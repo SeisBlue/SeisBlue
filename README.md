@@ -1,3 +1,3 @@
 # Autopicking
 
-Seismic event P phase picking Project  
+Seismic event P phase picking project  
