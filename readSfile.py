@@ -6,7 +6,6 @@ sfileDir = "REA/EVENT/1996/06/"
 waveFileDir = "WAV/"
 lsOutput = subprocess.run(["ls", sfileDir], stdout=subprocess.PIPE, universal_newlines=True)
 sfileList = lsOutput.stdout.splitlines()
-
 for file in sfileList:
     event = nordic.read_nordic(sfileDir + file)
     event.wavename = nordic.readwavename(sfileDir + file)
