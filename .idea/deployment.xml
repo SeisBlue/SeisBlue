@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="jimmy@140.115.20.43:22" createEmptyFolders="true">
+  <component name="PublishConfigData" autoUpload="Always" serverName="root@140.115.20.43:2502" createEmptyFolders="true">
     <serverData>
-      <paths name="jimmy@140.115.20.43:22">
+      <paths name="root@140.115.20.43:2502">
         <serverdata>
           <mappings>
-            <mapping deploy="/PycharmProjects/SSH" local="$PROJECT_DIR$" />
+            <mapping deploy="/mnt/tf_data" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="jimmy@140.115.20.43:22 (1)">
+      <paths name="root@140.115.20.43:2502 (1)">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/mnt/tf_data" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@140.115.22.28:2502">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/mnt/docker" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
