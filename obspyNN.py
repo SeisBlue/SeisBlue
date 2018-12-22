@@ -21,7 +21,7 @@ def load_stream(event):
     stream = Stream()
     wavedir = event.wavedir
     for wave in event.wavename:
-        stream += read(wavedir + str(wave))
+        stream += read(wavedir + "/" + str(wave))
     stream.sort(keys=['network', 'station', 'channel'])
     stream.normalize()
     return stream
@@ -40,15 +40,12 @@ def get_picked_stream(event, stream):
 
 def get_probability(stream):
     import scipy.stats as ss
-    # try:
     for trace in stream:
         start_time = trace.meta.starttime
         x_time = trace.times(reftime=start_time)
         pick_time = trace.pick.time - start_time
         sigma = 0.1
         trace.pick.pdf = ss.norm.pdf(x_time, pick_time, sigma)
-    # except:
-    #     trace.pick.pdf = ss.norm.pdf(x_time, np.inf, sigma)
     return stream
 
 
@@ -63,16 +60,16 @@ def plot_station_set(dataset):
     start_time = dataset[0].stats.starttime
     pick_time = dataset[0].pick.time - start_time
     pick_phase = dataset[0].pick.phase_hint
-
-    fig = plt.figure(figsize=(8, 8))
+    subplot = len(dataset) + 1
+    fig = plt.figure(figsize=(8, subplot*2))
     for i in range(len(dataset)):
-        ax = fig.add_subplot(len(dataset) + 1, 1, i + 1)
+        ax = fig.add_subplot(subplot, 1, i + 1)
         ax.plot(dataset[i].times(reftime=start_time), dataset[i].data, "k-", label=dataset[i].id)
         y_min, y_max = ax.get_ylim()
         ax.vlines(pick_time, y_min, y_max, color='r', lw=2, label=pick_phase)
         ax.legend()
 
-    ax = fig.add_subplot(len(dataset) + 1, 1, len(dataset) + 1)
+    ax = fig.add_subplot(subplot, 1, subplot)
     ax.plot(dataset[0].times(reftime=start_time), dataset[0].pick.pdf, "b-", label=pick_phase + " pdf")
     ax.legend()
     plt.show()
