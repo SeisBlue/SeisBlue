@@ -4,6 +4,17 @@ from obspy.core.event.catalog import Catalog
 import matplotlib.pyplot as plt
 
 
+def read_list(sfilelist):
+    with open(sfilelist, "r") as file:
+        data = []
+        while True:
+            row = file.readline().split()
+            if len(row) == 0:
+                break
+            data.append(row)
+    return data
+
+
 def load_sfile(sfileList):
     catalog = Catalog()
     for row in sfileList:
@@ -17,13 +28,27 @@ def load_sfile(sfileList):
     return catalog
 
 
-def load_stream(event):
+def load_seisan(event):
     stream = Stream()
     wavedir = event.wavedir
     for wave in event.wavename:
         stream += read(wavedir + "/" + str(wave))
     stream.sort(keys=['network', 'station', 'channel'])
     stream.normalize()
+    stream.detrend()
+    return stream
+
+
+def load_SDS(event):
+    from obspy.clients.filesystem.sds import Client
+    sdsRoot = event.wavedir
+    t = event.origins[0].time
+    stream = Stream()
+    client = Client(sds_root=sdsRoot)
+    client.nslc = client.get_all_nslc(sds_type="D")
+    for net, sta, loc, chan in client.nslc:
+        st = client.get_waveforms(net, sta, loc, chan, t, t + 30)
+        stream += st
     return stream
 
 
@@ -45,7 +70,8 @@ def get_probability(stream):
         x_time = trace.times(reftime=start_time)
         pick_time = trace.pick.time - start_time
         sigma = 0.1
-        trace.pick.pdf = ss.norm.pdf(x_time, pick_time, sigma)
+        pdf = ss.norm.pdf(x_time, pick_time, sigma)
+        trace.pick.pdf = pdf / pdf.max()
     return stream
 
 
@@ -61,7 +87,7 @@ def plot_station_set(dataset):
     pick_time = dataset[0].pick.time - start_time
     pick_phase = dataset[0].pick.phase_hint
     subplot = len(dataset) + 1
-    fig = plt.figure(figsize=(8, subplot*2))
+    fig = plt.figure(figsize=(8, subplot * 2))
     for i in range(len(dataset)):
         ax = fig.add_subplot(subplot, 1, i + 1)
         ax.plot(dataset[i].times(reftime=start_time), dataset[i].data, "k-", label=dataset[i].id)
@@ -71,6 +97,7 @@ def plot_station_set(dataset):
 
     ax = fig.add_subplot(subplot, 1, subplot)
     ax.plot(dataset[0].times(reftime=start_time), dataset[0].pick.pdf, "b-", label=pick_phase + " pdf")
+    plt.ylim(-0.1, 1.1)
     ax.legend()
     plt.show()
 
@@ -87,7 +114,7 @@ def load_dataset(sfileList, plot=False):
     catalog = load_sfile(sfileList)
     dataset = Stream()
     for event in catalog:
-        stream = load_stream(event)
+        stream = load_SDS(event)
         stream = get_picked_stream(event, stream)
         stream = get_probability(stream)
         dataset += stream
@@ -97,9 +124,22 @@ def load_dataset(sfileList, plot=False):
 
 
 def load_training_set(dataset):
+    import numpy as np
     wavefile = []
     probability = []
     for trace in dataset:
         wavefile.append(trace.data)
         probability.append(trace.pick.pdf)
+
+    wavefile = np.asarray(wavefile).reshape((len(dataset), 1, 7501, 1))
+    probability = np.asarray(probability).reshape((len(dataset), 1, 7501, 1))
+
     return wavefile, probability
+
+
+def add_predict(stream, predict):
+    i = 0
+    for trace in stream:
+        trace.pick.pdf = predict[i, :]
+        i += 1
+    return stream
