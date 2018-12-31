@@ -1,6 +1,7 @@
 import obspy.io.nordic.core as nordic
 from obspy.core import Stream, read
 from obspy.core.event.catalog import Catalog
+from obspy.signal.trigger import trigger_onset
 import matplotlib.pyplot as plt
 
 
@@ -8,23 +9,23 @@ def read_list(sfilelist):
     with open(sfilelist, "r") as file:
         data = []
         while True:
-            row = file.readline().split()
+            row = file.readline().strip("\n")
             if len(row) == 0:
                 break
             data.append(row)
     return data
 
 
-def load_sfile(sfileList):
+def load_sfile(sfile_list):
+    from obspy.io.nordic.core import NordicParsingError
     catalog = Catalog()
-    for row in sfileList:
-        wavename = []
-        sfile, wavedir = row[0], row[1]
-        sfile_event = nordic.read_nordic(sfile)
-        wavename.extend(nordic.readwavename(sfile))
-        sfile_event[0].wavename = nordic.readwavename(sfile)
-        sfile_event[0].wavedir = wavedir
-        catalog += sfile_event
+    for sfile in sfile_list:
+        try:
+            sfile_event, wavename = nordic.read_nordic(sfile, return_wavnames=True)
+            sfile_event[0].wavename = wavename
+            catalog += sfile_event
+        except NordicParsingError:
+            pass
     return catalog
 
 
@@ -39,16 +40,34 @@ def load_seisan(event):
     return stream
 
 
-def load_SDS(event):
+def load_sds(event, sds_root):
     from obspy.clients.filesystem.sds import Client
-    sdsRoot = event.wavedir
     t = event.origins[0].time
     stream = Stream()
-    client = Client(sds_root=sdsRoot)
-    client.nslc = client.get_all_nslc(sds_type="D")
-    for net, sta, loc, chan in client.nslc:
-        st = client.get_waveforms(net, sta, loc, chan, t, t + 30)
+    client = Client(sds_root=sds_root)
+    for pick in event.picks:
+        if pick.time > t + 30:
+            continue
+        if not pick.phase_hint == "P":
+            continue
+        if not pick.waveform_id.channel_code[-1] == "Z":
+            continue
+        net = "*"
+        sta = pick.waveform_id.station_code
+        loc = "*"
+        chan = "??" + pick.waveform_id.channel_code[-1]
+        st = client.get_waveforms(net, sta, loc, chan, t, t + 31)
+        st.normalize()
+        st.detrend()
+        st.resample(100)
+        st.trim(t, t + 30, pad=True, fill_value=0)
+        for trace in st:
+            if trace.data.size == 3001:
+                trace.pick = pick
+            else:
+                st.remove(trace)
         stream += st
+    stream.sort(keys=['starttime', 'network', 'station', 'channel'])
     return stream
 
 
@@ -71,51 +90,42 @@ def get_probability(stream):
         pick_time = trace.pick.time - start_time
         sigma = 0.1
         pdf = ss.norm.pdf(x_time, pick_time, sigma)
-        trace.pick.pdf = pdf / pdf.max()
+        if pdf.max():
+            trace.pick.pdf = pdf / pdf.max()
+        else:
+            stream.remove(trace)
     return stream
 
 
-def split_station_set(stream, station):
-    stationset = stream.select(station=station)
-    for trace in stationset:
-        stream.remove(trace)
-    return stream, stationset
-
-
-def plot_station_set(dataset):
-    start_time = dataset[0].stats.starttime
-    pick_time = dataset[0].pick.time - start_time
-    pick_phase = dataset[0].pick.phase_hint
-    subplot = len(dataset) + 1
+def plot_trace(trace):
+    start_time = trace.stats.starttime
+    pick_time = trace.pick.time - start_time
+    pick_phase = trace.pick.phase_hint
+    subplot = 2
     fig = plt.figure(figsize=(8, subplot * 2))
-    for i in range(len(dataset)):
-        ax = fig.add_subplot(subplot, 1, i + 1)
-        ax.plot(dataset[i].times(reftime=start_time), dataset[i].data, "k-", label=dataset[i].id)
-        y_min, y_max = ax.get_ylim()
-        ax.vlines(pick_time, y_min, y_max, color='r', lw=2, label=pick_phase)
-        ax.legend()
+
+    ax = fig.add_subplot(subplot, 1, 1)
+    ax.plot(trace.times(reftime=start_time), trace.data, "k-", label=trace.id)
+    y_min, y_max = ax.get_ylim()
+    ax.vlines(pick_time, y_min, y_max, color='r', lw=2, label=pick_phase)
+    ax.legend()
 
     ax = fig.add_subplot(subplot, 1, subplot)
-    ax.plot(dataset[0].times(reftime=start_time), dataset[0].pick.pdf, "b-", label=pick_phase + " pdf")
-    plt.ylim(-0.1, 1.1)
+    ax.plot(trace.times(reftime=start_time), trace.pick.pdf, "b-", label=pick_phase + " pdf")
     ax.legend()
     plt.show()
 
 
 def plot_stream(stream):
-    stream.sort(keys=['network', 'station', 'channel'], reverse=True)
-    while stream.count():
-        station = stream[0].stats.station
-        stream, dataset = split_station_set(stream, station)
-        plot_station_set(dataset)
+    for trace in stream:
+        plot_trace(trace)
 
 
-def load_dataset(sfileList, plot=False):
-    catalog = load_sfile(sfileList)
+def load_dataset(sfile_list, sds_root=None, plot=False):
+    catalog = load_sfile(sfile_list)
     dataset = Stream()
     for event in catalog:
-        stream = load_SDS(event)
-        stream = get_picked_stream(event, stream)
+        stream = load_sds(event, sds_root)
         stream = get_probability(stream)
         dataset += stream
         if plot:
@@ -131,8 +141,8 @@ def load_training_set(dataset):
         wavefile.append(trace.data)
         probability.append(trace.pick.pdf)
 
-    wavefile = np.asarray(wavefile).reshape((len(dataset), 1, 7501, 1))
-    probability = np.asarray(probability).reshape((len(dataset), 1, 7501, 1))
+    wavefile = np.asarray(wavefile).reshape((dataset.count(), 1, 3001, 1))
+    probability = np.asarray(probability).reshape((dataset.count(), 1, 3001, 1))
 
     return wavefile, probability
 
