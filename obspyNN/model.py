@@ -1,10 +1,9 @@
-import tensorflow as tf
 from tensorflow import keras
 
 
 def unet(pretrained_weights=None, input_size=(1, 3001, 1)):
     inputs = keras.layers.Input(input_size)
-    zpad = keras.layers.ZeroPadding2D(((0, 0), (0, 7)))(inputs)
+    zpad = keras.layers.ZeroPadding2D(((0, 0), (3, 4)))(inputs)
     conv1 = keras.layers.Conv2D(8, 3, activation='relu', padding='same', kernel_initializer='he_normal')(zpad)
     conv1 = keras.layers.Conv2D(8, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
     pool1 = keras.layers.MaxPooling2D(pool_size=(1, 2), padding='same')(conv1)
@@ -48,7 +47,7 @@ def unet(pretrained_weights=None, input_size=(1, 3001, 1)):
     conv9 = keras.layers.Conv2D(8, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
     conv9 = keras.layers.Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
     conv10 = keras.layers.Conv2D(1, 1, activation='sigmoid')(conv9)
-    crop = keras.layers.Cropping2D(((0, 0), (0, 7)))(conv10)
+    crop = keras.layers.Cropping2D(((0, 0), (3, 4)))(conv10)
 
     model = keras.models.Model(inputs=inputs, outputs=crop)
 
