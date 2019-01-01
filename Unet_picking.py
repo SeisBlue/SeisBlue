@@ -4,13 +4,15 @@ from obspy import read
 import obspyNN
 from obspyNN.model import unet
 
+
 tensorboard = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0,
                                           write_graph=True, write_images=False)
 
 picked_stream = read("/mnt/tf_data/dataset.pkl")
 wavefile, probability = obspyNN.io.load_training_set(picked_stream)
 
-split_point = -20
+
+split_point = -100
 X_train, X_val = wavefile[0:split_point], wavefile[split_point:]
 Y_train, Y_val = probability[0:split_point], probability[split_point:]
 
@@ -22,4 +24,5 @@ print('Test accuracy:', test_acc)
 
 predict = model.predict(wavefile)
 result = obspyNN.probability.set_probability(picked_stream, predict)
+result.write("result.pkl", format="PICKLE")
 obspyNN.plot.plot_stream(result[split_point:])
