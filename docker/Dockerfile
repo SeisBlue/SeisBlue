@@ -1,5 +1,4 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
-RUN sed -i 's/archive.ubuntu.com/free.nchc.org.tw/g' /etc/apt/sources.list
 
 RUN apt update && apt install wget
 RUN echo deb http://deb.obspy.org xenial main >> /etc/apt/sources.list
