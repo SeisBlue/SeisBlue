@@ -1,23 +1,29 @@
 from tensorflow import keras
+from obspy import read
+
 import obspyNN
 from obspyNN.model import unet
 
 tensorboard = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0,
                                           write_graph=True, write_images=False)
-wavedir = "/mnt/Data"
-sfileList = obspyNN.io.read_list("/mnt/tf_data/sfilelist")
 
-dataset = obspyNN.io.load_dataset(sfileList, wavedir, plot=False)
-wavefile, probability = obspyNN.io.load_training_set(dataset)
+picked_stream = read("/mnt/tf_data/dataset.pkl")
+wavefile, probability = obspyNN.io.load_training_set(picked_stream)
 
 split_dataset = -20
-model = unet()
-model.fit(wavefile[:split_dataset], probability[:split_dataset], epochs=5, callbacks=[tensorboard])
 
-test_loss, test_acc = model.evaluate(wavefile, probability)
+training_data = wavefile[:split_dataset]
+training_label = probability[:split_dataset]
+
+test_data = wavefile[split_dataset:]
+test_label = probability[split_dataset:]
+
+model = unet()
+model.fit(training_data, training_label, epochs=5, callbacks=[tensorboard])
+
+test_loss, test_acc = model.evaluate(test_data, test_label)
 print('Test accuracy:', test_acc)
 
 predict = model.predict(wavefile)
-pdf = predict.reshape(len(dataset), 3001)
-result = obspyNN.probability.set_probability(dataset, pdf)
+result = obspyNN.probability.set_probability(picked_stream, predict)
 obspyNN.plot.plot_stream(result[split_dataset:])

@@ -11,7 +11,7 @@ from obspyNN.plot import plot_stream
 from obspyNN.probability import get_probability
 
 
-def read_list(sfile_list):
+def read_sfile_list(sfile_list):
     with open(sfile_list, "r") as file:
         data = []
         while True:
@@ -26,7 +26,7 @@ def load_sfile(sfile_list):
     catalog = Catalog()
     for sfile in sfile_list:
         try:
-            sfile_event = nordic.read_nordic(sfile, return_wavnames=False)
+            sfile_event = nordic.read_nordic(sfile)
             catalog += sfile_event
         except NordicParsingError:
             pass
@@ -38,7 +38,7 @@ def load_sds(event, sds_root, phase="P", component="Z"):
     stream = Stream()
     client = Client(sds_root=sds_root)
     for pick in event.picks:
-        if pick.time > t + 30:
+        if not pick.time < t + 30:
             continue
         if not pick.phase_hint == phase:
             continue
@@ -56,8 +56,9 @@ def load_sds(event, sds_root, phase="P", component="Z"):
         st.resample(100)
         st.trim(t, t + 30, pad=True, fill_value=0)
 
+        desired_trace_length = 3001
         for trace in st:
-            if trace.data.size == 3001:
+            if trace.data.size == desired_trace_length:
                 trace.pick = pick
             else:
                 st.remove(trace)
@@ -66,18 +67,7 @@ def load_sds(event, sds_root, phase="P", component="Z"):
     return stream
 
 
-def get_picked_stream(event, stream):
-    picked_stream = Stream()
-    for pick in event.picks:
-        station = pick.waveform_id.station_code
-        station_stream = stream.select(station=station)
-        for trace in station_stream:
-            trace.pick = pick
-        picked_stream += station_stream
-    return picked_stream
-
-
-def load_dataset(sfile_list, sds_root=None, plot=False):
+def load_stream(sfile_list, sds_root=None, plot=False):
     catalog = load_sfile(sfile_list)
     dataset = Stream()
     for event in catalog:
@@ -86,7 +76,7 @@ def load_dataset(sfile_list, sds_root=None, plot=False):
         dataset += stream
         print("load " + str(len(dataset)) + " traces")
         if plot:
-            plot_stream(stream)
+            plot_stream(stream, savedir="original_dataset")
     return dataset
 
 
@@ -97,7 +87,10 @@ def load_training_set(dataset, trace_length=3001):
         wavefile.append(trace.data)
         probability.append(trace.pick.pdf)
 
-    wavefile = np.asarray(wavefile).reshape((dataset.count(), 1, trace_length, 1))
-    probability = np.asarray(probability).reshape((dataset.count(), 1, trace_length, 1))
+    component = 1
+    output_shape = (dataset.count(), component, trace_length, 1)
+
+    wavefile = np.asarray(wavefile).reshape(output_shape)
+    probability = np.asarray(probability).reshape(output_shape)
 
     return wavefile, probability

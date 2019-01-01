@@ -7,6 +7,7 @@ def get_probability(stream):
         x_time = trace.times(reftime=start_time)
         pick_time = trace.pick.time - start_time
         sigma = 0.1
+
         pdf = ss.norm.pdf(x_time, pick_time, sigma)
         if pdf.max():
             trace.pick.pdf = pdf / pdf.max()
@@ -16,6 +17,9 @@ def get_probability(stream):
 
 
 def set_probability(stream, predict):
+    trace_length = stream.trace[0].data.size
+    predict = predict.reshape(len(stream), trace_length)
+
     i = 0
     for trace in stream:
         trace.pick.pdf = predict[i, :]
