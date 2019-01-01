@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+
+
 def plot_trace(trace):
     start_time = trace.stats.starttime
     pick_time = trace.pick.time - start_time
