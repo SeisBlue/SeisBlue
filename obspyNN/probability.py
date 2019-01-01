@@ -17,7 +17,7 @@ def get_probability(stream):
 
 
 def set_probability(stream, predict):
-    trace_length = stream.trace[0].data.size
+    trace_length = stream.traces[0].data.size
     predict = predict.reshape(len(stream), trace_length)
 
     i = 0

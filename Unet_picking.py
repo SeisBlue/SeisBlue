@@ -10,20 +10,16 @@ tensorboard = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0,
 picked_stream = read("/mnt/tf_data/dataset.pkl")
 wavefile, probability = obspyNN.io.load_training_set(picked_stream)
 
-split_dataset = -20
-
-training_data = wavefile[:split_dataset]
-training_label = probability[:split_dataset]
-
-test_data = wavefile[split_dataset:]
-test_label = probability[split_dataset:]
+split_point = -20
+X_train, X_val = wavefile[0:split_point], wavefile[split_point:]
+Y_train, Y_val = probability[0:split_point], probability[split_point:]
 
 model = unet()
-model.fit(training_data, training_label, epochs=5, callbacks=[tensorboard])
+model.fit(X_train, Y_train, epochs=5, callbacks=[tensorboard])
 
-test_loss, test_acc = model.evaluate(test_data, test_label)
+test_loss, test_acc = model.evaluate(X_val, Y_val)
 print('Test accuracy:', test_acc)
 
 predict = model.predict(wavefile)
 result = obspyNN.probability.set_probability(picked_stream, predict)
-obspyNN.plot.plot_stream(result[split_dataset:])
+obspyNN.plot.plot_stream(result[split_point:])

@@ -24,7 +24,7 @@ def plot_stream(stream, savedir=None):
 
         if savedir:
             plt.savefig(savedir + "/" + time_stamp + "_" + trace.id + ".pdf")
+            plt.close()
         else:
             plt.show()
 
-        plt.close()
