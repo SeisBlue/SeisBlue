@@ -1,5 +1,6 @@
 from obspy.core import Stream
 from obspy.core.event.catalog import Catalog
+from obspy.core.event.origin import Pick
 
 import obspy.io.nordic.core as nordic
 from obspy.io.nordic.core import NordicParsingError
@@ -27,6 +28,7 @@ def load_sfile(sfile_list):
     for sfile in sfile_list:
         try:
             sfile_event = nordic.read_nordic(sfile)
+            sfile_event.events[0].sfile = sfile
             catalog += sfile_event
         except NordicParsingError:
             pass
@@ -74,7 +76,7 @@ def load_stream(sfile_list, sds_root=None, plot=False):
         stream = load_sds(event, sds_root)
         stream = get_probability(stream)
         dataset += stream
-        print("load " + str(len(dataset)) + " traces")
+        print(event.sfile + " load " + str(len(stream)) + " traces, total " + str(len(dataset)) + " traces")
         if plot:
             plot_stream(stream, savedir="original_dataset")
     return dataset
@@ -94,3 +96,27 @@ def load_training_set(dataset, trace_length=3001):
     probability = np.asarray(probability).reshape(output_shape)
 
     return wavefile, probability
+
+
+def scan_station(sds_root=None, nslc=None, start_time=None, end_time=None):
+    client = Client(sds_root=sds_root)
+    stream = Stream()
+    net, sta, loc, chan = nslc
+    t = start_time
+    while t < end_time:
+        st = client.get_waveforms(net, sta, loc, chan, t, t + 31)
+        st.normalize()
+        st.detrend()
+        st.resample(100)
+        st.trim(t, t + 30, pad=True, fill_value=0)
+
+        for trace in st:
+            if trace.data.size == 3001:
+                trace.pick = Pick()
+                trace.pick.time = t
+                trace.pick.phase_hint = "P"
+            else:
+                st.remove(trace)
+        stream += st
+        t += 30
+    return stream

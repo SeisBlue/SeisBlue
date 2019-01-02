@@ -1,18 +1,22 @@
 from tensorflow import keras
 
 
-def unet(pretrained_weights=None, input_size=(1, 3001, 1)):
+def unet(pretrained_weights=None, input_size=(1, 3001, 1), padding_size=((0, 0), (3, 4))):
     inputs = keras.layers.Input(input_size)
-    zpad = keras.layers.ZeroPadding2D(((0, 0), (3, 4)))(inputs)
+    zpad = keras.layers.ZeroPadding2D(padding_size)(inputs)
+
     conv1 = keras.layers.Conv2D(8, 3, activation='relu', padding='same', kernel_initializer='he_normal')(zpad)
     conv1 = keras.layers.Conv2D(8, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
     pool1 = keras.layers.MaxPooling2D(pool_size=(1, 2), padding='same')(conv1)
+
     conv2 = keras.layers.Conv2D(16, 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool1)
     conv2 = keras.layers.Conv2D(16, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv2)
     pool2 = keras.layers.MaxPooling2D(pool_size=(1, 2), padding='same')(conv2)
+
     conv3 = keras.layers.Conv2D(32, 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool2)
     conv3 = keras.layers.Conv2D(32, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv3)
     pool3 = keras.layers.MaxPooling2D(pool_size=(1, 2), padding='same')(conv3)
+
     conv4 = keras.layers.Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool3)
     conv4 = keras.layers.Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv4)
     drop4 = keras.layers.Dropout(0.5)(conv4)
@@ -46,8 +50,9 @@ def unet(pretrained_weights=None, input_size=(1, 3001, 1)):
     conv9 = keras.layers.Conv2D(8, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge9)
     conv9 = keras.layers.Conv2D(8, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
     conv9 = keras.layers.Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
+
     conv10 = keras.layers.Conv2D(1, 1, activation='sigmoid')(conv9)
-    crop = keras.layers.Cropping2D(((0, 0), (3, 4)))(conv10)
+    crop = keras.layers.Cropping2D(padding_size)(conv10)
 
     model = keras.models.Model(inputs=inputs, outputs=crop)
 

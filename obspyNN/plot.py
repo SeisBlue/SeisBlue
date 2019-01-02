@@ -20,6 +20,7 @@ def plot_stream(stream, savedir=None):
 
         ax = fig.add_subplot(subplot, 1, subplot)
         ax.plot(trace.times(reftime=start_time), trace.pick.pdf, "b-", label=pick_phase + " pdf")
+        plt.ylim((-0.1, 1.1))
         ax.legend()
 
         if savedir:
