@@ -34,4 +34,4 @@ Reference:
 
 [Jimmy Lab wordpress](https://jimmylab.wordpress.com/)
  
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
