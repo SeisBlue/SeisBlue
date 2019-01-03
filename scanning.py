@@ -1,19 +1,20 @@
 from obspy import UTCDateTime
 import numpy as np
-
-from obspyNN.model import unet
+from tensorflow.python.keras.optimizers import Adam, RMSprop, SGD
+from obspyNN.model import U_Net
 import obspyNN
 
 sds_root = "/mnt/Data"
 
-model = unet()
+model = U_Net(1, 3001, 1)
+model.compile(optimizer=Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])
 model.load_weights("/mnt/tf_data/trained_weight.h5")
 
 
-start_time = UTCDateTime("2017-05-01 00:00:00")
-end_time = UTCDateTime("2017-05-01 01:00:00")
+start_time = UTCDateTime("2017-03-19 23:00:00")
+end_time = start_time + 3600
 
-nslc = ("*", "H007", "*", "??Z")
+nslc = ("HL", "H065", "*", "??Z")
 stream = obspyNN.io.scan_station(sds_root, nslc, start_time, end_time)
 
 wavefile = []
