@@ -1,21 +1,11 @@
-from tensorflow import keras
-import tensorflow as tf
 from tensorflow.python.keras.models import Model
-from tensorflow.python.keras import backend as K
-from tensorflow.python.keras.layers import Input, merge, Conv2D, ZeroPadding2D, UpSampling2D, Dense, concatenate, \
-    Conv2DTranspose, Cropping2D
-from tensorflow.python.keras.layers.pooling import MaxPooling2D, GlobalAveragePooling2D, MaxPooling2D
-from tensorflow.python.keras.layers.core import Dense, Dropout, Activation
-from tensorflow.python.keras.layers import BatchNormalization, Dropout, Flatten, Lambda
-from tensorflow.python.keras.layers.advanced_activations import ELU, LeakyReLU
-from tensorflow.python.keras.optimizers import Adam, RMSprop, SGD
+from tensorflow.python.keras.layers import Input, concatenate, Dropout, Cropping2D, ZeroPadding2D
+from tensorflow.python.keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, UpSampling2D
 from tensorflow.python.keras.regularizers import l2
-from tensorflow.python.keras.layers.noise import GaussianDropout
-
-import numpy as np
 
 """
-Modified from https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py
+U-net, Nest-Net model from: 
+https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py
 """
 
 
@@ -26,6 +16,7 @@ Modified from https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.
 def standard_unit(input_tensor, stage, nb_filter, kernel_size=3):
     dropout_rate = 0.2
     act = "relu"
+
     x = Conv2D(nb_filter, 3, activation=act, name='conv' + stage + '_1',
                kernel_initializer='he_normal', padding='same', kernel_regularizer=l2(1e-4))(input_tensor)
     x = Dropout(dropout_rate, name='dp' + stage + '_1')(x)
@@ -176,10 +167,7 @@ def Nest_Net(img_rows, img_cols, color_type=1, num_class=1, deep_supervision=Fal
     crop4 = Cropping2D(padding_size)(nestnet_output_4)
 
     if deep_supervision:
-        model = Model(inputs=img_input, outputs=[crop1,
-                                                 crop2,
-                                                 crop3,
-                                                 crop4])
+        model = Model(inputs=img_input, outputs=[crop1, crop2, crop3, crop4])
     else:
         model = Model(inputs=img_input, outputs=[crop4])
 
@@ -187,7 +175,8 @@ def Nest_Net(img_rows, img_cols, color_type=1, num_class=1, deep_supervision=Fal
 
 
 """
-Modified from https://github.com/zhixuhao/unet/blob/master/model.py
+unet model from:
+https://github.com/zhixuhao/unet/blob/master/model.py
 """
 
 

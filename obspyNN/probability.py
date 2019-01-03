@@ -3,7 +3,7 @@ import scipy.stats as ss
 
 def get_probability(stream):
     for trace in stream:
-        start_time = trace.meta.starttime
+        start_time = trace.stats.starttime
         x_time = trace.times(reftime=start_time)
         pick_time = trace.pick.time - start_time
         sigma = 0.1

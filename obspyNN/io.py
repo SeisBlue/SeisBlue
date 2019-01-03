@@ -8,7 +8,7 @@ from obspy.clients.filesystem.sds import Client
 
 import numpy as np
 
-from obspyNN.plot import plot_stream
+from obspyNN.plot import plot_trace
 from obspyNN.probability import get_probability
 
 
@@ -36,16 +36,18 @@ def load_sfile(sfile_list):
 
 
 def load_sds(event, sds_root, phase="P", component="Z"):
-    t = event.origins[0].time
     stream = Stream()
     client = Client(sds_root=sds_root)
     for pick in event.picks:
-        if not pick.time < t + 30:
-            continue
         if not pick.phase_hint == phase:
             continue
         if not pick.waveform_id.channel_code[-1] == component:
             continue
+
+        t = event.origins[0].time
+        if pick.time > t + 30:
+            t = pick.time - 25
+            print("origin: " + t.isoformat() + " pick: " + pick.time.isoformat())
 
         net = "*"
         sta = pick.waveform_id.station_code
@@ -56,14 +58,18 @@ def load_sds(event, sds_root, phase="P", component="Z"):
         st.normalize()
         st.detrend()
         st.resample(100)
-        st.trim(t, t + 30, pad=True, fill_value=0)
 
         desired_trace_length = 3001
         for trace in st:
-            if trace.data.size == desired_trace_length:
-                trace.pick = pick
-            else:
+            dt = (trace.stats.endtime - trace.stats.starttime) / (trace.data.size - 1)
+            endtime = t + 3000 * dt
+            trace.trim(t, endtime, pad=True, fill_value=0)
+            trace.pick = pick
+
+            if not trace.data.size == desired_trace_length:
+                print(trace.id, trace.data.size)
                 st.remove(trace)
+
         stream += st
     stream.sort(keys=['starttime', 'network', 'station', 'channel'])
     return stream
@@ -78,7 +84,7 @@ def load_stream(sfile_list, sds_root=None, plot=False):
         dataset += stream
         print(event.sfile + " load " + str(len(stream)) + " traces, total " + str(len(dataset)) + " traces")
         if plot:
-            plot_stream(stream, savedir="original_dataset")
+            plot_trace(stream, savedir="original_dataset")
     return dataset
 
 

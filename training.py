@@ -10,7 +10,7 @@ from obspyNN.model import unet, U_Net, Nest_Net
 tensorboard = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0,
                                           write_graph=True, write_images=False)
 
-picked_stream = read("/mnt/tf_data/dataset2017_2018HL.pkl")
+picked_stream = read("/mnt/tf_data/data.pkl")
 wavefile, probability = obspyNN.io.load_training_set(picked_stream)
 
 split_point = -100
