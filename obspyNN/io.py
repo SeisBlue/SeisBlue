@@ -2,6 +2,9 @@ from obspy.core import Stream
 from obspy.core.event.catalog import Catalog
 from obspy.core.event.origin import Pick
 
+from obspy.core.inventory import Inventory, Network, Station, Channel
+from obspy.core.inventory.util import Latitude, Longitude
+
 import obspy.io.nordic.core as nordic
 from obspy.io.nordic.core import NordicParsingError
 from obspy.clients.filesystem.sds import Client
@@ -16,7 +19,7 @@ def read_sfile_list(sfile_list):
     with open(sfile_list, "r") as file:
         data = []
         while True:
-            row = file.readline().strip("\n")
+            row = file.readline().rstrip()
             if len(row) == 0:
                 break
             data.append(row)
@@ -126,3 +129,45 @@ def scan_station(sds_root=None, nslc=None, start_time=None, end_time=None):
         stream += st
         t += 30
     return stream
+
+
+def read_geom(hyp, network):
+    inv = Inventory(networks=[], source="")
+    net = Network(code=network, stations=[], description="")
+    with open(hyp, 'r') as file:
+        stats = 0
+        while True:
+            line = file.readline().rstrip()
+            if not len(line):
+                stats += 1
+                continue
+
+            if stats > 1:
+                break
+            elif stats == 1:
+                station = line[1:6]
+                lat = line[6:14]
+                lon = line[14:23]
+                elev = float(line[23:])
+
+                if lat[-1] == 'S':
+                    NS = -1
+                else:
+                    NS = 1
+
+                if lon[-1] == 'W':
+                    EW = -1
+                else:
+                    EW = 1
+
+                lat = (int(lat[0:2]) + float(lat[2:-1]) / 60) * NS
+                lat = Latitude(lat)
+                lon = (int(lon[0:3]) + float(lon[3:-1]) / 60) * EW
+                lon = Longitude(lon)
+
+                sta = Station(code=station, latitude=lat, longitude=lon, elevation=elev)
+                chan = Channel(code="??Z", location_code="", latitude=lat, longitude=lon, elevation=elev, depth=0)
+                sta.channels.append(chan)
+                net.stations.append(sta)
+    inv.networks.append(net)
+    return inv
