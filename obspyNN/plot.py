@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 
 def plot_trace(trace, enlarge=False, xlim=None, savedir=None):
     start_time = trace.stats.starttime
-    pick_time = trace.pick.time - start_time
-    pick_phase = trace.pick.phase_hint
+    pick_time = trace.picks[0].time - start_time
+    pick_phase = trace.picks[0].phase_hint
     time_stamp = start_time.isoformat()
 
     subplot = 2
@@ -23,7 +23,7 @@ def plot_trace(trace, enlarge=False, xlim=None, savedir=None):
     ax.legend()
 
     ax = fig.add_subplot(subplot, 1, subplot)
-    ax.plot(trace.times(reftime=start_time), trace.pick.pdf, "b-", label=pick_phase + " pdf")
+    ax.plot(trace.times(reftime=start_time), trace.picks[0].pdf, "b-", label=pick_phase + " pdf")
     if enlarge:
         if xlim:
             plt.xlim(xlim)

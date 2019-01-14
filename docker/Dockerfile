@@ -1,11 +1,12 @@
 FROM tensorflow/tensorflow:latest-gpu-py3
 
-RUN apt update && apt install wget
+RUN apt-get update && apt-get install wget
 RUN echo deb http://deb.obspy.org xenial main >> /etc/apt/sources.list
 RUN wget --quiet -O - https://raw.github.com/obspy/obspy/master/misc/debian/public.key | apt-key add - 
-RUN apt update
+RUN apt-get update
 
-RUN apt install -y openssh-server python3-obspy
+RUN apt-get install -y openssh-server python3-obspy git
+RUN pip install --user git+https://github.com/matplotlib/basemap.git
 RUN mkdir /var/run/sshd
 
 # Warning!!!! Please change the root password "screencast" below for security
