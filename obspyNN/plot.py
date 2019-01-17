@@ -3,9 +3,13 @@ import matplotlib.pyplot as plt
 
 def plot_trace(trace, enlarge=False, xlim=None, savedir=None):
     start_time = trace.stats.starttime
-    first_pick_time = trace.picks[0].time - start_time
-    pick_phase = trace.picks[0].phase_hint
     time_stamp = start_time.isoformat()
+    if len(trace.picks):
+        first_pick_time = trace.picks[0].time - start_time
+        pick_phase = trace.picks[0].phase_hint
+    else:
+        first_pick_time = 0
+        pick_phase = ""
 
     subplot = 2
     fig = plt.figure(figsize=(8, subplot * 2))
@@ -19,10 +23,12 @@ def plot_trace(trace, enlarge=False, xlim=None, savedir=None):
             plt.xlim((first_pick_time - 1, first_pick_time + 2))
     ax.plot(trace.times(reftime=start_time), trace.data, "k-", label=trace.id)
     y_min, y_max = ax.get_ylim()
-    ax.vlines(first_pick_time, y_min, y_max, color='r', lw=2, label=pick_phase)
-    for pick in trace.picks[1:]:
-        pick_time = pick.time - start_time
-        ax.vlines(pick_time, y_min, y_max, color='r', lw=1)
+    if not pick_phase == "":
+        ax.vlines(first_pick_time, y_min, y_max, color='r', lw=2, label=pick_phase)
+    if len(trace.picks):
+        for pick in trace.picks[1:]:
+            pick_time = pick.time - start_time
+            ax.vlines(pick_time, y_min, y_max, color='r', lw=1)
     ax.legend()
 
     ax = fig.add_subplot(subplot, 1, subplot)

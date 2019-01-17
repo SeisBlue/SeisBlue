@@ -1,5 +1,6 @@
 import fnmatch
 import scipy.stats as ss
+from scipy.signal import find_peaks
 import numpy as np
 from obspy.core.event.origin import Pick
 
@@ -29,7 +30,11 @@ def set_probability(stream, predict):
 
     i = 0
     for trace in stream:
-        trace.pdf = predict[i, :]
+        pdf = predict[i, :]
+        if pdf.max():
+            trace.pdf = pdf / pdf.max()
+        else:
+            trace.pdf = pdf
         i += 1
     return stream
 
@@ -37,12 +42,14 @@ def set_probability(stream, predict):
 def extract_picks(trace):
     start_time = trace.stats.starttime
     picks = []
-    pick = Pick()
-    # TODO: Extract picks from pdf
-    pick.time = start_time
-    pick.phase_hint = "P"
 
-    picks.append(pick)
+    peaks, properties = find_peaks(trace.pdf, height=0.4, width=10)
+    for p in peaks:
+        if p:
+            time = start_time + p / trace.stats.sampling_rate
+            phase_hint = "P"
+            pick = Pick(time=time, phase_hint=phase_hint)
+            picks.append(pick)
     return picks
 
 

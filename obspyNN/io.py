@@ -144,10 +144,6 @@ def scan_station(sds_root=None, nslc=None, start_time=None, end_time=None, trace
                 st.remove(trace)
                 continue
 
-            trace.picks = []
-            picks = extract_picks(trace)
-            trace.picks.extend(picks)
-
         stream += st
         t += trace_length
     return stream
