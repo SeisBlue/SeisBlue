@@ -29,6 +29,6 @@ output_shape = (stream.count(), 1, 3001, 1)
 wavefile = np.asarray(wavefile).reshape(output_shape)
 
 predict = model.predict(wavefile, batch_size=2, verbose=True)
-result = obspyNN.probability.set_probability(stream, predict)
+result = obspyNN.pick.set_probability(stream, predict)
 for trace in result:
     obspyNN.plot.plot_trace(trace)

@@ -1,18 +1,18 @@
+from obspy import read_events
 from obspy.core import Stream
 from obspy.core.event.catalog import Catalog
-
-
 from obspy.core.inventory import Inventory, Network, Station, Channel
 from obspy.core.inventory.util import Latitude, Longitude
-
-from obspy import read_events
-from obspy.io.nordic.core import NordicParsingError
 from obspy.clients.filesystem.sds import Client
 
 import numpy as np
 
 from obspyNN.plot import plot_trace
-from obspyNN.probability import get_probability, extract_picks
+from obspyNN.pick import get_probability, extract_picks, search_picks
+
+
+class LengthError(BaseException):
+    pass
 
 
 def read_event_list(sfile_list):
@@ -33,8 +33,8 @@ def _read_event(event_file):
         for event in sfile_event.events:
             event.sfile = event_file
         catalog += sfile_event
-    except NordicParsingError as err:
-        print(event_file, err)
+    except Exception as err:
+        print(err)
     return catalog
 
 
@@ -49,12 +49,10 @@ def data_preprocessing(data):
 def trim_trace_by_points(trace, points=3001):
     start_time = trace.stats.starttime
     dt = (trace.stats.endtime - trace.stats.starttime) / (trace.data.size - 1)
-    end_time = start_time + (points - 1) * dt
-    trace.trim(start_time, end_time, pad=True, fill_value=0)
-    if len(trace.data) == points:
-        return trace
-    else:
-        raise IndexError("Trace length is not correct.")
+    end_time = start_time + dt * (points - 1)
+    trace.trim(start_time, end_time, nearest_sample=False, pad=True, fill_value=0)
+    if not trace.data.size == points:
+        raise LengthError("Trace length is not correct.")
 
 
 def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_rate=100):
@@ -79,21 +77,18 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
         chan = "??" + component
 
         st = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
-        st = data_preprocessing(st)
+        trace = st.traces[0]
+        trace = data_preprocessing(trace)
 
         points = trace_length * sample_rate + 1
-        for trace in st:
-            try:
-                trace = trim_trace_by_points(trace, points)
-            except IndexError as err:
-                print(err)
-                continue
+        try:
+            trim_trace_by_points(trace, points)
+        except Exception as err:
+            print(err)
+            continue
 
-            trace.picks = []
-            trace.picks.append(pick)
+        stream += st.traces[0]
 
-        stream += st
-    stream.sort(keys=['starttime', 'network', 'station', 'channel'])
     return stream
 
 
@@ -103,6 +98,9 @@ def get_picked_stream(sfile_list, sds_root=None, plot=False):
     for event in catalog:
         t = event.origins[0].time
         st = read_sds(event, sds_root)
+        for trace in st:
+            picks = search_picks(trace, catalog)
+            trace.picks = picks
         st = get_probability(st)
         stream += st
         print(event.sfile + " " + t.isoformat() + " load " + str(len(st)) + " traces, total " + str(
@@ -117,7 +115,7 @@ def get_training_set(dataset, points=3001):
     probability = []
     for trace in dataset:
         wavefile.append(trace.data)
-        probability.append(trace.picks[0].pdf)
+        probability.append(trace.pdf)
 
     component = 1
     output_shape = (dataset.count(), component, points, 1)
@@ -140,9 +138,10 @@ def scan_station(sds_root=None, nslc=None, start_time=None, end_time=None, trace
         points = trace_length * sample_rate + 1
         for trace in st:
             try:
-                trace = trim_trace_by_points(trace, points)
+                trim_trace_by_points(trace, points)
             except IndexError as err:
                 print(err)
+                st.remove(trace)
                 continue
 
             trace.picks = []
@@ -155,7 +154,7 @@ def scan_station(sds_root=None, nslc=None, start_time=None, end_time=None, trace
 
 
 def read_hyp(hyp, network):
-    inv = Inventory(networks=[], source="")
+    inventory = Inventory(networks=[], source="")
     net = Network(code=network, stations=[], description="")
     with open(hyp, 'r') as file:
         blank_line = 0
@@ -169,7 +168,6 @@ def read_hyp(hyp, network):
                 break
 
             elif blank_line == 1:
-                NS = EW = 1
                 lat = line[6:14]
                 lon = line[14:23]
                 elev = float(line[23:])
@@ -177,18 +175,24 @@ def read_hyp(hyp, network):
 
                 if lat[-1] == 'S':
                     NS = -1
+                else:
+                    NS = 1
 
                 if lon[-1] == 'W':
                     EW = -1
+                else:
+                    EW = 1
 
                 lat = (int(lat[0:2]) + float(lat[2:-1]) / 60) * NS
                 lat = Latitude(lat)
+
                 lon = (int(lon[0:3]) + float(lon[3:-1]) / 60) * EW
                 lon = Longitude(lon)
 
                 sta = Station(code=station, latitude=lat, longitude=lon, elevation=elev)
                 chan = Channel(code="??Z", location_code="", latitude=lat, longitude=lon, elevation=elev, depth=0)
+
                 sta.channels.append(chan)
                 net.stations.append(sta)
-    inv.networks.append(net)
-    return inv
+    inventory.networks.append(net)
+    return inventory

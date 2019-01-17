@@ -2,7 +2,7 @@ from obspy import read
 import numpy as np
 import obspyNN
 
-result = read("/mnt/tf_data/pkl/small_set.pkl")
+result = read("/mnt/tf_data/pkl/one_set.pkl")
 index = np.arange(len(result))
 np.random.shuffle(index)
 

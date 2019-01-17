@@ -1,3 +1,5 @@
+from obspyNN import io
+
 import unittest
 
 

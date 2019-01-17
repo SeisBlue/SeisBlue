@@ -16,5 +16,5 @@ model.compile(optimizer=Adam(lr=3e-4), loss='binary_crossentropy', metrics=['acc
 model.load_weights("/mnt/tf_data/weights/trained_weight.h5")
 
 predict = model.predict(wavefile, batch_size=2, verbose=True)
-result = obspyNN.probability.set_probability(picked_stream, predict)
+result = obspyNN.pick.set_probability(picked_stream, predict)
 result.write("/mnt/tf_data/pkl/predict_small_set.pkl", format="PICKLE")
