@@ -1,7 +1,8 @@
 import obspyNN
 
 sds_root = "/mnt/DATA"
-sfile_list = "/mnt/tf_data/sfile/one_list"
+sfile_list = "/mnt/tf_data/sfile/201718_list"
+pkl_output = "/mnt/tf_data/pkl/201718select.pkl"
 
 stream = obspyNN.io.get_picked_stream(sfile_list, sds_root, plot=False)
-stream.write("/mnt/tf_data/pkl/one_set.pkl", format="PICKLE")
+stream.write(pkl_output, format="PICKLE")

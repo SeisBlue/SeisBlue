@@ -1,3 +1,5 @@
+import numpy as np
+
 from obspy import read_events
 from obspy.core import Stream
 from obspy.core.event.catalog import Catalog
@@ -5,10 +7,8 @@ from obspy.core.inventory import Inventory, Network, Station, Channel
 from obspy.core.inventory.util import Latitude, Longitude
 from obspy.clients.filesystem.sds import Client
 
-import numpy as np
-
 from obspyNN.plot import plot_trace
-from obspyNN.pick import get_probability, extract_picks, search_picks
+from obspyNN.pick import get_probability, search_picks, get_pick_list
 
 
 class LengthError(BaseException):
@@ -23,6 +23,7 @@ def read_event_list(sfile_list):
             if len(line) == 0:
                 break
             catalog += _read_event(line)
+    catalog.events.sort(key=lambda event: event.time)
     return catalog
 
 
@@ -94,13 +95,16 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
 
 def get_picked_stream(sfile_list, sds_root=None, plot=False):
     catalog = read_event_list(sfile_list)
+    pick_list = get_pick_list(catalog)
     stream = Stream()
     for event in catalog:
         t = event.origins[0].time
         st = read_sds(event, sds_root)
+
         for trace in st:
-            picks = search_picks(trace, catalog)
+            picks = search_picks(trace, pick_list)
             trace.picks = picks
+
         st = get_probability(st)
         stream += st
         print(event.sfile + " " + t.isoformat() + " load " + str(len(st)) + " traces, total " + str(

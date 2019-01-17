@@ -2,7 +2,17 @@ import fnmatch
 import scipy.stats as ss
 from scipy.signal import find_peaks
 import numpy as np
+from bisect import bisect_left, bisect_right
 from obspy.core.event.origin import Pick
+
+
+def get_pick_list(catalog):
+    pick_list = []
+    for event in catalog:
+        for pick in event.picks:
+            pick_list.append(pick)
+    pick_list.sort(key=lambda pick: pick.time)
+    return pick_list
 
 
 def get_probability(stream, sigma=0.1):
@@ -39,7 +49,7 @@ def set_probability(stream, predict):
     return stream
 
 
-def extract_picks(trace):
+def get_picks_from_pdf(trace):
     start_time = trace.stats.starttime
     picks = []
 
@@ -53,38 +63,51 @@ def extract_picks(trace):
     return picks
 
 
-def search_picks(trace, catalog, phase="P"):
+def filter_pick_time_window(pick_list, start_time, end_time):
+    # binary search, pick_list must be sorted by time
+    pick_time_key = []
+    for pick in pick_list:
+        pick_time_key.append(pick.time)
+
+    left = bisect_left(pick_time_key, start_time)
+    right = bisect_right(pick_time_key, end_time)
+
+    pick_list = pick_list[left:right]
+    return pick_list
+
+
+def search_picks(trace, pick_list, phase="P"):
     start_time = trace.stats.starttime
     end_time = trace.stats.endtime
+
     network = trace.stats.network
     station = trace.stats.station
     location = trace.stats.location
     channel = "*" + trace.stats.channel[-1]
 
-    pick_list = []
-    for event in catalog.events:
-        for pick in event.picks:
-            network_code = pick.waveform_id.network_code
-            station_code = pick.waveform_id.station_code
-            location_code = pick.waveform_id.location_code
-            channel_code = pick.waveform_id.channel_code
+    pick_list = filter_pick_time_window(pick_list, start_time, end_time)
 
-            if not start_time <= pick.time <= end_time:
-                continue
-            if not fnmatch.fnmatch(pick.phase_hint, phase):
-                continue
-            if network is not None and network_code is not 'NA':
-                if not fnmatch.fnmatch(network_code, network):
-                    continue
-            if station is not None:
-                if not fnmatch.fnmatch(station_code, station):
-                    continue
-            if location is not None and location_code is not None:
-                if not fnmatch.fnmatch(location_code, location):
-                    continue
-            if channel is not None:
-                if not fnmatch.fnmatch(channel_code, channel):
-                    continue
+    tmp_pick = []
+    for pick in pick_list:
+        network_code = pick.waveform_id.network_code
+        station_code = pick.waveform_id.station_code
+        location_code = pick.waveform_id.location_code
+        channel_code = pick.waveform_id.channel_code
 
-                pick_list.append(pick)
-    return pick_list
+        if not pick.phase_hint == phase:
+            continue
+        if network is not None and network_code is not 'NA':
+            if not fnmatch.fnmatch(network_code, network):
+                continue
+        if station is not None:
+            if not fnmatch.fnmatch(station_code, station):
+                continue
+        if location is not None and location_code is not None:
+            if not fnmatch.fnmatch(location_code, location):
+                continue
+        if channel is not None:
+            if not fnmatch.fnmatch(channel_code, channel):
+                continue
+
+            tmp_pick.append(pick)
+    return tmp_pick

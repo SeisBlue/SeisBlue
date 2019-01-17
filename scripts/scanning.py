@@ -15,7 +15,7 @@ model = multi_gpu_model(model, gpus=2)
 model.compile(optimizer=Adam(lr=3e-4), loss='binary_crossentropy', metrics=['accuracy'])
 model.load_weights("/mnt/tf_data/weights/trained_weight.h5")
 
-start_time = UTCDateTime("2018-02-09 12:43:54")
+start_time = UTCDateTime("2018-02-09 01:43:54")
 end_time = start_time + 30
 
 nslc = ("HL", "*", "*", "??Z")
@@ -32,7 +32,7 @@ predict = model.predict(wavefile, batch_size=2, verbose=True)
 result = obspyNN.pick.set_probability(stream, predict)
 
 for trace in result:
-    trace.picks = obspyNN.pick.extract_picks(trace)
+    trace.picks = obspyNN.pick.get_picks_from_pdf(trace)
 
 for trace in result:
     obspyNN.plot.plot_trace(trace)
