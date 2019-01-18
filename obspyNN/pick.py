@@ -12,6 +12,7 @@ def get_pick_list(catalog):
         for pick in event.picks:
             pick_list.append(pick)
     pick_list.sort(key=lambda pick: pick.time)
+    print("total " + str(len(pick_list)) + " picks")
     return pick_list
 
 
@@ -30,7 +31,6 @@ def get_probability(stream, sigma=0.1):
             pdf = pdf / pdf.max()
 
         trace.pdf = pdf
-
     return stream
 
 
@@ -49,11 +49,11 @@ def set_probability(stream, predict):
     return stream
 
 
-def get_picks_from_pdf(trace):
+def get_picks_from_pdf(trace, height=0.5, width=10):
     start_time = trace.stats.starttime
     picks = []
 
-    peaks, properties = find_peaks(trace.pdf, height=0.4, width=10)
+    peaks, properties = find_peaks(trace.pdf, height=height, width=width)
     for p in peaks:
         if p:
             time = start_time + p / trace.stats.sampling_rate
@@ -76,7 +76,7 @@ def filter_pick_time_window(pick_list, start_time, end_time):
     return pick_list
 
 
-def search_picks(trace, pick_list, phase="P"):
+def search_exist_picks(trace, pick_list, phase="P"):
     start_time = trace.stats.starttime
     end_time = trace.stats.endtime
 
@@ -94,6 +94,8 @@ def search_picks(trace, pick_list, phase="P"):
         location_code = pick.waveform_id.location_code
         channel_code = pick.waveform_id.channel_code
 
+        if not start_time < pick.time < end_time:
+            continue
         if not pick.phase_hint == phase:
             continue
         if network is not None and network_code is not 'NA':

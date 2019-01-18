@@ -8,7 +8,7 @@ from obspy.core.inventory.util import Latitude, Longitude
 from obspy.clients.filesystem.sds import Client
 
 from obspyNN.plot import plot_trace
-from obspyNN.pick import get_probability, search_picks, get_pick_list
+from obspyNN.pick import get_probability, search_exist_picks, get_pick_list
 
 
 class LengthError(BaseException):
@@ -23,7 +23,7 @@ def read_event_list(sfile_list):
             if len(line) == 0:
                 break
             catalog += _read_event(line)
-    catalog.events.sort(key=lambda event: event.time)
+    catalog.events.sort(key=lambda event: event.origins[0].time)
     return catalog
 
 
@@ -78,17 +78,20 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
         chan = "??" + component
 
         st = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
-        trace = st.traces[0]
-        trace = data_preprocessing(trace)
+        if st.traces:
+            trace = st.traces[0]
+            trace = data_preprocessing(trace)
 
-        points = trace_length * sample_rate + 1
-        try:
-            trim_trace_by_points(trace, points)
-        except Exception as err:
-            print(err)
-            continue
+            points = trace_length * sample_rate + 1
+            try:
+                trim_trace_by_points(trace, points)
+            except Exception as err:
+                print(err)
+                continue
 
-        stream += st.traces[0]
+            stream += st.traces[0]
+        else:
+            print("No trace in ", t.isoformat(), net, sta, loc, chan)
 
     return stream
 
@@ -102,13 +105,13 @@ def get_picked_stream(sfile_list, sds_root=None, plot=False):
         st = read_sds(event, sds_root)
 
         for trace in st:
-            picks = search_picks(trace, pick_list)
+            picks = search_exist_picks(trace, pick_list)
             trace.picks = picks
 
         st = get_probability(st)
         stream += st
         print(event.sfile + " " + t.isoformat() + " load " + str(len(st)) + " traces, total " + str(
-            len(stream)) + " traces")
+            len(stream)) + " traces, from " + str(len(pick_list)) + " picks")
         if plot:
             plot_trace(st, savedir="original_dataset")
     return stream
