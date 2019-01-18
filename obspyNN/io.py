@@ -9,10 +9,7 @@ from obspy.clients.filesystem.sds import Client
 
 from obspyNN.plot import plot_trace
 from obspyNN.pick import get_probability, search_exist_picks, get_pick_list
-
-
-class LengthError(BaseException):
-    pass
+from obspyNN.signal import signal_preprocessing, trim_trace
 
 
 def read_event_list(sfile_list):
@@ -39,23 +36,6 @@ def _read_event(event_file):
     return catalog
 
 
-def data_preprocessing(data):
-    data.detrend('demean')
-    data.detrend('linear')
-    data.normalize()
-    data.resample(100)
-    return data
-
-
-def trim_trace_by_points(trace, points=3001):
-    start_time = trace.stats.starttime
-    dt = (trace.stats.endtime - trace.stats.starttime) / (trace.data.size - 1)
-    end_time = start_time + dt * (points - 1)
-    trace.trim(start_time, end_time, nearest_sample=False, pad=True, fill_value=0)
-    if not trace.data.size == points:
-        raise LengthError("Trace length is not correct.")
-
-
 def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_rate=100):
     stream = Stream()
     client = Client(sds_root=sds_root)
@@ -80,11 +60,11 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
         st = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
         if st.traces:
             trace = st.traces[0]
-            trace = data_preprocessing(trace)
+            trace = signal_preprocessing(trace)
 
             points = trace_length * sample_rate + 1
             try:
-                trim_trace_by_points(trace, points)
+                trim_trace(trace, points)
             except Exception as err:
                 print(err)
                 continue
@@ -140,12 +120,12 @@ def scan_station(sds_root=None, nslc=None, start_time=None, end_time=None, trace
     t = start_time
     while t < end_time:
         st = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
-        st = data_preprocessing(st)
+        st = signal_preprocessing(st)
 
         points = trace_length * sample_rate + 1
         for trace in st:
             try:
-                trim_trace_by_points(trace, points)
+                trim_trace(trace, points)
             except IndexError as err:
                 print(err)
                 st.remove(trace)
@@ -156,7 +136,7 @@ def scan_station(sds_root=None, nslc=None, start_time=None, end_time=None, trace
     return stream
 
 
-def read_hyp(hyp, network):
+def read_hyp_inventory(hyp, network):
     inventory = Inventory(networks=[], source="")
     net = Network(code=network, stations=[], description="")
     with open(hyp, 'r') as file:

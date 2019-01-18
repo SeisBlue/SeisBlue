@@ -1,6 +1,6 @@
-from obspyNN.io import read_hyp
+from obspyNN.io import read_hyp_inventory
 from obspy import read
-inventory = read_hyp("/mnt/tf_data/STATION0.HYP", "HL")
+inventory = read_hyp_inventory("/mnt/tf_data/STATION0.HYP", "HL")
 
 #result = read("/mnt/tf_data/result.pkl")
 
