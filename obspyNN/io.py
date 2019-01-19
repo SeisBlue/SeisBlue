@@ -1,6 +1,8 @@
 import os
 import numpy as np
 from tensorflow.python.keras.utils import Sequence
+from multiprocessing import Pool
+from functools import partial
 
 from obspy import read, read_events
 from obspy.core import Stream
@@ -9,7 +11,6 @@ from obspy.core.inventory import Inventory, Network, Station, Channel
 from obspy.core.inventory.util import Latitude, Longitude
 from obspy.clients.filesystem.sds import Client
 
-from obspyNN.plot import plot_trace
 from obspyNN.pick import get_probability, search_exist_picks, get_pick_list
 from obspyNN.signal import signal_preprocessing, trim_trace
 
@@ -18,6 +19,10 @@ def files(path):
     for file in os.listdir(path):
         if os.path.isfile(os.path.join(path, file)):
             yield file
+
+
+def filecount(dir_name):
+    return len([f for f in os.listdir(dir_name) if os.path.isfile(f)])
 
 
 def read_event_list(sfile_list):
@@ -80,30 +85,29 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
     return stream
 
 
-def generate_trainning_pkl(sfile_list, sds_root=None, pkl_dir=None, plot=False):
+def generate_trainning_pkl(sfile_list, sds_root=None, pkl_dir=None):
     catalog = read_event_list(sfile_list)
     pick_list = get_pick_list(catalog)
 
-    trace_count = 0
-    for event in catalog:
-        t = event.origins[0].time
-        stream = read_sds(event, sds_root)
+    with Pool() as pool:
+        par = partial(generate_picked_trace, pick_list=pick_list, sds_root=sds_root, pkl_dir=pkl_dir)
+        pool.map_async(par, catalog.events)
+        pool.close()
+        pool.join()
 
-        for trace in stream:
-            picks = search_exist_picks(trace, pick_list)
-            trace.picks = picks
-            trace.pdf = get_probability(trace)
 
-            if pkl_dir:
-                time_stamp = trace.stats.starttime.isoformat()
-                trace.write(pkl_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+def generate_picked_trace(event, pick_list, sds_root=None, pkl_dir=None):
+    t = event.origins[0].time
+    stream = read_sds(event, sds_root)
+    for trace in stream:
+        picks = search_exist_picks(trace, pick_list)
+        trace.picks = picks
+        trace.pdf = get_probability(trace)
+        time_stamp = trace.stats.starttime.isoformat()
+        trace.write(pkl_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
 
-        trace_count += len(stream)
-        print(event.sfile + " " + t.isoformat() + " load " + str(len(stream)) + " traces, total " +
-              str(trace_count) + " traces, from " + str(len(pick_list)) + " picks")
-
-        if plot:
-            plot_trace(stream, savedir="original_dataset")
+    print(event.sfile + " " + t.isoformat() + " load " + str(len(stream)) + " traces, total "
+          + str(len(pick_list)) + " picks")
 
 
 def get_training_set(stream, shape=(1, 3001, 1)):
@@ -213,3 +217,12 @@ class DataGenerator(Sequence):
             wavefile[i,], probability[i,] = get_training_set(trace, self.dim)
 
         return wavefile, probability
+
+
+class PredictGenerator(DataGenerator):
+    def __data_generation(self, temp_pkl_list):
+        wavefile = np.empty((self.batch_size, *self.dim))
+        for i, ID in enumerate(temp_pkl_list):
+            trace = read(ID)
+            wavefile[i,] = trace.data.reshape(*self.dim)
+        return wavefile

@@ -4,6 +4,7 @@ from scipy.signal import find_peaks
 import numpy as np
 from bisect import bisect_left, bisect_right
 from obspy.core.event.origin import Pick
+from obspy import read, Stream
 
 
 def get_pick_list(catalog):
@@ -32,19 +33,18 @@ def get_probability(trace, sigma=0.1):
         return pdf
 
 
-def set_probability(stream, predict):
-    trace_length = stream.traces[0].data.size
-    predict = predict.reshape(len(stream), trace_length)
-
-    i = 0
-    for trace in stream:
-        pdf = predict[i, :]
+def set_probability(predict, pkl_list, pkl_output_dir):
+    for i, prob in enumerate(predict):
+        trace = read(pkl_list[i])[0]
+        trace_length = trace.data.size
+        pdf = prob.reshape(trace_length,)
         if pdf.max():
             trace.pdf = pdf / pdf.max()
         else:
             trace.pdf = pdf
-        i += 1
-    return stream
+        trace.picks = get_picks_from_pdf(trace)
+        time_stamp = trace.stats.starttime.isoformat()
+        trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
 
 
 def get_picks_from_pdf(trace, height=0.5, width=10):
@@ -96,16 +96,16 @@ def search_exist_picks(trace, pick_list, phase="P"):
             continue
         if not pick.phase_hint == phase:
             continue
-        if network is not None and network_code is not 'NA':
+        if network and network_code and not network_code == 'NA':
             if not fnmatch.fnmatch(network_code, network):
                 continue
-        if station is not None:
+        if station:
             if not fnmatch.fnmatch(station_code, station):
                 continue
-        if location is not None and location_code is not None:
+        if location and location_code:
             if not fnmatch.fnmatch(location_code, location):
                 continue
-        if channel is not None:
+        if channel:
             if not fnmatch.fnmatch(channel_code, channel):
                 continue
 
