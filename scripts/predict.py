@@ -7,7 +7,7 @@ import obspyNN
 from obspyNN.model import Nest_Net
 
 
-pkl_dir = "/mnt/tf_data/pkl/small_set"
+pkl_dir = "/mnt/tf_data/pkl/scan"
 pkl_output_dir = pkl_dir + "_predict"
 
 pkl_list = []
@@ -26,6 +26,6 @@ model.load_weights("/mnt/tf_data/weights/trained_weight.h5")
 predict = model.predict_generator(generator=predict_generator,
                                   use_multiprocessing=True, verbose=True)
 
-shutil.rmtree(pkl_output_dir)
+shutil.rmtree(pkl_output_dir, ignore_errors=True)
 os.makedirs(pkl_output_dir, exist_ok=True)
 obspyNN.pick.set_probability(predict, pkl_list, pkl_output_dir)

@@ -4,7 +4,7 @@ from scipy.signal import find_peaks
 import numpy as np
 from bisect import bisect_left, bisect_right
 from obspy.core.event.origin import Pick
-from obspy import read, Stream
+from obspy import read
 
 
 def get_pick_list(catalog):
@@ -35,7 +35,10 @@ def get_probability(trace, sigma=0.1):
 
 def set_probability(predict, pkl_list, pkl_output_dir):
     for i, prob in enumerate(predict):
-        trace = read(pkl_list[i])[0]
+        try:
+            trace = read(pkl_list[i]).traces[0]
+        except IndexError:
+            break
         trace_length = trace.data.size
         pdf = prob.reshape(trace_length,)
         if pdf.max():

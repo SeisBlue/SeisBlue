@@ -3,7 +3,7 @@ import numpy as np
 from obspy import read
 import obspyNN
 
-pkl_dir = "/mnt/tf_data/pkl/small_set_predict"
+pkl_dir = "/mnt/tf_data/pkl/scan_predict"
 pkl_list = []
 for file in obspyNN.io.files(pkl_dir):
     pkl_list.append(os.path.join(pkl_dir, file))

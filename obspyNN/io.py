@@ -118,27 +118,26 @@ def get_training_set(stream, shape=(1, 3001, 1)):
     return wavefile, probability
 
 
-def scan_station(sds_root=None, nslc=None, start_time=None, end_time=None, trace_length=30, sample_rate=100):
+def generate_station_pkl(pkl_dir, sds_root, nslc, start_time, end_time, trace_length=30, sample_rate=100):
     client = Client(sds_root=sds_root)
-    stream = Stream()
     net, sta, loc, chan = nslc
     t = start_time
     while t < end_time:
-        st = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
-        st = signal_preprocessing(st)
-
+        stream = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
+        stream = signal_preprocessing(stream)
         points = trace_length * sample_rate + 1
-        for trace in st:
+        for trace in stream:
             try:
                 trim_trace(trace, points)
             except IndexError as err:
                 print(err)
-                st.remove(trace)
+                stream.remove(trace)
                 continue
+            finally:
+                time_stamp = trace.stats.starttime.isoformat()
+                trace.write(pkl_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
 
-        stream += st
         t += trace_length
-    return stream
 
 
 def read_hyp_inventory(hyp, network):
@@ -195,7 +194,7 @@ class DataGenerator(Sequence):
         self.on_epoch_end()
 
     def __len__(self):
-        return int(np.floor(len(self.pkl_list) / self.batch_size))
+        return int(np.ceil(len(self.pkl_list) / self.batch_size))
 
     def __getitem__(self, index):
         indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
@@ -213,16 +212,23 @@ class DataGenerator(Sequence):
         wavefile = np.empty((self.batch_size, *self.dim))
         probability = np.empty((self.batch_size, *self.dim))
         for i, ID in enumerate(temp_pkl_list):
-            trace = read(ID)
+            trace = read(ID).traces[0]
             wavefile[i,], probability[i,] = get_training_set(trace, self.dim)
 
         return wavefile, probability
 
 
 class PredictGenerator(DataGenerator):
+    def __getitem__(self, index):
+        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
+        temp_pkl_list = [self.pkl_list[k] for k in indexes]
+        wavefile = self.__data_generation(temp_pkl_list)
+
+        return wavefile
+
     def __data_generation(self, temp_pkl_list):
         wavefile = np.empty((self.batch_size, *self.dim))
         for i, ID in enumerate(temp_pkl_list):
-            trace = read(ID)
+            trace = read(ID).traces[0]
             wavefile[i,] = trace.data.reshape(*self.dim)
         return wavefile
