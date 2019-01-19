@@ -16,8 +16,7 @@ def get_pick_list(catalog):
     return pick_list
 
 
-def get_probability(stream, sigma=0.1):
-    for trace in stream:
+def get_probability(trace, sigma=0.1):
         start_time = trace.stats.starttime
         x_time = trace.times(reftime=start_time)
 
@@ -30,8 +29,7 @@ def get_probability(stream, sigma=0.1):
         if pdf.max():
             pdf = pdf / pdf.max()
 
-        trace.pdf = pdf
-    return stream
+        return pdf
 
 
 def set_probability(stream, predict):

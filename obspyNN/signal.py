@@ -17,3 +17,5 @@ def trim_trace(trace, points=3001):
     trace.trim(start_time, end_time, nearest_sample=False, pad=True, fill_value=0)
     if not trace.data.size == points:
         raise LengthError("Trace length is not correct.")
+    return trace
+

@@ -1,6 +1,8 @@
+import os
 import numpy as np
+from tensorflow.python.keras.utils import Sequence
 
-from obspy import read_events
+from obspy import read, read_events
 from obspy.core import Stream
 from obspy.core.event.catalog import Catalog
 from obspy.core.inventory import Inventory, Network, Station, Channel
@@ -12,14 +14,16 @@ from obspyNN.pick import get_probability, search_exist_picks, get_pick_list
 from obspyNN.signal import signal_preprocessing, trim_trace
 
 
+def files(path):
+    for file in os.listdir(path):
+        if os.path.isfile(os.path.join(path, file)):
+            yield file
+
+
 def read_event_list(sfile_list):
-    with open(sfile_list, "r") as file:
-        catalog = Catalog()
-        while True:
-            line = file.readline().rstrip()
-            if len(line) == 0:
-                break
-            catalog += _read_event(line)
+    catalog = Catalog()
+    for sfile in sfile_list:
+        catalog += _read_event(sfile)
     catalog.events.sort(key=lambda event: event.origins[0].time)
     return catalog
 
@@ -76,40 +80,37 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
     return stream
 
 
-def get_picked_stream(sfile_list, sds_root=None, plot=False):
+def generate_trainning_pkl(sfile_list, sds_root=None, pkl_dir=None, plot=False):
     catalog = read_event_list(sfile_list)
     pick_list = get_pick_list(catalog)
-    stream = Stream()
+
+    trace_count = 0
     for event in catalog:
         t = event.origins[0].time
-        st = read_sds(event, sds_root)
+        stream = read_sds(event, sds_root)
 
-        for trace in st:
+        for trace in stream:
             picks = search_exist_picks(trace, pick_list)
             trace.picks = picks
+            trace.pdf = get_probability(trace)
 
-        st = get_probability(st)
-        stream += st
-        print(event.sfile + " " + t.isoformat() + " load " + str(len(st)) + " traces, total " + str(
-            len(stream)) + " traces, from " + str(len(pick_list)) + " picks")
+            if pkl_dir:
+                time_stamp = trace.stats.starttime.isoformat()
+                trace.write(pkl_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+
+        trace_count += len(stream)
+        print(event.sfile + " " + t.isoformat() + " load " + str(len(stream)) + " traces, total " +
+              str(trace_count) + " traces, from " + str(len(pick_list)) + " picks")
+
         if plot:
-            plot_trace(st, savedir="original_dataset")
-    return stream
+            plot_trace(stream, savedir="original_dataset")
 
 
-def get_training_set(dataset, points=3001):
-    wavefile = []
-    probability = []
-    for trace in dataset:
-        wavefile.append(trace.data)
-        probability.append(trace.pdf)
-
-    component = 1
-    output_shape = (dataset.count(), component, points, 1)
-
-    wavefile = np.asarray(wavefile).reshape(output_shape)
-    probability = np.asarray(probability).reshape(output_shape)
-
+def get_training_set(stream, shape=(1, 3001, 1)):
+    output_shape = shape
+    trace = stream.traces[0]
+    wavefile = trace.data.reshape(output_shape)
+    probability = trace.pdf.reshape(output_shape)
     return wavefile, probability
 
 
@@ -179,3 +180,36 @@ def read_hyp_inventory(hyp, network):
                 net.stations.append(sta)
     inventory.networks.append(net)
     return inventory
+
+
+class DataGenerator(Sequence):
+    def __init__(self, pkl_list, batch_size=2, dim=(1, 3001, 1), shuffle=True):
+        self.dim = dim
+        self.batch_size = batch_size
+        self.pkl_list = pkl_list
+        self.shuffle = shuffle
+        self.on_epoch_end()
+
+    def __len__(self):
+        return int(np.floor(len(self.pkl_list) / self.batch_size))
+
+    def __getitem__(self, index):
+        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
+        temp_pkl_list = [self.pkl_list[k] for k in indexes]
+        wavefile, probability = self.__data_generation(temp_pkl_list)
+
+        return wavefile, probability
+
+    def on_epoch_end(self):
+        self.indexes = np.arange(len(self.pkl_list))
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
+
+    def __data_generation(self, temp_pkl_list):
+        wavefile = np.empty((self.batch_size, *self.dim))
+        probability = np.empty((self.batch_size, *self.dim))
+        for i, ID in enumerate(temp_pkl_list):
+            trace = read(ID)
+            wavefile[i,], probability[i,] = get_training_set(trace, self.dim)
+
+        return wavefile, probability
