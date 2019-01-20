@@ -3,18 +3,16 @@ from tensorflow import keras
 from tensorflow.python.keras.optimizers import Adam
 from tensorflow.python.keras.utils import multi_gpu_model
 
-import os
-import obspyNN
+from obspyNN.io import get_dir_list
+from obspyNN.generator import DataGenerator
 from obspyNN.model import Nest_Net
 
 pkl_dir = "/mnt/tf_data/pkl/201718select"
-pkl_list = []
-for file in obspyNN.io.files(pkl_dir):
-    pkl_list.append(os.path.join(pkl_dir, file))
+pkl_list = get_dir_list(pkl_dir)
 
 split_point = -1000
-training_generator = obspyNN.io.DataGenerator(pkl_list[:split_point], batch_size=2)
-validation_generator = obspyNN.io.DataGenerator(pkl_list[split_point:], batch_size=2)
+training_generator = DataGenerator(pkl_list[:split_point], batch_size=2, shuffle=True)
+validation_generator = DataGenerator(pkl_list[split_point:], batch_size=256)
 
 tensorboard = keras.callbacks.TensorBoard(log_dir='../logs', histogram_freq=0,
                                           write_graph=True, write_images=False)

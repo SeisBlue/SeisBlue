@@ -1,21 +1,11 @@
-import os
-import obspyNN
+from obspyNN.io import get_dir_list, write_training_pkl
 
 sds_root = "/mnt/DATA"
+# sfile_list = ["/mnt/tf_data/sfile/201718select.out"]
+# pkl_dir = "/mnt/tf_data/pkl/201718select"
+
 sfile_dir = "/mnt/Data/2017_2018_sfile"
-pkl_dir = "/mnt/tf_data/pkl/201718select"
+sfile_list = get_dir_list(sfile_dir, limit=100)
+pkl_dir = "/mnt/tf_data/pkl/small_set"
 
-sfile_list = ["/mnt/tf_data/sfile/201718select.out"]
-# sfile_list = []
-
-if not sfile_list:
-    for file in obspyNN.io.files(sfile_dir):
-        sfile_list.append(os.path.join(sfile_dir, file))
-        if len(sfile_list) >= 100:
-            break
-
-
-os.makedirs(pkl_dir, exist_ok=True)
-obspyNN.io.generate_trainning_pkl(sfile_list, sds_root, pkl_dir=pkl_dir)
-
-
+write_training_pkl(sfile_list, sds_root, pkl_dir=pkl_dir, remove_dir=True)
