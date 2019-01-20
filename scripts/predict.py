@@ -1,13 +1,10 @@
-import os
-import shutil
 import tensorflow as tf
 from tensorflow.python.keras.optimizers import Adam
 from tensorflow.python.keras.utils import multi_gpu_model
 
-from obspyNN.io import get_dir_list
+from obspyNN.io import get_dir_list, write_probability_pkl
 from obspyNN.generator import PredictGenerator
 from obspyNN.model import Nest_Net
-from obspyNN.pick import set_probability
 
 pkl_dir = "/mnt/tf_data/pkl/scan"
 pkl_output_dir = pkl_dir + "_predict"
@@ -25,6 +22,4 @@ model.load_weights("/mnt/tf_data/weights/trained_weight.h5")
 predict = model.predict_generator(generator=predict_generator,
                                   use_multiprocessing=True, verbose=True)
 
-shutil.rmtree(pkl_output_dir, ignore_errors=True)
-os.makedirs(pkl_output_dir, exist_ok=True)
-set_probability(predict, pkl_list, pkl_output_dir)
+write_probability_pkl(predict, pkl_list, pkl_output_dir, remove_dir=True)

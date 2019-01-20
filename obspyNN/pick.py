@@ -4,7 +4,6 @@ import scipy.stats as ss
 from scipy.signal import find_peaks
 from bisect import bisect_left, bisect_right
 
-from obspy import read
 from obspy.core.event.origin import Pick
 
 
@@ -36,27 +35,6 @@ def get_probability(trace, sigma=0.1):
         pdf = pdf / pdf.max()
 
     return pdf
-
-
-def set_probability(predict, pkl_list, pkl_output_dir):
-    for i, prob in enumerate(predict):
-        try:
-            trace = read(pkl_list[i]).traces[0]
-
-        except IndexError:
-            break
-
-        trace_length = trace.data.size
-        pdf = prob.reshape(trace_length, )
-
-        if pdf.max():
-            trace.pdf = pdf / pdf.max()
-        else:
-            trace.pdf = pdf
-
-        trace.picks = get_picks_from_pdf(trace)
-        time_stamp = trace.stats.starttime.isoformat()
-        trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
 
 
 def get_picks_from_pdf(trace, height=0.5, width=10):

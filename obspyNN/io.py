@@ -3,14 +3,14 @@ import shutil
 from multiprocessing import Pool
 from functools import partial
 
-from obspy import read_events
+from obspy import read_events, read
 from obspy.core import Stream
 from obspy.core.event.catalog import Catalog
 from obspy.core.inventory import Inventory, Network, Station, Channel
 from obspy.core.inventory.util import Latitude, Longitude
 from obspy.clients.filesystem.sds import Client
 
-from obspyNN.pick import get_probability, search_exist_picks, get_pick_list
+from obspyNN.pick import get_probability, search_exist_picks, get_pick_list, get_picks_from_pdf
 from obspyNN.signal import signal_preprocessing, trim_trace
 
 
@@ -18,6 +18,7 @@ def get_dir_list(file_dir, limit=None):
     file_list = []
     for file in list_generator(file_dir):
         file_list.append(os.path.join(file_dir, file))
+
         if limit and len(file_list) >= limit:
             break
 
@@ -34,6 +35,7 @@ def read_event_list(file_list):
     catalog = Catalog()
     for file in file_list:
         catalog += _read_event(file)
+
     catalog.events.sort(key=lambda event: event.origins[0].time)
 
     return catalog
@@ -159,6 +161,31 @@ def write_station_pkl(pkl_output_dir, sds_root, nslc, start_time, end_time,
         t += trace_length
 
 
+def write_probability_pkl(predict, pkl_list, pkl_output_dir, remove_dir=False):
+    if remove_dir:
+        shutil.rmtree(pkl_output_dir, ignore_errors=True)
+    os.makedirs(pkl_output_dir, exist_ok=True)
+
+    for i, prob in enumerate(predict):
+        try:
+            trace = read(pkl_list[i]).traces[0]
+
+        except IndexError:
+            break
+
+        trace_length = trace.data.size
+        pdf = prob.reshape(trace_length, )
+
+        if pdf.max():
+            trace.pdf = pdf / pdf.max()
+        else:
+            trace.pdf = pdf
+
+        trace.picks = get_picks_from_pdf(trace)
+        time_stamp = trace.stats.starttime.isoformat()
+        trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+
+
 def read_hyp_inventory(hyp, network):
     inventory = Inventory(networks=[], source="")
     net = Network(code=network, stations=[], description="")
@@ -206,5 +233,3 @@ def read_hyp_inventory(hyp, network):
     inventory.networks.append(net)
 
     return inventory
-
-

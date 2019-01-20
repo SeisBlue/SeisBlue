@@ -12,7 +12,7 @@ pkl_list = get_dir_list(pkl_dir)
 
 split_point = -1000
 training_generator = DataGenerator(pkl_list[:split_point], batch_size=2, shuffle=True)
-validation_generator = DataGenerator(pkl_list[split_point:], batch_size=256)
+validation_generator = DataGenerator(pkl_list[split_point:], batch_size=2)
 
 tensorboard = keras.callbacks.TensorBoard(log_dir='../logs', histogram_freq=0,
                                           write_graph=True, write_images=False)
