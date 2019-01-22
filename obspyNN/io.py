@@ -238,14 +238,13 @@ def write_channel_coordinates(pkl_list, pkl_output_dir, inventory, kml_output_di
                 elev = sta.elevation
                 depth = Distance(0)
 
-                trace.stats['coordinates'] = {}
-                trace.stats.coordinates['latitude'] = lat
-                trace.stats.coordinates['longitude'] = lon
+                trace.stats.coordinates = ({'latitude': lat, 'longitude': lon})
                 trace.stats.elevation = elev
                 trace.stats.depth = depth
 
                 time_stamp = trace.stats.starttime.isoformat()
                 trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+                print(trace.get_id() + " latitude: " + str(lat)[0:5] + " longitude: " + str(lon)[0:6])
 
                 ch_name = []
                 for ch in sta.channels:
