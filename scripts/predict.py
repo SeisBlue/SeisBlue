@@ -2,7 +2,8 @@ import tensorflow as tf
 from tensorflow.python.keras.optimizers import Adam
 from tensorflow.python.keras.utils import multi_gpu_model
 
-from obspyNN.io import get_dir_list, write_probability_pkl
+from obspyNN.io import get_dir_list
+from obspyNN.pick import write_probability_pkl
 from obspyNN.generator import PredictGenerator
 from obspyNN.model import Nest_Net
 

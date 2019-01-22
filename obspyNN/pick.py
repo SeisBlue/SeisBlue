@@ -1,6 +1,10 @@
 import fnmatch
+import os
+import shutil
+
 import numpy as np
 import scipy.stats as ss
+from obspy import read
 from scipy.signal import find_peaks
 from bisect import bisect_left, bisect_right
 
@@ -52,7 +56,7 @@ def get_picks_from_pdf(trace, height=0.5, width=10):
     return picks
 
 
-def filter_pick_time_window(pick_list, start_time, end_time):
+def _filter_pick_time_window(pick_list, start_time, end_time):
     # binary search, pick_list must be sorted by time
     pick_time_key = []
     for pick in pick_list:
@@ -65,7 +69,7 @@ def filter_pick_time_window(pick_list, start_time, end_time):
     return pick_list
 
 
-def search_exist_picks(trace, pick_list, phase="P"):
+def get_exist_picks(trace, pick_list, phase="P"):
     start_time = trace.stats.starttime
     end_time = trace.stats.endtime
     network = trace.stats.network
@@ -73,7 +77,7 @@ def search_exist_picks(trace, pick_list, phase="P"):
     location = trace.stats.location
     channel = "*" + trace.stats.channel[-1]
 
-    pick_list = filter_pick_time_window(pick_list, start_time, end_time)
+    pick_list = _filter_pick_time_window(pick_list, start_time, end_time)
 
     tmp_pick = []
     for pick in pick_list:
@@ -107,3 +111,28 @@ def search_exist_picks(trace, pick_list, phase="P"):
         tmp_pick.append(pick)
 
     return tmp_pick
+
+
+def write_probability_pkl(predict, pkl_list, pkl_output_dir, remove_dir=False):
+    if remove_dir:
+        shutil.rmtree(pkl_output_dir, ignore_errors=True)
+    os.makedirs(pkl_output_dir, exist_ok=True)
+
+    for i, prob in enumerate(predict):
+        try:
+            trace = read(pkl_list[i]).traces[0]
+
+        except IndexError:
+            break
+
+        trace_length = trace.data.size
+        pdf = prob.reshape(trace_length, )
+
+        if pdf.max():
+            trace.pdf = pdf / pdf.max()
+        else:
+            trace.pdf = pdf
+
+        trace.picks = get_picks_from_pdf(trace)
+        time_stamp = trace.stats.starttime.isoformat()
+        trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
