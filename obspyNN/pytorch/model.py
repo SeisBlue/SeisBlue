@@ -1,8 +1,12 @@
 from torch import nn
-from torch.nn import functional as F
 import torch
-
 from torchsummaryX import summary
+
+"""
+Transfer model from tensorflow to pytorch.
+Tensorflow model:
+https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py
+"""
 
 
 def conv1x3(in_, out):
