@@ -2,7 +2,7 @@
 
 Seismic event P phase picking project
 
-Main framework: Obspy, Seisan, Tensorflow, Keras
+Main framework: Obspy, Seisan, Tensorflow with Keras, Pytorch
 
 Using U-net to generate pick probability
 
