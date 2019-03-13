@@ -12,7 +12,7 @@ pkl_output_dir = pkl_dir + "_predict"
 pkl_list = get_dir_list(pkl_dir)
 
 split_point = -100
-batch = 32
+batch = 512
 testset = WaveProbDataset(pkl_list[split_point:], train=False)
 testloader = DataLoader(testset, batch_size=batch, shuffle=False, num_workers=2)
 
@@ -20,9 +20,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 model = Nest_Net(in_ch=1, out_ch=1)
 
-if torch.cuda.device_count() > 1:
-    print("Let's use", torch.cuda.device_count(), "GPUs!")
-    model = nn.DataParallel(model)
+# if torch.cuda.device_count() > 1:
+#     print("Let's use", torch.cuda.device_count(), "GPUs!")
+#     model = nn.DataParallel(model)
 
 model.load_state_dict(torch.load('/mnt/tf_data/weights/trained_weight.pt'))
 model.eval()
