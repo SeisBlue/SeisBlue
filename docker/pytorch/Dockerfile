@@ -5,67 +5,66 @@
 # pytorch       latest (pip)
 # ==================================================================
 
-FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade" && \
-    GIT_CLONE="git clone --depth 10" && \
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+ARG APT_INSTALL="apt-get install -y --no-install-recommends" 
+ARG PIP_INSTALL="python -m pip --no-cache-dir install --upgrade" 
 
-    rm -rf /var/lib/apt/lists/* \
+RUN rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/cuda.list \
-           /etc/apt/sources.list.d/nvidia-ml.list && \
+           /etc/apt/sources.list.d/nvidia-ml.list 
 
-    apt-get update && \
+RUN apt-get update 
 
 # ==================================================================
 # tools
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+RUN ${APT_INSTALL} \
         build-essential \
         ca-certificates \
         cmake \
         wget \
         git \
-        vim \
-        && \
+        vim 
 
 # ==================================================================
 # python
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        software-properties-common \
-        && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+RUN ${APT_INSTALL} \
+        software-properties-common 
+        
+RUN add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update
+
+RUN ${APT_INSTALL} \
         python3.6 \
-        python3.6-dev \
-        && \
-    wget -O ~/get-pip.py \
-        https://bootstrap.pypa.io/get-pip.py && \
-    python3.6 ~/get-pip.py && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python && \
-    $PIP_INSTALL \
-        setuptools \
-        && \
-    $PIP_INSTALL \
+        python3.6-dev  
+        
+RUN wget -O ~/get-pip.py \
+        https://bootstrap.pypa.io/get-pip.py 
+
+RUN python3.6 ~/get-pip.py 
+RUN ln -s /usr/bin/python3.6 /usr/local/bin/python3 
+RUN ln -s /usr/bin/python3.6 /usr/local/bin/python 
+
+RUN ${PIP_INSTALL} \
+        setuptools
+        
+RUN ${PIP_INSTALL} \
         numpy \
         scipy \
         pandas \
         cloudpickle \
         scikit-learn==0.20.0 \
         matplotlib \
-        Cython \
-        obspy \
-        && \
-
+        Cython 
+        
 # ==================================================================
 # pytorch
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN ${PIP_INSTALL} \
         future \
         numpy \
         protobuf \
@@ -73,26 +72,30 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         pyyaml \
         typing \
     	torchvision_nightly \
-        torchsummaryx \
-        && \
-    $PIP_INSTALL \
+        torchsummaryx 
+        
+RUN ${PIP_INSTALL} \
         torch_nightly -f \
-        https://download.pytorch.org/whl/nightly/cu90/torch_nightly.html \
-        && \
-
+        https://download.pytorch.org/whl/nightly/cu100/torch_nightly.html 
+        
 # ==================================================================
 # config & cleanup
 # ------------------------------------------------------------------
 
-    ldconfig && \
-    apt-get clean && \
-    apt-get autoremove && \
-    rm -rf /var/lib/apt/lists/* /tmp/* ~/*
+RUN ldconfig 
+RUN apt-get clean 
+RUN apt-get autoremove 
+RUN rm -rf /var/lib/apt/lists/* /tmp/* ~/*
 
+
+# ==================================================================
+# ssh
+# ------------------------------------------------------------------
+
+RUN ${PIP_INSTALL} obspy
 RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
-# Warning!!!! Please change the root password "screencast" below for security
-RUN echo 'root:screencast' | chpasswd
+RUN echo 'root:CHANGEPASSWORD' | chpasswd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # SSH login fix. Otherwise user is kicked off after login
