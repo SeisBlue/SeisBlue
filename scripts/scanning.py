@@ -1,6 +1,6 @@
 from obspy import UTCDateTime
 
-from obspyNN.io import write_station_pkl
+from seisnn.io import write_station_pkl
 
 sds_root = "/mnt/DATA"
 pkl_output_dir = "/mnt/tf_data/pkl/scan"

@@ -2,10 +2,10 @@ import tensorflow as tf
 from tensorflow.python.keras.optimizers import Adam
 from tensorflow.python.keras.utils import multi_gpu_model
 
-from obspyNN.io import get_dir_list
-from obspyNN.pick import write_probability_pkl
-from obspyNN.tensorflow.generator import PredictGenerator
-from obspyNN.tensorflow.model import Nest_Net
+from seisnn.io import get_dir_list
+from seisnn.pick import write_probability_pkl
+from seisnn.tensorflow.generator import PredictGenerator
+from seisnn.tensorflow.model import Nest_Net
 
 pkl_dir = "/mnt/tf_data/pkl/scan"
 pkl_output_dir = pkl_dir + "_predict"

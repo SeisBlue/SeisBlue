@@ -3,9 +3,9 @@ from tensorflow.python import keras
 from tensorflow.python.keras.optimizers import Adam
 from tensorflow.python.keras.utils import multi_gpu_model
 
-from obspyNN.io import get_dir_list
-from obspyNN.tensorflow.generator import DataGenerator
-from obspyNN.tensorflow.model import Nest_Net
+from seisnn.io import get_dir_list
+from seisnn.tensorflow.generator import DataGenerator
+from seisnn.tensorflow.model import Nest_Net
 
 pkl_dir = "/mnt/tf_data/pkl/small_set"
 pkl_list = get_dir_list(pkl_dir)

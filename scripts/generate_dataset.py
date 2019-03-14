@@ -1,4 +1,4 @@
-from obspyNN.io import get_dir_list, write_training_pkl
+from seisnn.io import get_dir_list, write_training_pkl
 
 sds_root = "/mnt/DATA"
 # sfile_list = ["/mnt/tf_data/sfile/201718select.out"]

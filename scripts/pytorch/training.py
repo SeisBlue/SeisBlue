@@ -3,9 +3,9 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 import torch.optim as optim
 
-from obspyNN.io import get_dir_list
-from obspyNN.pytorch.dataset import WaveProbDataset
-from obspyNN.pytorch.model import Nest_Net
+from seisnn.io import get_dir_list
+from seisnn.pytorch.dataset import WaveProbDataset
+from seisnn.pytorch.model import Nest_Net
 
 pkl_dir = "/mnt/tf_data/pkl/201718select"
 pkl_list = get_dir_list(pkl_dir)

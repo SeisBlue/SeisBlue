@@ -11,8 +11,8 @@ from obspy.core.inventory import Inventory, Network, Station, Channel
 from obspy.core.inventory.util import Latitude, Longitude, Distance
 from obspy.clients.filesystem.sds import Client
 
-from obspyNN.pick import get_probability, get_exist_picks, get_pick_list
-from obspyNN.signal import signal_preprocessing, trim_trace
+from seisnn.pick import get_probability, get_exist_picks, get_pick_list
+from seisnn.signal import signal_preprocessing, trim_trace
 
 
 def get_dir_list(file_dir, limit=None):

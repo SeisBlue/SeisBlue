@@ -1,4 +1,4 @@
-from obspyNN import io
+from seisnn import io
 
 import unittest
 

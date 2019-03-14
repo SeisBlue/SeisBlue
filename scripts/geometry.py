@@ -1,4 +1,4 @@
-from obspyNN.io import get_dir_list, read_hyp_inventory, write_channel_coordinates
+from seisnn.io import get_dir_list, read_hyp_inventory, write_channel_coordinates
 
 pkl_dir = "/mnt/tf_data/pkl/small_set"
 pkl_list = get_dir_list(pkl_dir)
