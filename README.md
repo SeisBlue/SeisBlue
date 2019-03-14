@@ -1,4 +1,4 @@
-# Autopicking
+# SeisNN
 
 Seismic event P phase picking project
 
