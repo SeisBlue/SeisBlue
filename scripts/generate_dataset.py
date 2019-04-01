@@ -8,5 +8,7 @@ sfile_dir = "/mnt/Data/2017_2018_sfile"
 sfile_list = get_dir_list(sfile_dir, limit=100)
 
 pkl_dir = "/mnt/tf_data/pkl/small_set"
+
+
 write_training_pkl(sfile_list, sds_root, pkl_dir=pkl_dir, remove_dir=True)
 

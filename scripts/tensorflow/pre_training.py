@@ -1,3 +1,5 @@
+import os
+
 import tensorflow as tf
 from tensorflow.python import keras
 from tensorflow.python.keras.optimizers import Adam
@@ -9,6 +11,7 @@ from seisnn.tensorflow.model import Nest_Net
 
 pkl_dir = "/mnt/tf_data/pkl/small_set"
 pkl_list = get_dir_list(pkl_dir)
+
 
 split_point = -10
 training_generator = DataGenerator(pkl_list[:split_point], batch_size=2, shuffle=True)
@@ -22,4 +25,6 @@ model.compile(optimizer=Adam(lr=1e-4), loss='binary_crossentropy', metrics=['acc
 model.fit_generator(generator=training_generator, validation_data=validation_generator,
                     epochs=1, use_multiprocessing=True, callbacks=[tensorboard])
 
+weight_dir = "/mnt/tf_data/weights"
+os.makedirs(weight_dir, exist_ok=True)
 model.save_weights('/mnt/tf_data/weights/pretrained_weight.h5')

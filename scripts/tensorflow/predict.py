@@ -13,10 +13,7 @@ pkl_list = get_dir_list(pkl_dir)
 
 predict_generator = PredictGenerator(pkl_list, batch_size=256)
 
-with tf.device('/cpu:0'):
-    model = Nest_Net(1, 3001, 1)
-
-model = multi_gpu_model(model, gpus=2)
+model = Nest_Net(1, 3001, 1)
 model.compile(optimizer=Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])
 model.load_weights("/mnt/tf_data/weights/trained_weight.h5")
 

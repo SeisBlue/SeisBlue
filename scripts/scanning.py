@@ -6,7 +6,7 @@ sds_root = "/mnt/DATA"
 pkl_output_dir = "/mnt/tf_data/pkl/scan"
 xml = "/mnt/tf_data/kml/HL.xml"
 
-start_time = UTCDateTime("2018-02-09 01:43:54")
+start_time = UTCDateTime("2018-02-17 12:00:00")
 end_time = start_time + 30
 nslc = ("HL", "*", "*", "*Z")
 
