@@ -12,7 +12,7 @@ Early access
 
 ![Under Construction](Construction.jpg)
 
-The code is still in the development state.
+The code is still in the development state, please star us for upcoming updates!
 
 ---
 
