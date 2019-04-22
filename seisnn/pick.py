@@ -56,6 +56,23 @@ def get_picks_from_pdf(trace, height=0.5, width=10):
     return picks
 
 
+def get_picks_from_pkl(pkl):
+    pick_list = []
+    trace = read(pkl).traces[0]
+    picks = trace.picks
+    pick_list.extend(picks)
+    return pick_list
+
+
+def is_true_positive_pick(validate_pick, predict_pick, delta=0.1):
+            pick_upper_bound = predict_pick.time + delta
+            pick_lower_bound = predict_pick.time - delta
+            if pick_lower_bound < validate_pick.time < pick_upper_bound:
+                return True
+            else:
+                return False
+
+
 def _filter_pick_time_window(pick_list, start_time, end_time):
     # binary search, pick_list must be sorted by time
     pick_time_key = []

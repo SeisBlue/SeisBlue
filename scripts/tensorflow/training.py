@@ -13,6 +13,7 @@ pkl_dir = "/mnt/tf_data/pkl/201718select"
 pkl_list = get_dir_list(pkl_dir)
 
 split_point = -1000
+
 training_generator = DataGenerator(pkl_list[:split_point], batch_size=2, shuffle=True)
 validation_generator = DataGenerator(pkl_list, batch_size=2)
 
