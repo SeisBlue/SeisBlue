@@ -1,7 +1,7 @@
 FROM tensorflow/tensorflow:2.0.0a0-gpu-py3-jupyter
 
 RUN apt-get update && apt-get upgrade -y && apt-get install openssh-server -y
-RUN python -m pip --no-cache-dir install --upgrade obspy
+RUN python -m pip --no-cache-dir install --upgrade obspy scikit-learn
 
 RUN mkdir /var/run/sshd
 RUN echo 'root:CHANGEPASSWORD' | chpasswd
