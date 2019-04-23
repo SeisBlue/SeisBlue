@@ -1,7 +1,7 @@
 import os
 import shutil
 import fnmatch
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 from functools import partial
 
 from obspy import read, read_events
@@ -109,8 +109,9 @@ def write_training_pkl(event_list, sds_root, pkl_dir, remove_dir=False):
 
     catalog = read_event_list(event_list)
     pick_list = get_pick_list(catalog)
+    pool_size = cpu_count()
 
-    with Pool(maxtasksperchild=1) as pool:
+    with Pool(processes=pool_size, maxtasksperchild=1) as pool:
         par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, pkl_dir=pkl_dir)
         pool.map_async(par, catalog.events)
         pool.close()
