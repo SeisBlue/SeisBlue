@@ -110,7 +110,7 @@ def write_training_pkl(event_list, sds_root, pkl_dir, remove_dir=False):
     catalog = read_event_list(event_list)
     pick_list = get_pick_list(catalog)
 
-    with Pool() as pool:
+    with Pool(maxtasksperchild=1) as pool:
         par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, pkl_dir=pkl_dir)
         pool.map_async(par, catalog.events)
         pool.close()
