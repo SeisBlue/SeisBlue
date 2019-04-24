@@ -21,9 +21,11 @@ for i in range(len(validate_pkl_list)):
         for pre_pick in predict_picks:
             if is_true_positive_pick(val_pick, pre_pick):
                 true_positive.append(val_pick)
+    if i % 100 == 0:
+        print("Evaluating... %d out of %d " % (i, len(validate_pkl_list)))
 
 precision = len(true_positive) / pre_picks_count
 recall = len(true_positive) / val_picks_count
 F1 = 2 * (precision * recall) / (precision + recall)
 
-print("precision = %f ,recall = %f ,F1 = %f" % (precision, recall, F1))
+print("Precision = %f, Recall = %f, F1 = %f" % (precision, recall, F1))

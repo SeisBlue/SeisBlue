@@ -41,9 +41,9 @@ def get_probability(trace, sigma=0.1):
     return pdf
 
 
-def get_picks_from_pdf(trace, height=0.5, width=10):
+def get_picks_from_pdf(trace, height=0.5, distance=100):
     start_time = trace.stats.starttime
-    peaks, properties = find_peaks(trace.pdf, height=height, width=width)
+    peaks, properties = find_peaks(trace.pdf, height=height, distance=distance)
 
     picks = []
     for p in peaks:
@@ -65,12 +65,12 @@ def get_picks_from_pkl(pkl):
 
 
 def is_true_positive_pick(validate_pick, predict_pick, delta=0.1):
-            pick_upper_bound = predict_pick.time + delta
-            pick_lower_bound = predict_pick.time - delta
-            if pick_lower_bound < validate_pick.time < pick_upper_bound:
-                return True
-            else:
-                return False
+    pick_upper_bound = predict_pick.time + delta
+    pick_lower_bound = predict_pick.time - delta
+    if pick_lower_bound < validate_pick.time < pick_upper_bound:
+        return True
+    else:
+        return False
 
 
 def _filter_pick_time_window(pick_list, start_time, end_time):

@@ -12,14 +12,12 @@ from seisnn.tensorflow.model import Nest_Net
 pkl_dir = "/mnt/tf_data/pkl/small_set"
 pkl_list = get_dir_list(pkl_dir)
 
-
 split_point = -10
-training_generator = DataGenerator(pkl_list[:split_point], batch_size=2, shuffle=True)
-validation_generator = DataGenerator(pkl_list[split_point:], batch_size=2)
+training_generator = DataGenerator(pkl_list[:split_point], batch_size=2, shuffle=False)
+validation_generator = DataGenerator(pkl_list[split_point:], batch_size=32)
 
 tensorboard = keras.callbacks.TensorBoard(log_dir='../logs', histogram_freq=0,
                                           write_graph=True, write_images=False)
-
 model = Nest_Net(1, 3001, 1)
 model.compile(optimizer=Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])
 model.fit_generator(generator=training_generator, validation_data=validation_generator,

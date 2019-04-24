@@ -7,11 +7,11 @@ from seisnn.pick import write_probability_pkl
 from seisnn.tensorflow.generator import PredictGenerator
 from seisnn.tensorflow.model import Nest_Net
 
-pkl_dir = "/mnt/tf_data/pkl/scan"
+pkl_dir = "/mnt/tf_data/pkl/small_set"
 pkl_output_dir = pkl_dir + "_predict"
 pkl_list = get_dir_list(pkl_dir)
 
-predict_generator = PredictGenerator(pkl_list, batch_size=256)
+predict_generator = PredictGenerator(pkl_list, batch_size=32)
 
 model = Nest_Net(1, 3001, 1)
 model.compile(optimizer=Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])

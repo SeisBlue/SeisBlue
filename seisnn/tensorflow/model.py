@@ -1,6 +1,7 @@
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.layers import Input, concatenate, Dropout, Cropping2D, ZeroPadding2D
 from tensorflow.python.keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, UpSampling2D
+from tensorflow.python.keras.layers import BatchNormalization
 from tensorflow.python.keras.regularizers import l2
 
 """
