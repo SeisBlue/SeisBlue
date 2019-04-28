@@ -21,8 +21,7 @@ Prerequisite:
 - S-File catalog from [SEISAN](http://seisan.info/)
 - SeisComP Data Structure (SDS) database. The directory and file layout of SDS is defined as:
 
-
-    <SDSdir>/YEAR/NET/STA/CHAN.TYPE/NET.STA.LOC.CHAN.TYPE.YEAR.DAY
+      SDSROOT/YEAR/NET/STA/CHAN.TYPE/NET.STA.LOC.CHAN.TYPE.YEAR.DAY
 
 Installation:
 
