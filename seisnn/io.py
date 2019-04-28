@@ -8,10 +8,10 @@ from obspy import read, read_events
 from obspy.clients.filesystem.sds import Client
 from obspy.core import Stream
 from obspy.core.event.catalog import Catalog
-from obspy.core.inventory import Inventory, Network, Station, Channel
-from obspy.core.inventory.util import Latitude, Longitude, Distance
+from obspy.core.inventory import Channel, Inventory, Network, Station
+from obspy.core.inventory.util import Distance, Latitude, Longitude
 
-from seisnn.pick import get_probability, get_exist_picks, get_pick_list
+from seisnn.pick import get_exist_picks, get_pick_list, get_probability
 from seisnn.signal import signal_preprocessing, trim_trace
 
 
