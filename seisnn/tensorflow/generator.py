@@ -1,7 +1,6 @@
 import numpy as np
-from tensorflow.python.keras.utils import Sequence
-
 from obspy import read
+from tensorflow.python.keras.utils import Sequence
 
 
 class DataGenerator(Sequence):

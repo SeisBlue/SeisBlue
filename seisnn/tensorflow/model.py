@@ -1,7 +1,6 @@
-from tensorflow.python.keras.models import Model
+from tensorflow.python.keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D
 from tensorflow.python.keras.layers import Input, concatenate, Dropout, Cropping2D, ZeroPadding2D
-from tensorflow.python.keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, UpSampling2D
-from tensorflow.python.keras.layers import BatchNormalization
+from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.regularizers import l2
 
 """
@@ -14,8 +13,8 @@ https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py
 # 2D Standard
 ########################################
 
-def standard_unit(input_tensor, stage, nb_filter, kernel_size=3):
-    dropout_rate = 0.2
+def standard_unit(input_tensor, stage, nb_filter, kernel_size=7):
+    dropout_rate = 0.1
     act = "relu"
 
     x = Conv2D(nb_filter, 3, activation=act, name='conv' + stage + '_1',
@@ -38,7 +37,6 @@ Total params: 7,759,521
 
 def U_Net(img_rows, img_cols, color_type=1, num_class=1):
     nb_filter = [8, 16, 32, 64, 128]
-    # nb_filter = [32, 64, 128, 256, 512]
     pool_size = (1, 2)
     padding_size = ((0, 0), (3, 4))
 
@@ -91,8 +89,7 @@ Total params: 9,041,601
 
 
 def Nest_Net(img_rows, img_cols, color_type=1, num_class=1, deep_supervision=False):
-    # nb_filter = [8, 16, 32, 64, 128]
-    nb_filter = [32, 64, 128, 256, 512]
+    nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 2)
     padding_size = ((0, 0), (3, 4))
 
@@ -175,82 +172,9 @@ def Nest_Net(img_rows, img_cols, color_type=1, num_class=1, deep_supervision=Fal
     return model
 
 
-"""
-unet model from:
-https://github.com/zhixuhao/unet/blob/master/model.py
-"""
-
-
-def unet(img_rows, img_cols, color_type=1, num_class=1):
-    nb_filter = [8, 16, 32, 64, 128]
-    # nb_filter = [32, 64, 128, 256, 512]
-    padding_size = ((0, 0), (3, 4))
-    pool_size = (1, 2)
-    dropout_rate = 0.5
-
-    img_input = Input(shape=(img_rows, img_cols, color_type), name='main_input')
-    zpad = ZeroPadding2D(padding_size)(img_input)
-
-    conv1 = Conv2D(nb_filter[0], 3, activation='relu', padding='same', kernel_initializer='he_normal')(zpad)
-    conv1 = Conv2D(nb_filter[0], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
-    pool1 = MaxPooling2D(pool_size=pool_size, padding='same')(conv1)
-
-    conv2 = Conv2D(nb_filter[1], 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool1)
-    conv2 = Conv2D(nb_filter[1], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv2)
-    pool2 = MaxPooling2D(pool_size=pool_size, padding='same')(conv2)
-
-    conv3 = Conv2D(nb_filter[2], 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool2)
-    conv3 = Conv2D(nb_filter[2], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv3)
-    pool3 = MaxPooling2D(pool_size=pool_size, padding='same')(conv3)
-
-    conv4 = Conv2D(nb_filter[3], 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool3)
-    conv4 = Conv2D(nb_filter[3], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv4)
-    drop4 = Dropout(dropout_rate)(conv4)
-    pool4 = MaxPooling2D(pool_size=pool_size, padding='same')(drop4)
-
-    conv5 = Conv2D(nb_filter[4], 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool4)
-    conv5 = Conv2D(nb_filter[4], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv5)
-    drop5 = Dropout(dropout_rate)(conv5)
-
-    up6 = Conv2D(nb_filter[3], 2, activation='relu', padding='same', kernel_initializer='he_normal')(
-        UpSampling2D(size=pool_size)(drop5))
-    merge6 = concatenate([drop4, up6], axis=3)
-    conv6 = Conv2D(nb_filter[3], 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge6)
-    conv6 = Conv2D(nb_filter[3], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv6)
-
-    up7 = Conv2D(nb_filter[2], 2, activation='relu', padding='same', kernel_initializer='he_normal')(
-        UpSampling2D(size=pool_size)(conv6))
-    merge7 = concatenate([conv3, up7], axis=3)
-    conv7 = Conv2D(nb_filter[2], 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge7)
-    conv7 = Conv2D(nb_filter[2], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv7)
-
-    up8 = Conv2D(nb_filter[1], 2, activation='relu', padding='same', kernel_initializer='he_normal')(
-        UpSampling2D(size=pool_size)(conv7))
-    merge8 = concatenate([conv2, up8], axis=3)
-    conv8 = Conv2D(nb_filter[1], 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge8)
-    conv8 = Conv2D(nb_filter[1], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv8)
-
-    up9 = Conv2D(nb_filter[0], 2, activation='relu', padding='same', kernel_initializer='he_normal')(
-        UpSampling2D(size=pool_size)(conv8))
-    merge9 = concatenate([conv1, up9], axis=3)
-    conv9 = Conv2D(nb_filter[0], 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge9)
-    conv9 = Conv2D(nb_filter[0], 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
-    conv9 = Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
-
-    conv10 = Conv2D(num_class, 1, activation='sigmoid')(conv9)
-    crop = Cropping2D(padding_size)(conv10)
-
-    model = Model(inputs=img_input, outputs=crop)
-
-    return model
-
-
 if __name__ == '__main__':
     model = U_Net(1, 3001, 1)
     model.summary()
 
     model = Nest_Net(1, 3001, 1)
-    model.summary()
-
-    model = unet(1, 3001, 1)
     model.summary()

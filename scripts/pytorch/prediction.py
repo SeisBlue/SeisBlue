@@ -1,11 +1,10 @@
 import torch
-import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from seisnn.io import get_dir_list
+from seisnn.pick import write_probability_pkl
 from seisnn.pytorch.dataset import WaveProbDataset
 from seisnn.pytorch.model import Nest_Net
-from seisnn.pick import write_probability_pkl
 
 pkl_dir = "/mnt/tf_data/pkl/small_set"
 pkl_output_dir = pkl_dir + "_predict"

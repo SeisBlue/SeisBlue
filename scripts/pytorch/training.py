@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
 import torch.optim as optim
+from torch.utils.data import DataLoader
 
 from seisnn.io import get_dir_list
 from seisnn.pytorch.dataset import WaveProbDataset

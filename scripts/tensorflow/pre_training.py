@@ -1,9 +1,7 @@
 import os
 
-import tensorflow as tf
 from tensorflow.python import keras
 from tensorflow.python.keras.optimizers import Adam
-from tensorflow.python.keras.utils import multi_gpu_model
 
 from seisnn.io import get_dir_list
 from seisnn.tensorflow.generator import DataGenerator

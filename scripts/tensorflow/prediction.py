@@ -1,6 +1,4 @@
-import tensorflow as tf
 from tensorflow.python.keras.optimizers import Adam
-from tensorflow.python.keras.utils import multi_gpu_model
 
 from seisnn.io import get_dir_list
 from seisnn.pick import write_probability_pkl

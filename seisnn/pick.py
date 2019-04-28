@@ -1,14 +1,14 @@
 import fnmatch
 import os
 import shutil
+from bisect import bisect_left, bisect_right
 
 import numpy as np
 import scipy.stats as ss
 from obspy import read
-from scipy.signal import find_peaks
-from bisect import bisect_left, bisect_right
-
+from obspy.core.event.base import ResourceIdentifier
 from obspy.core.event.origin import Pick
+from scipy.signal import find_peaks
 
 
 def get_pick_list(catalog):
@@ -124,7 +124,9 @@ def get_exist_picks(trace, pick_list, phase="P"):
         if channel:
             if not fnmatch.fnmatch(channel_code, channel):
                 continue
-
+        method_id = ResourceIdentifier(prefix='pick')
+        method_id.convert_id_to_quakeml_uri(authority_id="seisan.info")
+        pick.method_id = method_id
         tmp_pick.append(pick)
 
     return tmp_pick

@@ -1,5 +1,5 @@
-from obspy import read
 import torch
+from obspy import read
 from torch.utils.data import Dataset
 
 
