@@ -141,7 +141,7 @@ def write_station_pkl(pkl_output_dir, sds_root, nslc, start_time, end_time,
     client = Client(sds_root=sds_root)
     net, sta, loc, chan = nslc
     t = start_time
-
+    counter = 0
     while t < end_time:
         stream = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
         stream = signal_preprocessing(stream)
@@ -157,10 +157,16 @@ def write_station_pkl(pkl_output_dir, sds_root, nslc, start_time, end_time,
                 continue
 
             finally:
+                trace.picks = []
                 time_stamp = trace.stats.starttime.isoformat()
                 trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+                counter += 1
+
+                if counter % 100 == 0:
+                    print("Output file... %d" % counter)
 
         t += trace_length
+    print("Output file... Total %d" % counter)
 
 
 def read_hyp_inventory(hyp, network, kml_output_dir=None):

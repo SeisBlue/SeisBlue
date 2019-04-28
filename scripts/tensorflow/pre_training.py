@@ -7,10 +7,10 @@ from seisnn.io import get_dir_list
 from seisnn.tensorflow.generator import DataGenerator
 from seisnn.tensorflow.model import Nest_Net
 
-pkl_dir = "/mnt/tf_data/pkl/small_set"
+pkl_dir = "/mnt/tf_data/pkl/2017_02"
 pkl_list = get_dir_list(pkl_dir)
 
-split_point = -10
+split_point = -100
 training_generator = DataGenerator(pkl_list[:split_point], batch_size=2, shuffle=False)
 validation_generator = DataGenerator(pkl_list[split_point:], batch_size=32)
 

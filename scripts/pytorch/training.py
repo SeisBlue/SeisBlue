@@ -14,7 +14,6 @@ split_point = -1000
 trainset = WaveProbDataset(pkl_list[:split_point])
 trainloader = DataLoader(trainset, batch_size=2, shuffle=False, num_workers=2)
 
-
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 model = Nest_Net(in_ch=1, out_ch=1)
@@ -52,4 +51,3 @@ for epoch in range(1):  # loop over the dataset multiple times
             running_loss = 0.0
 
 torch.save(model.state_dict(), '/mnt/tf_data/weights/trained_weight.pt')
-

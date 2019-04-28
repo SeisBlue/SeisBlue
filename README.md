@@ -33,7 +33,7 @@ In the [scripts](scripts) folder:
  
 - [generate_dataset.py](scripts/generate_dataset.py)
   - Make S-Files into training datasets. (.pkl)
-- [evalution.py](scripts/evaluation.py)
+- [evalution.py](seisnn/qc.py)
   - Calculate precision, recall and F1 score
 - [plot_instance.py](scripts/plot_instance.py)
   - Plot the wavefile, picks and the probability form the dataset.

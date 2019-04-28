@@ -6,7 +6,7 @@ from bisect import bisect_left, bisect_right
 import numpy as np
 import scipy.stats as ss
 from obspy import read
-from obspy.core.event.base import ResourceIdentifier
+from obspy.core.event.base import QuantityError
 from obspy.core.event.origin import Pick
 from scipy.signal import find_peaks
 
@@ -58,19 +58,10 @@ def get_picks_from_pdf(trace, height=0.5, distance=100):
 
 def get_picks_from_pkl(pkl):
     pick_list = []
-    trace = read(pkl).traces[0]
+    trace = read(pkl, headonly=True).traces[0]
     picks = trace.picks
     pick_list.extend(picks)
     return pick_list
-
-
-def is_true_positive_pick(validate_pick, predict_pick, delta=0.1):
-    pick_upper_bound = predict_pick.time + delta
-    pick_lower_bound = predict_pick.time - delta
-    if pick_lower_bound < validate_pick.time < pick_upper_bound:
-        return True
-    else:
-        return False
 
 
 def _filter_pick_time_window(pick_list, start_time, end_time):
@@ -124,9 +115,8 @@ def get_exist_picks(trace, pick_list, phase="P"):
         if channel:
             if not fnmatch.fnmatch(channel_code, channel):
                 continue
-        method_id = ResourceIdentifier(prefix='pick')
-        method_id.convert_id_to_quakeml_uri(authority_id="seisan.info")
-        pick.method_id = method_id
+
+        pick.evaluation_mode = "manual"
         tmp_pick.append(pick)
 
     return tmp_pick
@@ -151,7 +141,41 @@ def write_probability_pkl(predict, pkl_list, pkl_output_dir, remove_dir=False):
             trace.pdf = pdf / pdf.max()
         else:
             trace.pdf = pdf
+        pdf_picks = get_picks_from_pdf(trace)
 
-        trace.picks = get_picks_from_pdf(trace)
+        if trace.picks:
+            for val_pick in trace.picks:
+                for pre_pick in pdf_picks:
+                    pre_pick.evaluation_mode = "automatic"
+
+                    residual = get_time_residual(val_pick, pre_pick)
+                    pre_pick.time_errors = QuantityError(residual)
+
+                    if is_close_pick(val_pick, pre_pick, delta=0.1):
+                        pre_pick.evaluation_status = "confirmed"
+
+        else:
+            trace.picks = []
+        trace.picks.extend(pdf_picks)
         time_stamp = trace.stats.starttime.isoformat()
         trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+
+        if i % 1000 == 0:
+            print("Output file... %d out of %d" % (i, len(predict)))
+
+
+def is_close_pick(validate_pick, predict_pick, delta=0.1):
+    pick_upper_bound = predict_pick.time + delta
+    pick_lower_bound = predict_pick.time - delta
+    if pick_lower_bound < validate_pick.time < pick_upper_bound:
+        return True
+    else:
+        return False
+
+
+def get_time_residual(val_pick, pre_pick):
+    if is_close_pick(val_pick, pre_pick, delta=0.5):
+        residual = val_pick.time - pre_pick.time
+        return residual
+    else:
+        return None

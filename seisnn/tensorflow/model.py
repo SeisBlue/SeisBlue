@@ -1,5 +1,5 @@
-from tensorflow.python.keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D
-from tensorflow.python.keras.layers import Input, concatenate, Dropout, Cropping2D, ZeroPadding2D
+from tensorflow.python.keras.layers import Conv2D, Conv2DTranspose, Cropping2D, Dropout, Input, MaxPooling2D, \
+    ZeroPadding2D, concatenate
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.regularizers import l2
 

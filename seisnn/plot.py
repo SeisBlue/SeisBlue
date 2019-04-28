@@ -1,6 +1,9 @@
 import os
 
 import matplotlib.pyplot as plt
+import numpy as np
+
+from seisnn.pick import get_picks_from_pkl
 
 
 def plot_trace(trace, enlarge=False, xlim=None, save_dir=None):
@@ -25,13 +28,27 @@ def plot_trace(trace, enlarge=False, xlim=None, save_dir=None):
         plt.xlim((first_pick_time - 1, first_pick_time + 2))
     ax.plot(trace.times(reftime=start_time), trace.data, "k-", label=trace.id)
     y_min, y_max = ax.get_ylim()
-    if pick_phase:
-        ax.vlines(first_pick_time, y_min, y_max, color='r', lw=2, label=pick_phase)
+
     if trace.picks:
-        for pick in trace.picks[1:]:
+        val_label = True
+        pre_label = True
+        for pick in trace.picks:
             pick_time = pick.time - start_time
-            ax.vlines(pick_time, y_min, y_max, color='r', lw=1)
-    ax.legend()
+            if pick.evaluation_mode == "manual":
+                if val_label:
+                    ax.vlines(pick_time, y_min, y_max, color='g', lw=2,
+                              label=pick.evaluation_mode + " " + pick.phase_hint)
+                    val_label = False
+                else:
+                    ax.vlines(pick_time, y_min, y_max, color='g', lw=2)
+
+            else:
+                if pre_label:
+                    ax.vlines(pick_time, y_min, y_max, color='r', lw=1, label=pick.phase_hint)
+                    pre_label = False
+                else:
+                    ax.vlines(pick_time, y_min, y_max, color='r', lw=1)
+    ax.legend(loc=1)
 
     ax = fig.add_subplot(subplot, 1, subplot)
     ax.plot(trace.times(reftime=start_time), trace.pdf, "b-", label=pick_phase + " pdf")
@@ -47,3 +64,23 @@ def plot_trace(trace, enlarge=False, xlim=None, save_dir=None):
         plt.close()
     else:
         plt.show()
+
+
+def plot_error_distribution(predict_pkl_list):
+    time_residuals = []
+    for i, pkl in enumerate(predict_pkl_list):
+        picks = get_picks_from_pkl(pkl)
+        for p in picks:
+            if p.time_errors:
+                residual = p.time_errors.get("uncertainty")
+                time_residuals.append(float(residual))
+
+        if i % 1000 == 0:
+            print("Reading... %d out of %d " % (i, len(predict_pkl_list)))
+
+    bins = np.linspace(-0.5, 0.5, 100)
+    plt.hist(time_residuals, bins=bins)
+    plt.xlabel("Time residuals (sec)")
+    plt.ylabel("Number of picks")
+    plt.title("Error Distribution")
+    plt.show()
