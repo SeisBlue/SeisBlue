@@ -16,6 +16,56 @@ The code is still in the development state, please star us for upcoming updates!
 
 ---
 
+Prerequisite:
+
+- S-File catalog from [SEISAN](http://seisan.info/)
+- SeisComP Data Structure (SDS) database. The directory and file layout of SDS is defined as:
+
+
+    <SDSdir>/YEAR/NET/STA/CHAN.TYPE/NET.STA.LOC.CHAN.TYPE.YEAR.DAY
+
+Installation:
+
+- Clone this repository
+- Follow the instructions in the [Docker](docker) folder to create a Docker container.
+- SSH into the Docker container you create.
+
+In the [scripts](scripts) folder:
+ 
+- [generate_dataset.py](scripts/generate_dataset.py)
+  - Make S-Files into training datasets. (.pkl)
+- [evalution.py](scripts/evaluation.py)
+  - Calculate precision, recall and F1 score
+- [plot_instance.py](scripts/plot_instance.py)
+  - Plot the wavefile, picks and the probability form the dataset.
+- [scanning.py](scripts/scanning.py)
+  - Scan through all stations available in the given time window, transfer into dataset.
+  
+Training:
+
+You can choose between [scripts/tensorflow](scripts/tensorflow) or [scripts/pytorch](scripts/pytorch)
+
+- [pre_training.py](scripts/tensorflow/pre_training.py)
+  - Pre-train the model using small dataset.
+- [training.py](scripts/tensorflow/training.py)
+  - Train the model with the pre-trained weight.
+- [prediction.py](scripts/tensorflow/prediction.py)
+  - Prediction the probability of the picks and write into the dataset.
+
+Model:
+
+The model is stored in [seisnn/tensorflow](seisnn/tensorflow) or [seisnn/pytorch](seisnn/pytorch) 
+
+- Nest_Net
+  - Unet++ code modified from [MrGiovanni](https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py)
+- U_Net
+  - Unet code modified from [MrGiovanni](https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py)
+- unet
+  - Unet code modified from [zhixuhao](https://github.com/zhixuhao/unet/blob/master/model.py)
+
+
+---
+
 Reference:
 
  [PhaseNet](https://arxiv.org/abs/1803.03211)
