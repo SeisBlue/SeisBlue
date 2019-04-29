@@ -6,13 +6,15 @@ Main framework: Obspy, Seisan, Tensorflow with Keras, Pytorch
 
 Using U-net to generate pick probability
 
+![example](example.png)
+
 ---
 
 Early access
 
-![Under Construction](Construction.jpg)
+The code is still in the development state, API will change frequently. 
 
-The code is still in the development state, please star us for upcoming updates!
+please star us for upcoming updates!
 
 ---
 
@@ -32,13 +34,14 @@ Installation:
 In the [scripts](scripts) folder:
  
 - [generate_dataset.py](scripts/generate_dataset.py)
-  - Make S-Files into training datasets. (.pkl)
+  - Make S-Files into training .pkl datasets.
 - [evalution.py](seisnn/qc.py)
-  - Calculate precision, recall and F1 score
+  - Calculate precision, recall and F1 score.
+  - Plot error distribution.
 - [plot_instance.py](scripts/plot_instance.py)
-  - Plot the wavefile, picks and the probability form the dataset.
+  - Plot the wavefile, picks and the probability form the .pkl dataset.
 - [scanning.py](scripts/scanning.py)
-  - Scan through all stations available in the given time window, transfer into dataset.
+  - Scan through all stations available in the given time window, transfer into .pkl dataset.
   
 Training:
 
@@ -57,11 +60,6 @@ The model is stored in [seisnn/tensorflow](seisnn/tensorflow) or [seisnn/pytorch
 
 - Nest_Net
   - Unet++ code modified from [MrGiovanni](https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py)
-- U_Net
-  - Unet code modified from [MrGiovanni](https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py)
-- unet
-  - Unet code modified from [zhixuhao](https://github.com/zhixuhao/unet/blob/master/model.py)
-
 
 ---
 
@@ -79,13 +77,7 @@ Reference:
   
  Zhou, Z., Siddiquee, M. M. R., Tajbakhsh, N., & Liang, J. (2018). Unet++: A nested u-net architecture for medical image segmentation. In Deep Learning in Medical Image Analysis and Multimodal Learning for Clinical Decision Support (pp. 3-11). Springer, Cham.
  
- ---
- 
- Code reference:
- 
-  [U-net model](https://github.com/zhixuhao/unet)
-  
-  [U-net ++](https://github.com/MrGiovanni/Nested-UNet)
+
 
 ---
 
