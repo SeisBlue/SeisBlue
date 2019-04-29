@@ -14,7 +14,7 @@ Early access
 
 The code is still in the development state, API will change frequently. 
 
-please star us for upcoming updates!
+Please star us for upcoming updates!
 
 ---
 
@@ -52,7 +52,7 @@ You can choose between [scripts/tensorflow](scripts/tensorflow) or [scripts/pyto
 - [training.py](scripts/tensorflow/training.py)
   - Train the model with the pre-trained weight.
 - [prediction.py](scripts/tensorflow/prediction.py)
-  - Prediction the probability of the picks and write into the dataset.
+  - Predict the probability of the picks and write into the dataset.
 
 Model:
 
