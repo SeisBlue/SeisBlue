@@ -10,11 +10,11 @@ def precision_recall_f1_score(predict_pkl_list):
         for p in picks:
             if p.evaluation_mode == "manual":
                 val_picks_count += 1
-            else:
-                pre_picks_count += 1
 
-            if p.evaluation_status == "confirmed":
-                true_positive += 1
+            elif p.evaluation_mode == "automatic":
+                pre_picks_count += 1
+                if p.evaluation_status == "confirmed":
+                    true_positive += 1
 
         if i % 1000 == 0:
             print("Reading... %d out of %d " % (i, len(predict_pkl_list)))
