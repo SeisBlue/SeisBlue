@@ -70,7 +70,7 @@ def _read_event(event_file):
     return catalog
 
 
-def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_rate=100, random_time=False):
+def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_rate=100, random_time=0):
     stream = Stream()
     client = Client(sds_root=sds_root)
     for pick in event.picks:
@@ -89,7 +89,7 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
             print("origin: " + t.isoformat() + " pick: " + pick.time.isoformat())
 
         if random_time:
-            t = t - 50 + np.random.random_sample() * 100
+            t = t - random_time + np.random.random_sample() * random_time * 2
 
         net = "*"
         sta = pick.waveform_id.station_code
@@ -118,7 +118,7 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
     return stream
 
 
-def write_training_pkl(catalog, sds_root, pkl_dir, remove_dir=False):
+def write_training_pkl(catalog, sds_root, pkl_dir, random_time=0, remove_dir=False):
     if remove_dir:
         shutil.rmtree(pkl_dir, ignore_errors=True)
     os.makedirs(pkl_dir, exist_ok=True)
@@ -127,15 +127,16 @@ def write_training_pkl(catalog, sds_root, pkl_dir, remove_dir=False):
     pool_size = cpu_count()
 
     with Pool(processes=pool_size, maxtasksperchild=1) as pool:
-        par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, pkl_dir=pkl_dir)
+        par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, pkl_dir=pkl_dir,
+                      random_time=random_time)
         pool.map_async(par, catalog.events)
         pool.close()
         pool.join()
 
 
-def _write_picked_trace(event, pick_list, sds_root, pkl_dir):
+def _write_picked_trace(event, pick_list, sds_root, pkl_dir, random_time):
     t = event.origins[0].time
-    stream = read_sds(event, sds_root, random_time=True)
+    stream = read_sds(event, sds_root, random_time)
     for trace in stream:
         picks = get_exist_picks(trace, pick_list)
         trace.picks = picks
