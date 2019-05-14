@@ -27,6 +27,7 @@ Prerequisite:
 
 Installation:
 
+- pip install seisnn
 - Clone this repository
 - Follow the instructions in the [Docker](docker) folder to create a Docker container.
 - SSH into the Docker container you create.
