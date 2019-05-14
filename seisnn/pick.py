@@ -156,6 +156,9 @@ def write_probability_pkl(predict, pkl_list, pkl_output_dir, remove_dir=False):
 
         else:
             trace.picks = []
+            for pre_pick in pdf_picks:
+                pre_pick.evaluation_mode = "automatic"
+
         trace.picks.extend(pdf_picks)
         time_stamp = trace.stats.starttime.isoformat()
         trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
