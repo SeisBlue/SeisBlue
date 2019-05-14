@@ -1,9 +1,11 @@
 import fnmatch
 import os
+import pickle
 import shutil
 from functools import partial
 from multiprocessing import Pool, cpu_count
 
+import numpy as np
 from obspy import read, read_events
 from obspy.clients.filesystem.sds import Client
 from obspy.core import Stream
@@ -13,6 +15,17 @@ from obspy.core.inventory.util import Distance, Latitude, Longitude
 
 from seisnn.pick import get_exist_picks, get_pick_list, get_probability
 from seisnn.signal import signal_preprocessing, trim_trace
+
+
+def read_pickle(pkl):
+    with open(pkl, "rb") as f:
+        obj = pickle.load(f)
+        return obj
+
+
+def write_pickle(obj, file):
+    with open(file, "wb") as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
 def get_dir_list(file_dir, limit=None):
@@ -57,7 +70,7 @@ def _read_event(event_file):
     return catalog
 
 
-def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_rate=100):
+def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_rate=100, random_time=False):
     stream = Stream()
     client = Client(sds_root=sds_root)
     for pick in event.picks:
@@ -74,6 +87,9 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
         if pick.time > t + trace_length:
             t = pick.time - trace_length + 5
             print("origin: " + t.isoformat() + " pick: " + pick.time.isoformat())
+
+        if random_time:
+            t = t - 50 + np.random.random_sample() * 100
 
         net = "*"
         sta = pick.waveform_id.station_code
@@ -102,12 +118,11 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
     return stream
 
 
-def write_training_pkl(event_list, sds_root, pkl_dir, remove_dir=False):
+def write_training_pkl(catalog, sds_root, pkl_dir, remove_dir=False):
     if remove_dir:
         shutil.rmtree(pkl_dir, ignore_errors=True)
     os.makedirs(pkl_dir, exist_ok=True)
 
-    catalog = read_event_list(event_list)
     pick_list = get_pick_list(catalog)
     pool_size = cpu_count()
 
@@ -120,7 +135,7 @@ def write_training_pkl(event_list, sds_root, pkl_dir, remove_dir=False):
 
 def _write_picked_trace(event, pick_list, sds_root, pkl_dir):
     t = event.origins[0].time
-    stream = read_sds(event, sds_root)
+    stream = read_sds(event, sds_root, random_time=True)
     for trace in stream:
         picks = get_exist_picks(trace, pick_list)
         trace.picks = picks
