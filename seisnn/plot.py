@@ -42,9 +42,10 @@ def plot_trace(trace, enlarge=False, xlim=None, save_dir=None):
                 else:
                     ax.vlines(pick_time, y_min, y_max, color='g', lw=2)
 
-            else:
+            elif pick.evaluation_mode == "automatic":
                 if pre_label:
-                    ax.vlines(pick_time, y_min, y_max, color='r', lw=1, label=pick.phase_hint)
+                    ax.vlines(pick_time, y_min, y_max, color='r', lw=1,
+                              label=pick.evaluation_mode + " " + pick.phase_hint)
                     pre_label = False
                 else:
                     ax.vlines(pick_time, y_min, y_max, color='r', lw=1)
@@ -80,6 +81,7 @@ def plot_error_distribution(predict_pkl_list):
 
     bins = np.linspace(-0.5, 0.5, 100)
     plt.hist(time_residuals, bins=bins)
+    plt.xticks(np.arange(-0.5, 0.51, step=0.1))
     plt.xlabel("Time residuals (sec)")
     plt.ylabel("Number of picks")
     plt.title("Error Distribution")
