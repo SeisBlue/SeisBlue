@@ -6,7 +6,7 @@ from bisect import bisect_left, bisect_right
 import numpy as np
 import scipy.stats as ss
 from obspy import read
-from obspy.core.event.base import QuantityError
+from obspy.core.event.base import QuantityError, WaveformStreamID
 from obspy.core.event.origin import Pick
 from scipy.signal import find_peaks
 
@@ -51,6 +51,8 @@ def get_picks_from_pdf(trace, height=0.5, distance=100):
             time = start_time + p / trace.stats.sampling_rate
             phase_hint = "P"
             pick = Pick(time=time, phase_hint=phase_hint)
+            pick.waveform_id = WaveformStreamID(network_code=trace.stats.network, station_code=trace.stats.station,
+                                                location_code=trace.stats.channel, channel_code=trace.stats.location)
             picks.append(pick)
 
     return picks
@@ -153,6 +155,8 @@ def write_probability_pkl(predict, pkl_list, pkl_output_dir, remove_dir=False):
 
                     if is_close_pick(val_pick, pre_pick, delta=0.1):
                         pre_pick.evaluation_status = "confirmed"
+                    elif is_close_pick(val_pick, pre_pick, delta=1):
+                        pre_pick.evaluation_status = "rejected"
 
         else:
             trace.picks = []
