@@ -14,7 +14,7 @@ https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py
 ########################################
 
 def standard_unit(input_tensor, stage, nb_filter, kernel_size):
-    dropout_rate = 0.05
+    dropout_rate = 0.1
     act = "relu"
 
     x = Conv2D(nb_filter, kernel_size, activation=act, name='conv' + stage + '_1',
@@ -36,11 +36,11 @@ Total params: 420,249
 
 
 def U_Net(img_rows, img_cols, color_type=1, num_class=1):
-    # nb_filter = [8, 11, 16, 22, 32]
-    nb_filter = [8, 16, 32, 64, 128]
-    pool_size = (1, 2)
+    nb_filter = [8, 11, 16, 22, 32]
+    # nb_filter = [8, 16, 32, 64, 128]
+    pool_size = (1, 4)
     kernel_size = (1, 7)
-    padding_size = ((0, 0), (3, 4))
+    padding_size = ((0, 0), (35, 36))
 
     img_input = Input(shape=(img_rows, img_cols, color_type), name='main_input')
     zpad = ZeroPadding2D(padding_size)(img_input)
