@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 setup(
     name='SeisNN',
     packages=['seisnn'],
-    version='0.0.1dev1',
+    version='0.0.2.dev1',
     description='Deep learning seismic phase picking package',
     long_description=long_description,
     long_description_content_type="text/markdown",
