@@ -23,6 +23,11 @@ setup(
         'obspy>=1.1.1'
     ],
     classifiers=[
+        "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.5",
+        "Operating System :: POSIX :: Linux",
+        "License :: OSI Approved :: MIT License",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Development Status :: 2 - Pre-Alpha"
     ]
 )
