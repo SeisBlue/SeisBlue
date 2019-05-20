@@ -1,9 +1,10 @@
 import numpy as np
+from abc import abstractmethod
 from obspy import read
 from tensorflow.python.keras.utils import Sequence
 
 
-class DataGenerator(Sequence):
+class BaseGenerator(Sequence):
     def __init__(self, pkl_list, batch_size=32, dim=(1, 3001, 1), shuffle=False):
         self.dim = dim
         self.batch_size = batch_size
@@ -18,15 +19,27 @@ class DataGenerator(Sequence):
     def __getitem__(self, index):
         indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
         temp_pkl_list = [self.pkl_list[k] for k in indexes]
-        wavefile, probability = self.__data_generation(temp_pkl_list)
-
-        return wavefile, probability
+        data = self.get_data(temp_pkl_list)
+        return data
 
     def on_epoch_end(self):
         if self.shuffle:
             np.random.shuffle(self.indexes)
 
-    def __data_generation(self, temp_pkl_list):
+    @abstractmethod
+    def get_data(self, temp_pkl_list):
+        """Extract data from each trace.
+        :argument
+            temp_pkl_list: List of input data path.
+
+        :returns
+            Data, label(optional)
+        """
+        raise NotImplementedError
+
+
+class DataGenerator(BaseGenerator):
+    def get_data(self, temp_pkl_list):
         wavefile = np.empty((self.batch_size, *self.dim))
         probability = np.empty((self.batch_size, *self.dim))
         for i, ID in enumerate(temp_pkl_list):
@@ -37,15 +50,8 @@ class DataGenerator(Sequence):
         return wavefile, probability
 
 
-class PredictGenerator(DataGenerator):
-    def __getitem__(self, index):
-        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
-        temp_pkl_list = [self.pkl_list[k] for k in indexes]
-        wavefile = self.__data_generation(temp_pkl_list)
-
-        return wavefile
-
-    def __data_generation(self, temp_pkl_list):
+class PredictGenerator(BaseGenerator):
+    def get_data(self, temp_pkl_list):
         wavefile = np.empty((self.batch_size, *self.dim))
         for i, ID in enumerate(temp_pkl_list):
             trace = read(ID).traces[0]
