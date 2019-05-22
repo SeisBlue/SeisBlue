@@ -28,21 +28,14 @@ def write_pkl(obj, file):
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
-def get_dir_list(file_dir, limit=None):
+def get_dir_list(file_dir, suffix=""):
     file_list = []
-    for file in _list_generator(file_dir):
-        file_list.append(os.path.join(file_dir, file))
-
-        if limit and len(file_list) >= limit:
-            break
+    for file_name in os.listdir(file_dir):
+        f = os.path.join(file_dir, file_name)
+        if file_name.endswith(suffix):
+            file_list.append(f)
 
     return file_list
-
-
-def _list_generator(path):
-    for file in os.listdir(path):
-        if os.path.isfile(os.path.join(path, file)):
-            yield file
 
 
 def read_event_list(file_list):
