@@ -4,7 +4,7 @@ from obspy.signal.trigger import recursive_sta_lta, trigger_onset
 
 from seisnn.io import get_dir_list
 
-predict_pkl_dir = "/mnt/tf_data/pkl/2017_02"
+predict_pkl_dir = "/mnt/tf_data/dataset/2017_02"
 predict_pkl_list = get_dir_list(predict_pkl_dir)
 on = 3.5
 off = 0.5

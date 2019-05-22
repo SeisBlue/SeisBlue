@@ -118,23 +118,23 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
     return stream
 
 
-def write_training_dataset(catalog, sds_root, pkl_dir, random_time=0, remove_dir=False):
+def write_training_dataset(catalog, sds_root, dataset_dir, random_time=0, remove_dir=False):
     if remove_dir:
-        shutil.rmtree(pkl_dir, ignore_errors=True)
-    os.makedirs(pkl_dir, exist_ok=True)
+        shutil.rmtree(dataset_dir, ignore_errors=True)
+    os.makedirs(dataset_dir, exist_ok=True)
 
     pick_list = get_pick_list(catalog)
     pool_size = cpu_count()
 
     with Pool(processes=pool_size, maxtasksperchild=1) as pool:
-        par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, pkl_dir=pkl_dir,
+        par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, pkl_dir=dataset_dir,
                       random_time=random_time)
         pool.map_async(par, catalog.events)
         pool.close()
         pool.join()
 
 
-def _write_picked_trace(event, pick_list, sds_root, pkl_dir, random_time):
+def _write_picked_trace(event, pick_list, sds_root, dataset_dir, random_time):
     t = event.origins[0].time
     stream = read_sds(event, sds_root, random_time)
     for trace in stream:
@@ -142,17 +142,17 @@ def _write_picked_trace(event, pick_list, sds_root, pkl_dir, random_time):
         trace.picks = picks
         trace.pdf = get_pdf(trace)
         time_stamp = trace.stats.starttime.isoformat()
-        trace.write(pkl_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+        trace.write(dataset_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
 
     print(event.file_name + " " + t.isoformat() + " load " + str(len(stream)) + " traces, total "
           + str(len(pick_list)) + " picks")
 
 
-def write_station_dataset(pkl_output_dir, sds_root, nslc, start_time, end_time,
+def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_time,
                           trace_length=30, sample_rate=100, remove_dir=False):
     if remove_dir:
-        shutil.rmtree(pkl_output_dir, ignore_errors=True)
-    os.makedirs(pkl_output_dir, exist_ok=True)
+        shutil.rmtree(dataset_output_dir, ignore_errors=True)
+    os.makedirs(dataset_output_dir, exist_ok=True)
 
     client = Client(sds_root=sds_root)
     net, sta, loc, chan = nslc
@@ -175,7 +175,7 @@ def write_station_dataset(pkl_output_dir, sds_root, nslc, start_time, end_time,
             finally:
                 trace.picks = []
                 time_stamp = trace.stats.starttime.isoformat()
-                trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+                trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
                 counter += 1
 
                 if counter % 100 == 0:
@@ -236,12 +236,12 @@ def read_hyp_inventory(hyp, network, kml_output_dir=None):
     return inventory
 
 
-def write_channel_coordinates(pkl_list, pkl_output_dir, inventory, kml_output_dir=None, remove_pkl_dir=False):
-    if remove_pkl_dir:
-        shutil.rmtree(pkl_output_dir, ignore_errors=True)
-    os.makedirs(pkl_output_dir, exist_ok=True)
+def write_channel_coordinates(dataset_list, dataset_output_dir, inventory, kml_output_dir=None, remove_dataset_dir=False):
+    if remove_dataset_dir:
+        shutil.rmtree(dataset_output_dir, ignore_errors=True)
+    os.makedirs(dataset_output_dir, exist_ok=True)
 
-    for i, file in enumerate(pkl_list):
+    for i, file in enumerate(dataset_list):
         trace = read(file).traces[0]
         network = trace.stats.network
         station = trace.stats.station
@@ -266,7 +266,7 @@ def write_channel_coordinates(pkl_list, pkl_output_dir, inventory, kml_output_di
                 trace.stats.depth = depth
 
                 time_stamp = trace.stats.starttime.isoformat()
-                trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+                trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
                 print(trace.get_id() + " latitude: " + str(lat)[0:5] + " longitude: " + str(lon)[0:6])
 
                 ch_name = []

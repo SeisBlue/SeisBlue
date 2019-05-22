@@ -7,7 +7,7 @@ from seisnn.io import get_dir_list
 from seisnn.pytorch.dataset import WaveProbDataset
 from seisnn.pytorch.model import Nest_Net
 
-pkl_dir = "/mnt/tf_data/pkl/201718select"
+pkl_dir = "/mnt/tf_data/dataset/201718select"
 pkl_list = get_dir_list(pkl_dir)
 
 split_point = -1000

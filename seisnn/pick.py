@@ -58,9 +58,9 @@ def get_picks_from_pdf(trace, height=0.5, distance=100):
     return picks
 
 
-def get_picks_from_dataset(pkl):
+def get_picks_from_dataset(dataset):
     pick_list = []
-    trace = read(pkl, headonly=True).traces[0]
+    trace = read(dataset, headonly=True).traces[0]
     picks = trace.picks
     pick_list.extend(picks)
     return pick_list
@@ -124,14 +124,14 @@ def get_exist_picks(trace, pick_list, phase="P"):
     return tmp_pick
 
 
-def write_pdf_to_dataset(predict, pkl_list, pkl_output_dir, remove_dir=False):
+def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=False):
     if remove_dir:
-        shutil.rmtree(pkl_output_dir, ignore_errors=True)
-    os.makedirs(pkl_output_dir, exist_ok=True)
+        shutil.rmtree(dataset_output_dir, ignore_errors=True)
+    os.makedirs(dataset_output_dir, exist_ok=True)
 
     for i, prob in enumerate(predict):
         try:
-            trace = read(pkl_list[i]).traces[0]
+            trace = read(dataset_list[i]).traces[0]
 
         except IndexError:
             break
@@ -165,7 +165,7 @@ def write_pdf_to_dataset(predict, pkl_list, pkl_output_dir, remove_dir=False):
 
         trace.picks.extend(pdf_picks)
         time_stamp = trace.stats.starttime.isoformat()
-        trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+        trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
 
         if i % 1000 == 0:
             print("Output file... %d out of %d" % (i, len(predict)))

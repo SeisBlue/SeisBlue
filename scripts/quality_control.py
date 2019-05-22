@@ -3,8 +3,8 @@ from obspy import read
 from seisnn.io import get_dir_list, write_pkl
 from seisnn.plot import plot_dataset
 
-pick_pkl = "/mnt/tf_data/catalog/new_pick.pkl"
-predict_pkl_dir = "/mnt/tf_data/pkl/2018_02_18_predict"
+pick_pkl = "/mnt/tf_data/catalog/new_pick.dataset"
+predict_pkl_dir = "/mnt/tf_data/dataset/2018_02_18_predict"
 predict_pkl_list = get_dir_list(predict_pkl_dir)
 
 new_pick = []

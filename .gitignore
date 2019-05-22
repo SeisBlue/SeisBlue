@@ -55,7 +55,7 @@ fabric.properties
 
 /geom/
 /catalog/
-/pkl/
+/dataset/
 /weights/
 /kml/
 /.idea/

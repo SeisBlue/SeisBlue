@@ -3,7 +3,7 @@ from obspy import UTCDateTime
 from seisnn.io import write_station_dataset
 
 sds_root = "/mnt/DATA"
-pkl_output_dir = "/mnt/tf_data/pkl/scan"
+pkl_output_dir = "/mnt/tf_data/dataset/scan"
 xml = "/mnt/tf_data/kml/HL.xml"
 
 start_time = UTCDateTime("2017-04-25 23:14:28")

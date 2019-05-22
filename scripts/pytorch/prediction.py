@@ -6,7 +6,7 @@ from seisnn.pick import write_pdf_to_dataset
 from seisnn.pytorch.dataset import WaveProbDataset
 from seisnn.pytorch.model import Nest_Net
 
-pkl_dir = "/mnt/tf_data/pkl/small_set"
+pkl_dir = "/mnt/tf_data/dataset/small_set"
 pkl_output_dir = pkl_dir + "_predict"
 pkl_list = get_dir_list(pkl_dir)
 

@@ -7,7 +7,7 @@ from seisnn.io import get_dir_list
 from seisnn.tensorflow.generator import DataGenerator
 from seisnn.tensorflow.model import Nest_Net,U_Net
 
-pkl_dir = "/mnt/tf_data/pkl/201718select_random"
+pkl_dir = "/mnt/tf_data/dataset/201718select_random"
 pkl_list = get_dir_list(pkl_dir)
 
 training_generator = DataGenerator(pkl_list[5000:30000], batch_size=8, shuffle=False)

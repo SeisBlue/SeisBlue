@@ -5,8 +5,8 @@ from seisnn.pick import write_pdf_to_dataset
 from seisnn.tensorflow.generator import PredictGenerator
 from seisnn.tensorflow.model import Nest_Net, U_Net
 
-pkl_dir = "/mnt/tf_data/pkl/2018_02_18"
-# pkl_dir = "/mnt/tf_data/pkl/scan"
+pkl_dir = "/mnt/tf_data/dataset/2018_02_18"
+# pkl_dir = "/mnt/tf_data/dataset/scan"
 pkl_output_dir = pkl_dir + "_predict"
 pkl_list = get_dir_list(pkl_dir)
 
