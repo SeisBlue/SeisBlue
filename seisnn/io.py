@@ -13,17 +13,17 @@ from obspy.core.event.catalog import Catalog
 from obspy.core.inventory import Channel, Inventory, Network, Station
 from obspy.core.inventory.util import Distance, Latitude, Longitude
 
-from seisnn.pick import get_exist_picks, get_pick_list, get_probability
+from seisnn.pick import get_exist_picks, get_pick_list, get_pdf
 from seisnn.signal import signal_preprocessing, trim_trace
 
 
-def read_pickle(pkl):
+def read_pkl(pkl):
     with open(pkl, "rb") as f:
         obj = pickle.load(f)
         return obj
 
 
-def write_pickle(obj, file):
+def write_pkl(obj, file):
     with open(file, "wb") as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
@@ -118,7 +118,7 @@ def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_
     return stream
 
 
-def write_training_pkl(catalog, sds_root, pkl_dir, random_time=0, remove_dir=False):
+def write_training_dataset(catalog, sds_root, pkl_dir, random_time=0, remove_dir=False):
     if remove_dir:
         shutil.rmtree(pkl_dir, ignore_errors=True)
     os.makedirs(pkl_dir, exist_ok=True)
@@ -140,7 +140,7 @@ def _write_picked_trace(event, pick_list, sds_root, pkl_dir, random_time):
     for trace in stream:
         picks = get_exist_picks(trace, pick_list)
         trace.picks = picks
-        trace.pdf = get_probability(trace)
+        trace.pdf = get_pdf(trace)
         time_stamp = trace.stats.starttime.isoformat()
         trace.write(pkl_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
 
@@ -148,8 +148,8 @@ def _write_picked_trace(event, pick_list, sds_root, pkl_dir, random_time):
           + str(len(pick_list)) + " picks")
 
 
-def write_station_pkl(pkl_output_dir, sds_root, nslc, start_time, end_time,
-                      trace_length=30, sample_rate=100, remove_dir=False):
+def write_station_dataset(pkl_output_dir, sds_root, nslc, start_time, end_time,
+                          trace_length=30, sample_rate=100, remove_dir=False):
     if remove_dir:
         shutil.rmtree(pkl_output_dir, ignore_errors=True)
     os.makedirs(pkl_output_dir, exist_ok=True)

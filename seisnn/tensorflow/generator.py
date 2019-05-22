@@ -1,5 +1,6 @@
-import numpy as np
 from abc import abstractmethod
+
+import numpy as np
 from obspy import read
 from tensorflow.python.keras.utils import Sequence
 

@@ -1,4 +1,4 @@
-from seisnn.pick import get_picks_from_pkl
+from seisnn.pick import get_picks_from_dataset
 
 
 def precision_recall_f1_score(predict_pkl_list):
@@ -6,7 +6,7 @@ def precision_recall_f1_score(predict_pkl_list):
     val_picks_count = 0
     pre_picks_count = 0
     for i, pkl in enumerate(predict_pkl_list):
-        picks = get_picks_from_pkl(pkl)
+        picks = get_picks_from_dataset(pkl)
         for p in picks:
             if p.evaluation_mode == "manual":
                 val_picks_count += 1

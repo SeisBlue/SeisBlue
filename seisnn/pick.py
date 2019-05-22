@@ -23,7 +23,7 @@ def get_pick_list(catalog):
     return pick_list
 
 
-def get_probability(trace, sigma=0.1):
+def get_pdf(trace, sigma=0.1):
     start_time = trace.stats.starttime
     x_time = trace.times(reftime=start_time)
     pdf = np.zeros((len(x_time),))
@@ -58,7 +58,7 @@ def get_picks_from_pdf(trace, height=0.5, distance=100):
     return picks
 
 
-def get_picks_from_pkl(pkl):
+def get_picks_from_dataset(pkl):
     pick_list = []
     trace = read(pkl, headonly=True).traces[0]
     picks = trace.picks
@@ -124,7 +124,7 @@ def get_exist_picks(trace, pick_list, phase="P"):
     return tmp_pick
 
 
-def write_probability_pkl(predict, pkl_list, pkl_output_dir, remove_dir=False):
+def write_pdf_to_dataset(predict, pkl_list, pkl_output_dir, remove_dir=False):
     if remove_dir:
         shutil.rmtree(pkl_output_dir, ignore_errors=True)
     os.makedirs(pkl_output_dir, exist_ok=True)

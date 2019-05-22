@@ -1,7 +1,7 @@
 from obspy import read
 
-from seisnn.io import get_dir_list, write_pickle
-from seisnn.plot import plot_trace
+from seisnn.io import get_dir_list, write_pkl
+from seisnn.plot import plot_dataset
 
 pick_pkl = "/mnt/tf_data/catalog/new_pick.pkl"
 predict_pkl_dir = "/mnt/tf_data/pkl/2018_02_18_predict"
@@ -16,7 +16,7 @@ try:
             if p.evaluation_mode == "automatic":
                 if not p.evaluation_status == "confirmed" and not p.evaluation_status == "rejected":
                     pick_time = p.time - start_time
-                    plot_trace(trace, xlim=(pick_time - 2, pick_time + 4))
+                    plot_dataset(trace, xlim=(pick_time - 2, pick_time + 4))
                     key_in = input("Confirmed pick? [y/N]")
                     if key_in == "y" or key_in == "Y":
                         print("Current file... %d out of %d" % (i, len(predict_pkl_list)))
@@ -30,5 +30,5 @@ try:
 except KeyboardInterrupt:
     print("Keyboard interrupt.")
 finally:
-    write_pickle(new_pick, pick_pkl)
+    write_pkl(new_pick, pick_pkl)
     print("Pick saved.")

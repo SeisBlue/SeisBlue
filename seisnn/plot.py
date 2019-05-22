@@ -3,10 +3,10 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from seisnn.pick import get_picks_from_pkl
+from seisnn.pick import get_picks_from_dataset
 
 
-def plot_trace(trace, enlarge=False, xlim=None, save_dir=None):
+def plot_dataset(trace, enlarge=False, xlim=None, save_dir=None):
     start_time = trace.stats.starttime
     time_stamp = start_time.isoformat()
 
@@ -70,7 +70,7 @@ def plot_trace(trace, enlarge=False, xlim=None, save_dir=None):
 def plot_error_distribution(predict_pkl_list):
     time_residuals = []
     for i, pkl in enumerate(predict_pkl_list):
-        picks = get_picks_from_pkl(pkl)
+        picks = get_picks_from_dataset(pkl)
         for p in picks:
             if p.time_errors:
                 residual = p.time_errors.get("uncertainty")

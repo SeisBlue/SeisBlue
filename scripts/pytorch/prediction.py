@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from seisnn.io import get_dir_list
-from seisnn.pick import write_probability_pkl
+from seisnn.pick import write_pdf_to_dataset
 from seisnn.pytorch.dataset import WaveProbDataset
 from seisnn.pytorch.model import Nest_Net
 
@@ -41,4 +41,4 @@ with torch.no_grad():
         for trace in outputs:
             predict.append(trace)
 
-write_probability_pkl(predict, pkl_list, pkl_output_dir, remove_dir=True)
+write_pdf_to_dataset(predict, pkl_list, pkl_output_dir, remove_dir=True)

@@ -1,13 +1,13 @@
 from obspy import UTCDateTime
 
-from seisnn.io import write_station_pkl
+from seisnn.io import write_station_dataset
 
 sds_root = "/mnt/DATA"
 pkl_output_dir = "/mnt/tf_data/pkl/scan"
 xml = "/mnt/tf_data/kml/HL.xml"
 
-start_time = UTCDateTime("2018-02-14 12:00:00")
-end_time = start_time + 300
+start_time = UTCDateTime("2017-04-25 23:14:28")
+end_time = start_time + 30
 nslc = ("HL", "*", "*", "*Z")
 
-write_station_pkl(pkl_output_dir, sds_root, nslc, start_time, end_time, remove_dir=True)
+write_station_dataset(pkl_output_dir, sds_root, nslc, start_time, end_time, remove_dir=True)

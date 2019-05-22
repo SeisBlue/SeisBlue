@@ -2,7 +2,7 @@ import os
 
 from obspy import read
 
-from seisnn.io import get_dir_list, read_pickle
+from seisnn.io import get_dir_list, read_pkl
 from seisnn.pick import get_exist_picks
 
 pkl_dir = "/mnt/tf_data/pkl/2018_02_18_predict"
@@ -10,7 +10,7 @@ pkl_list = get_dir_list(pkl_dir)
 pkl_output_dir = pkl_dir + "_updated"
 
 pick_pkl = "/mnt/tf_data/catalog/new_pick.pkl"
-pick_list = read_pickle(pick_pkl)
+pick_list = read_pkl(pick_pkl)
 
 os.makedirs(pkl_output_dir, exist_ok=True)
 
