@@ -9,6 +9,7 @@ from obspy import read
 from obspy.core.event.base import QuantityError, WaveformStreamID
 from obspy.core.event.origin import Pick
 from scipy.signal import find_peaks
+from tqdm import tqdm
 
 
 def get_pick_list(catalog):
@@ -128,46 +129,45 @@ def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=F
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
     os.makedirs(dataset_output_dir, exist_ok=True)
 
-    for i, prob in enumerate(predict):
-        try:
-            trace = read(dataset_list[i]).traces[0]
+    with tqdm(total=len(dataset_list)) as pbar:
+        for i, prob in enumerate(predict):
+            try:
+                trace = read(dataset_list[i]).traces[0]
 
-        except IndexError:
-            break
+            except IndexError:
+                break
 
-        trace_length = trace.data.size
-        pdf = prob.reshape(trace_length, )
+            trace_length = trace.data.size
+            pdf = prob.reshape(trace_length, )
 
-        if pdf.max():
-            trace.pdf = pdf / pdf.max()
-        else:
-            trace.pdf = pdf
-        pdf_picks = get_picks_from_pdf(trace)
+            if pdf.max():
+                trace.pdf = pdf / pdf.max()
+            else:
+                trace.pdf = pdf
+            pdf_picks = get_picks_from_pdf(trace)
 
-        if trace.picks:
-            for val_pick in trace.picks:
+            if trace.picks:
+                for val_pick in trace.picks:
+                    for pre_pick in pdf_picks:
+                        pre_pick.evaluation_mode = "automatic"
+
+                        residual = get_time_residual(val_pick, pre_pick)
+                        pre_pick.time_errors = QuantityError(residual)
+
+                        if is_close_pick(val_pick, pre_pick, delta=0.1):
+                            pre_pick.evaluation_status = "confirmed"
+                        elif is_close_pick(val_pick, pre_pick, delta=1):
+                            pre_pick.evaluation_status = "rejected"
+
+            else:
+                trace.picks = []
                 for pre_pick in pdf_picks:
                     pre_pick.evaluation_mode = "automatic"
 
-                    residual = get_time_residual(val_pick, pre_pick)
-                    pre_pick.time_errors = QuantityError(residual)
-
-                    if is_close_pick(val_pick, pre_pick, delta=0.1):
-                        pre_pick.evaluation_status = "confirmed"
-                    elif is_close_pick(val_pick, pre_pick, delta=1):
-                        pre_pick.evaluation_status = "rejected"
-
-        else:
-            trace.picks = []
-            for pre_pick in pdf_picks:
-                pre_pick.evaluation_mode = "automatic"
-
-        trace.picks.extend(pdf_picks)
-        time_stamp = trace.stats.starttime.isoformat()
-        trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
-
-        if i % 1000 == 0:
-            print("Output file... %d out of %d" % (i, len(predict)))
+            trace.picks.extend(pdf_picks)
+            time_stamp = trace.stats.starttime.isoformat()
+            trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+            pbar.update()
 
 
 def is_close_pick(validate_pick, predict_pick, delta=0.1):
@@ -183,5 +183,3 @@ def get_time_residual(val_pick, pre_pick):
     if is_close_pick(val_pick, pre_pick, delta=0.5):
         residual = val_pick.time - pre_pick.time
         return residual
-    else:
-        return None
