@@ -14,12 +14,11 @@ from scipy.signal import find_peaks
 def get_pick_list(catalog):
     pick_list = []
     for event in catalog:
-        for pick in event.picks:
-            pick_list.append(pick)
-
+        for p in event.picks:
+            if event.origins:
+                p.origin = event.origins[0]
+            pick_list.append(p)
     pick_list.sort(key=lambda pick: pick.time)
-    print("total " + str(len(pick_list)) + " picks")
-
     return pick_list
 
 
@@ -66,7 +65,7 @@ def get_picks_from_dataset(dataset):
     return pick_list
 
 
-def _filter_pick_time_window(pick_list, start_time, end_time):
+def _search_pick(pick_list, start_time, end_time):
     # binary search, pick_list must be sorted by time
     pick_time_key = []
     for pick in pick_list:
@@ -87,7 +86,7 @@ def get_exist_picks(trace, pick_list, phase="P"):
     location = trace.stats.location
     channel = "*" + trace.stats.channel[-1]
 
-    pick_list = _filter_pick_time_window(pick_list, start_time, end_time)
+    pick_list = _search_pick(pick_list, start_time, end_time)
 
     tmp_pick = []
     for pick in pick_list:

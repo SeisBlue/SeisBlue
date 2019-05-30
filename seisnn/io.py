@@ -6,15 +6,22 @@ from functools import partial
 from multiprocessing import Pool, cpu_count
 
 import numpy as np
+import scipy
 from obspy import read, read_events
 from obspy.clients.filesystem.sds import Client
-from obspy.core import Stream
 from obspy.core.event.catalog import Catalog
 from obspy.core.inventory import Channel, Inventory, Network, Station
 from obspy.core.inventory.util import Distance, Latitude, Longitude
+from tqdm import tqdm
 
-from seisnn.pick import get_exist_picks, get_pick_list, get_pdf
+from seisnn.pick import get_exist_picks, get_pdf, get_pick_list
 from seisnn.signal import signal_preprocessing, trim_trace
+
+
+def batch(iterable, n=1):
+    iter_len = len(iterable)
+    for ndx in range(0, iter_len, n):
+        yield iterable[ndx:min(ndx + n, iter_len)]
 
 
 def read_pkl(pkl):
@@ -40,105 +47,72 @@ def get_dir_list(file_dir, suffix=""):
 
 def read_event_list(file_list):
     catalog = Catalog()
-    for file in file_list:
-        catalog += _read_event(file)
-
-    catalog.events.sort(key=lambda event: event.origins[0].time)
-
-    return catalog
-
-
-def _read_event(event_file):
-    catalog = Catalog()
     try:
-        cat = read_events(event_file)
-        for event in cat.events:
-            event.file_name = event_file
-
-        catalog += cat
+        for file in file_list:
+            catalog += read_events(file)
 
     except Exception as err:
         print(err)
 
+    catalog.events.sort(key=lambda event: event.origins[0].time)
     return catalog
 
 
-def read_sds(event, sds_root, phase="P", component="Z", trace_length=30, sample_rate=100, random_time=0):
-    stream = Stream()
+def read_sds(pick, sds_root, phase="P", component="Z", trace_length=30, sample_rate=100):
     client = Client(sds_root=sds_root)
-    for pick in event.picks:
-        if not pick.phase_hint == phase:
-            print("Skip " + pick.phase_hint + " phase pick")
-            continue
+    if not pick.phase_hint == phase:
+        return
 
-        if not pick.waveform_id.channel_code[-1] == component:
-            print(pick.waveform_id.channel_code)
-            continue
+    if not pick.waveform_id.channel_code[-1] == component:
+        return
 
-        t = event.origins[0].time
+    t = pick.time
+    t = t - 30 + np.random.random_sample() * 30
 
-        if pick.time > t + trace_length:
-            t = pick.time - trace_length + 5
-            print("origin: " + t.isoformat() + " pick: " + pick.time.isoformat())
+    net = "*"
+    sta = pick.waveform_id.station_code
+    loc = "*"
+    chan = "??" + component
 
-        if random_time:
-            t = t - random_time + np.random.random_sample() * random_time * 2
+    st = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
 
-        net = "*"
-        sta = pick.waveform_id.station_code
-        loc = "*"
-        chan = "??" + component
-
-        st = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
-
-        if st.traces:
-            trace = st.traces[0]
-            trace = signal_preprocessing(trace)
-
-            points = trace_length * sample_rate + 1
-            try:
-                trim_trace(trace, points)
-
-            except Exception as err:
-                print(err)
-                continue
-
-            stream += st.traces[0]
-
-        else:
-            print("No trace in ", t.isoformat(), net, sta, loc, chan)
-
-    return stream
+    if st.traces:
+        trace = st.traces[0]
+        trace = signal_preprocessing(trace)
+        points = trace_length * sample_rate + 1
+        trim_trace(trace, points)
+        return trace
 
 
-def write_training_dataset(catalog, sds_root, dataset_dir, random_time=0, remove_dir=False):
+def write_training_dataset(catalog, sds_root, output_dir, batch_size=100, remove_dir=False):
     if remove_dir:
-        shutil.rmtree(dataset_dir, ignore_errors=True)
-    os.makedirs(dataset_dir, exist_ok=True)
+        shutil.rmtree(output_dir, ignore_errors=True)
+    os.makedirs(output_dir, exist_ok=True)
 
     pick_list = get_pick_list(catalog)
-    pool_size = cpu_count()
 
-    with Pool(processes=pool_size, maxtasksperchild=1) as pool:
-        par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, pkl_dir=dataset_dir,
-                      random_time=random_time)
-        pool.map_async(par, catalog.events)
-        pool.close()
-        pool.join()
+    par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, dataset_dir=output_dir)
+    pool = Pool(processes=cpu_count(), maxtasksperchild=1)
+
+    for _ in tqdm(pool.imap_unordered(par, batch(pick_list, batch_size)),
+                  total=int(np.ceil(len(pick_list) / batch_size))):
+        pass
+
+    pool.close()
+    pool.join()
 
 
-def _write_picked_trace(event, pick_list, sds_root, dataset_dir, random_time):
-    t = event.origins[0].time
-    stream = read_sds(event, sds_root, random_time)
-    for trace in stream:
-        picks = get_exist_picks(trace, pick_list)
-        trace.picks = picks
+def _write_picked_trace(batch_picks, pick_list, sds_root, dataset_dir):
+    for pick in batch_picks:
+        scipy.random.seed()
+        trace = read_sds(pick, sds_root)
+        if not trace:
+            continue
+        exist_picks = get_exist_picks(trace, pick_list)
+        trace.picks = exist_picks
         trace.pdf = get_pdf(trace)
         time_stamp = trace.stats.starttime.isoformat()
         trace.write(dataset_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
-
-    print(event.file_name + " " + t.isoformat() + " load " + str(len(stream)) + " traces, total "
-          + str(len(pick_list)) + " picks")
 
 
 def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_time,
@@ -229,7 +203,8 @@ def read_hyp_inventory(hyp, network, kml_output_dir=None):
     return inventory
 
 
-def write_channel_coordinates(dataset_list, dataset_output_dir, inventory, kml_output_dir=None, remove_dataset_dir=False):
+def write_channel_coordinates(dataset_list, dataset_output_dir, inventory, kml_output_dir=None,
+                              remove_dataset_dir=False):
     if remove_dataset_dir:
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
     os.makedirs(dataset_output_dir, exist_ok=True)
