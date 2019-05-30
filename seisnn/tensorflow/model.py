@@ -2,6 +2,20 @@ from tensorflow.python.keras.layers import Conv2D, Conv2DTranspose, Cropping2D, 
     ZeroPadding2D, concatenate
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.regularizers import l2
+import numpy as np
+
+
+def unet_padding_size(length, pool_size, layers=4):
+    output = length
+    for _ in range(layers):
+        output = int(np.ceil(output / pool_size))
+
+    padding = output * (pool_size ** layers) - length
+    lpad = int(np.ceil(padding / 2))
+    rpad = int(np.floor(padding / 2))
+
+    return lpad, rpad
+
 
 """
 U-net, Nest-Net model from: 
@@ -40,7 +54,7 @@ def U_Net(img_rows, img_cols, color_type=1, num_class=1):
     # nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 4)
     kernel_size = (1, 7)
-    padding_size = ((0, 0), (35, 36))
+    padding_size = ((0, 0), unet_padding_size(img_cols, pool_size[1]))
 
     img_input = Input(shape=(img_rows, img_cols, color_type), name='main_input')
     zpad = ZeroPadding2D(padding_size)(img_input)
@@ -94,7 +108,7 @@ def Nest_Net(img_rows, img_cols, color_type=1, num_class=1, deep_supervision=Fal
     nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 2)
     kernel_size = (1, 7)
-    padding_size = ((0, 0), (3, 4))
+    padding_size = ((0, 0), unet_padding_size(img_cols, pool_size[1]))
 
     img_input = Input(shape=(img_rows, img_cols, color_type), name='main_input')
     zpad = ZeroPadding2D(padding_size)(img_input)
