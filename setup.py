@@ -20,7 +20,8 @@ setup(
         'matplotlib>=3.0.3',
         'numpy>=1.16.2',
         'scipy>=1.2.1',
-        'obspy>=1.1.1'
+        'obspy>=1.1.1',
+        'tqdm>=4.32.1'
     ],
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",
