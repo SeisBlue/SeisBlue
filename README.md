@@ -2,7 +2,7 @@
 
 Seismic event P phase picking project
 
-Main framework: Obspy, Seisan, Tensorflow with Keras, Pytorch
+Main framework: Obspy, Seisan, Tensorflow with Keras
 
 Using U-net to generate pick probability
 
@@ -46,7 +46,7 @@ In the [scripts](scripts) folder:
   
 Training:
 
-You can choose between [scripts/tensorflow](scripts/tensorflow) or [scripts/pytorch](scripts/pytorch)
+You can choose between [scripts/tensorflow](scripts/tensorflow)
 
 - [pre_training.py](scripts/tensorflow/pre_training.py)
   - Pre-train the model using small dataset.
@@ -57,7 +57,7 @@ You can choose between [scripts/tensorflow](scripts/tensorflow) or [scripts/pyto
 
 Model:
 
-The model is stored in [seisnn/tensorflow](seisnn/tensorflow) or [seisnn/pytorch](seisnn/pytorch) 
+The model is stored in [seisnn/tensorflow](seisnn/tensorflow)
 
 - Nest_Net
   - Unet++ code modified from [MrGiovanni](https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py)
