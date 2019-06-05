@@ -9,7 +9,7 @@ List of pre-installed python packages:
 - scikit-learn 
 - tqdm 
 
-If you want to modify the [Dockerfile](docker/tensorflow/Dockerfile), look up [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) for instructions.
+If you want to modify the [Dockerfile](Dockerfile), look up [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) for instructions.
 
 Build the Docker image:
 
@@ -19,7 +19,7 @@ Create workspace for home, will mount later into the container:
 
 `mkdir workspace`
 
-Run docker container, you can download the script [run.sh](docker/tensorflow/run.sh).
+Run docker container, you can download the script [run.sh](run.sh).
 
 change the followings: 
 - 49154 for ssh port
