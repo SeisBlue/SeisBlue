@@ -26,17 +26,19 @@ change the followings:
 - </path/to/database> for database or trace data folder
 - </path/to/workspace> for home in the container
 
-`docker run -d \
+```
+docker run -d \
     --runtime=nvidia \
-	-p 49154:22 \
-	-p 0.0.0.0:6006:6006 \
-	-p 8080:8080 \
-	-v /etc/passwd:/etc/passwd:ro \
-	-v /etc/shadow:/etc/shadow:ro \
-	-v </path/to/database>:/mnt/DATA \
-	-v </path/to/workspace>:/home/${USER} \
-	--name tfx tfx_ssh 
-`
+    -p 49154:22 \
+    -p 0.0.0.0:6006:6006 \
+    -p 8080:8080 \
+    -v /etc/passwd:/etc/passwd:ro \
+    -v /etc/shadow:/etc/shadow:ro \
+    -v </path/to/database>:/mnt/DATA \
+    -v </path/to/workspace>:/home/${USER} \
+    --name tfx \
+    tfx_ssh
+```
 
 Now you can SSH into the container with your username and password.
 
