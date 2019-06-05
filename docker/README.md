@@ -11,7 +11,7 @@ Create workspace for home, will mount later into the container:
 
 `mkdir workspace`
 
-Run docker container, change the followings in [run.sh](docker/tensorflow/run.sh): 
+Run docker container, change the followings in [run.sh](tensorflow/run.sh): 
 - 49154 for ssh port
 - </path/to/database> for database or trace data folder
 - </path/to/workspace> for home in the container
@@ -30,6 +30,6 @@ Put your script in the workspace folder and you will find them in the container'
 
 ---
 
-Customized your Dockerfile in [docker/tensorflow](docker/tensorflow)
+Customized your Dockerfile in [docker/tensorflow](tensorflow)
 
-Remove all Docker container and images with [docker_clean_all.sh](docker/docker_clean_all)
+Remove all Docker container and images with [docker_clean_all.sh](docker_clean_all)
