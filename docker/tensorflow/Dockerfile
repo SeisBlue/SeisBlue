@@ -1,11 +1,16 @@
-FROM tensorflow/tensorflow:2.0.0a0-gpu-py3-jupyter
+FROM tensorflow/tensorflow:nightly-gpu-py3-jupyter
 
 RUN apt-get update && apt-get upgrade -y && apt-get install openssh-server -y
+RUN pip install --upgrade pip
+
+ENV TFX_DIR "/tfx"
+ENV AIRFLOW_HOME "/airflow"
+ENV SLUGIFY_USES_TEXT_UNIDECODE "yes"
+
+RUN python -m pip --no-cache-dir install --upgrade tfx apache-airflow docker
 RUN python -m pip --no-cache-dir install --upgrade obspy scikit-learn sklearn tqdm
 
 RUN mkdir /var/run/sshd
-RUN echo 'root:CHANGEPASSWORD' | chpasswd
-
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # SSH login fix. Otherwise user is kicked off after login
