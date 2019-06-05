@@ -1,4 +1,4 @@
-#Tensorflow customized image
+# Tensorflow customized image
 
 List of pre-installed python packages:
 - tensorflow
