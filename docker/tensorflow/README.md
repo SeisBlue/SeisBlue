@@ -1,32 +1,54 @@
-# Docker 
-Nvidia-docker currently only works on Linux.
+#Tensorflow customized image
 
-Install [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [nvidia-docker](https://github.com/NVIDIA/nvidia-docker).
+List of pre-installed python packages:
+- tensorflow
+- tfx 
+- apache-airflow 
+- docker
+- obspy 
+- scikit-learn 
+- tqdm 
 
-Download the Dockerfile to the server.
+If you want to modify the [Dockerfile](docker/tensorflow/Dockerfile), look up [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) for instructions.
 
-Change the root password in the Dockerfile
+Build the Docker image:
 
-Build docker image:
+`./build_docker_image.sh`
 
-`docker build -t tensorflow_ssh .`
+Create workspace for home, will mount later into the container:
 
-Run docker container, change the port "49154":
+`mkdir workspace`
 
-`nvidia-docker run -d -p 49154:22 --name tf_ssh tensorflow_ssh`
+Run docker container, you can download the script [run.sh](docker/tensorflow/run.sh).
 
-Remove container:
+change the followings: 
+- 49154 for ssh port
+- </path/to/database> for database or trace data folder
+- </path/to/workspace> for home in the container
 
-`docker container rm tf_ssh`
+`docker run -d \
+    --runtime=nvidia \
+	-p 49154:22 \
+	-p 0.0.0.0:6006:6006 \
+	-p 8080:8080 \
+	-v /etc/passwd:/etc/passwd:ro \
+	-v /etc/shadow:/etc/shadow:ro \
+	-v </path/to/database>:/mnt/DATA \
+	-v </path/to/workspace>:/home/${USER} \
+	--name tfx tfx_ssh 
+`
 
-Remove image:
+Now you can SSH into the container with your username and password.
 
-`docker image rm tensorflow_ssh`
+`ssh username@localhost -p49154`  
 
 ---
 
-You can pull the pre-built image from the dockerhub:
+Remove container:
 
-`docker pull jimmy60504/tensorflow_ssh`
+`docker container rm tfx`
 
-The root password is ssh.
+Remove image:
+
+`docker image rm tfx_ssh`
+
