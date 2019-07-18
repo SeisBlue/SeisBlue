@@ -17,9 +17,8 @@ setup(
     url='https://github.com/jimmy60504/SeisNN',
     python_requires='>=3.5',
     install_requires=[
-        'matplotlib>=3.0.3',
-        'numpy>=1.16.2',
-        'scipy>=1.2.1',
+        'tensorflow>=1.13.0',
+        'apache-beam>=2.13.0',
         'obspy>=1.1.1',
         'tqdm>=4.32.1'
     ],
