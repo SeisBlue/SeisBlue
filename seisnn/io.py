@@ -67,7 +67,7 @@ def read_sds(pick, sds_root, phase="P", component="Z", trace_length=30, sample_r
         return
 
     t = pick.time
-    t = t - 30 + np.random.random_sample() * 30
+    t = t - trace_length + np.random.random_sample() * trace_length
 
     net = "*"
     sta = pick.waveform_id.station_code
@@ -125,6 +125,7 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
     net, sta, loc, chan = nslc
     t = start_time
     counter = 0
+
     while t < end_time:
         stream = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
         stream = signal_preprocessing(stream)
@@ -145,11 +146,7 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
                 trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
                 counter += 1
 
-                if counter % 100 == 0:
-                    print("Output file... %d" % counter)
-
         t += trace_length
-    print("Output file... Total %d" % counter)
 
 
 def read_hyp_inventory(hyp, network, kml_output_dir=None):
