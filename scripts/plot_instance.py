@@ -4,7 +4,7 @@ from obspy import read
 from seisnn.io import get_dir_list
 from seisnn.plot import plot_dataset
 
-# pkl_dir = "/mnt/tf_data/dataset/2018_02_18_random_predict"
+# pkl_dir = "/mnt/tf_data/dataset/201718select_random"
 pkl_dir = "/mnt/tf_data/dataset/2018_02_18_predict"
 # pkl_dir = "/mnt/tf_data/dataset/scan_predict"
 
@@ -14,7 +14,7 @@ index = np.arange(len(pkl_list))
 # np.random.shuffle(index)
 
 plot_dir = "/mnt/tf_data/plot"
-for i in index[:200]:
+for i in index[:20]:
     trace = read(pkl_list[i]).traces[0]
     plot_dataset(trace)
     # plot_trace(trace, save_dir=plot_dir)

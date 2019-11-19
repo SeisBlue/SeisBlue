@@ -1,6 +1,7 @@
 import os
 
 from obspy import read
+from tqdm import tqdm
 
 from seisnn.io import get_dir_list, read_pkl
 from seisnn.pick import get_exist_picks
@@ -14,13 +15,12 @@ pick_list = read_pkl(pick_pkl)
 
 os.makedirs(pkl_output_dir, exist_ok=True)
 
-for i, pkl in enumerate(pkl_list):
-    trace = read(pkl).traces[0]
-    new_picks = get_exist_picks(trace, pick_list)
-    trace.picks.extend(new_picks)
+with tqdm(total=len(pkl_list)) as pbar:
+    for i, pkl in enumerate(pkl_list):
+        trace = read(pkl).traces[0]
+        new_picks = get_exist_picks(trace, pick_list)
+        trace.picks.extend(new_picks)
 
-    time_stamp = trace.stats.starttime.isoformat()
-    trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".dataset", format="PICKLE")
-
-    if i % 1000 == 0:
-        print("Output file... %d out of %d" % (i, len(pkl_list)))
+        time_stamp = trace.stats.starttime.isoformat()
+        trace.write(pkl_output_dir + '/' + time_stamp + trace.get_id() + ".dataset", format="PICKLE")
+        pbar.update()

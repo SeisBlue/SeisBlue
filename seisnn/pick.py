@@ -129,6 +129,7 @@ def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=F
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
     os.makedirs(dataset_output_dir, exist_ok=True)
 
+    print("Output file:")
     with tqdm(total=len(dataset_list)) as pbar:
         for i, prob in enumerate(predict):
             try:

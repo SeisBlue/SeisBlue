@@ -15,3 +15,4 @@ catalog_pkl = "/mnt/tf_data/catalog/saved_catalog.pkl"
 cat = read_pkl("/mnt/tf_data/catalog/saved_small_catalog.pkl")
 
 write_training_dataset(cat, sds_root, output_dir=output_dir, batch_size=100, remove_dir=True)
+
