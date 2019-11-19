@@ -41,7 +41,7 @@ with beam.Pipeline(options=PipelineOptions()) as p:
                | 'Extract stream features' >> beam.ParDo(StreamFeatureExtraction())
                )
 
-    _ = (dataset
+    transform = (dataset
          | 'Feature to Example' >> beam.ParDo(FeatureToExample())
-         # | 'Write dataset' >> tfrecordio.WriteToTFRecord("")
+         | 'Write dataset' >> tfrecordio.WriteToTFRecord(tfrecord_dir, coder=beam.coders.ProtoCoder)
          )

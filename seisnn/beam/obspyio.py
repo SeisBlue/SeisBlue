@@ -1,5 +1,4 @@
 import os
-import re
 
 import apache_beam as beam
 import numpy as np
