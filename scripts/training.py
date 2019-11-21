@@ -4,8 +4,8 @@ from tensorflow.python import keras
 from tensorflow.python.keras.optimizers import Adam
 
 from seisnn.io import get_dir_list
-from seisnn.tensorflow.generator import DataGenerator
-from seisnn.tensorflow.model import Nest_Net,U_Net
+from seisnn.generator import DataGenerator
+from seisnn.model import Nest_Net
 
 pkl_dir = "/mnt/tf_data/dataset/201718select_random"
 pkl_list = get_dir_list(pkl_dir)

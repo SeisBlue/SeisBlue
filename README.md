@@ -48,11 +48,11 @@ Training:
 
 You can choose between [scripts/tensorflow](scripts/tensorflow)
 
-- [pre_training.py](scripts/tensorflow/pre_training.py)
+- [pre_training.py](scripts/pre_training.py)
   - Pre-train the model using small dataset.
-- [training.py](scripts/tensorflow/training.py)
+- [training.py](scripts/training.py)
   - Train the model with the pre-trained weight.
-- [prediction.py](scripts/tensorflow/prediction.py)
+- [prediction.py](scripts/prediction.py)
   - Predict the probability of the picks and write into the dataset.
 
 Model:

@@ -2,8 +2,8 @@ from tensorflow.python.keras.optimizers import Adam
 
 from seisnn.io import get_dir_list
 from seisnn.pick import write_pdf_to_dataset
-from seisnn.tensorflow.generator import PredictGenerator
-from seisnn.tensorflow.model import Nest_Net, U_Net
+from seisnn.generator import PredictGenerator
+from seisnn.model import Nest_Net
 
 pkl_dir = "/mnt/tf_data/dataset/2018_02_18"
 # pkl_dir = "/mnt/tf_data/dataset/scan"

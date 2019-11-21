@@ -1,6 +1,6 @@
-FROM tensorflow/tensorflow:nightly-gpu-py3-jupyter
+FROM tensorflow/tensorflow:2.0.0-gpu-py3-jupyter
 
-RUN apt-get update && apt-get upgrade -y && apt-get install sudo openssh-server -y
+RUN apt-get update && apt-get upgrade -y && apt-get install sudo openssh-server vim htop screen reptyr git -y
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 RUN pip install --upgrade pip
 
