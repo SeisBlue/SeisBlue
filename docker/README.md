@@ -5,7 +5,7 @@ Install [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [n
 
 You can pull the pre-built image from the dockerhub:
 
-`docker pull jimmy60504/tfx_ssh`
+`docker pull jimmy60504/tf_ssh`
 
 Create workspace for home, will mount later into the container:
 
@@ -74,8 +74,8 @@ docker run -d \
     -v </path/to/database>:/mnt/SDS_ROOT \
     -v </path/to/sfile>:/mnt/SFILE_ROOT \
     -v </path/to/workspace>:/home/${USER} \
-    --name tfx \
-    tfx_ssh
+    --name tf \
+    tf_ssh
 ```
 
 Now you can SSH into the container with your username and password.
@@ -86,9 +86,9 @@ Now you can SSH into the container with your username and password.
 
 Remove container:
 
-`docker container rm tfx`
+`docker container rm tf`
 
 Remove image:
 
-`docker image rm tfx_ssh`
+`docker image rm tf_ssh`
 

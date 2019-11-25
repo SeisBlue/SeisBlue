@@ -1,4 +1,4 @@
-docker container rm -f tfx
+docker container rm -f tf
 docker run -d \
     --runtime=nvidia \
 	-p 49154:22 \
@@ -9,4 +9,4 @@ docker run -d \
 	-v /etc/group:/etc/group:ro \
 	-v </path/to/database>:/mnt/DATA \
 	-v </path/to/workspace>:/home/${USER} \
-	--name tfx tfx_ssh
+	--name tf tf_ssh

@@ -1,1 +1,1 @@
-docker build -t tfx_ssh .
+docker build -t tf_ssh .
