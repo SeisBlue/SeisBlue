@@ -1,15 +1,14 @@
 FROM tensorflow/tensorflow:2.0.0-gpu-py3-jupyter
 
-RUN apt-get update && apt-get upgrade -y && apt-get install sudo openssh-server vim htop screen reptyr git -y
-RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
-RUN pip install --upgrade pip
-
 ENV TFX_DIR "/tfx"
-ENV AIRFLOW_HOME "/airflow"
-ENV SLUGIFY_USES_TEXT_UNIDECODE "yes"
 
-RUN python -m pip --no-cache-dir install --upgrade tfx apache-airflow docker
-RUN python -m pip --no-cache-dir install --upgrade obspy scikit-learn sklearn tqdm
+RUN sed -i 's/archive.ubuntu.com/free.nchc.org.tw/g' /etc/apt/sources.list
+RUN apt-get update && apt-get upgrade -y && apt-get install sudo openssh-server vim htop screen reptyr git -y
+
+RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
+
+RUN pip install --upgrade pip
+RUN python -m pip --no-cache-dir install --upgrade tfx docker obspy scikit-learn sklearn tqdm
 
 RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
