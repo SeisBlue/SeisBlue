@@ -34,7 +34,7 @@ Installation:
 
 In the [scripts](scripts) folder:
  
-- [generate_dataset.py](scripts/generate_dataset.py)
+- [preprocessing.py](scripts/preprocessing.py)
   - Make S-Files into training .pkl datasets.
 - [evalution.py](seisnn/qc.py)
   - Calculate precision, recall and F1 score.
@@ -46,18 +46,14 @@ In the [scripts](scripts) folder:
   
 Training:
 
-You can choose between [scripts/tensorflow](scripts/tensorflow)
-
-- [pre_training.py](scripts/pre_training.py)
+- [pre_training.py](scripts/pre_train.py)
   - Pre-train the model using small dataset.
 - [training.py](scripts/training.py)
   - Train the model with the pre-trained weight.
-- [prediction.py](scripts/prediction.py)
+- [prediction.py](scripts/predict.py)
   - Predict the probability of the picks and write into the dataset.
 
 Model:
-
-The model is stored in [seisnn/tensorflow](seisnn/tensorflow)
 
 - Nest_Net
   - Unet++ code modified from [MrGiovanni](https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py)
