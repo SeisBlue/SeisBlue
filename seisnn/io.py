@@ -2,6 +2,7 @@ import fnmatch
 import os
 import pickle
 import shutil
+import yaml
 from functools import partial
 from multiprocessing import Pool, cpu_count
 
@@ -18,11 +19,20 @@ from seisnn.pick import get_exist_picks, get_pdf, get_pick_list
 from seisnn.signal import signal_preprocessing, trim_trace
 
 
+def make_dirs(path):
+    if not os.path.isdir(path):
+        os.makedirs(path, mode=0o777)
+
+
 def batch(iterable, n=1):
     iter_len = len(iterable)
     for ndx in range(0, iter_len, n):
         yield iterable[ndx:min(ndx + n, iter_len)]
 
+def read_config():
+    with open('../config.yaml', 'r') as file:
+        config = yaml.full_load(file)
+    return config
 
 def read_pkl(pkl):
     with open(pkl, "rb") as f:
@@ -33,6 +43,31 @@ def read_pkl(pkl):
 def write_pkl(obj, file):
     with open(file, "wb") as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+
+
+def read_tfrecord():
+    pass
+
+
+def write_tfrecord(output_dir, file_name):
+    import tensorflow as tf
+    from seisnn.example_proto import trace_to_example
+
+    save_file = os.path.join(output_dir, '{}.tfrecord'.format(file_name))
+    with tf.io.TFRecordWriter(save_file) as writer:
+        tf_example = trace_to_example(save_file)
+        writer.write(tf_example)
+
+
+def parallel(par, file_list, batch_size=100):
+    pool = Pool(processes=cpu_count(), maxtasksperchild=1)
+
+    for _ in tqdm(pool.imap_unordered(par, batch(file_list, batch_size)),
+                  total=int(np.ceil(len(file_list) / batch_size))):
+        pass
+
+    pool.close()
+    pool.join()
 
 
 def get_dir_list(file_dir, suffix=""):
@@ -92,14 +127,7 @@ def write_training_dataset(catalog, sds_root, output_dir, batch_size=100, remove
     pick_list = get_pick_list(catalog)
 
     par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, dataset_dir=output_dir)
-    pool = Pool(processes=cpu_count(), maxtasksperchild=1)
-
-    for _ in tqdm(pool.imap_unordered(par, batch(pick_list, batch_size)),
-                  total=int(np.ceil(len(pick_list) / batch_size))):
-        pass
-
-    pool.close()
-    pool.join()
+    parallel(par, pick_list, batch_size)
 
 
 def _write_picked_trace(batch_picks, pick_list, sds_root, dataset_dir):
