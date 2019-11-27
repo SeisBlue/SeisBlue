@@ -35,6 +35,9 @@ Installation:
 
       git clone https://github.com/jimmy60504/SeisNN.git
 
+- Change SDS_ROOT and WORKSPACE in [config.py](scripts/config.py) 
+- Run  [config.py](scripts/config.py)  to generate config.yaml
+
 In the [scripts](scripts) folder:
 
 Preprocessing:
