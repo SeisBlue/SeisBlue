@@ -10,7 +10,9 @@ Using U-net to generate pick probability
 
 ---
 
-Early access
+# Warning 
+
+This version is unstable. Do not use now.
 
 The code is still in the development state, API will change frequently. 
 
@@ -27,36 +29,41 @@ Prerequisite:
 
 Installation:
 
-- pip install seisnn
-- Clone this repository
 - Follow the instructions in the [Docker](docker) folder to create a Docker container.
 - SSH into the Docker container you create.
+- Clone this repo in the workspace
+
+      git clone https://github.com/jimmy60504/SeisNN.git
 
 In the [scripts](scripts) folder:
- 
-- [preprocessing.py](scripts/preprocessing/training_set_to_tfrecord.py)
-  - Make S-Files into training .pkl datasets.
-- [evalution.py](seisnn/qc.py)
-  - Calculate precision, recall and F1 score.
-  - Plot error distribution.
-- [plot_instance.py](scripts/evaluation/plot_instance.py)
-  - Plot the wavefile, picks and the probability form the .pkl dataset.
-- [scanning.py](scripts/preprocessing/scanning.py)
-  - Scan through all stations available in the given time window, transfer into .pkl dataset.
+
+Preprocessing:
+
+- Turn catalog and trace into training set
+- Add coordinate 
+- Scan through continuous data
   
 Training:
 
-- [pre_training.py](scripts/training/pre_train.py)
-  - Pre-train the model using small dataset.
-- [training.py](scripts/training/training.py)
-  - Train the model with the pre-trained weight.
-- [prediction.py](scripts/predict/predict.py)
-  - Predict the probability of the picks and write into the dataset.
+- Pre-train
+- Training
+- Predict from saved model
 
-Model:
+Evaluate:
 
-- Nest_Net
-  - Unet++ code modified from [MrGiovanni](https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py)
+- Plot picking instances
+- Calculate F1 score
+- Quality control
+
+Post-processing: (not yet)
+
+- Output picks
+- Earthquake location 
+- Output s-file
+
+Prototypes:
+
+- Small example of some function
 
 ---
 
