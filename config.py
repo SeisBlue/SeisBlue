@@ -1,13 +1,15 @@
 import os
 import yaml
+
 from seisnn.utils import make_dirs
 
 SDS_ROOT = '/mnt/SDS_ROOT'
-WORKSPACE = '/home/jimmy'
+WORKSPACE = os.path.expanduser('~')
+
 
 TFRECORD_ROOT = os.path.join(WORKSPACE, 'tfrecord')
 DATASET_ROOT = os.path.join(TFRECORD_ROOT, 'dataset')
-PICK_ROOT = os.path.join(TFRECORD_ROOT, 'catalog')
+PICK_ROOT = os.path.join(TFRECORD_ROOT, 'picks')
 
 MODELS_ROOT = os.path.join(WORKSPACE, 'models')
 config = {'SDS_ROOT': SDS_ROOT,
@@ -23,5 +25,5 @@ if __name__ == '__main__':
     for d in [TFRECORD_ROOT, DATASET_ROOT, PICK_ROOT, MODELS_ROOT]:
         make_dirs(d)
 
-    with open(os.path.join(WORKSPACE, 'SeisNN', 'config.yaml'), 'w') as file:
+    with open('config.yaml', 'w') as file:
         yaml.dump(config, file, sort_keys=False)

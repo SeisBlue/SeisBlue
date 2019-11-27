@@ -31,12 +31,16 @@ Installation:
 
 - Follow the instructions in the [Docker](docker) folder to create a Docker container.
 - SSH into the Docker container you create.
-- Clone this repo in the workspace
+- Clone this repo in the home folder.
 
+      cd ~
       git clone https://github.com/jimmy60504/SeisNN.git
 
-- Change SDS_ROOT and WORKSPACE in [config.py](scripts/config.py) 
-- Run  [config.py](scripts/config.py)  to generate config.yaml
+- Run  [config.py](config.py) to generate [config.yaml](config.yaml)
+
+      python config.py
+
+---
 
 In the [scripts](scripts) folder:
 
