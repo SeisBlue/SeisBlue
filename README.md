@@ -12,7 +12,7 @@ Using U-net to generate pick probability
 
 # Warning 
 
-This version is unstable. Do not use now.
+This version is unstable. Do not use it now.
 
 The code is still in the development state, API will change frequently. 
 
