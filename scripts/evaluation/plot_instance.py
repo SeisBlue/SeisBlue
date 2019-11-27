@@ -1,7 +1,7 @@
 import numpy as np
 from obspy import read
 
-from seisnn.io import get_dir_list
+from seisnn.utils import get_dir_list
 from seisnn.plot import plot_dataset
 
 # pkl_dir = "/mnt/tf_data/dataset/201718select_random"

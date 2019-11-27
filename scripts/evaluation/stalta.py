@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from obspy import read
 from obspy.signal.trigger import recursive_sta_lta, trigger_onset
 
-from seisnn.io import get_dir_list
+from seisnn.utils import get_dir_list
 
 predict_pkl_dir = "/mnt/tf_data/dataset/2017_02"
 predict_pkl_list = get_dir_list(predict_pkl_dir)

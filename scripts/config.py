@@ -1,6 +1,6 @@
 import os
 import yaml
-from seisnn.io import make_dirs
+from seisnn.utils import make_dirs
 
 SDS_ROOT = '/mnt/SDS_ROOT'
 WORKSPACE = '/home/jimmy'

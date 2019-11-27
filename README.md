@@ -34,23 +34,23 @@ Installation:
 
 In the [scripts](scripts) folder:
  
-- [preprocessing.py](scripts/preprocessing.py)
+- [preprocessing.py](scripts/preprocessing/training_set_to_tfrecord.py)
   - Make S-Files into training .pkl datasets.
 - [evalution.py](seisnn/qc.py)
   - Calculate precision, recall and F1 score.
   - Plot error distribution.
-- [plot_instance.py](scripts/plot_instance.py)
+- [plot_instance.py](scripts/evaluation/plot_instance.py)
   - Plot the wavefile, picks and the probability form the .pkl dataset.
-- [scanning.py](scripts/scanning.py)
+- [scanning.py](scripts/preprocessing/scanning.py)
   - Scan through all stations available in the given time window, transfer into .pkl dataset.
   
 Training:
 
-- [pre_training.py](scripts/pre_train.py)
+- [pre_training.py](scripts/training/pre_train.py)
   - Pre-train the model using small dataset.
-- [training.py](scripts/training.py)
+- [training.py](scripts/training/training.py)
   - Train the model with the pre-trained weight.
-- [prediction.py](scripts/predict.py)
+- [prediction.py](scripts/predict/predict.py)
   - Predict the probability of the picks and write into the dataset.
 
 Model:

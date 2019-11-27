@@ -1,6 +1,7 @@
 from obspy import read
 
-from seisnn.io import get_dir_list, write_pkl
+from seisnn.io import write_pkl
+from seisnn.utils import get_dir_list
 from seisnn.plot import plot_dataset
 
 pick_pkl = "/mnt/tf_data/catalog/new_pick.dataset"

@@ -2,37 +2,27 @@ import fnmatch
 import os
 import pickle
 import shutil
-import yaml
 from functools import partial
-from multiprocessing import Pool, cpu_count
 
 import numpy as np
 import scipy
+import tensorflow as tf
+
 from obspy import read, read_events
 from obspy.clients.filesystem.sds import Client
 from obspy.core.event.catalog import Catalog
 from obspy.core.inventory import Channel, Inventory, Network, Station
 from obspy.core.inventory.util import Distance, Latitude, Longitude
-from tqdm import tqdm
 
 from seisnn.pick import get_exist_picks, get_pdf, get_pick_list
 from seisnn.signal import signal_preprocessing, trim_trace
+from seisnn.example_proto import trace_to_example
+from seisnn.utils import get_config, make_dirs, parallel
 
 
-def make_dirs(path):
-    if not os.path.isdir(path):
-        os.makedirs(path, mode=0o777)
+def read_dataset(dataset):
+    dataset = tf.data.Dataset()
 
-
-def batch(iterable, n=1):
-    iter_len = len(iterable)
-    for ndx in range(0, iter_len, n):
-        yield iterable[ndx:min(ndx + n, iter_len)]
-
-def read_config():
-    with open('../config.yaml', 'r') as file:
-        config = yaml.full_load(file)
-    return config
 
 def read_pkl(pkl):
     with open(pkl, "rb") as f:
@@ -49,35 +39,19 @@ def read_tfrecord():
     pass
 
 
-def write_tfrecord(output_dir, file_name):
-    import tensorflow as tf
-    from seisnn.example_proto import trace_to_example
+def write_tfrecord(trace, dataset):
+    config = get_config()
 
-    save_file = os.path.join(output_dir, '{}.tfrecord'.format(file_name))
+    output_dir = os.path.join(config['DATASET_ROOT'], dataset)
+    make_dirs(output_dir)
+
+    time_stamp = trace.stats.starttime.isoformat()
+    file_name = '{}.tfrecord'.format(time_stamp + trace.get_id())
+
+    save_file = os.path.join(output_dir, file_name)
     with tf.io.TFRecordWriter(save_file) as writer:
-        tf_example = trace_to_example(save_file)
+        tf_example = trace_to_example(trace)
         writer.write(tf_example)
-
-
-def parallel(par, file_list, batch_size=100):
-    pool = Pool(processes=cpu_count(), maxtasksperchild=1)
-
-    for _ in tqdm(pool.imap_unordered(par, batch(file_list, batch_size)),
-                  total=int(np.ceil(len(file_list) / batch_size))):
-        pass
-
-    pool.close()
-    pool.join()
-
-
-def get_dir_list(file_dir, suffix=""):
-    file_list = []
-    for file_name in os.listdir(file_dir):
-        f = os.path.join(file_dir, file_name)
-        if file_name.endswith(suffix):
-            file_list.append(f)
-
-    return file_list
 
 
 def read_event_list(file_list):

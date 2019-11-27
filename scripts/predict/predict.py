@@ -1,6 +1,6 @@
 from tensorflow.python.keras.optimizers import Adam
 
-from seisnn.io import get_dir_list
+from seisnn.utils import get_dir_list
 from seisnn.pick import write_pdf_to_dataset
 from seisnn.generator import PredictGenerator
 from seisnn.model import Nest_Net

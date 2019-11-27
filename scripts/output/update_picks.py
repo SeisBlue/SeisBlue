@@ -3,7 +3,8 @@ import os
 from obspy import read
 from tqdm import tqdm
 
-from seisnn.io import get_dir_list, read_pkl
+from seisnn.io import read_pkl
+from seisnn.utils import get_dir_list
 from seisnn.pick import get_exist_picks
 
 pkl_dir = "/mnt/tf_data/dataset/2018_02_18_predict"

@@ -1,4 +1,4 @@
-from seisnn.io import get_dir_list
+from seisnn.utils import get_dir_list
 from seisnn.qc import precision_recall_f1_score
 from seisnn.plot import plot_error_distribution
 

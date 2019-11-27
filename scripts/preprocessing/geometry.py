@@ -1,4 +1,5 @@
-from seisnn.io import get_dir_list, read_hyp_inventory, write_channel_coordinates
+from seisnn.io import read_hyp_inventory, write_channel_coordinates
+from seisnn.utils import get_dir_list
 
 pkl_dir = "/mnt/tf_data/dataset/small_set"
 pkl_list = get_dir_list(pkl_dir)
