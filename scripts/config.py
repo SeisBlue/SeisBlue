@@ -23,5 +23,5 @@ if __name__ == '__main__':
     for d in [TFRECORD_ROOT, DATASET_ROOT, PICK_ROOT, MODELS_ROOT]:
         make_dirs(d)
 
-    with open(os.path.join(WORKSPACE, 'seisnn', 'config.yaml'), 'w') as file:
+    with open(os.path.join(WORKSPACE, 'SeisNN', 'config.yaml'), 'w') as file:
         yaml.dump(config, file, sort_keys=False)

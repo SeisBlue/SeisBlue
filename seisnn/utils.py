@@ -7,7 +7,8 @@ from tqdm import tqdm
 
 
 def get_config():
-    with open('../config.yaml', 'r') as file:
+    config_file = os.path.join(os.path.expanduser('~'), 'SeisNN', 'config.yaml')
+    with open(config_file, 'r') as file:
         config = yaml.full_load(file)
     return config
 

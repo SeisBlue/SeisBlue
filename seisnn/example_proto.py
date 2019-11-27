@@ -52,13 +52,13 @@ def trace_to_example(trace):
     try:
         for pick in trace.picks:
             pick_time.append(pick.time)
-            pick_phase.append(pick.phase)
-            pick_type.append(pick.type)
+            pick_phase.append(pick.phase.encode('utf-8'))
+            pick_type.append(pick.type.encode('utf-8'))
 
     except AttributeError:
-        pick_time = 0.0
-        pick_phase = "NA"
-        pick_type = "NA"
+        pick_time.append(0.0)
+        pick_phase.append("NA".encode('utf-8'))
+        pick_type.append("NA".encode('utf-8'))
     pick_time = np.asarray(pick_time)
     pick_phase = np.asarray(pick_phase)
     pick_type = np.asarray(pick_type)
@@ -82,8 +82,8 @@ def trace_to_example(trace):
         'longitude': _float_feature(longitude),
 
         'pick_time': _bytes_feature(pick_time.astype(dtype=np.float32).tostring()),
-        'pick_phase': _bytes_feature(pick_phase.astype(dtype=object).tostring()),
-        'pick_type': _bytes_feature(pick_type.astype(dtype=object).tostring()),
+        'pick_phase': _bytes_feature(pick_phase.astype(dtype='U10').tostring()),
+        'pick_type': _bytes_feature(pick_type.astype(dtype='U10').tostring()),
 
     }
 
@@ -117,7 +117,7 @@ def extract_trace_example(example):
 
     for item in ['pick_phase', 'pick_type']:
         data = example.features.feature[item].bytes_list.value[0]
-        data = np.fromstring(data, dtype=object)
+        data = np.fromstring(data, dtype='U10')
         feature[item] = data
 
 

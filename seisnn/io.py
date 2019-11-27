@@ -17,11 +17,15 @@ from obspy.core.inventory.util import Distance, Latitude, Longitude
 from seisnn.pick import get_exist_picks, get_pdf, get_pick_list
 from seisnn.signal import signal_preprocessing, trim_trace
 from seisnn.example_proto import trace_to_example
-from seisnn.utils import get_config, make_dirs, parallel
+from seisnn.utils import get_config, make_dirs, parallel, get_dir_list
 
 
 def read_dataset(dataset):
-    dataset = tf.data.Dataset()
+    config = get_config()
+    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
+    file_list = get_dir_list(dataset_dir)
+    dataset = tf.data.TFRecordDataset(file_list)
+    return dataset
 
 
 def read_pkl(pkl):
