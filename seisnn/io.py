@@ -39,15 +39,9 @@ def write_pkl(obj, file):
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
-def read_tfrecord():
-    pass
-
-
 def write_tfrecord(trace, dataset):
     config = get_config()
-
     output_dir = os.path.join(config['DATASET_ROOT'], dataset)
-    make_dirs(output_dir)
 
     time_stamp = trace.stats.starttime.isoformat()
     file_name = '{}.tfrecord'.format(time_stamp + trace.get_id())
@@ -97,28 +91,29 @@ def read_sds(pick, sds_root, phase="P", component="Z", trace_length=30, sample_r
         return trace
 
 
-def write_training_dataset(catalog, sds_root, output_dir, batch_size=100, remove_dir=False):
-    if remove_dir:
-        shutil.rmtree(output_dir, ignore_errors=True)
-    os.makedirs(output_dir, exist_ok=True)
+def write_training_dataset(catalog,  dataset_dir, batch_size=100):
+    config = get_config()
+    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset_dir)
+    make_dirs(dataset_dir)
 
     pick_list = get_pick_list(catalog)
 
-    par = partial(_write_picked_trace, pick_list=pick_list, sds_root=sds_root, dataset_dir=output_dir)
+    par = partial(_write_picked_trace, pick_list=pick_list, dataset_dir=dataset_dir)
     parallel(par, pick_list, batch_size)
 
 
-def _write_picked_trace(batch_picks, pick_list, sds_root, dataset_dir):
+def _write_picked_trace(batch_picks, pick_list, dataset_dir):
+    config = get_config()
     for pick in batch_picks:
         scipy.random.seed()
-        trace = read_sds(pick, sds_root)
+        trace = read_sds(pick, config['SDS_ROOT'])
         if not trace:
             continue
         exist_picks = get_exist_picks(trace, pick_list)
         trace.picks = exist_picks
         trace.pdf = get_pdf(trace)
-        time_stamp = trace.stats.starttime.isoformat()
-        trace.write(dataset_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+        write_tfrecord(trace, dataset_dir)
+
 
 
 def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_time,
