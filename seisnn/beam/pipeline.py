@@ -1,14 +1,15 @@
 import apache_beam as beam
 from apache_beam.io import tfrecordio
 from apache_beam.options.pipeline_options import PipelineOptions
-
+from seisnn.utils import get_config
 from seisnn.beam.obspyio import ReadHYP, FeatureToExample, DropEmptyStation, FilterPickPhase, GeneratePDF, GetWindowFromPick, GroupStreamPick, \
     ReadSDS, ReadSfile, StreamFeatureExtraction, TrimTrace
 
-file_dir = '/mnt/Data/test_sfile'
-sds_root = '/mnt/DATA'
-hyp_file = '/mnt/tf_data/geom/STATION0.HYP'
-tfrecord_dir = '/mnt/tf_data/dataset/tfrecord'
+config = get_config()
+file_dir = '/mnt/sfile/test_sfile'
+sds_root = '/mnt/SDS_ROOT'
+hyp_file = '/home/jimmy/SeisNN/geom/STATION0.HYP'
+tfrecord_dir = '/home/jimmy/tfrecord/dataset/test'
 
 with beam.Pipeline(options=PipelineOptions()) as p:
     location = (p

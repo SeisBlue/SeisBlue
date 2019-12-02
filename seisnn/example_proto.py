@@ -1,6 +1,8 @@
 import numpy as np
 import tensorflow as tf
 
+from obspy import UTCDateTime
+
 
 def _bytes_feature(value):
     """Returns a bytes_list from a string / byte."""
@@ -83,7 +85,7 @@ def feature_to_example(stream_feature):
     context = tf.train.Features(feature=data)
 
     data_dict = {}
-    for key in ['pick_time', 'pick_phase', 'pick_type']:
+    for key in ['pick_time', 'pick_phase', 'pick_type', 'channel', 'phase']:
         pick_features = []
         if stream_feature[key]:
             for data in stream_feature[key]:
@@ -98,3 +100,37 @@ def feature_to_example(stream_feature):
 
     example = tf.train.SequenceExample(context=context, feature_lists=feature_list)
     return example.SerializeToString()
+
+
+def extract_stream_example(example):
+
+    feature = {
+        'starttime': UTCDateTime(example.context.feature['starttime'].bytes_list.value[0].decode('utf-8')),
+        'endtime': UTCDateTime(example.context.feature['endtime'].bytes_list.value[0].decode('utf-8')),
+
+        'delta': example.context.feature['delta'].float_list.value[0],
+        'npts': example.context.feature['npts'].int64_list.value[0],
+
+        'station': example.context.feature['station'].bytes_list.value[0].decode('utf-8'),
+        'latitude': example.context.feature['latitude'].float_list.value[0],
+        'longitude': example.context.feature['longitude'].float_list.value[0],
+        'elevation': example.context.feature['elevation'].float_list.value[0],
+
+    }
+    # get channel list
+    for i in ['channel', 'phase']:
+        feature_list = example.feature_lists.feature_list[i].feature
+        data_list = []
+        for f in feature_list:
+            f = f.bytes_list.value[0].decode('utf-8')
+            data_list.append(f)
+            feature[i] = data_list
+
+    # get trace
+    for types in ['channel', 'phase']:
+        for i in feature[types]:
+            sequence_data = example.context.feature[i].bytes_list.value[0]
+            sequence_data = np.fromstring(sequence_data, dtype=np.float32)
+            feature[i] = sequence_data
+
+    return feature
