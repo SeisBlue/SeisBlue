@@ -19,108 +19,82 @@ def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 
 
-def trace_to_example(trace):
-    starttime = trace.stats.starttime
-    endtime = trace.stats.endtime
+def stream_to_feature(stream):
+    trace = stream[0]
 
-    delta = trace.stats.delta
-    npts = trace.stats.npts
+    feature = {
+        'starttime': trace.stats.starttime.isoformat(),
+        'endtime': trace.stats.endtime.isoformat(),
+        'station': trace.stats.station,
+        'npts': trace.stats.npts,
+        'delta': trace.stats.delta,
 
-    data = trace.data
+        'latitude': stream.location['latitude'],
+        'longitude': stream.location['longitude'],
+        'elevation': stream.location['elevation'],
+    }
 
-    try:
-        pdf = trace.pdf
-    except AttributeError:
-        pdf = np.zeros((len(trace.data),))
+    channel_list = []
+    for trace in stream:
+        channel = trace.stats.channel
+        channel_list.append(channel)
+        feature[channel] = trace.data
+    feature['channel'] = channel_list
 
-    network = trace.stats.network
-    location = trace.stats.location
-    station = trace.stats.station
-    channel = trace.stats.channel
-
-    try:
-        latitude = trace.stats.coordinates['latitude']
-        longitude = trace.stats.coordinates['longitude']
-    except AttributeError:
-        latitude = 0.0
-        longitude = 0.0
-
+    phase_list = []
     pick_time = []
     pick_phase = []
     pick_type = []
 
-    try:
-        for pick in trace.picks:
-            pick_time.append(pick.time)
-            pick_phase.append(pick.phase.encode('utf-8'))
-            pick_type.append(pick.type.encode('utf-8'))
+    if stream.picks:
+        for phase, picks in stream.picks.items():
+            phase_list.append(phase)
+            for pick in picks:
+                pick_time.append(pick.time.isoformat())
+                pick_phase.append(pick.phase_hint)
+                pick_type.append(pick.evaluation_mode)
 
-    except AttributeError:
-        pick_time.append(0.0)
-        pick_phase.append("NA".encode('utf-8'))
-        pick_type.append("NA".encode('utf-8'))
-    pick_time = np.asarray(pick_time)
-    pick_phase = np.asarray(pick_phase)
-    pick_type = np.asarray(pick_type)
+    feature['phase'] = phase_list
+    feature['pick_time'] = pick_time
+    feature['pick_phase'] = pick_phase
+    feature['pick_type'] = pick_type
 
-    feature = {
-        'starttime': _bytes_feature(starttime.isoformat().encode('utf-8')),
-        'endtime': _bytes_feature(endtime.isoformat().encode('utf-8')),
-
-        'delta': _float_feature(delta),
-        'npts': _int64_feature(npts),
-
-        'data': _bytes_feature(data.astype(dtype=np.float32).tostring()),
-        'pdf': _bytes_feature(pdf.astype(dtype=np.float32).tostring()),
-
-        'network': _bytes_feature(network.encode('utf-8')),
-        'location': _bytes_feature(location.encode('utf-8')),
-        'station': _bytes_feature(station.encode('utf-8')),
-        'channel': _bytes_feature(channel.encode('utf-8')),
-
-        'latitude': _float_feature(latitude),
-        'longitude': _float_feature(longitude),
-
-        'pick_time': _bytes_feature(pick_time.astype(dtype=np.float32).tostring()),
-        'pick_phase': _bytes_feature(pick_phase.astype(dtype='U10').tostring()),
-        'pick_type': _bytes_feature(pick_type.astype(dtype='U10').tostring()),
-
-    }
-
-    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
-    return example_proto.SerializeToString()
-
-
-def extract_trace_example(example):
-    feature = {
-        'starttime': example.features.feature['starttime'].bytes_list.value[0].decode('utf-8'),
-        'endtime': example.features.feature['endtime'].bytes_list.value[0].decode('utf-8'),
-
-        'delta': example.features.feature['delta'].float_list.value[0],
-        'npts': example.features.feature['npts'].int64_list.value[0],
-
-        'network': example.features.feature['network'].bytes_list.value[0].decode('utf-8'),
-        'location': example.features.feature['location'].bytes_list.value[0].decode('utf-8'),
-        'station': example.features.feature['station'].bytes_list.value[0].decode('utf-8'),
-        'channel': example.features.feature['channel'].bytes_list.value[0].decode('utf-8'),
-
-        'latitude': example.features.feature['latitude'].float_list.value[0],
-        'longitude': example.features.feature['longitude'].float_list.value[0],
-
-
-    }
-
-    for item in ['data', 'pdf', 'pick_time']:
-        data = example.features.feature[item].bytes_list.value[0]
-        data = np.fromstring(data, dtype=np.float32)
-        feature[item] = data
-
-    for item in ['pick_phase', 'pick_type']:
-        data = example.features.feature[item].bytes_list.value[0]
-        data = np.fromstring(data, dtype='U10')
-        feature[item] = data
-
-
+    for phase, pdf in stream.pdf.items():
+        feature[phase] = pdf
 
     return feature
 
+
+def feature_to_example(stream_feature):
+    data = {
+        'starttime': _bytes_feature(stream_feature['starttime'].encode('utf-8')),
+        'endtime': _bytes_feature(stream_feature['endtime'].encode('utf-8')),
+        'station': _bytes_feature(stream_feature['station'].encode('utf-8')),
+        'npts': _int64_feature(stream_feature['npts']),
+        'delta': _float_feature(stream_feature['delta']),
+        'latitude': _float_feature(stream_feature['latitude']),
+        'longitude': _float_feature(stream_feature['longitude']),
+        'elevation': _float_feature(stream_feature['elevation'])
+    }
+
+    for key in ['channel', 'phase']:
+        for k in stream_feature[key]:
+            data[k] = _bytes_feature(stream_feature[k].astype(dtype=np.float32).tostring())
+    context = tf.train.Features(feature=data)
+
+    data_dict = {}
+    for key in ['pick_time', 'pick_phase', 'pick_type']:
+        pick_features = []
+        if stream_feature[key]:
+            for data in stream_feature[key]:
+                pick_feature = _bytes_feature(data.encode('utf-8'))
+                pick_features.append(pick_feature)
+        else:
+            pick_features.append(_bytes_feature('NA'.encode('utf-8')))
+
+        data_dict[key] = tf.train.FeatureList(feature=pick_features)
+
+    feature_list = tf.train.FeatureLists(feature_list=data_dict)
+
+    example = tf.train.SequenceExample(context=context, feature_lists=feature_list)
+    return example.SerializeToString()

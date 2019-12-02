@@ -1,10 +1,10 @@
-import fnmatch
 import os
 import shutil
-from bisect import bisect_left, bisect_right
 
+import scipy
 import numpy as np
-import scipy.stats as ss
+import tensorflow as tf
+import tensorflow_probability as tfp
 from obspy import read
 from obspy.core.event.base import QuantityError, WaveformStreamID
 from obspy.core.event.origin import Pick
@@ -12,33 +12,53 @@ from scipy.signal import find_peaks
 from tqdm import tqdm
 
 
-def get_pick_list(catalog):
+def get_pick_list(events):
     pick_list = []
-    for event in catalog:
+    for event in events:
         for p in event.picks:
-            if event.origins:
-                p.origin = event.origins[0]
             pick_list.append(p)
     pick_list.sort(key=lambda pick: pick.time)
     return pick_list
 
 
-def get_pdf(trace, sigma=0.1):
+def get_window(pick, trace_length=30):
+    scipy.random.seed()
+    pick_time = pick.time
+
+    starttime = pick_time - trace_length + np.random.random_sample() * trace_length
+    endtime = starttime + trace_length
+
+    window = {
+        'starttime': starttime,
+        'endtime': endtime,
+        'station': pick.waveform_id.station_code,
+        'wavename': pick.waveform_id.wavename
+    }
+    return window
+
+
+def get_pdf(stream, sigma=0.1):
+    trace = stream[0]
+    tfd = tfp.distributions
     start_time = trace.stats.starttime
     x_time = trace.times(reftime=start_time)
-    pdf = np.zeros((len(x_time),))
+    stream.pdf = {}
+    for phase, picks in stream.picks.items():
+        phase_pdf = np.zeros((len(x_time),))
 
-    for pick in trace.picks:
-        pick_time = pick.time - start_time
-        pick_pdf = ss.norm.pdf(x_time, pick_time, sigma)
+        for pick in picks:
+            pick_time = pick.time - start_time
+            dist = tfd.Normal(loc=pick_time, scale=sigma)
+            pick_pdf = dist.prob(x_time)
 
-        if pick_pdf.max():
-            pdf += pick_pdf / pick_pdf.max()
+            if tf.math.reduce_max(pick_pdf):
+                phase_pdf += pick_pdf / tf.math.reduce_max(pick_pdf)
 
-    if pdf.max():
-        pdf = pdf / pdf.max()
+        if tf.math.reduce_max(phase_pdf):
+            phase_pdf = phase_pdf / tf.math.reduce_max(phase_pdf)
 
-    return pdf
+        stream.pdf[phase] = phase_pdf.numpy()
+    return stream
 
 
 def get_picks_from_pdf(trace, height=0.5, distance=100):
@@ -66,62 +86,25 @@ def get_picks_from_dataset(dataset):
     return pick_list
 
 
-def _search_pick(pick_list, start_time, end_time):
-    # binary search, pick_list must be sorted by time
-    pick_time_key = []
+def search_pick(pick_list, stream):
+    tmp_pick = {}
+    starttime = stream.traces[0].stats.starttime
+    endtime = stream.traces[0].stats.endtime
     for pick in pick_list:
-        pick_time_key.append(pick.time)
-
-    left = bisect_left(pick_time_key, start_time)
-    right = bisect_right(pick_time_key, end_time)
-    pick_list = pick_list[left:right]
-
-    return pick_list
-
-
-def get_exist_picks(trace, pick_list, phase="P"):
-    start_time = trace.stats.starttime
-    end_time = trace.stats.endtime
-    network = trace.stats.network
-    station = trace.stats.station
-    location = trace.stats.location
-    channel = "*" + trace.stats.channel[-1]
-
-    pick_list = _search_pick(pick_list, start_time, end_time)
-
-    tmp_pick = []
-    for pick in pick_list:
-        network_code = pick.waveform_id.network_code
-        station_code = pick.waveform_id.station_code
-        location_code = pick.waveform_id.location_code
-        channel_code = pick.waveform_id.channel_code
-
-        if not start_time < pick.time < end_time:
-            continue
-
-        if not pick.phase_hint == phase:
-            continue
-
-        if network and network_code and not network_code == 'NA':
-            if not fnmatch.fnmatch(network_code, network):
-                continue
-
-        if station:
-            if not fnmatch.fnmatch(station_code, station):
-                continue
-
-        if location and location_code:
-            if not fnmatch.fnmatch(location_code, location):
-                continue
-
-        if channel:
-            if not fnmatch.fnmatch(channel_code, channel):
-                continue
-
-        pick.evaluation_mode = "manual"
-        tmp_pick.append(pick)
+        phase = pick.phase_hint
+        if starttime < pick.time < endtime:
+            if not tmp_pick.get(phase):
+                tmp_pick[phase] = [pick]
+            else:
+                tmp_pick[phase].append(pick)
 
     return tmp_pick
+
+
+def get_exist_picks(stream, pick_list):
+    picks = search_pick(pick_list, stream)
+    stream.picks = picks
+    return stream
 
 
 def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=False):

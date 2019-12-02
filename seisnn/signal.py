@@ -2,20 +2,19 @@ class LengthError(BaseException):
     pass
 
 
-def signal_preprocessing(data):
-    data.detrend('demean')
-    data.detrend('linear')
-    data.normalize()
-    data.resample(100)
-    return data
+def signal_preprocessing(stream):
+    stream.detrend('demean')
+    stream.detrend('linear')
+    stream.normalize()
+    stream.resample(100)
+    return stream
 
 
-def trim_trace(trace, points=3001):
+def trim_trace(stream, points=3001):
+    trace = stream[0]
     start_time = trace.stats.starttime
     dt = (trace.stats.endtime - trace.stats.starttime) / (trace.data.size - 1)
     end_time = start_time + dt * (points - 1)
-    trace.trim(start_time, end_time, nearest_sample=False, pad=True, fill_value=0)
-    if not trace.data.size == points:
-        raise LengthError("Trace length is not correct.")
+    stream.trim(start_time, end_time, nearest_sample=False, pad=True, fill_value=0)
     return trace
 
