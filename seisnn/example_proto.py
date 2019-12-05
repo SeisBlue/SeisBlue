@@ -21,10 +21,11 @@ def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 
 
-def stream_to_feature(stream):
+def stream_to_feature(stream, pickset):
     trace = stream[0]
 
     feature = {
+        'id': trace.id,
         'starttime': trace.stats.starttime.isoformat(),
         'endtime': trace.stats.endtime.isoformat(),
         'station': trace.stats.station,
@@ -46,7 +47,7 @@ def stream_to_feature(stream):
     phase_list = []
     pick_time = []
     pick_phase = []
-    pick_type = []
+    pick_set = []
 
     if stream.picks:
         for phase, picks in stream.picks.items():
@@ -54,12 +55,12 @@ def stream_to_feature(stream):
             for pick in picks:
                 pick_time.append(pick.time.isoformat())
                 pick_phase.append(pick.phase_hint)
-                pick_type.append(pick.evaluation_mode)
+                pick_set.append(pickset)
 
     feature['phase'] = phase_list
     feature['pick_time'] = pick_time
     feature['pick_phase'] = pick_phase
-    feature['pick_type'] = pick_type
+    feature['pick_set'] = pick_set
 
     for phase, pdf in stream.pdf.items():
         feature[phase] = pdf
@@ -69,6 +70,7 @@ def stream_to_feature(stream):
 
 def feature_to_example(stream_feature):
     data = {
+        'id': _bytes_feature(stream_feature['id'].encode('utf-8')),
         'starttime': _bytes_feature(stream_feature['starttime'].encode('utf-8')),
         'endtime': _bytes_feature(stream_feature['endtime'].encode('utf-8')),
         'station': _bytes_feature(stream_feature['station'].encode('utf-8')),
@@ -85,7 +87,7 @@ def feature_to_example(stream_feature):
     context = tf.train.Features(feature=data)
 
     data_dict = {}
-    for key in ['pick_time', 'pick_phase', 'pick_type', 'channel', 'phase']:
+    for key in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
         pick_features = []
         if stream_feature[key]:
             for data in stream_feature[key]:
@@ -102,9 +104,9 @@ def feature_to_example(stream_feature):
     return example.SerializeToString()
 
 
-def extract_stream_example(example):
-
+def extract_example(example):
     feature = {
+        'id': example.context.feature['id'].bytes_list.value[0].decode('utf-8'),
         'starttime': UTCDateTime(example.context.feature['starttime'].bytes_list.value[0].decode('utf-8')),
         'endtime': UTCDateTime(example.context.feature['endtime'].bytes_list.value[0].decode('utf-8')),
 
@@ -115,14 +117,15 @@ def extract_stream_example(example):
         'latitude': example.context.feature['latitude'].float_list.value[0],
         'longitude': example.context.feature['longitude'].float_list.value[0],
         'elevation': example.context.feature['elevation'].float_list.value[0],
-
     }
-    # get channel list
-    for i in ['channel', 'phase']:
+    # get c list
+    for i in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
         feature_list = example.feature_lists.feature_list[i].feature
         data_list = []
         for f in feature_list:
             f = f.bytes_list.value[0].decode('utf-8')
+            if i == 'pick_time':
+                f = UTCDateTime(f)
             data_list.append(f)
             feature[i] = data_list
 

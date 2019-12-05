@@ -90,7 +90,11 @@ def search_pick(pick_list, stream):
     tmp_pick = {}
     starttime = stream.traces[0].stats.starttime
     endtime = stream.traces[0].stats.endtime
+    station = stream.traces[0].stats.station
+
     for pick in pick_list:
+        if not pick.waveform_id.station_code == station:
+            continue
         phase = pick.phase_hint
         if starttime < pick.time < endtime:
             if not tmp_pick.get(phase):

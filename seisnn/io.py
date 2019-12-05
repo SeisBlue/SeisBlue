@@ -34,7 +34,7 @@ def write_pkl(obj, file):
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
-def write_tfrecord(stream, dataset):
+def write_tfrecord(stream, dataset, pickset):
     config = get_config()
     output_dir = os.path.join(config['DATASET_ROOT'], dataset)
     trace = stream.traces[0]
@@ -43,7 +43,7 @@ def write_tfrecord(stream, dataset):
 
     save_file = os.path.join(output_dir, file_name)
     with tf.io.TFRecordWriter(save_file) as writer:
-        feature = stream_to_feature(stream)
+        feature = stream_to_feature(stream, pickset)
         example = feature_to_example(feature)
         writer.write(example)
 
@@ -70,25 +70,30 @@ def read_sds(window):
     seismometer_list = {}
 
     for trace in stream:
-        current_type = trace.stats.channel[0:2]
-        if not seismometer_list.get(current_type):
-            seismometer_list[current_type] = Stream(trace)
+        geophone_type = trace.stats.channel[0:2]
+        if not seismometer_list.get(geophone_type):
+            seismometer_list[geophone_type] = Stream(trace)
         else:
-            seismometer_list[current_type].append(trace)
+            seismometer_list[geophone_type].append(trace)
 
     return seismometer_list
 
 
-def write_training_dataset(pick_list, geom, dataset_dir, batch_size=100):
+def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=100):
     config = get_config()
-    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset_dir)
+    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
     make_dirs(dataset_dir)
 
-    par = partial(_write_picked_stream, pick_list=pick_list, geom=geom, dataset_dir=dataset_dir)
+    par = partial(_write_picked_stream,
+                  pick_list=pick_list,
+                  geom=geom,
+                  dataset_dir=dataset_dir,
+                  pickset=pickset)
+
     parallel(par, pick_list, batch_size)
 
 
-def _write_picked_stream(batch_picks, pick_list, geom, dataset_dir):
+def _write_picked_stream(batch_picks, pick_list, geom, dataset_dir, pickset):
     for pick in batch_picks:
         window = get_window(pick)
         streams = read_sds(window)
@@ -98,7 +103,7 @@ def _write_picked_stream(batch_picks, pick_list, geom, dataset_dir):
             stream = get_exist_picks(stream, pick_list)
             stream = get_pdf(stream)
             stream = get_stream_geom(stream, geom)
-            write_tfrecord(stream, dataset_dir)
+            write_tfrecord(stream, dataset_dir, pickset)
 
 
 def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_time,

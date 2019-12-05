@@ -6,53 +6,76 @@ import numpy as np
 from seisnn.pick import get_picks_from_dataset
 
 
-def plot_dataset(trace, enlarge=False, xlim=None, save_dir=None):
-    start_time = trace.stats.starttime
-    time_stamp = start_time.isoformat()
+def color_palette(feature, phase=None, shade=1):
+    # color palette source: http://www.webfreelancer.com.br/color/colors.html
+    # 200       #500       #800
+    palette = [['#90CAF9', '#2196F3', '#1565C0'],  # Blue
+               ['#A5D6A7', '#4CAF50', '#2E7D32'],  # Green
+               ['#FFAB91', '#FF5722', '#D84315']]  # Deep Orange
+    phase_index = feature['phase'].index(phase)
+    return palette[phase_index][shade]
 
-    if trace.picks:
-        first_pick_time = trace.picks[0].time - start_time
-        pick_phase = trace.picks[0].phase_hint
+
+def pick_exist(feature):
+    if not feature['pick_phase'][0] == 'NA':
+        return True
+    else:
+        return False
+
+
+def get_time_array(feature):
+    time_array = np.arange(feature['npts'])
+    time_array = time_array * feature['delta']
+    return time_array
+
+
+def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
+    start_time = feature['starttime']
+    time_stamp = feature['starttime'].isoformat()
+
+    if pick_exist(feature):
+        first_pick_time = feature['pick_time'][0] - start_time
     else:
         first_pick_time = 1
-        pick_phase = ""
 
-    subplot = 2
+    subplot = len(feature['channel']) + 1
+
     fig = plt.figure(figsize=(8, subplot * 2))
+    for i, chan in enumerate(feature['channel']):
+        ax = fig.add_subplot(subplot, 1, i + 1)
+        plt.title(time_stamp + " " + feature['id'][:-3] + chan)
 
-    ax = fig.add_subplot(subplot, 1, 1)
-    plt.title(time_stamp + " " + trace.id)
-    if xlim:
-        plt.xlim(xlim)
-    if enlarge:
-        plt.xlim((first_pick_time - 1, first_pick_time + 2))
-    ax.plot(trace.times(reftime=start_time), trace.data, "k-", label=trace.id)
-    y_min, y_max = ax.get_ylim()
+        if xlim:
+            plt.xlim(xlim)
+        if enlarge:
+            plt.xlim((first_pick_time - 1, first_pick_time + 2))
+        ax.plot(get_time_array(feature), feature[chan], "k-", label=chan)
+        y_min, y_max = ax.get_ylim()
 
-    if trace.picks:
-        val_label = True
-        pre_label = True
-        for pick in trace.picks:
-            pick_time = pick.time - start_time
-            if pick.evaluation_mode == "manual":
-                if val_label:
-                    ax.vlines(pick_time, y_min, y_max, color='g', lw=2,
-                              label=pick.evaluation_mode + " " + pick.phase_hint)
-                    val_label = False
+        if pick_exist(feature):
+            pick_set_list = list(set(feature['pick_set']))
+            labelset = set()
+            for i in range(len(feature['pick_time'])):
+                pick_set = feature['pick_set'][i]
+                pick_phase = feature['pick_phase'][i]
+                pick_set_index = pick_set_list.index(pick_set)
+
+                color = color_palette(feature, pick_phase, pick_set_index)
+                label = pick_set + " " + pick_phase
+
+                pick_time = feature['pick_time'][i] - start_time
+                if not label in labelset:
+                    ax.vlines(pick_time, y_min/(pick_set_index+1), y_max/(pick_set_index+1), color=color, lw=2, label=label)
+                    labelset.add(label)
                 else:
-                    ax.vlines(pick_time, y_min, y_max, color='g', lw=2)
+                    ax.vlines(pick_time, y_min/(pick_set_index+1), y_max/(pick_set_index+1), color=color, lw=2)
 
-            elif pick.evaluation_mode == "automatic":
-                if pre_label:
-                    ax.vlines(pick_time, y_min, y_max, color='r', lw=1,
-                              label=pick.evaluation_mode + " " + pick.phase_hint)
-                    pre_label = False
-                else:
-                    ax.vlines(pick_time, y_min, y_max, color='r', lw=1)
-    ax.legend(loc=1)
+        ax.legend(loc=1)
 
     ax = fig.add_subplot(subplot, 1, subplot)
-    ax.plot(trace.times(reftime=start_time), trace.pdf, "b-", label=pick_phase + " pdf")
+    for phase in feature['phase']:
+        color = color_palette(feature, phase)
+        ax.plot(get_time_array(feature), feature[phase], color=color, label=phase)
     if xlim:
         plt.xlim(xlim)
     if enlarge:
@@ -61,7 +84,7 @@ def plot_dataset(trace, enlarge=False, xlim=None, save_dir=None):
 
     if save_dir:
         os.makedirs(save_dir, exist_ok=True)
-        plt.savefig(save_dir + "/" + time_stamp + "_" + trace.id + ".pdf")
+        plt.savefig(save_dir + "/" + time_stamp + "_" + feature['id'])
         plt.close()
     else:
         plt.show()

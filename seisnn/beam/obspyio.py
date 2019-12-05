@@ -16,6 +16,7 @@ class StreamFeatureExtraction(beam.DoFn):
         trace = stream[0]
 
         feature = {
+            'id': trace.id,
             'starttime': trace.stats.starttime.isoformat(),
             'endtime': trace.stats.endtime.isoformat(),
             'station': trace.stats.station,
@@ -61,6 +62,7 @@ class StreamFeatureExtraction(beam.DoFn):
 class FeatureToExample(beam.DoFn):
     def process(self, stream, *args, **kwargs):
         context = tf.train.Features(feature={
+            'id': tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['id'].encode('utf-8')])),
             'starttime':  tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['starttime'].encode('utf-8')])),
             'endtime':  tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['endtime'].encode('utf-8')])),
             'station':  tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['station'].encode('utf-8')])),

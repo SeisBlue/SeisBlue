@@ -9,7 +9,9 @@ from seisnn.utils import get_config
 ap = argparse.ArgumentParser()
 ap.add_argument('-c', '--catalog', required=True, help='catalog s-file', type=str)
 ap.add_argument('-g', '--geometry', required=True, help='geometry STATION0.HYP', type=str)
-ap.add_argument('-d', '--dataset', required=True, help='output dataset', type=str)
+ap.add_argument('-d', '--dataset', required=True, help='output dataset name', type=str)
+ap.add_argument('-p', '--pickset', required=True, help='output pickset name', type=str)
+
 args = ap.parse_args()
 
 config = get_config()
@@ -20,4 +22,4 @@ sfile = os.path.join(config['CATALOG_ROOT'], args.catalog)
 events = read_event_list(sfile)
 pick_list = get_pick_list(events)
 
-write_training_dataset(pick_list, geom, dataset_dir='test', batch_size=100)
+write_training_dataset(pick_list, geom, dataset=args.dataset, pickset=args.pickset, batch_size=100)

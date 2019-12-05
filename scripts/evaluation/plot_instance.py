@@ -1,23 +1,16 @@
-import numpy as np
-from obspy import read
+import tensorflow as tf
 
-from seisnn.utils import get_dir_list
+from seisnn.utils import  get_config
+from seisnn.io import read_dataset
+from seisnn.example_proto import extract_example
 from seisnn.plot import plot_dataset
 
-# pkl_dir = "/mnt/tf_data/dataset/201718select_random"
-pkl_dir = "/mnt/tf_data/dataset/2018_02_18_predict"
-# pkl_dir = "/mnt/tf_data/dataset/scan_predict"
+config = get_config()
+dataset = read_dataset('test')
 
-pkl_list = get_dir_list(pkl_dir)
+for example in dataset:
+    example = tf.train.SequenceExample.FromString(example.numpy())
+    feature = extract_example(example)
 
-index = np.arange(len(pkl_list))
-# np.random.shuffle(index)
-
-plot_dir = "/mnt/tf_data/plot"
-for i in index[:20]:
-    trace = read(pkl_list[i]).traces[0]
-    plot_dataset(trace)
-    # plot_trace(trace, save_dir=plot_dir)
-    # plot_trace(trace, enlarge=True, save_dir=plot_dir + "/enlarge")
-
+    plot_dataset(feature)
 
