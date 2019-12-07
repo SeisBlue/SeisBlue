@@ -4,29 +4,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from seisnn.pick import get_picks_from_dataset
+from seisnn.feature import pick_exist, get_time_array
 
 
 def color_palette(feature, phase=None, shade=1):
-    # color palette source: http://www.webfreelancer.com.br/color/colors.html
-    # 200       #500       #800
+    # color palette source:
+    # http://www.webfreelancer.com.br/color/colors.html
+
+    # shade:     #200       #500       #800
     palette = [['#90CAF9', '#2196F3', '#1565C0'],  # Blue
                ['#A5D6A7', '#4CAF50', '#2E7D32'],  # Green
                ['#FFAB91', '#FF5722', '#D84315']]  # Deep Orange
     phase_index = feature['phase'].index(phase)
     return palette[phase_index][shade]
-
-
-def pick_exist(feature):
-    if not feature['pick_phase'][0] == 'NA':
-        return True
-    else:
-        return False
-
-
-def get_time_array(feature):
-    time_array = np.arange(feature['npts'])
-    time_array = time_array * feature['delta']
-    return time_array
 
 
 def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
@@ -43,6 +33,7 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
     fig = plt.figure(figsize=(8, subplot * 2))
     for i, chan in enumerate(feature['channel']):
         ax = fig.add_subplot(subplot, 1, i + 1)
+
         plt.title(time_stamp + " " + feature['id'][:-3] + chan)
 
         if xlim:
@@ -65,10 +56,11 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
 
                 pick_time = feature['pick_time'][i] - start_time
                 if not label in labelset:
-                    ax.vlines(pick_time, y_min/(pick_set_index+1), y_max/(pick_set_index+1), color=color, lw=2, label=label)
+                    ax.vlines(pick_time, y_min / (pick_set_index + 1), y_max / (pick_set_index + 1), color=color, lw=2,
+                              label=label)
                     labelset.add(label)
                 else:
-                    ax.vlines(pick_time, y_min/(pick_set_index+1), y_max/(pick_set_index+1), color=color, lw=2)
+                    ax.vlines(pick_time, y_min / (pick_set_index + 1), y_max / (pick_set_index + 1), color=color, lw=2)
 
         ax.legend(loc=1)
 

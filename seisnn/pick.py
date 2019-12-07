@@ -105,12 +105,6 @@ def search_pick(pick_list, stream):
     return tmp_pick
 
 
-def get_exist_picks(stream, pick_list):
-    picks = search_pick(pick_list, stream)
-    stream.picks = picks
-    return stream
-
-
 def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=False):
     if remove_dir:
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
@@ -139,12 +133,12 @@ def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=F
                     for pre_pick in pdf_picks:
                         pre_pick.evaluation_mode = "automatic"
 
-                        residual = get_time_residual(val_pick, pre_pick)
+                        residual = get_time_residual(pre_pick, val_pick)
                         pre_pick.time_errors = QuantityError(residual)
 
-                        if is_close_pick(val_pick, pre_pick, delta=0.1):
+                        if validate_picks_nearby(pre_pick, val_pick, delta=0.1):
                             pre_pick.evaluation_status = "confirmed"
-                        elif is_close_pick(val_pick, pre_pick, delta=1):
+                        elif validate_picks_nearby(pre_pick, val_pick, delta=1):
                             pre_pick.evaluation_status = "rejected"
 
             else:
@@ -158,7 +152,7 @@ def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=F
             pbar.update()
 
 
-def is_close_pick(validate_pick, predict_pick, delta=0.1):
+def validate_picks_nearby(validate_pick, predict_pick, delta=0.1):
     pick_upper_bound = predict_pick.time + delta
     pick_lower_bound = predict_pick.time - delta
     if pick_lower_bound < validate_pick.time < pick_upper_bound:
@@ -167,7 +161,7 @@ def is_close_pick(validate_pick, predict_pick, delta=0.1):
         return False
 
 
-def get_time_residual(val_pick, pre_pick):
-    if is_close_pick(val_pick, pre_pick, delta=0.5):
+def get_time_residual(pre_pick, val_pick):
+    if validate_picks_nearby(pre_pick, val_pick, delta=0.5):
         residual = val_pick.time - pre_pick.time
         return residual

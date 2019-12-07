@@ -43,3 +43,14 @@ def get_dir_list(file_dir, suffix=""):
             file_list.append(f)
 
     return file_list
+
+
+def trim_trace(stream, points=3001):
+    trace = stream[0]
+    start_time = trace.stats.starttime
+    dt = (trace.stats.endtime - trace.stats.starttime) / (trace.data.size - 1)
+    end_time = start_time + dt * (points - 1)
+    stream.trim(start_time, end_time, nearest_sample=False, pad=True, fill_value=0)
+    return trace
+
+

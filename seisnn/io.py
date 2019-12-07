@@ -9,10 +9,10 @@ from obspy.clients.filesystem.sds import Client
 from obspy.io.nordic.core import read_nordic
 from obspy.core.inventory.util import Latitude, Longitude
 
-from seisnn.pick import get_pdf, get_window, get_exist_picks
-from seisnn.signal import signal_preprocessing, trim_trace
+from seisnn.pick import get_window
+from seisnn.flow import signal_preprocessing, stream_preprocessing
 from seisnn.example_proto import stream_to_feature, feature_to_example
-from seisnn.utils import get_config, make_dirs, parallel, get_dir_list
+from seisnn.utils import get_config, make_dirs, parallel, get_dir_list, trim_trace
 
 
 def read_dataset(dataset):
@@ -67,16 +67,16 @@ def read_sds(window):
                                   starttime=starttime, endtime=endtime)
 
     stream.sort(keys=['channel'], reverse=True)
-    seismometer_list = {}
+    stream_list = {}
 
     for trace in stream:
         geophone_type = trace.stats.channel[0:2]
-        if not seismometer_list.get(geophone_type):
-            seismometer_list[geophone_type] = Stream(trace)
+        if not stream_list.get(geophone_type):
+            stream_list[geophone_type] = Stream(trace)
         else:
-            seismometer_list[geophone_type].append(trace)
+            stream_list[geophone_type].append(trace)
 
-    return seismometer_list
+    return stream_list
 
 
 def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=100):
@@ -98,11 +98,8 @@ def _write_picked_stream(batch_picks, pick_list, geom, dataset_dir, pickset):
         window = get_window(pick)
         streams = read_sds(window)
 
-        for k, stream in streams.items():
-            stream = signal_preprocessing(stream)
-            stream = get_exist_picks(stream, pick_list)
-            stream = get_pdf(stream)
-            stream = get_stream_geom(stream, geom)
+        for _, stream in streams.items():
+            stream = stream_preprocessing(stream, pick_list, geom)
             write_tfrecord(stream, dataset_dir, pickset)
 
 
@@ -137,7 +134,7 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
                 trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
                 counter += 1
 
-        t += trace_length
+    t += trace_length
 
 
 def read_geom(hyp):
@@ -183,7 +180,4 @@ def read_geom(hyp):
     return geom
 
 
-def get_stream_geom(stream, geom):
-    station = stream.traces[0].stats.station
-    stream.location = geom[station]
-    return stream
+

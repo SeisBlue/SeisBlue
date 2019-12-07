@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 from seisnn.io import read_pkl
 from seisnn.utils import get_dir_list
-from seisnn.pick import get_exist_picks
+from seisnn.flow import get_exist_picks
 
 pkl_dir = "/mnt/tf_data/dataset/2018_02_18_predict"
 pkl_list = get_dir_list(pkl_dir)
