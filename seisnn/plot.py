@@ -1,10 +1,11 @@
 import os
 
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import numpy as np
 
 from seisnn.pick import get_picks_from_dataset
-from seisnn.feature import pick_exist, get_time_array
+from seisnn.feature import get_time_array
 
 
 def color_palette(feature, phase=None, shade=1):
@@ -15,16 +16,19 @@ def color_palette(feature, phase=None, shade=1):
     palette = [['#90CAF9', '#2196F3', '#1565C0'],  # Blue
                ['#A5D6A7', '#4CAF50', '#2E7D32'],  # Green
                ['#FFAB91', '#FF5722', '#D84315']]  # Deep Orange
-    phase_index = feature['phase'].index(phase)
+
+    phase_list = list(feature['phase'].keys())
+    phase_index = phase_list.index(phase)
     return palette[phase_index][shade]
 
 
 def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
     start_time = feature['starttime']
     time_stamp = feature['starttime'].isoformat()
+    picks = feature['picks']
 
-    if pick_exist(feature):
-        first_pick_time = feature['pick_time'][0] - start_time
+    if not picks.empty:
+        first_pick_time = picks['pick_time'].values[0] - start_time
     else:
         first_pick_time = 1
 
@@ -40,39 +44,48 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
             plt.xlim(xlim)
         if enlarge:
             plt.xlim((first_pick_time - 1, first_pick_time + 2))
-        ax.plot(get_time_array(feature), feature[chan], "k-", label=chan)
+        ax.plot(get_time_array(feature), feature['channel'][chan], "k-", label=chan)
         y_min, y_max = ax.get_ylim()
 
-        if pick_exist(feature):
-            pick_set_list = list(set(feature['pick_set']))
+        if not picks.empty:
+            pick_set_list = picks['pick_set'].unique().tolist()
             labelset = set()
-            for i in range(len(feature['pick_time'])):
-                pick_set = feature['pick_set'][i]
-                pick_phase = feature['pick_phase'][i]
-                pick_set_index = pick_set_list.index(pick_set)
+            for i in range(len(picks)):
+                pick_set = picks['pick_set'].values[i]
+                pick_phase = picks['pick_phase'].values[i]
+                pick_index = pick_set_list.index(pick_set)
 
-                color = color_palette(feature, pick_phase, pick_set_index)
+                color = color_palette(feature, pick_phase, pick_index)
                 label = pick_set + " " + pick_phase
 
-                pick_time = feature['pick_time'][i] - start_time
+                pick_time = picks['pick_time'].values[i] - start_time
                 if not label in labelset:
-                    ax.vlines(pick_time, y_min / (pick_set_index + 1), y_max / (pick_set_index + 1), color=color, lw=2,
+                    ax.vlines(pick_time, y_min / (pick_index+1), y_max / (pick_index+1), color=color, lw=2,
                               label=label)
                     labelset.add(label)
                 else:
-                    ax.vlines(pick_time, y_min / (pick_set_index + 1), y_max / (pick_set_index + 1), color=color, lw=2)
+                    ax.vlines(pick_time, y_min / (pick_index+1), y_max / (pick_index+1), color=color, lw=2)
 
         ax.legend(loc=1)
 
     ax = fig.add_subplot(subplot, 1, subplot)
-    for phase in feature['phase']:
-        color = color_palette(feature, phase)
-        ax.plot(get_time_array(feature), feature[phase], color=color, label=phase)
+
+    if feature['phase']:
+        for phase in feature['phase']:
+            color = color_palette(feature, phase)
+            ax.plot(get_time_array(feature), feature['phase'][phase], color=color, label=phase)
+        ax.legend()
+
+    else:
+        label_only = [Line2D([0], [0], color="#AAAAAA", lw=2)]
+        ax.legend(label_only, ['No phase data'])
+
+
     if xlim:
         plt.xlim(xlim)
     if enlarge:
         plt.xlim((first_pick_time - 1, first_pick_time + 2))
-    ax.legend()
+
 
     if save_dir:
         os.makedirs(save_dir, exist_ok=True)
@@ -80,6 +93,7 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
         plt.close()
     else:
         plt.show()
+
 
 
 def plot_error_distribution(predict_pkl_list):

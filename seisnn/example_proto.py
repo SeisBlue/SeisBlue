@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import tensorflow as tf
 
 from obspy import UTCDateTime
@@ -37,33 +38,21 @@ def stream_to_feature(stream, pickset):
         'elevation': stream.location['elevation'],
     }
 
-    channel_list = []
+    channel_dict = {}
     for trace in stream:
-        channel = trace.stats.channel
-        channel_list.append(channel)
-        feature[channel] = trace.data
-    feature['channel'] = channel_list
+        channel_dict[trace.stats.channel] = trace.data
+    feature['channel'] = channel_dict
 
-    phase_list = []
-    pick_time = []
-    pick_phase = []
-    pick_set = []
-
+    picks_dict = {'pick_time':[], 'pick_phase':[], 'pick_set':[]}
     if stream.picks:
-        for phase, picks in stream.picks.items():
-            phase_list.append(phase)
+        for _, picks in stream.picks.items():
             for pick in picks:
-                pick_time.append(pick.time.isoformat())
-                pick_phase.append(pick.phase_hint)
-                pick_set.append(pickset)
+                picks_dict['pick_time'].append(pick.time.isoformat())
+                picks_dict['pick_phase'].append(pick.phase_hint)
+                picks_dict['pick_set'].append(pickset)
 
-    feature['phase'] = phase_list
-    feature['pick_time'] = pick_time
-    feature['pick_phase'] = pick_phase
-    feature['pick_set'] = pick_set
-
-    for phase, pdf in stream.pdf.items():
-        feature[phase] = pdf
+    feature['picks'] = pd.DataFrame(picks_dict)
+    feature['phase'] = stream.pdf
 
     return feature
 
@@ -82,9 +71,15 @@ def feature_to_example(stream_feature):
     }
 
     for key in ['channel', 'phase']:
-        for k in stream_feature[key]:
-            data[k] = _bytes_feature(stream_feature[k].astype(dtype=np.float32).tostring())
+        for k, v in stream_feature[key].items():
+            data[k] = _bytes_feature(stream_feature[key][k].astype(dtype=np.float32).tostring())
+        stream_feature[key] = list(stream_feature[key].keys())
     context = tf.train.Features(feature=data)
+
+    picks = stream_feature['picks']
+    stream_feature['pick_time'] = picks['pick_time'].tolist()
+    stream_feature['pick_phase'] = picks['pick_phase'].tolist()
+    stream_feature['pick_set'] = picks['pick_set'].tolist()
 
     data_dict = {}
     for key in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
@@ -93,8 +88,6 @@ def feature_to_example(stream_feature):
             for data in stream_feature[key]:
                 pick_feature = _bytes_feature(data.encode('utf-8'))
                 pick_features.append(pick_feature)
-        else:
-            pick_features.append(_bytes_feature('NA'.encode('utf-8')))
 
         data_dict[key] = tf.train.FeatureList(feature=pick_features)
 
@@ -118,7 +111,7 @@ def extract_example(example):
         'longitude': example.context.feature['longitude'].float_list.value[0],
         'elevation': example.context.feature['elevation'].float_list.value[0],
     }
-    # get c list
+    # get list
     for i in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
         feature_list = example.feature_lists.feature_list[i].feature
         data_list = []
@@ -131,9 +124,17 @@ def extract_example(example):
 
     # get trace
     for types in ['channel', 'phase']:
+        type_dict = {}
         for i in feature[types]:
             sequence_data = example.context.feature[i].bytes_list.value[0]
             sequence_data = np.fromstring(sequence_data, dtype=np.float32)
-            feature[i] = sequence_data
+            type_dict[i] = sequence_data
+        feature[types] = type_dict
+
+    picks = {'pick_time': feature.pop('pick_time'),
+             'pick_phase': feature.pop('pick_phase'),
+             'pick_set': feature.pop('pick_set')}
+
+    feature['picks'] = pd.DataFrame.from_dict(picks)
 
     return feature
