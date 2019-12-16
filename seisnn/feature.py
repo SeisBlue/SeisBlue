@@ -1,32 +1,116 @@
 import numpy as np
+import tensorflow as tf
 
-def get_time_array(feature):
-    time_array = np.arange(feature['npts'])
-    time_array = time_array * feature['delta']
-    return time_array
-
-
-def select_phase(feature, phase):
-    keys = list(feature['phase'].keys())
-    for key in keys:
-        if not phase in key:
-            feature['phase'].pop(key)
-
-    feature['picks'] = feature['picks'].loc[feature['picks']['pick_phase'] == phase]
-
-    return feature
+from seisnn.utils import unet_padding_size
+from seisnn.plot import plot_dataset
+from seisnn.example_proto import extract_example, feature_to_example
 
 
-def select_channel(feature, channel):
-    keys = list(feature['channel'].keys())
-    for key in keys:
-        if not channel in key:
-            feature['channel'].pop(key)
+class Feature:
+    def __init__(self, input_data=None):
+        self.id = None
+        self.station = None
 
-    return feature
+        self.starttime = None
+        self.endtime = None
+        self.npts = None
+        self.delta = None
 
+        self.latitude = None
+        self.longitude = None
+        self.elevation = None
 
-def select_pickset(feature, pickset):
-    feature['picks'] = feature['picks'].loc[feature['picks']['pick_set'] in pickset]
+        self.channel = None
+        self.picks = None
+        self.phase = None
 
-    return feature
+        self.trace = None
+        self.pdf = None
+
+        if isinstance(input_data, dict):
+            self.from_feature(input_data)
+
+        if isinstance(input_data, tf.Tensor):
+            self.from_example(input_data)
+
+    def from_feature(self, feature):
+        self.id = feature['id']
+        self.station = feature['station']
+
+        self.starttime = feature['starttime']
+        self.endtime = feature['endtime']
+        self.npts = feature['npts']
+        self.delta = feature['delta']
+
+        self.latitude = feature['latitude']
+        self.longitude = feature['longitude']
+        self.elevation = feature['elevation']
+
+        self.channel = feature['channel']
+        self.picks = feature['picks']
+        self.phase = feature['phase']
+
+    def to_feature(self):
+        feature = {
+            'id': self.id,
+            'station': self.station,
+            'starttime': self.starttime,
+            'endtime': self.endtime,
+            'npts': self.npts,
+            'delta': self.delta,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'elevation': self.elevation,
+            'channel': self.channel,
+            'picks': self.picks,
+            'phase': self.phase
+        }
+        return feature
+
+    def from_example(self, example):
+        feature = extract_example(example)
+        self.from_feature(feature)
+
+    def to_example(self):
+        feature = self.to_feature()
+        example = feature_to_example(feature)
+        return example
+
+    def filter_phase(self, phase):
+        keys = list(self.phase.keys())
+        for key in keys:
+            if not phase in key:
+                self.phase.pop(key)
+
+        self.picks = self.picks.loc[self.picks['pick_phase'] == phase]
+
+    def filter_channel(self, channel):
+        keys = list(self.channel.keys())
+        for key in keys:
+            if not channel in key:
+                self.channel.pop(key)
+
+    def filter_pickset(self, pickset):
+        self.picks = self.picks.loc[self.picks['pick_set'] in pickset]
+
+    def get_trace(self):
+        traces = []
+        for k, v in self.channel.items():
+            tr = np.pad(v, unet_padding_size(v))
+            traces.append(tr[np.newaxis, np.newaxis, :])
+        traces = np.stack(traces, axis=-1)
+        self.trace = traces
+        return traces
+
+    def get_pdf(self):
+        pdf = []
+        for k, v in self.phase.items():
+            tr = np.pad(v, unet_padding_size(v))
+            pdf.append(tr[np.newaxis, np.newaxis, :])
+        pdf = np.stack(pdf, axis=-1)
+        self.pdf = pdf
+        return pdf
+
+    def plot(self):
+        feature = self.to_feature()
+        plot_dataset(feature)

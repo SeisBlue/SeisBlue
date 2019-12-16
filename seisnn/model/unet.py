@@ -1,21 +1,8 @@
-from tensorflow.python.keras.layers import Conv2D, Conv2DTranspose, Cropping2D, Dropout, Input, MaxPooling2D, \
-    ZeroPadding2D, concatenate
-from tensorflow.python.keras.models import Model
-from tensorflow.python.keras.regularizers import l2
-import numpy as np
+import tensorflow as tf
 
-
-def unet_padding_size(length, pool_size, layers=4):
-    output = length
-    for _ in range(layers):
-        output = int(np.ceil(output / pool_size))
-
-    padding = output * (pool_size ** layers) - length
-    lpad = int(np.ceil(padding / 2))
-    rpad = int(np.floor(padding / 2))
-
-    return lpad, rpad
-
+from tensorflow.keras.layers import Conv2D, Conv2DTranspose, Dropout, Input, MaxPooling2D, \
+    concatenate
+from tensorflow.keras.regularizers import l2
 
 """
 U-net, Nest-Net model from: 
@@ -54,12 +41,10 @@ def U_Net(img_rows, img_cols, color_type=1, num_class=1):
     # nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 4)
     kernel_size = (1, 7)
-    padding_size = ((0, 0), unet_padding_size(img_cols, pool_size[1]))
 
     img_input = Input(shape=(img_rows, img_cols, color_type), name='main_input')
-    zpad = ZeroPadding2D(padding_size)(img_input)
 
-    conv1_1 = standard_unit(zpad, stage='11', nb_filter=nb_filter[0], kernel_size=kernel_size)
+    conv1_1 = standard_unit(img_input, stage='11', nb_filter=nb_filter[0], kernel_size=kernel_size)
     pool1 = MaxPooling2D(pool_size=pool_size, name='pool1')(conv1_1)
 
     conv2_1 = standard_unit(pool1, stage='21', nb_filter=nb_filter[1], kernel_size=kernel_size)
@@ -91,9 +76,8 @@ def U_Net(img_rows, img_cols, color_type=1, num_class=1):
 
     unet_output = Conv2D(num_class, (1, 1), activation='sigmoid', name='output', kernel_initializer='he_normal',
                          padding='same', kernel_regularizer=l2(3e-4))(conv1_5)
-    crop = Cropping2D(padding_size)(unet_output)
 
-    model = Model(inputs=img_input, outputs=crop)
+    model = tf.keras.Model(inputs=img_input, outputs=unet_output)
 
     return model
 
@@ -108,12 +92,10 @@ def Nest_Net(img_rows, img_cols, color_type=1, num_class=1, deep_supervision=Fal
     nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 2)
     kernel_size = (1, 7)
-    padding_size = ((0, 0), unet_padding_size(img_cols, pool_size[1]))
 
     img_input = Input(shape=(img_rows, img_cols, color_type), name='main_input')
-    zpad = ZeroPadding2D(padding_size)(img_input)
 
-    conv1_1 = standard_unit(zpad, stage='11', nb_filter=nb_filter[0], kernel_size=kernel_size)
+    conv1_1 = standard_unit(img_input, stage='11', nb_filter=nb_filter[0], kernel_size=kernel_size)
     pool1 = MaxPooling2D(pool_size=pool_size, name='pool1')(conv1_1)
 
     conv2_1 = standard_unit(pool1, stage='21', nb_filter=nb_filter[1], kernel_size=kernel_size)
@@ -176,15 +158,13 @@ def Nest_Net(img_rows, img_cols, color_type=1, num_class=1, deep_supervision=Fal
     nestnet_output_4 = Conv2D(num_class, (1, 1), activation='sigmoid', name='output_4', kernel_initializer='he_normal',
                               padding='same', kernel_regularizer=l2(1e-4))(conv1_5)
 
-    crop1 = Cropping2D(padding_size)(nestnet_output_1)
-    crop2 = Cropping2D(padding_size)(nestnet_output_2)
-    crop3 = Cropping2D(padding_size)(nestnet_output_3)
-    crop4 = Cropping2D(padding_size)(nestnet_output_4)
-
     if deep_supervision:
-        model = Model(inputs=img_input, outputs=[crop1, crop2, crop3, crop4])
+        model = tf.keras.Model(inputs=img_input, outputs=[nestnet_output_1,
+                                                          nestnet_output_2,
+                                                          nestnet_output_3,
+                                                          nestnet_output_4])
     else:
-        model = Model(inputs=img_input, outputs=[crop4])
+        model = tf.keras.Model(inputs=img_input, outputs=[nestnet_output_1])
 
     return model
 

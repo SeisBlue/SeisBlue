@@ -10,9 +10,9 @@ from obspy.io.nordic.core import read_nordic
 from obspy.core.inventory.util import Latitude, Longitude
 
 from seisnn.pick import get_window
-from seisnn.flow import signal_preprocessing, stream_preprocessing
+from seisnn.flow import signal_preprocessing, stream_preprocessing, trim_trace
 from seisnn.example_proto import stream_to_feature, feature_to_example
-from seisnn.utils import get_config, make_dirs, parallel, get_dir_list, trim_trace
+from seisnn.utils import get_config, make_dirs, parallel, get_dir_list
 
 
 def read_dataset(dataset):

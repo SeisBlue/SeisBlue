@@ -43,7 +43,7 @@ def stream_to_feature(stream, pickset):
         channel_dict[trace.stats.channel] = trace.data
     feature['channel'] = channel_dict
 
-    picks_dict = {'pick_time':[], 'pick_phase':[], 'pick_set':[]}
+    picks_dict = {'pick_time': [], 'pick_phase': [], 'pick_set': []}
     if stream.picks:
         for _, picks in stream.picks.items():
             for pick in picks:
@@ -73,7 +73,7 @@ def feature_to_example(stream_feature):
     for key in ['channel', 'phase']:
         for k, v in stream_feature[key].items():
             data[k] = _bytes_feature(stream_feature[key][k].astype(dtype=np.float32).tostring())
-        stream_feature[key] = list(stream_feature[key].keys())
+        stream_feature[key] = list(stream_feature[key].keys())  # replace dict by its own keys
     context = tf.train.Features(feature=data)
 
     picks = stream_feature['picks']
@@ -98,6 +98,8 @@ def feature_to_example(stream_feature):
 
 
 def extract_example(example):
+    example = tf.train.SequenceExample.FromString(example.numpy())
+
     feature = {
         'id': example.context.feature['id'].bytes_list.value[0].decode('utf-8'),
         'starttime': UTCDateTime(example.context.feature['starttime'].bytes_list.value[0].decode('utf-8')),

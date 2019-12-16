@@ -1,18 +1,18 @@
-import tensorflow as tf
+import argparse
 
-from seisnn.feature import select_phase, select_channel
-from seisnn.utils import  get_config
+from seisnn.feature import Feature
+from seisnn.utils import get_config
 from seisnn.io import read_dataset
-from seisnn.example_proto import extract_example
-from seisnn.plot import plot_dataset
+
+ap = argparse.ArgumentParser()
+ap.add_argument('-d', '--dataset', required=True, help='dataset', type=str)
+args = ap.parse_args()
 
 config = get_config()
-dataset = read_dataset('test')
+dataset = read_dataset(args.dataset)
 
 for example in dataset:
-    example = tf.train.SequenceExample.FromString(example.numpy())
-    feature = extract_example(example)
-    feature = select_phase(feature, 'P')
-    feature = select_channel(feature, 'Z')
-    plot_dataset(feature)
-
+    feature = Feature(example)
+    feature.filter_phase('P')
+    feature.filter_channel('Z')
+    feature.plot()

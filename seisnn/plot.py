@@ -5,7 +5,6 @@ from matplotlib.lines import Line2D
 import numpy as np
 
 from seisnn.pick import get_picks_from_dataset
-from seisnn.feature import get_time_array
 
 
 def color_palette(feature, phase=None, shade=1):
@@ -20,6 +19,12 @@ def color_palette(feature, phase=None, shade=1):
     phase_list = list(feature['phase'].keys())
     phase_index = phase_list.index(phase)
     return palette[phase_index][shade]
+
+
+def get_time_array(feature):
+    time_array = np.arange(feature['npts'])
+    time_array = time_array * feature['delta']
+    return time_array
 
 
 def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
@@ -60,11 +65,11 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
 
                 pick_time = picks['pick_time'].values[i] - start_time
                 if not label in labelset:
-                    ax.vlines(pick_time, y_min / (pick_index+1), y_max / (pick_index+1), color=color, lw=2,
+                    ax.vlines(pick_time, y_min / (pick_index + 1), y_max / (pick_index + 1), color=color, lw=2,
                               label=label)
                     labelset.add(label)
                 else:
-                    ax.vlines(pick_time, y_min / (pick_index+1), y_max / (pick_index+1), color=color, lw=2)
+                    ax.vlines(pick_time, y_min / (pick_index + 1), y_max / (pick_index + 1), color=color, lw=2)
 
         ax.legend(loc=1)
 
@@ -80,12 +85,10 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
         label_only = [Line2D([0], [0], color="#AAAAAA", lw=2)]
         ax.legend(label_only, ['No phase data'])
 
-
     if xlim:
         plt.xlim(xlim)
     if enlarge:
         plt.xlim((first_pick_time - 1, first_pick_time + 2))
-
 
     if save_dir:
         os.makedirs(save_dir, exist_ok=True)
@@ -93,7 +96,6 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
         plt.close()
     else:
         plt.show()
-
 
 
 def plot_error_distribution(predict_pkl_list):

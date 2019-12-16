@@ -45,12 +45,14 @@ def get_dir_list(file_dir, suffix=""):
     return file_list
 
 
-def trim_trace(stream, points=3001):
-    trace = stream[0]
-    start_time = trace.stats.starttime
-    dt = (trace.stats.endtime - trace.stats.starttime) / (trace.data.size - 1)
-    end_time = start_time + dt * (points - 1)
-    stream.trim(start_time, end_time, nearest_sample=False, pad=True, fill_value=0)
-    return trace
+def unet_padding_size(trace, pool_size=2, layers=4):
+    length = len(trace)
+    output = length
+    for _ in range(layers):
+        output = int(np.ceil(output / pool_size))
 
+    padding = output * (pool_size ** layers) - length
+    lpad = int(np.ceil(padding / 2))
+    rpad = int(np.floor(padding / 2))
 
+    return lpad, rpad
