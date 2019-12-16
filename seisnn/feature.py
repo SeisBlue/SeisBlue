@@ -98,18 +98,24 @@ class Feature:
         for k, v in self.channel.items():
             tr = np.pad(v, unet_padding_size(v))
             traces.append(tr[np.newaxis, np.newaxis, :])
-        traces = np.stack(traces, axis=-1)
-        self.trace = traces
-        return traces
+        if traces:
+            traces = np.stack(traces, axis=-1)
+            self.trace = traces
+            return traces
+        else:
+            return None
 
     def get_pdf(self):
         pdf = []
         for k, v in self.phase.items():
             tr = np.pad(v, unet_padding_size(v))
             pdf.append(tr[np.newaxis, np.newaxis, :])
-        pdf = np.stack(pdf, axis=-1)
-        self.pdf = pdf
-        return pdf
+        if pdf:
+            pdf = np.stack(pdf, axis=-1)
+            self.pdf = pdf
+            return pdf
+        else:
+            return None
 
     def plot(self):
         feature = self.to_feature()

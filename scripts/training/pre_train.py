@@ -1,27 +1,51 @@
 import os
+import argparse
 
-from tensorflow.python import keras
-from tensorflow.python.keras.optimizers import Adam
+import tensorflow as tf
 
-from seisnn.utils import get_dir_list
-from seisnn.generator import DataGenerator
-from seisnn.model import Nest_Net
+from seisnn.utils import get_config, make_dirs
+from seisnn.io import read_dataset
+from seisnn.feature import Feature
+from seisnn.model.settings import model, optimizer, train_step
 
-pkl_dir = "/mnt/tf_data/dataset/201718select_random"
-pkl_list = get_dir_list(pkl_dir)
+ap = argparse.ArgumentParser()
+ap.add_argument('-d', '--dataset', required=True, help='dataset', type=str)
+ap.add_argument('-m', '--model', required=True, help='save model', type=str)
+args = ap.parse_args()
 
+config = get_config()
+SAVE_MODEL_PATH = os.path.join(config['MODELS_ROOT'], args.model)
+make_dirs(SAVE_MODEL_PATH)
 
-training_generator = DataGenerator(pkl_list[:5000], batch_size=2, shuffle=False)
-validation_generator = DataGenerator(pkl_list[-7304:], batch_size=32)
+dataset = read_dataset(args.dataset)
+test = Feature(next(iter(read_dataset(args.dataset))))
+test.filter_phase('P')
+test.filter_channel('Z')
 
-tensorboard = keras.callbacks.TensorBoard(log_dir='../logs', histogram_freq=0,
-                                          write_graph=True, write_images=False)
-model = Nest_Net(1, 3001, 1)
-# model = U_Net(1, 3001, 1)
-model.compile(optimizer=Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])
-model.fit_generator(generator=training_generator, validation_data=validation_generator,
-                    epochs=1, use_multiprocessing=True, callbacks=[tensorboard])
+ckpt = tf.train.Checkpoint(model=model, optimizer=optimizer)
+ckpt_manager = tf.train.CheckpointManager(ckpt, SAVE_MODEL_PATH, max_to_keep=100)
 
-weight_dir = "/mnt/tf_data/weights"
-os.makedirs(weight_dir, exist_ok=True)
-model.save_weights('/mnt/tf_data/weights/pretrained_weight.h5')
+EPOCHS = 100
+for epoch in range(EPOCHS):
+    n = 0
+    for example in dataset:
+        feature = Feature(example)
+        feature.filter_phase('P')
+        feature.filter_channel('Z')
+
+        trace = feature.get_trace()
+        pdf = feature.get_pdf()
+
+        if pdf is None or trace is None:
+            continue
+
+        train_loss = train_step(trace, pdf)
+        n += 1
+
+        if n % 100 == 0:
+            print(f'epoch {epoch + 1}, step {n}, loss= {train_loss.numpy()}')
+
+    test.phase['pred'] = model.predict(test.get_trace())[0, 0, :3001, 0]
+    test.plot()
+
+    ckpt_save_path = ckpt_manager.save()

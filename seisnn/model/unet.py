@@ -88,7 +88,7 @@ Total params: 496,225
 """
 
 
-def Nest_Net(img_rows, img_cols, color_type=1, num_class=1, deep_supervision=False):
+def Nest_Net(img_rows=None, img_cols=None, color_type=1, num_class=1, deep_supervision=False):
     nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 2)
     kernel_size = (1, 7)

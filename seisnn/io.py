@@ -79,7 +79,7 @@ def read_sds(window):
     return stream_list
 
 
-def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=100):
+def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=20):
     config = get_config()
     dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
     make_dirs(dataset_dir)
@@ -178,6 +178,3 @@ def read_geom(hyp):
                             'elevation': elev}
                 geom[sta] = location
     return geom
-
-
-

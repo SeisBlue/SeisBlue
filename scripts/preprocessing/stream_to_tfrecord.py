@@ -1,4 +1,5 @@
 import os
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import argparse
 
@@ -22,4 +23,4 @@ sfile = os.path.join(config['CATALOG_ROOT'], args.catalog)
 events = read_event_list(sfile)
 pick_list = get_pick_list(events)
 
-write_training_dataset(pick_list, geom, dataset=args.dataset, pickset=args.pickset, batch_size=100)
+write_training_dataset(pick_list, geom, dataset=args.dataset, pickset=args.pickset, batch_size=20)

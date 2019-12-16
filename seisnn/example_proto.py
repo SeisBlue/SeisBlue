@@ -99,7 +99,6 @@ def feature_to_example(stream_feature):
 
 def extract_example(example):
     example = tf.train.SequenceExample.FromString(example.numpy())
-
     feature = {
         'id': example.context.feature['id'].bytes_list.value[0].decode('utf-8'),
         'starttime': UTCDateTime(example.context.feature['starttime'].bytes_list.value[0].decode('utf-8')),

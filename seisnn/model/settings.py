@@ -1,8 +1,8 @@
 import tensorflow as tf
 from seisnn.model.unet import Nest_Net
 
-model = Nest_Net(1, 3001, 1)
-optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
+model = Nest_Net()
+optimizer = tf.keras.optimizers.Adam(1e-4)
 loss_obj = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
 
