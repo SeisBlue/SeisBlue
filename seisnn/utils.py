@@ -24,16 +24,17 @@ def batch(iterable, n=1):
         yield iterable[ndx:min(ndx + n, iter_len)]
 
 
-def parallel(par, file_list, batch_size=100):
+def parallel(par, file_list, batch_size=1):
     pool = Pool(processes=cpu_count(), maxtasksperchild=1)
-
-    for _ in tqdm(pool.imap_unordered(par, batch(file_list, batch_size)),
+    output = []
+    for thread_output in tqdm(pool.imap_unordered(par, batch(file_list, batch_size)),
                   total=int(np.ceil(len(file_list) / batch_size))):
-        pass
+        if thread_output:
+            output.extend(thread_output)
 
     pool.close()
     pool.join()
-
+    return output
 
 def get_dir_list(file_dir, suffix=""):
     file_list = []
@@ -52,7 +53,7 @@ def unet_padding_size(trace, pool_size=2, layers=4):
         output = int(np.ceil(output / pool_size))
 
     padding = output * (pool_size ** layers) - length
-    lpad = int(np.ceil(padding / 2))
-    rpad = int(np.floor(padding / 2))
+    lpad = 0
+    rpad = padding
 
     return lpad, rpad

@@ -27,8 +27,8 @@ def stream_to_feature(stream, pickset):
 
     feature = {
         'id': trace.id,
-        'starttime': trace.stats.starttime.isoformat(),
-        'endtime': trace.stats.endtime.isoformat(),
+        'starttime': trace.stats.starttime,
+        'endtime': trace.stats.endtime,
         'station': trace.stats.station,
         'npts': trace.stats.npts,
         'delta': trace.stats.delta,
@@ -60,8 +60,8 @@ def stream_to_feature(stream, pickset):
 def feature_to_example(stream_feature):
     data = {
         'id': _bytes_feature(stream_feature['id'].encode('utf-8')),
-        'starttime': _bytes_feature(stream_feature['starttime'].encode('utf-8')),
-        'endtime': _bytes_feature(stream_feature['endtime'].encode('utf-8')),
+        'starttime': _bytes_feature(stream_feature['starttime'].isoformat().encode('utf-8')),
+        'endtime': _bytes_feature(stream_feature['endtime'].isoformat().encode('utf-8')),
         'station': _bytes_feature(stream_feature['station'].encode('utf-8')),
         'npts': _int64_feature(stream_feature['npts']),
         'delta': _float_feature(stream_feature['delta']),
@@ -86,7 +86,10 @@ def feature_to_example(stream_feature):
         pick_features = []
         if stream_feature[key]:
             for data in stream_feature[key]:
-                pick_feature = _bytes_feature(data.encode('utf-8'))
+                if isinstance(data, UTCDateTime):
+                    pick_feature = _bytes_feature(data.isoformat().encode('utf-8'))
+                else:
+                    pick_feature = _bytes_feature(data.encode('utf-8'))
                 pick_features.append(pick_feature)
 
         data_dict[key] = tf.train.FeatureList(feature=pick_features)

@@ -2,6 +2,6 @@ SDS_ROOT: /mnt/SDS_ROOT
 WORKSPACE: /home/jimmy
 TFRECORD_ROOT: /home/jimmy/tfrecord
 DATASET_ROOT: /home/jimmy/tfrecord/dataset
-CATALOG_ROOT: /home/jimmy/tfrecord/catalog
+CATALOG_ROOT: /home/jimmy/catalog
 PICK_ROOT: /home/jimmy/tfrecord/picks
 MODELS_ROOT: /home/jimmy/models

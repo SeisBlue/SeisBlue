@@ -15,9 +15,7 @@ from seisnn.example_proto import stream_to_feature, feature_to_example
 from seisnn.utils import get_config, make_dirs, parallel, get_dir_list
 
 
-def read_dataset(dataset):
-    config = get_config()
-    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
+def read_dataset(dataset_dir):
     file_list = get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
     return dataset
@@ -34,7 +32,7 @@ def write_pkl(obj, file):
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
-def write_tfrecord(stream, dataset, pickset):
+def stream_to_tfrecord(stream, dataset, pickset):
     config = get_config()
     output_dir = os.path.join(config['DATASET_ROOT'], dataset)
     trace = stream.traces[0]
@@ -42,18 +40,32 @@ def write_tfrecord(stream, dataset, pickset):
     file_name = '{}.tfrecord'.format(time_stamp + trace.get_id())
 
     save_file = os.path.join(output_dir, file_name)
+    feature = stream_to_feature(stream, pickset)
+    feature_to_tfrecord(feature, save_file)
+
+
+def feature_to_tfrecord(feature, save_file):
     with tf.io.TFRecordWriter(save_file) as writer:
-        feature = stream_to_feature(stream, pickset)
         example = feature_to_example(feature)
         writer.write(example)
 
+def read_event_list(sfile_dir):
+    sfile_list = get_dir_list(sfile_dir)
+    print('read events...')
+    events = parallel(par=get_event, file_list=sfile_list, batch_size=1)
+    return events
 
-def read_event_list(filename):
-    catalog, wavename = read_nordic(filename, return_wavnames=True)
-    for event in catalog.events:
-        for pick in event.picks:
-            pick.waveform_id.wavename = wavename
-        yield event
+
+def get_event(filename):
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        catalog, wavename = read_nordic(filename[0], return_wavnames=True)
+        for event in catalog.events:
+            for pick in event.picks:
+
+                pick.waveform_id.wavename = wavename
+        return catalog.events
 
 
 def read_sds(window):
@@ -79,28 +91,28 @@ def read_sds(window):
     return stream_list
 
 
-def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=20):
+def write_training_dataset(pick_dict, geom, dataset, pickset, batch_size=20):
     config = get_config()
     dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
     make_dirs(dataset_dir)
 
     par = partial(_write_picked_stream,
-                  pick_list=pick_list,
+                  pick_dict=pick_dict,
                   geom=geom,
                   dataset_dir=dataset_dir,
                   pickset=pickset)
 
-    parallel(par, pick_list, batch_size)
+    parallel(par, pick_dict, batch_size)
 
 
-def _write_picked_stream(batch_picks, pick_list, geom, dataset_dir, pickset):
+def _write_picked_stream(batch_picks, pick_dict, geom, dataset_dir, pickset):
     for pick in batch_picks:
         window = get_window(pick)
         streams = read_sds(window)
 
         for _, stream in streams.items():
-            stream = stream_preprocessing(stream, pick_list, geom)
-            write_tfrecord(stream, dataset_dir, pickset)
+            stream = stream_preprocessing(stream, pick_dict, geom)
+            stream_to_tfrecord(stream, dataset_dir, pickset)
 
 
 def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_time,

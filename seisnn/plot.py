@@ -1,10 +1,10 @@
 import os
-
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-import numpy as np
 
 from seisnn.pick import get_picks_from_dataset
+from seisnn.utils import make_dirs
 
 
 def color_palette(feature, phase=None, shade=1):
@@ -13,8 +13,9 @@ def color_palette(feature, phase=None, shade=1):
 
     # shade:     #200       #500       #800
     palette = [['#90CAF9', '#2196F3', '#1565C0'],  # Blue
+               ['#FFAB91', '#FF5722', '#D84315'],  # Deep Orange
                ['#A5D6A7', '#4CAF50', '#2E7D32'],  # Green
-               ['#FFAB91', '#FF5722', '#D84315']]  # Deep Orange
+               ]
 
     phase_list = list(feature['phase'].keys())
     phase_index = phase_list.index(phase)
@@ -27,11 +28,13 @@ def get_time_array(feature):
     return time_array
 
 
-def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
+def plot_dataset(feature, enlarge=False, xlim=None, title=None, save_dir=None):
     start_time = feature['starttime']
     time_stamp = feature['starttime'].isoformat()
     picks = feature['picks']
 
+    if title is None:
+        title = f'{time_stamp}_{feature["id"][:-3]}'
     if not picks.empty:
         first_pick_time = picks['pick_time'].values[0] - start_time
     else:
@@ -43,7 +46,7 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
     for i, chan in enumerate(feature['channel']):
         ax = fig.add_subplot(subplot, 1, i + 1)
 
-        plt.title(time_stamp + " " + feature['id'][:-3] + chan)
+        plt.title(title + chan)
 
         if xlim:
             plt.xlim(xlim)
@@ -91,12 +94,11 @@ def plot_dataset(feature, enlarge=False, xlim=None, save_dir=None):
         plt.xlim((first_pick_time - 1, first_pick_time + 2))
 
     if save_dir:
-        os.makedirs(save_dir, exist_ok=True)
-        plt.savefig(save_dir + "/" + time_stamp + "_" + feature['id'])
+        make_dirs(save_dir)
+        plt.savefig(os.path.join(save_dir, f'{title}.png'))
         plt.close()
     else:
         plt.show()
-
 
 def plot_error_distribution(predict_pkl_list):
     time_residuals = []

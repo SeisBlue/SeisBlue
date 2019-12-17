@@ -1,5 +1,6 @@
 import os
 import shutil
+from bisect import bisect_left, bisect_right
 
 import scipy
 import numpy as np
@@ -12,13 +13,17 @@ from scipy.signal import find_peaks
 from tqdm import tqdm
 
 
-def get_pick_list(events):
-    pick_list = []
+def get_pick_dict(events):
+    pick_dict = {}
     for event in events:
         for p in event.picks:
-            pick_list.append(p)
-    pick_list.sort(key=lambda pick: pick.time)
-    return pick_list
+            station = p.waveform_id.station_code
+            if not pick_dict.get(station):
+                pick_dict[station]=[]
+            pick_dict[station].append(p)
+    for k, v in pick_dict.items():
+        v.sort(key=lambda pick: pick.time)
+    return pick_dict
 
 
 def get_window(pick, trace_length=30):
@@ -92,18 +97,28 @@ def search_pick(pick_list, stream):
     endtime = stream.traces[0].stats.endtime
     station = stream.traces[0].stats.station
 
+    pick_list = binary_search(pick_list, starttime, endtime)
     for pick in pick_list:
         if not pick.waveform_id.station_code == station:
             continue
         phase = pick.phase_hint
-        if starttime < pick.time < endtime:
-            if not tmp_pick.get(phase):
-                tmp_pick[phase] = [pick]
-            else:
-                tmp_pick[phase].append(pick)
+        if not tmp_pick.get(phase):
+            tmp_pick[phase] = [pick]
+        else:
+            tmp_pick[phase].append(pick)
 
     return tmp_pick
 
+def binary_search(pick_list, start_time, end_time):
+    # binary search, pick_list must be sorted by time
+    pick_time_key = []
+    for pick in pick_list:
+        pick_time_key.append(pick.time)
+
+    left = bisect_left(pick_time_key, start_time)
+    right = bisect_right(pick_time_key, end_time)
+    pick_list = pick_list[left:right]
+    return pick_list
 
 def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=False):
     if remove_dir:

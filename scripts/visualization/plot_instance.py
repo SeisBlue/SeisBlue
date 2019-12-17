@@ -1,3 +1,4 @@
+import os
 import argparse
 
 from seisnn.feature import Feature
@@ -5,11 +6,12 @@ from seisnn.utils import get_config
 from seisnn.io import read_dataset
 
 ap = argparse.ArgumentParser()
-ap.add_argument('-d', '--dataset', required=True, help='dataset', type=str)
+ap.add_argument('-d', '--dataset', required=False, help='dataset', type=str)
 args = ap.parse_args()
 
 config = get_config()
-dataset = read_dataset(args.dataset)
+dataset_dir = os.path.join(config['DATASET_ROOT'], args.dataset)
+dataset = read_dataset(dataset_dir)
 
 for example in dataset:
     feature = Feature(example)
