@@ -3,7 +3,7 @@ FROM tensorflow/tensorflow:2.0.0-gpu-py3-jupyter
 ENV TFX_DIR "/tfx"
 
 RUN sed -i 's/archive.ubuntu.com/free.nchc.org.tw/g' /etc/apt/sources.list
-RUN apt-get update && apt-get upgrade -y && apt-get install sudo openssh-server vim htop screen reptyr git -y
+RUN apt-get update && apt-get upgrade -y && apt-get install sudo openssh-server vim htop screen reptyr git ffmpeg -y
 
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
