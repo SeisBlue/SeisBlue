@@ -8,7 +8,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install sudo openssh-server 
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 RUN pip install --upgrade pip
-RUN python -m pip --no-cache-dir install --upgrade tfx tensorflow_probability pyyaml docker obspy scikit-learn sklearn tqdm geopandas
+RUN python -m pip --no-cache-dir install --upgrade tfx tensorflow_probability pyyaml docker obspy scikit-learn sklearn tqdm
 
 RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
