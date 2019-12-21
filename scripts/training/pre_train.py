@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from seisnn.utils import get_config, make_dirs
 from seisnn.io import read_dataset
-from seisnn.feature import Feature
+from seisnn.core import Feature
 from seisnn.logger import save_history
 from seisnn.model.settings import model, optimizer, train_step
 
@@ -33,7 +33,7 @@ ckpt_manager = tf.train.CheckpointManager(ckpt, SAVE_MODEL_PATH, max_to_keep=100
 EPOCHS = 5
 for epoch in range(EPOCHS):
     n = 0
-    for example in dataset:
+    for example in dataset.prefetch(100):
         try:
             feature = Feature(example)
             feature.filter_phase('P')

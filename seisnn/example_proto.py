@@ -58,7 +58,7 @@ def stream_to_feature(stream, pickset):
 
 
 def feature_to_example(stream_feature):
-    data = {
+    context_data = {
         'id': _bytes_feature(stream_feature['id'].encode('utf-8')),
         'starttime': _bytes_feature(stream_feature['starttime'].isoformat().encode('utf-8')),
         'endtime': _bytes_feature(stream_feature['endtime'].isoformat().encode('utf-8')),
@@ -69,71 +69,127 @@ def feature_to_example(stream_feature):
         'longitude': _float_feature(stream_feature['longitude']),
         'elevation': _float_feature(stream_feature['elevation'])
     }
+    context = tf.train.Features(feature=context_data)
 
+    # dict to list
     for key in ['channel', 'phase']:
+        data_list = []
         for k, v in stream_feature[key].items():
-            data[k] = _bytes_feature(stream_feature[key][k].astype(dtype=np.float32).tostring())
-        stream_feature[key] = list(stream_feature[key].keys())  # replace dict by its own keys
-    context = tf.train.Features(feature=data)
+            data_list.append(stream_feature[key][k].astype(dtype=np.float32).tostring())
+        stream_feature[key] = list(stream_feature[key].keys())
+        stream_feature[f'{key}_data'] = data_list
 
+    # dataframe to list
     picks = stream_feature['picks']
     stream_feature['pick_time'] = picks['pick_time'].tolist()
     stream_feature['pick_phase'] = picks['pick_phase'].tolist()
     stream_feature['pick_set'] = picks['pick_set'].tolist()
 
-    data_dict = {}
-    for key in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
+    sequence_data = {}
+    for key in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'channel_data', 'phase', 'phase_data']:
         pick_features = []
         if stream_feature[key]:
-            for data in stream_feature[key]:
-                if isinstance(data, UTCDateTime):
-                    pick_feature = _bytes_feature(data.isoformat().encode('utf-8'))
+            for context_data in stream_feature[key]:
+                if isinstance(context_data, UTCDateTime):
+                    pick_feature = _bytes_feature(context_data.isoformat().encode('utf-8'))
+                elif isinstance(context_data, bytes):
+                    pick_feature = _bytes_feature(context_data)
                 else:
-                    pick_feature = _bytes_feature(data.encode('utf-8'))
+                    pick_feature = _bytes_feature(context_data.encode('utf-8'))
                 pick_features.append(pick_feature)
 
-        data_dict[key] = tf.train.FeatureList(feature=pick_features)
+        sequence_data[key] = tf.train.FeatureList(feature=pick_features)
 
-    feature_list = tf.train.FeatureLists(feature_list=data_dict)
+    feature_list = tf.train.FeatureLists(feature_list=sequence_data)
 
     example = tf.train.SequenceExample(context=context, feature_lists=feature_list)
     return example.SerializeToString()
 
 
-def extract_example(example):
-    example = tf.train.SequenceExample.FromString(example.numpy())
-    feature = {
-        'id': example.context.feature['id'].bytes_list.value[0].decode('utf-8'),
-        'starttime': UTCDateTime(example.context.feature['starttime'].bytes_list.value[0].decode('utf-8')),
-        'endtime': UTCDateTime(example.context.feature['endtime'].bytes_list.value[0].decode('utf-8')),
-
-        'delta': example.context.feature['delta'].float_list.value[0],
-        'npts': example.context.feature['npts'].int64_list.value[0],
-
-        'station': example.context.feature['station'].bytes_list.value[0].decode('utf-8'),
-        'latitude': example.context.feature['latitude'].float_list.value[0],
-        'longitude': example.context.feature['longitude'].float_list.value[0],
-        'elevation': example.context.feature['elevation'].float_list.value[0],
+def sequence_example_parser(record):
+    context = {
+        "id": tf.io.FixedLenFeature((), tf.string, default_value=""),
+        "starttime": tf.io.FixedLenFeature((), tf.string, default_value=""),
+        "endtime": tf.io.FixedLenFeature((), tf.string, default_value=""),
+        "station": tf.io.FixedLenFeature((), tf.string, default_value=""),
+        "npts": tf.io.FixedLenFeature((), tf.int64, default_value=tf.zeros([], dtype=tf.int64)),
+        "delta": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
+        "latitude": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
+        "longitude": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
+        "elevation": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
     }
-    # get list
+    sequence = {
+        "pick_time": tf.io.VarLenFeature(tf.string),
+        "pick_phase": tf.io.VarLenFeature(tf.string),
+        "pick_set": tf.io.VarLenFeature(tf.string),
+
+        "channel": tf.io.VarLenFeature(tf.string),
+        "channel_data": tf.io.VarLenFeature(tf.string),
+        "phase": tf.io.VarLenFeature(tf.string),
+        "phase_data": tf.io.VarLenFeature(tf.string),
+    }
+    parsed_context, parsed_sequence = tf.io.parse_single_sequence_example(record,
+                                                                          context_features=context,
+                                                                          sequence_features=sequence)
+    parsed_example = {
+        'id': parsed_context['id'],
+        'starttime': parsed_context['starttime'],
+        'endtime': parsed_context['endtime'],
+
+        'delta': parsed_context['delta'],
+        'npts': parsed_context['npts'],
+
+        'station': parsed_context['station'],
+        'latitude': parsed_context['latitude'],
+        'longitude': parsed_context['longitude'],
+        'elevation': parsed_context['elevation'],
+
+        "pick_time": tf.RaggedTensor.from_sparse(parsed_sequence['pick_time']),
+        "pick_phase": tf.RaggedTensor.from_sparse(parsed_sequence['pick_phase']),
+        "pick_set": tf.RaggedTensor.from_sparse(parsed_sequence['pick_set']),
+
+        "channel": tf.RaggedTensor.from_sparse(parsed_sequence['channel']),
+        "channel_data": tf.RaggedTensor.from_sparse(parsed_sequence['channel_data']),
+        "phase": tf.RaggedTensor.from_sparse(parsed_sequence['phase']),
+        "phase_data": tf.RaggedTensor.from_sparse(parsed_sequence['phase_data']),
+    }
+
+    return parsed_example
+
+
+def extract_parsed_example(parsed_example):
+    feature = {
+        'id': parsed_example['id'].numpy().decode('utf-8'),
+        'starttime': UTCDateTime(parsed_example['starttime'].numpy().decode('utf-8')),
+        'endtime': UTCDateTime(parsed_example['endtime'].numpy().decode('utf-8')),
+
+        'delta': parsed_example['delta'].numpy(),
+        'npts': parsed_example['npts'].numpy(),
+
+        'station': parsed_example['station'].numpy().decode('utf-8'),
+        'latitude': parsed_example['latitude'].numpy(),
+        'longitude': parsed_example['longitude'].numpy(),
+        'elevation': parsed_example['elevation'].numpy(),
+
+        "pick_time": parsed_example['pick_time'],
+        "pick_phase": parsed_example['pick_phase'],
+        "pick_set": parsed_example['pick_set'],
+
+        "channel": parsed_example['channel'],
+        "channel_data": parsed_example['channel_data'],
+        "phase": parsed_example['phase'],
+        "phase_data": parsed_example['phase_data'],
+    }
+
     for i in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
-        feature_list = example.feature_lists.feature_list[i].feature
+        feature_list = feature[i]
         data_list = []
         for f in feature_list:
-            f = f.bytes_list.value[0].decode('utf-8')
+            f = f[0].numpy().decode('utf-8')
             if i == 'pick_time':
                 f = UTCDateTime(f)
             data_list.append(f)
-            feature[i] = data_list
-
-    # get trace
-    for types in ['channel', 'phase']:
-        type_dict = {}
-        for i in feature[types]:
-            sequence_data = example.context.feature[i].bytes_list.value[0]
-            sequence_data = np.fromstring(sequence_data, dtype=np.float32)
-            type_dict[i] = sequence_data
-        feature[types] = type_dict
+        feature[i] = data_list
 
     picks = {'pick_time': feature.pop('pick_time'),
              'pick_phase': feature.pop('pick_phase'),
@@ -141,4 +197,36 @@ def extract_example(example):
 
     feature['picks'] = pd.DataFrame.from_dict(picks)
 
+    for types in ['channel', 'phase']:
+        type_dict = {}
+        for i, v in enumerate(feature[types]):
+            type_dict[v] = np.fromstring(feature[f'{types}_data'].values[i].numpy(), dtype=np.float32)
+        feature[types] = type_dict
+
     return feature
+
+
+def extract_batch(index, batch):
+    parsed_example = {
+        'id': batch['id'][index],
+        'starttime': batch['starttime'][index],
+        'endtime': batch['endtime'][index],
+
+        'delta': batch['delta'][index],
+        'npts': batch['npts'][index],
+
+        'station': batch['station'][index],
+        'latitude': batch['latitude'][index],
+        'longitude': batch['longitude'][index],
+        'elevation': batch['elevation'][index],
+
+        "pick_time": batch['pick_time'][index, :],
+        "pick_phase": batch['pick_phase'][index, :],
+        "pick_set": batch['pick_set'][index, :],
+
+        "channel": batch['channel'][index, :],
+        "channel_data": batch['channel_data'][index, :],
+        "phase": batch['phase'][index, :],
+        "phase_data": batch['phase_data'][index, :],
+    }
+    return parsed_example

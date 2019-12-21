@@ -2,6 +2,7 @@ import os
 import pickle
 import shutil
 from functools import partial
+from multiprocessing import cpu_count
 import tensorflow as tf
 
 from obspy import Stream
@@ -11,13 +12,14 @@ from obspy.core.inventory.util import Latitude, Longitude
 
 from seisnn.pick import get_window
 from seisnn.flow import signal_preprocessing, stream_preprocessing, trim_trace
-from seisnn.example_proto import stream_to_feature, feature_to_example
+from seisnn.example_proto import stream_to_feature, feature_to_example, sequence_example_parser
 from seisnn.utils import get_config, make_dirs, parallel, get_dir_list
 
 
 def read_dataset(dataset_dir):
     file_list = get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
+    dataset = dataset.map(sequence_example_parser, num_parallel_calls=cpu_count())
     return dataset
 
 
@@ -49,6 +51,7 @@ def feature_to_tfrecord(feature, save_file):
         example = feature_to_example(feature)
         writer.write(example)
 
+
 def read_event_list(sfile_dir):
     sfile_list = get_dir_list(sfile_dir)
     print('read events...')
@@ -63,7 +66,6 @@ def get_event(filename):
         catalog, wavename = read_nordic(filename[0], return_wavnames=True)
         for event in catalog.events:
             for pick in event.picks:
-
                 pick.waveform_id.wavename = wavename
         return catalog.events
 

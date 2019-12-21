@@ -4,7 +4,7 @@ import tensorflow as tf
 from seisnn.utils import unet_padding_size
 from seisnn.plot import plot_dataset
 from seisnn.io import feature_to_tfrecord
-from seisnn.example_proto import extract_example, feature_to_example
+from seisnn.example_proto import extract_parsed_example, feature_to_example
 
 
 class Feature:
@@ -28,10 +28,9 @@ class Feature:
         self.trace = None
         self.pdf = None
 
-        if isinstance(input_data, dict):
+        if isinstance(input_data['id'], str):
             self.from_feature(input_data)
-
-        if isinstance(input_data, tf.Tensor):
+        if isinstance(input_data['id'], tf.Tensor):
             self.from_example(input_data)
 
     def from_feature(self, feature):
@@ -69,7 +68,7 @@ class Feature:
         return feature
 
     def from_example(self, example):
-        feature = extract_example(example)
+        feature = extract_parsed_example(example)
         self.from_feature(feature)
 
     def to_example(self):

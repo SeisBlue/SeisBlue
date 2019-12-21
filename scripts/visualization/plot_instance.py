@@ -1,7 +1,7 @@
 import os
 import argparse
 
-from seisnn.feature import Feature
+from seisnn.core import Feature
 from seisnn.utils import get_config
 from seisnn.io import read_dataset
 
