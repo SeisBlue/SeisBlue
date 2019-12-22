@@ -19,7 +19,7 @@ def get_pick_dict(events):
         for p in event.picks:
             station = p.waveform_id.station_code
             if not pick_dict.get(station):
-                pick_dict[station]=[]
+                pick_dict[station] = []
             pick_dict[station].append(p)
     for k, v in pick_dict.items():
         v.sort(key=lambda pick: pick.time)
@@ -91,14 +91,15 @@ def get_picks_from_dataset(dataset):
     return pick_list
 
 
-def search_pick(pick_list, stream):
+def search_pick(pick_list, pick_time_key, stream):
     tmp_pick = {}
     starttime = stream.traces[0].stats.starttime
     endtime = stream.traces[0].stats.endtime
     station = stream.traces[0].stats.station
 
-    pick_list = binary_search(pick_list, starttime, endtime)
-    for pick in pick_list:
+    left, right = binary_search(pick_time_key, starttime, endtime)
+
+    for pick in pick_list[left:right]:
         if not pick.waveform_id.station_code == station:
             continue
         phase = pick.phase_hint
@@ -109,16 +110,13 @@ def search_pick(pick_list, stream):
 
     return tmp_pick
 
-def binary_search(pick_list, start_time, end_time):
-    # binary search, pick_list must be sorted by time
-    pick_time_key = []
-    for pick in pick_list:
-        pick_time_key.append(pick.time)
 
-    left = bisect_left(pick_time_key, start_time)
-    right = bisect_right(pick_time_key, end_time)
-    pick_list = pick_list[left:right]
-    return pick_list
+def binary_search(key_list, min_value, max_value):
+    # binary search, key_list must be sorted by time
+    left = bisect_left(key_list, min_value)
+    right = bisect_right(key_list, max_value)
+    return left, right
+
 
 def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=False):
     if remove_dir:

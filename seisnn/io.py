@@ -34,27 +34,15 @@ def write_pkl(obj, file):
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
-def stream_to_tfrecord(stream, dataset, pickset):
-    config = get_config()
-    output_dir = os.path.join(config['DATASET_ROOT'], dataset)
-    trace = stream.traces[0]
-    time_stamp = trace.stats.starttime.isoformat()
-    file_name = '{}.tfrecord'.format(time_stamp + trace.get_id())
-
-    save_file = os.path.join(output_dir, file_name)
-    feature = stream_to_feature(stream, pickset)
-    feature_to_tfrecord(feature, save_file)
-
-
-def feature_to_tfrecord(feature, save_file):
+def write_tfrecord(example_list, save_file):
     with tf.io.TFRecordWriter(save_file) as writer:
-        example = feature_to_example(feature)
-        writer.write(example)
+        for example in example_list:
+            writer.write(example)
 
 
 def read_event_list(sfile_dir):
     sfile_list = get_dir_list(sfile_dir)
-    print('read events...')
+    print('reading events...')
     events = parallel(par=get_event, file_list=sfile_list, batch_size=1)
     return events
 
@@ -63,11 +51,14 @@ def get_event(filename):
     import warnings
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        catalog, wavename = read_nordic(filename[0], return_wavnames=True)
-        for event in catalog.events:
-            for pick in event.picks:
-                pick.waveform_id.wavename = wavename
-        return catalog.events
+        try:
+            catalog, wavename = read_nordic(filename[0], return_wavnames=True)
+            for event in catalog.events:
+                for pick in event.picks:
+                    pick.waveform_id.wavename = wavename
+            return catalog.events
+        except:
+            pass
 
 
 def read_sds(window):
@@ -93,28 +84,42 @@ def read_sds(window):
     return stream_list
 
 
-def write_training_dataset(pick_dict, geom, dataset, pickset, batch_size=20):
+def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=20):
     config = get_config()
     dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
     make_dirs(dataset_dir)
 
+    pick_time_key = []
+    for pick in pick_list:
+        pick_time_key.append(pick.time)
+
     par = partial(_write_picked_stream,
-                  pick_dict=pick_dict,
+                  pick_list=pick_list,
+                  pick_time_key=pick_time_key,
                   geom=geom,
-                  dataset_dir=dataset_dir,
                   pickset=pickset)
 
-    parallel(par, pick_dict, batch_size)
+    example_list = parallel(par, pick_list, batch_size)
+    
+    station = pick_list[0].waveform_id.station_code
+    file_name = '{}.tfrecord'.format(station)
+    save_file = os.path.join(dataset_dir, file_name)
+    
+    write_tfrecord(example_list, save_file)
 
 
-def _write_picked_stream(batch_picks, pick_dict, geom, dataset_dir, pickset):
+def _write_picked_stream(batch_picks, pick_list, pick_time_key, geom, pickset):
+    example_list = []
     for pick in batch_picks:
         window = get_window(pick)
         streams = read_sds(window)
 
         for _, stream in streams.items():
-            stream = stream_preprocessing(stream, pick_dict, geom)
-            stream_to_tfrecord(stream, dataset_dir, pickset)
+            stream = stream_preprocessing(stream, pick_list, pick_time_key, geom)
+            feature = stream_to_feature(stream, pickset)
+            example = feature_to_example(feature)
+            example_list.append(example)
+    return example_list
 
 
 def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_time,
@@ -152,6 +157,8 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
 
 
 def read_geom(hyp):
+    config = get_config()
+    hyp = os.path.join(config['GEOM_ROOT'], hyp)
     geom = {}
     with open(hyp, 'r') as file:
         blank_line = 0

@@ -1,9 +1,9 @@
 from seisnn.pick import search_pick, get_pdf
 
 
-def stream_preprocessing(stream, pick_list, geom):
+def stream_preprocessing(stream, pick_list, pick_time_key, geom):
     stream = signal_preprocessing(stream)
-    stream = get_exist_picks(stream, pick_list)
+    stream = get_exist_picks(stream, pick_list, pick_time_key)
     stream = get_pdf(stream)
     stream = get_stream_geom(stream, geom)
     return stream
@@ -17,8 +17,8 @@ def signal_preprocessing(stream):
     return stream
 
 
-def get_exist_picks(stream, pick_list):
-    picks = search_pick(pick_list, stream)
+def get_exist_picks(stream, pick_list, pick_time_key):
+    picks = search_pick(pick_list, pick_time_key, stream)
     stream.picks = picks
     return stream
 

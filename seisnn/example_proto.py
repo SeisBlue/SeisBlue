@@ -129,8 +129,8 @@ def sequence_example_parser(record):
         "phase_data": tf.io.VarLenFeature(tf.string),
     }
     parsed_context, parsed_sequence = tf.io.parse_single_sequence_example(record,
-                                                                          context_features=context,
-                                                                          sequence_features=sequence)
+                                                                   context_features=context,
+                                                                   sequence_features=sequence)
     parsed_example = {
         'id': parsed_context['id'],
         'starttime': parsed_context['starttime'],

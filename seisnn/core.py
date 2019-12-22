@@ -3,7 +3,7 @@ import tensorflow as tf
 
 from seisnn.utils import unet_padding_size
 from seisnn.plot import plot_dataset
-from seisnn.io import feature_to_tfrecord
+from seisnn.io import write_tfrecord
 from seisnn.example_proto import extract_parsed_example, feature_to_example
 
 
@@ -78,7 +78,8 @@ class Feature:
 
     def to_tfrecord(self, file_path):
         feature = self.to_feature()
-        feature_to_tfrecord(feature, file_path)
+        example = feature_to_example(feature)
+        write_tfrecord([example], file_path)
 
     def filter_phase(self, phase):
         keys = list(self.phase.keys())

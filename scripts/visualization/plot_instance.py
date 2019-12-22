@@ -11,7 +11,7 @@ args = ap.parse_args()
 
 config = get_config()
 dataset_dir = os.path.join(config['DATASET_ROOT'], args.dataset)
-dataset = read_dataset(dataset_dir)
+dataset = read_dataset(dataset_dir).shuffle(100000).prefetch(10)
 
 for example in dataset:
     feature = Feature(example)
