@@ -18,10 +18,7 @@ args = ap.parse_args()
 config = get_config()
 
 geom = read_geom(args.geometry)
-
-sfile_dir = os.path.join(config['CATALOG_ROOT'], args.catalog)
-
-events = read_event_list(sfile_dir)
+events = read_event_list(args.catalog)
 pick_dict = get_pick_dict(events)
 
 pick_dict_keys = pick_dict.keys()
