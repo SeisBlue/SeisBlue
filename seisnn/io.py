@@ -44,8 +44,9 @@ def read_event_list(sfile_dir):
     config = get_config()
     sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
     sfile_list = get_dir_list(sfile_dir)
-    print('reading events...')
-    events = parallel(par=get_event, file_list=sfile_list, batch_size=1)
+    print(f'reading events from {sfile_dir}')
+    events = parallel(par=get_event, file_list=sfile_list, batch_size=100)
+    print(f'total {len(events)} events')
     return events
 
 
@@ -54,11 +55,14 @@ def get_event(filename):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         try:
-            catalog, wavename = read_nordic(filename[0], return_wavnames=True)
-            for event in catalog.events:
-                for pick in event.picks:
-                    pick.waveform_id.wavename = wavename
-            return catalog.events
+            events=[]
+            for file in filename:
+                catalog, wavename = read_nordic(file, return_wavnames=True)
+                for event in catalog.events:
+                    for pick in event.picks:
+                        pick.waveform_id.wavename = wavename
+                    events.append(event)
+            return events
         except:
             pass
 
