@@ -39,7 +39,7 @@ Total params: 420,249
 def U_Net(img_rows, img_cols, color_type=1, num_class=1):
     nb_filter = [8, 11, 16, 22, 32]
     # nb_filter = [8, 16, 32, 64, 128]
-    pool_size = (1, 4)
+    pool_size = (1, 2)
     kernel_size = (1, 7)
 
     img_input = Input(shape=(img_rows, img_cols, color_type), name='main_input')
@@ -164,14 +164,14 @@ def Nest_Net(img_rows=None, img_cols=None, color_type=1, num_class=1, deep_super
                                                           nestnet_output_3,
                                                           nestnet_output_4])
     else:
-        model = tf.keras.Model(inputs=img_input, outputs=[nestnet_output_1])
+        model = tf.keras.Model(inputs=img_input, outputs=[nestnet_output_4])
 
     return model
 
 
 if __name__ == '__main__':
-    model = U_Net(1, 3001, 1)
-    model.summary()
+    # model = U_Net(1, 3008, 1)
+    # model.summary()
 
-    model = Nest_Net(1, 3001, 1)
+    model = Nest_Net(1, 3008, 1)
     model.summary()
