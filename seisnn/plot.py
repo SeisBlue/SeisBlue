@@ -57,7 +57,7 @@ def plot_dataset(feature, enlarge=False, xlim=None, title=None, save_dir=None):
 
         if not picks.empty:
             pick_set_list = picks['pick_set'].unique().tolist()
-            labelset = set()
+            label_set = set()
             for i in range(len(picks)):
                 pick_set = picks['pick_set'].values[i]
                 pick_phase = picks['pick_phase'].values[i]
@@ -67,10 +67,10 @@ def plot_dataset(feature, enlarge=False, xlim=None, title=None, save_dir=None):
                 label = pick_set + " " + pick_phase
 
                 pick_time = picks['pick_time'].values[i] - start_time
-                if not label in labelset:
+                if not label in label_set:
                     ax.vlines(pick_time, y_min / (pick_index + 1), y_max / (pick_index + 1), color=color, lw=2,
                               label=label)
-                    labelset.add(label)
+                    label_set.add(label)
                 else:
                     ax.vlines(pick_time, y_min / (pick_index + 1), y_max / (pick_index + 1), color=color, lw=2)
 
@@ -96,6 +96,32 @@ def plot_dataset(feature, enlarge=False, xlim=None, title=None, save_dir=None):
     if save_dir:
         make_dirs(save_dir)
         plt.savefig(os.path.join(save_dir, f'{title}.png'))
+        plt.close()
+    else:
+        plt.show()
+
+
+def plot_loss(log_file, save_dir=None):
+    loss = []
+    with open(log_file, 'r') as f:
+        for line in f.readlines():
+            line = line.split(' ')
+            loss.append(line)
+
+    file_name = os.path.basename(log_file).split('.')
+    loss = np.asarray(loss).astype(np.float32)
+
+    fig = plt.figure(figsize=(8, 4))
+    ax = fig.add_subplot(111)
+
+    ax.plot(loss[:,0], label='train')
+    ax.plot(loss[:,1], label='validation')
+    ax.legend()
+    plt.title(f'{file_name[0]} loss')
+
+    if save_dir:
+        make_dirs(save_dir)
+        plt.savefig(os.path.join(save_dir, f'{file_name[0]}.png'))
         plt.close()
     else:
         plt.show()

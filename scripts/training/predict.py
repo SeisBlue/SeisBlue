@@ -1,23 +1,46 @@
-from tensorflow.python.keras.optimizers import Adam
+import os
+import argparse
 
-from seisnn.utils import get_dir_list
-from seisnn.pick import write_pdf_to_dataset
-from seisnn.generator import PredictGenerator
-from seisnn.model import Nest_Net
+import tensorflow as tf
 
-pkl_dir = "/mnt/tf_data/dataset/2018_02_18"
-# pkl_dir = "/mnt/tf_data/dataset/scan"
-pkl_output_dir = pkl_dir + "_predict"
-pkl_list = get_dir_list(pkl_dir)
+from seisnn.utils import get_config, make_dirs
+from seisnn.io import read_dataset
+from seisnn.core import Feature
 
-predict_generator = PredictGenerator(pkl_list, batch_size=256)
+from seisnn.model.settings import model, optimizer
 
-# model = U_Net(1, 3001, 1)
-model = Nest_Net(1, 3001, 1)
-model.compile(optimizer=Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])
-model.load_weights("/mnt/tf_data/weights/random_trained_weight.h5")
+ap = argparse.ArgumentParser()
+ap.add_argument('-i', '--input', required=True, help='input dataset', type=str)
+ap.add_argument('-o', '--output', required=True, help='output dataset', type=str)
+ap.add_argument('-m', '--model', required=True, help='model', type=str)
+args = ap.parse_args()
 
-predict = model.predict_generator(generator=predict_generator,
-                                  use_multiprocessing=True, verbose=True)
+config = get_config()
 
-write_pdf_to_dataset(predict, pkl_list, pkl_output_dir, remove_dir=True)
+MODEL_PATH = os.path.join(config['MODELS_ROOT'], args.model)
+make_dirs(MODEL_PATH)
+
+OUTPUT_DATASET = os.path.join(config['DATASET_ROOT'], args.output)
+make_dirs(OUTPUT_DATASET)
+
+INPUT_DATASET = os.path.join(config['DATASET_ROOT'], args.input)
+dataset = read_dataset(INPUT_DATASET).take(10)
+
+ckpt = tf.train.Checkpoint(model=model, optimizer=optimizer)
+ckpt_manager = tf.train.CheckpointManager(ckpt, MODEL_PATH, max_to_keep=100)
+
+if ckpt_manager.latest_checkpoint:
+    ckpt.restore(ckpt_manager.latest_checkpoint)
+    last_epoch = len(ckpt_manager.checkpoints)
+    print('Latest checkpoint epoch {} restored!!'.format(last_epoch))
+
+for example in dataset:
+    feature = Feature(example)
+    feature.filter_phase('P')
+    feature.filter_channel('Z')
+
+    trace = feature.get_trace()
+    feature.phase['predict'] = model.predict(trace)[0, 0, -3001:, 0]
+    feature.get_picks('predict')
+    filename = f'{feature.starttime}_{feature.id}.tfrecord'
+    feature.to_tfrecord(os.path.join(OUTPUT_DATASET, filename))

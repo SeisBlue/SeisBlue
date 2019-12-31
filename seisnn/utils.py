@@ -1,4 +1,5 @@
 import os
+from bisect import bisect_left, bisect_right
 from multiprocessing import Pool, cpu_count
 
 import numpy as np
@@ -57,3 +58,10 @@ def unet_padding_size(trace, pool_size=2, layers=4):
     rpad = padding
 
     return lpad, rpad
+
+
+def binary_search(key_list, min_value, max_value):
+    # binary search, key_list must be sorted by time
+    left = bisect_left(key_list, min_value)
+    right = bisect_right(key_list, max_value)
+    return left, right

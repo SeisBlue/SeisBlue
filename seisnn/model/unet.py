@@ -88,7 +88,7 @@ Total params: 496,225
 """
 
 
-def Nest_Net(img_rows=None, img_cols=None, color_type=1, num_class=1, deep_supervision=False):
+def Nest_Net(img_rows=None, img_cols=None, color_type=1, num_class=1):
     nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 2)
     kernel_size = (1, 7)
@@ -149,22 +149,10 @@ def Nest_Net(img_rows=None, img_cols=None, color_type=1, num_class=1, deep_super
     conv1_5 = concatenate([up1_5, conv1_1, conv1_2, conv1_3, conv1_4], name='merge15', axis=3)
     conv1_5 = standard_unit(conv1_5, stage='15', nb_filter=nb_filter[0], kernel_size=kernel_size)
 
-    nestnet_output_1 = Conv2D(num_class, (1, 1), activation='sigmoid', name='output_1', kernel_initializer='he_normal',
-                              padding='same', kernel_regularizer=l2(1e-4))(conv1_2)
-    nestnet_output_2 = Conv2D(num_class, (1, 1), activation='sigmoid', name='output_2', kernel_initializer='he_normal',
-                              padding='same', kernel_regularizer=l2(1e-4))(conv1_3)
-    nestnet_output_3 = Conv2D(num_class, (1, 1), activation='sigmoid', name='output_3', kernel_initializer='he_normal',
-                              padding='same', kernel_regularizer=l2(1e-4))(conv1_4)
-    nestnet_output_4 = Conv2D(num_class, (1, 1), activation='sigmoid', name='output_4', kernel_initializer='he_normal',
+    nestnet_output = Conv2D(num_class, (1, 1), activation='sigmoid', name='output', kernel_initializer='he_normal',
                               padding='same', kernel_regularizer=l2(1e-4))(conv1_5)
 
-    if deep_supervision:
-        model = tf.keras.Model(inputs=img_input, outputs=[nestnet_output_1,
-                                                          nestnet_output_2,
-                                                          nestnet_output_3,
-                                                          nestnet_output_4])
-    else:
-        model = tf.keras.Model(inputs=img_input, outputs=[nestnet_output_4])
+    model = tf.keras.Model(inputs=img_input, outputs=[nestnet_output])
 
     return model
 

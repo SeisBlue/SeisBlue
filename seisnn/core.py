@@ -1,9 +1,11 @@
 import numpy as np
+import pandas as pd
 import tensorflow as tf
 
 from seisnn.utils import unet_padding_size
 from seisnn.plot import plot_dataset
 from seisnn.io import write_tfrecord
+from seisnn.pick import get_picks_from_pdf
 from seisnn.example_proto import extract_parsed_example, feature_to_example
 
 
@@ -121,6 +123,11 @@ class Feature:
             return pdf
         else:
             return None
+
+    def get_picks(self, phase_type):
+        picks = get_picks_from_pdf(self, phase_type)
+        self.picks = pd.concat([self.picks, picks])
+
 
     def plot(self, **kwargs):
         feature = self.to_feature()

@@ -40,13 +40,13 @@ def write_tfrecord(example_list, save_file):
             writer.write(example)
 
 
-def read_event_list(sfile_dir):
+def read_event_list(sfile):
     config = get_config()
-    sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
+    sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile)
     sfile_list = get_dir_list(sfile_dir)
     print(f'reading events from {sfile_dir}')
     events = parallel(par=get_event, file_list=sfile_list, batch_size=100)
-    print(f'total {len(events)} events')
+    print(f'read {len(events)} events from {sfile}')
     return events
 
 
@@ -164,9 +164,9 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
 
 def read_geom(hyp):
     config = get_config()
-    hyp = os.path.join(config['GEOM_ROOT'], hyp)
+    hyp_file = os.path.join(config['GEOM_ROOT'], hyp)
     geom = {}
-    with open(hyp, 'r') as file:
+    with open(hyp_file, 'r') as file:
         blank_line = 0
         while True:
             line = file.readline().rstrip()
@@ -204,4 +204,5 @@ def read_geom(hyp):
                             'longitude': lon,
                             'elevation': elev}
                 geom[sta] = location
+    print(f'read {len(geom)} stations from {hyp}')
     return geom

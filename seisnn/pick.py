@@ -1,28 +1,39 @@
-import os
-import shutil
-from bisect import bisect_left, bisect_right
+from collections import OrderedDict
 
-import scipy
 import numpy as np
+import pandas as pd
+import scipy
+from scipy.signal import find_peaks
+
+from obspy import read
+
 import tensorflow as tf
 import tensorflow_probability as tfp
-from obspy import read
-from obspy.core.event.base import QuantityError, WaveformStreamID
-from obspy.core.event.origin import Pick
-from scipy.signal import find_peaks
-from tqdm import tqdm
+
+from seisnn.utils import binary_search
 
 
 def get_pick_dict(events):
     pick_dict = {}
+    pick_count = {}
     for event in events:
         for p in event.picks:
             station = p.waveform_id.station_code
             if not pick_dict.get(station):
                 pick_dict[station] = []
+            phase = p.phase_hint
+            if not pick_count.get(phase):
+                pick_count[phase] = 0
             pick_dict[station].append(p)
+            pick_count[phase] += 1
+
+    pick_dict = OrderedDict(sorted(pick_dict.items()))
     for k, v in pick_dict.items():
         v.sort(key=lambda pick: pick.time)
+        print(f'station {k} {len(v)} picks')
+
+    for k, v in pick_count.items():
+        print(f'total {v} {k} phase picks')
     return pick_dict
 
 
@@ -65,20 +76,24 @@ def get_pdf(stream, sigma=0.1):
         stream.pdf[phase] = phase_pdf.numpy()
     return stream
 
+def get_picks_from_pdf(feature, phase_type, height=0.5, distance=100):
+    start_time = feature.starttime
+    peaks, properties = find_peaks(feature.phase[phase_type], height=height, distance=distance)
 
-def get_picks_from_pdf(trace, height=0.5, distance=100):
-    start_time = trace.stats.starttime
-    peaks, properties = find_peaks(trace.pdf, height=height, distance=distance)
-
-    picks = []
+    pick_time = []
+    pick_phase = []
+    pick_set = []
     for p in peaks:
         if p:
-            time = start_time + p / trace.stats.sampling_rate
-            phase_hint = "P"
-            pick = Pick(time=time, phase_hint=phase_hint)
-            pick.waveform_id = WaveformStreamID(network_code=trace.stats.network, station_code=trace.stats.station,
-                                                location_code=trace.stats.channel, channel_code=trace.stats.location)
-            picks.append(pick)
+            pick_time.append(start_time + p * feature.delta)
+            pick_phase.append('P')
+            pick_set.append(phase_type)
+
+    picks = {'pick_time': pick_time,
+             'pick_phase': pick_phase,
+             'pick_set': pick_set}
+
+    picks = pd.DataFrame.from_dict(picks)
 
     return picks
 
@@ -109,60 +124,6 @@ def search_pick(pick_list, pick_time_key, stream):
             tmp_pick[phase].append(pick)
 
     return tmp_pick
-
-
-def binary_search(key_list, min_value, max_value):
-    # binary search, key_list must be sorted by time
-    left = bisect_left(key_list, min_value)
-    right = bisect_right(key_list, max_value)
-    return left, right
-
-
-def write_pdf_to_dataset(predict, dataset_list, dataset_output_dir, remove_dir=False):
-    if remove_dir:
-        shutil.rmtree(dataset_output_dir, ignore_errors=True)
-    os.makedirs(dataset_output_dir, exist_ok=True)
-
-    print("Output file:")
-    with tqdm(total=len(dataset_list)) as pbar:
-        for i, prob in enumerate(predict):
-            try:
-                trace = read(dataset_list[i]).traces[0]
-
-            except IndexError:
-                break
-
-            trace_length = trace.data.size
-            pdf = prob.reshape(trace_length, )
-
-            if pdf.max():
-                trace.pdf = pdf / pdf.max()
-            else:
-                trace.pdf = pdf
-            pdf_picks = get_picks_from_pdf(trace)
-
-            if trace.picks:
-                for val_pick in trace.picks:
-                    for pre_pick in pdf_picks:
-                        pre_pick.evaluation_mode = "automatic"
-
-                        residual = get_time_residual(pre_pick, val_pick)
-                        pre_pick.time_errors = QuantityError(residual)
-
-                        if validate_picks_nearby(pre_pick, val_pick, delta=0.1):
-                            pre_pick.evaluation_status = "confirmed"
-                        elif validate_picks_nearby(pre_pick, val_pick, delta=1):
-                            pre_pick.evaluation_status = "rejected"
-
-            else:
-                trace.picks = []
-                for pre_pick in pdf_picks:
-                    pre_pick.evaluation_mode = "automatic"
-
-            trace.picks.extend(pdf_picks)
-            time_stamp = trace.stats.starttime.isoformat()
-            trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
-            pbar.update()
 
 
 def validate_picks_nearby(validate_pick, predict_pick, delta=0.1):
