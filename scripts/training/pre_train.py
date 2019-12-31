@@ -60,7 +60,7 @@ for epoch in range(EPOCHS):
             continue
 
         if n % 10 == 0:
-            print(f'epoch {epoch + 1}, step {n}, loss= {train_loss.numpy()}, val= {val_loss.numpy()}')
+            print(f'epoch {epoch + 1}, step {n}, loss= {train_loss.numpy():f}, val= {val_loss.numpy():f}')
             validate.phase['pre_train'] = model.predict(val_trace)[0, 0, -3001:, 0]
 
             title = f'epoch{epoch + 1:0>2}_step{n:0>5}'

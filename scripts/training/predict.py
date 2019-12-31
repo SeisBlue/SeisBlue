@@ -24,7 +24,7 @@ OUTPUT_DATASET = os.path.join(config['DATASET_ROOT'], args.output)
 make_dirs(OUTPUT_DATASET)
 
 INPUT_DATASET = os.path.join(config['DATASET_ROOT'], args.input)
-dataset = read_dataset(INPUT_DATASET).take(10)
+dataset = read_dataset(INPUT_DATASET).take(1000)
 
 ckpt = tf.train.Checkpoint(model=model, optimizer=optimizer)
 ckpt_manager = tf.train.CheckpointManager(ckpt, MODEL_PATH, max_to_keep=100)
@@ -32,7 +32,7 @@ ckpt_manager = tf.train.CheckpointManager(ckpt, MODEL_PATH, max_to_keep=100)
 if ckpt_manager.latest_checkpoint:
     ckpt.restore(ckpt_manager.latest_checkpoint)
     last_epoch = len(ckpt_manager.checkpoints)
-    print('Latest checkpoint epoch {} restored!!'.format(last_epoch))
+    print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
 for example in dataset:
     feature = Feature(example)

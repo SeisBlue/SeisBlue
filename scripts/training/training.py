@@ -45,7 +45,7 @@ if args.pre_train:
 if ckpt_manager.latest_checkpoint:
     ckpt.restore(ckpt_manager.latest_checkpoint)
     last_epoch = len(ckpt_manager.checkpoints)
-    print('Latest checkpoint epoch {} restored!!'.format(last_epoch))
+    print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
 EPOCHS = 1
 for epoch in range(EPOCHS):
@@ -70,7 +70,7 @@ for epoch in range(EPOCHS):
             continue
 
         if n % 10 == 0:
-            print(f'epoch {epoch + 1}, step {n}, loss= {train_loss.numpy()}, val= {val_loss.numpy()}')
+            print(f'epoch {epoch + 1}, step {n}, loss= {train_loss.numpy():f}, val= {val_loss.numpy():f}')
 
         if n % 1000 == 0 and not n == 0:
             validate.phase['pre_train'] = model.predict(val_trace)[0, 0, -3001:, 0]

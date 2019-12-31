@@ -126,22 +126,17 @@ def plot_loss(log_file, save_dir=None):
     else:
         plt.show()
 
-def plot_error_distribution(predict_pkl_list):
-    time_residuals = []
-    for i, pkl in enumerate(predict_pkl_list):
-        picks = get_picks_from_dataset(pkl)
-        for p in picks:
-            if p.time_errors:
-                residual = p.time_errors.get("uncertainty")
-                time_residuals.append(float(residual))
-
-        if i % 1000 == 0:
-            print("Reading... %d out of %d " % (i, len(predict_pkl_list)))
-
+def plot_error_distribution(time_residuals, save_dir=None):
     bins = np.linspace(-0.5, 0.5, 100)
     plt.hist(time_residuals, bins=bins)
     plt.xticks(np.arange(-0.5, 0.51, step=0.1))
     plt.xlabel("Time residuals (sec)")
     plt.ylabel("Number of picks")
     plt.title("Error Distribution")
-    plt.show()
+
+    if save_dir:
+        make_dirs(save_dir)
+        plt.savefig(os.path.join(save_dir, f'error_distribution.png'))
+        plt.close()
+    else:
+        plt.show()

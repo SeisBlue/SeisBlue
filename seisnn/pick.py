@@ -126,16 +126,16 @@ def search_pick(pick_list, pick_time_key, stream):
     return tmp_pick
 
 
-def validate_picks_nearby(validate_pick, predict_pick, delta=0.1):
-    pick_upper_bound = predict_pick.time + delta
-    pick_lower_bound = predict_pick.time - delta
-    if pick_lower_bound < validate_pick.time < pick_upper_bound:
+def validate_picks_nearby(val_pick, pred_pick, delta=0.1):
+    pick_upper_bound = pred_pick['pick_time'] + delta
+    pick_lower_bound = pred_pick['pick_time'] - delta
+    if pick_lower_bound < val_pick['pick_time'] < pick_upper_bound:
         return True
     else:
         return False
 
 
-def get_time_residual(pre_pick, val_pick):
-    if validate_picks_nearby(pre_pick, val_pick, delta=0.5):
-        residual = val_pick.time - pre_pick.time
+def get_time_residual(pred_pick, val_pick):
+    if validate_picks_nearby(pred_pick, val_pick, delta=0.5):
+        residual = val_pick['pick_time'] - pred_pick['pick_time']
         return residual
