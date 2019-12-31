@@ -15,7 +15,7 @@ stamen_terrain = cimgt.Stamen('terrain-background')
 fig = plt.figure(figsize=(8, 10))
 ax = fig.add_subplot(1, 1, 1, projection=stamen_terrain.crs)
 ax.set_extent([W, E, S, N], crs=ccrs.Geodetic())
-ax.add_image(stamen_terrain, 10)
+ax.add_image(stamen_terrain, 11)
 
 events = read_event_list('HL201718')
 HL_eq = []
@@ -33,12 +33,21 @@ MN_eq = np.array(MN_eq).T
 ax.scatter(MN_eq[0], MN_eq[1],
            transform=ccrs.Geodetic(), color='#333333', edgecolors='k', linewidth=0.3, marker='o', s=0.5)
 
-geom = read_geom('HL201718.HYP')
+geom = read_geom('HL2017.HYP')
 HL_station = []
 for k, station in geom.items():
     HL_station.append([station['longitude'], station['latitude'], ])
 HL_station = np.array(HL_station).T
 ax.scatter(HL_station[0], HL_station[1], label='HL station',
+           transform=ccrs.Geodetic(), color='#3F51B5', edgecolors='k', linewidth=0.1, marker='v', s=5)
+
+geom = read_geom('HL2018.HYP')
+HL_station = []
+for k, station in geom.items():
+    if station['latitude'] > 23.65:
+        HL_station.append([station['longitude'], station['latitude'], ])
+HL_station = np.array(HL_station).T
+ax.scatter(HL_station[0], HL_station[1],
            transform=ccrs.Geodetic(), color='#3F51B5', edgecolors='k', linewidth=0.1, marker='v', s=5)
 
 geom = read_geom('MN2016.HYP')

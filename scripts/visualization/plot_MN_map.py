@@ -1,7 +1,6 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 
 import cartopy.crs as ccrs
 import cartopy.io.img_tiles as cimgt
@@ -23,7 +22,7 @@ for event in events:
     MN_eq.append([event.origins[0].longitude, event.origins[0].latitude])
 MN_eq = np.array(MN_eq).T
 ax.scatter(MN_eq[0], MN_eq[1], label='Earthquake',
-           transform=ccrs.Geodetic(), color='#333333', edgecolors='k', linewidth=1, marker='o', s=1)
+           transform=ccrs.Geodetic(), color='#555555', edgecolors='k', linewidth=0.3, marker='o', s=10)
 
 geom = read_geom('MN2016.HYP')
 MN_station = []
