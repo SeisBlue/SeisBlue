@@ -4,6 +4,7 @@ from seisnn.utils import make_dirs, get_config
 
 config = get_config()
 
+
 def save_loss(loss_buffer, title, save_dir):
     make_dirs(save_dir)
     file_path = os.path.join(save_dir, f'{title}.log')

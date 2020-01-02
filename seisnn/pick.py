@@ -76,6 +76,7 @@ def get_pdf(stream, sigma=0.1):
         stream.pdf[phase] = phase_pdf.numpy()
     return stream
 
+
 def get_picks_from_pdf(feature, phase_type, height=0.5, distance=100):
     start_time = feature.starttime
     peaks, properties = find_peaks(feature.phase[phase_type], height=height, distance=distance)

@@ -15,6 +15,4 @@ dataset = read_dataset(dataset_dir).shuffle(100000).prefetch(10)
 
 for example in dataset:
     feature = Feature(example)
-    feature.filter_phase('P')
-    feature.filter_channel('Z')
-    feature.plot()
+    feature.plot(enlarge=True)

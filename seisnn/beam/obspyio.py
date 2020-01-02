@@ -63,14 +63,14 @@ class FeatureToExample(beam.DoFn):
     def process(self, stream, *args, **kwargs):
         context = tf.train.Features(feature={
             'id': tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['id'].encode('utf-8')])),
-            'starttime':  tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['starttime'].encode('utf-8')])),
-            'endtime':  tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['endtime'].encode('utf-8')])),
-            'station':  tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['station'].encode('utf-8')])),
-            'npts':  tf.train.Feature(int64_list=tf.train.Int64List(value=[stream['npts']])),
-            'delta':  tf.train.Feature(float_list=tf.train.FloatList(value=[stream['delta']])),
-            'latitude':  tf.train.Feature(float_list=tf.train.FloatList(value=[stream['latitude']])),
-            'longitude':  tf.train.Feature(float_list=tf.train.FloatList(value=[stream['longitude']])),
-            'elevation':  tf.train.Feature(float_list=tf.train.FloatList(value=[stream['elevation']]))
+            'starttime': tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['starttime'].encode('utf-8')])),
+            'endtime': tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['endtime'].encode('utf-8')])),
+            'station': tf.train.Feature(bytes_list=tf.train.BytesList(value=[stream['station'].encode('utf-8')])),
+            'npts': tf.train.Feature(int64_list=tf.train.Int64List(value=[stream['npts']])),
+            'delta': tf.train.Feature(float_list=tf.train.FloatList(value=[stream['delta']])),
+            'latitude': tf.train.Feature(float_list=tf.train.FloatList(value=[stream['latitude']])),
+            'longitude': tf.train.Feature(float_list=tf.train.FloatList(value=[stream['longitude']])),
+            'elevation': tf.train.Feature(float_list=tf.train.FloatList(value=[stream['elevation']]))
         })
 
         data_dict = {}

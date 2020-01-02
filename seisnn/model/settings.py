@@ -2,7 +2,7 @@ import tensorflow as tf
 from seisnn.model.unet import Nest_Net
 
 model = Nest_Net()
-optimizer = tf.keras.optimizers.Adam(3e-4)
+optimizer = tf.keras.optimizers.Adam(1e-4)
 bce = tf.keras.losses.BinaryCrossentropy()
 
 

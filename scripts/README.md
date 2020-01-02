@@ -22,7 +22,7 @@ Evaluate:
 
 - [plot_instance.py](visualization/plot_instance.py)
   - Plot the wavefile, picks and the probability form the .pkl dataset.
-- [evalution.py](evaluation/evalution.py)
+- [evalution.py](analysis/model_evaluation.py)
   - Calculate precision, recall and F1 score.
   - Plot error distribution.
 

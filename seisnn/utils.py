@@ -29,13 +29,14 @@ def parallel(par, file_list, batch_size=1):
     pool = Pool(processes=cpu_count(), maxtasksperchild=1)
     output = []
     for thread_output in tqdm(pool.imap_unordered(par, batch(file_list, batch_size)),
-                  total=int(np.ceil(len(file_list) / batch_size))):
+                              total=int(np.ceil(len(file_list) / batch_size))):
         if thread_output:
             output.extend(thread_output)
 
     pool.close()
     pool.join()
     return output
+
 
 def get_dir_list(file_dir, suffix=""):
     file_list = []

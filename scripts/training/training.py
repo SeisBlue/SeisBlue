@@ -38,9 +38,8 @@ ckpt_manager = tf.train.CheckpointManager(ckpt, SAVE_MODEL_PATH, max_to_keep=100
 
 if args.pre_train:
     PRE_TRAIN_PATH = os.path.join(config['MODELS_ROOT'], args.pre_train)
-    for file in glob.glob(os.path.join(PRE_TRAIN_PATH,'ckpt*')):
+    for file in glob.glob(os.path.join(PRE_TRAIN_PATH, 'ckpt*')):
         shutil.copy2(file, SAVE_MODEL_PATH)
-
 
 if ckpt_manager.latest_checkpoint:
     ckpt.restore(ckpt_manager.latest_checkpoint)
@@ -83,5 +82,6 @@ for epoch in range(EPOCHS):
             loss_buffer.clear()
             ckpt_save_path = ckpt_manager.save()
             print(f'Saving checkpoint to {ckpt_save_path}')
+            validate.plot()
 
         n += 1

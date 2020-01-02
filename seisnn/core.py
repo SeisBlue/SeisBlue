@@ -128,7 +128,6 @@ class Feature:
         picks = get_picks_from_pdf(self, phase_type)
         self.picks = pd.concat([self.picks, picks])
 
-
     def plot(self, **kwargs):
         feature = self.to_feature()
         plot_dataset(feature, **kwargs)

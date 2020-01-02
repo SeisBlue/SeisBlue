@@ -55,7 +55,7 @@ def get_event(filename):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         try:
-            events=[]
+            events = []
             for file in filename:
                 catalog, wavename = read_nordic(file, return_wavnames=True)
                 for event in catalog.events:
@@ -106,11 +106,11 @@ def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=20):
                   pickset=pickset)
 
     example_list = parallel(par, pick_list, batch_size)
-    
+
     station = pick_list[0].waveform_id.station_code
     file_name = '{}.tfrecord'.format(station)
     save_file = os.path.join(dataset_dir, file_name)
-    
+
     write_tfrecord(example_list, save_file)
 
 

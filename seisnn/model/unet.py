@@ -150,7 +150,7 @@ def Nest_Net(img_rows=None, img_cols=None, color_type=1, num_class=1):
     conv1_5 = standard_unit(conv1_5, stage='15', nb_filter=nb_filter[0], kernel_size=kernel_size)
 
     nestnet_output = Conv2D(num_class, (1, 1), activation='sigmoid', name='output', kernel_initializer='he_normal',
-                              padding='same', kernel_regularizer=l2(1e-4))(conv1_5)
+                            padding='same', kernel_regularizer=l2(1e-4))(conv1_5)
 
     model = tf.keras.Model(inputs=img_input, outputs=[nestnet_output])
 

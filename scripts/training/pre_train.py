@@ -18,7 +18,7 @@ args = ap.parse_args()
 
 config = get_config()
 SAVE_MODEL_PATH = os.path.join(config['MODELS_ROOT'], args.model)
-shutil.rmtree(SAVE_MODEL_PATH)
+shutil.rmtree(SAVE_MODEL_PATH, ignore_errors=True)
 
 make_dirs(SAVE_MODEL_PATH)
 SAVE_HISTORY_PATH = os.path.join(SAVE_MODEL_PATH, "history")
@@ -48,7 +48,6 @@ for epoch in range(EPOCHS):
 
             train_trace = feature.get_trace()
             train_pdf = feature.get_pdf()
-
 
             if train_pdf is None or train_trace is None:
                 continue

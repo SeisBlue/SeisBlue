@@ -2,7 +2,8 @@ import apache_beam as beam
 from apache_beam.io import tfrecordio
 from apache_beam.options.pipeline_options import PipelineOptions
 from seisnn.utils import get_config
-from seisnn.beam.obspyio import ReadHYP, FeatureToExample, DropEmptyStation, FilterPickPhase, GeneratePDF, GetWindowFromPick, GroupStreamPick, \
+from seisnn.beam.obspyio import ReadHYP, FeatureToExample, DropEmptyStation, FilterPickPhase, GeneratePDF, \
+    GetWindowFromPick, GroupStreamPick, \
     ReadSDS, ReadSfile, StreamFeatureExtraction, TrimTrace
 
 config = get_config()
@@ -43,6 +44,6 @@ with beam.Pipeline(options=PipelineOptions()) as p:
                )
 
     transform = (dataset
-         | 'Feature to Example' >> beam.ParDo(FeatureToExample())
-         | 'Write dataset' >> tfrecordio.WriteToTFRecord(tfrecord_dir, coder=beam.coders.ProtoCoder)
-         )
+                 | 'Feature to Example' >> beam.ParDo(FeatureToExample())
+                 | 'Write dataset' >> tfrecordio.WriteToTFRecord(tfrecord_dir, coder=beam.coders.ProtoCoder)
+                 )
