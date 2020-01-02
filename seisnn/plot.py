@@ -1,9 +1,10 @@
 import os
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
-from seisnn.pick import get_picks_from_dataset
+import seaborn as sns
 from seisnn.utils import make_dirs
 
 
@@ -114,8 +115,8 @@ def plot_loss(log_file, save_dir=None):
     fig = plt.figure(figsize=(8, 4))
     ax = fig.add_subplot(111)
 
-    ax.plot(loss[:,0], label='train')
-    ax.plot(loss[:,1], label='validation')
+    ax.plot(loss[:, 0], label='train')
+    ax.plot(loss[:, 1], label='validation')
     ax.legend()
     plt.title(f'{file_name[0]} loss')
 
@@ -126,12 +127,13 @@ def plot_loss(log_file, save_dir=None):
     else:
         plt.show()
 
+
 def plot_error_distribution(time_residuals, save_dir=None):
     bins = np.linspace(-0.5, 0.5, 100)
     plt.hist(time_residuals, bins=bins)
     plt.xticks(np.arange(-0.5, 0.51, step=0.1))
     plt.xlabel("Time residuals (sec)")
-    plt.ylabel("Number of picks")
+    plt.ylabel("Counts")
     plt.title("Error Distribution")
 
     if save_dir:
@@ -140,3 +142,32 @@ def plot_error_distribution(time_residuals, save_dir=None):
         plt.close()
     else:
         plt.show()
+
+
+def plot_snr_distribution(pick_snr, save_dir=None):
+    bins = np.linspace(-1, 10, 55)
+    plt.hist(pick_snr, bins=bins)
+    plt.xticks(np.arange(-1, 11, step=1))
+    plt.xlabel("Signal to Noise Ratio (log10)")
+    plt.ylabel("Counts")
+    plt.title("SNR Distribution")
+
+    if save_dir:
+        make_dirs(save_dir)
+        plt.savefig(os.path.join(save_dir, f'error_distribution.png'))
+        plt.close()
+    else:
+        plt.show()
+
+
+def plot_confusion_matrix(true_positive, pred_count, val_count):
+    matrix = pd.DataFrame([[true_positive, pred_count - true_positive],
+                           [val_count - true_positive, 0]], columns=['True', 'False'], index=['True', 'False'])
+
+    sns.heatmap(matrix, annot=True, cbar=False, fmt="d", cmap='Blues', square=True)
+    bottom, top = plt.ylim()
+    plt.ylim(bottom + 0.5, top - 0.5)
+    plt.xlabel('True Label')
+    plt.ylabel('Predicted Label')
+    plt.title('Confusion Matrix')
+    plt.show()
