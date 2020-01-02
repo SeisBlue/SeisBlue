@@ -5,5 +5,3 @@ geom = read_geom('HL2018.HYP')
 events = read_event_list('HL201718')
 
 pick_dict = get_pick_dict(events)
-
-
