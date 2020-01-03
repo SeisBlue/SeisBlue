@@ -38,21 +38,29 @@ def stream_to_feature(stream, pickset):
         'elevation': stream.location['elevation'],
     }
 
-    channel_dict = {}
-    for trace in stream:
-        channel_dict[trace.stats.channel] = trace.data
-    feature['channel'] = channel_dict
+    channel = []
+    trace = np.zeros([3008, 3])
+    for i, tr in enumerate(stream):
+        trace[:, i] = tr.data
+        channel.append(tr.stats.channel)
+    feature['trace'] = trace
+    feature['channel'] = channel
 
-    picks_dict = {'pick_time': [], 'pick_phase': [], 'pick_set': []}
+    feature['phase'] = stream.phase
+    feature['pdf'] = np.asarray(stream.pdf)
+
+    pick_time = []
+    pick_phase = []
+    pick_set = []
     if stream.picks:
         for _, picks in stream.picks.items():
             for pick in picks:
-                picks_dict['pick_time'].append(pick.time.isoformat())
-                picks_dict['pick_phase'].append(pick.phase_hint)
-                picks_dict['pick_set'].append(pickset)
-
-    feature['picks'] = pd.DataFrame(picks_dict)
-    feature['phase'] = stream.pdf
+                pick_time.append(pick.time.isoformat())
+                pick_phase.append(pick.phase_hint)
+                pick_set.append(pickset)
+    feature['pick_time'] = pick_time
+    feature['pick_phase'] = pick_phase
+    feature['pick_set'] = pick_set
 
     return feature
 
@@ -63,30 +71,21 @@ def feature_to_example(stream_feature):
         'starttime': _bytes_feature(stream_feature['starttime'].isoformat().encode('utf-8')),
         'endtime': _bytes_feature(stream_feature['endtime'].isoformat().encode('utf-8')),
         'station': _bytes_feature(stream_feature['station'].encode('utf-8')),
+
         'npts': _int64_feature(stream_feature['npts']),
         'delta': _float_feature(stream_feature['delta']),
+
         'latitude': _float_feature(stream_feature['latitude']),
         'longitude': _float_feature(stream_feature['longitude']),
-        'elevation': _float_feature(stream_feature['elevation'])
+        'elevation': _float_feature(stream_feature['elevation']),
+
+        'trace': _bytes_feature(stream_feature['trace'].astype(dtype=np.float32).tostring()),
+        'pdf': _bytes_feature(stream_feature['pdf'].astype(dtype=np.float32).tostring()),
     }
     context = tf.train.Features(feature=context_data)
 
-    # dict to list
-    for key in ['channel', 'phase']:
-        data_list = []
-        for k, v in stream_feature[key].items():
-            data_list.append(stream_feature[key][k].astype(dtype=np.float32).tostring())
-        stream_feature[key] = list(stream_feature[key].keys())
-        stream_feature[f'{key}_data'] = data_list
-
-    # dataframe to list
-    picks = stream_feature['picks']
-    stream_feature['pick_time'] = picks['pick_time'].tolist()
-    stream_feature['pick_phase'] = picks['pick_phase'].tolist()
-    stream_feature['pick_set'] = picks['pick_set'].tolist()
-
     sequence_data = {}
-    for key in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'channel_data', 'phase', 'phase_data']:
+    for key in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
         pick_features = []
         if stream_feature[key]:
             for context_data in stream_feature[key]:
@@ -112,11 +111,16 @@ def sequence_example_parser(record):
         "starttime": tf.io.FixedLenFeature((), tf.string, default_value=""),
         "endtime": tf.io.FixedLenFeature((), tf.string, default_value=""),
         "station": tf.io.FixedLenFeature((), tf.string, default_value=""),
+
         "npts": tf.io.FixedLenFeature((), tf.int64, default_value=tf.zeros([], dtype=tf.int64)),
         "delta": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
+
         "latitude": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
         "longitude": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
         "elevation": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
+
+        "trace": tf.io.FixedLenFeature((), tf.string, default_value=""),
+        "pdf": tf.io.FixedLenFeature((), tf.string, default_value=""),
     }
     sequence = {
         "pick_time": tf.io.VarLenFeature(tf.string),
@@ -124,10 +128,9 @@ def sequence_example_parser(record):
         "pick_set": tf.io.VarLenFeature(tf.string),
 
         "channel": tf.io.VarLenFeature(tf.string),
-        "channel_data": tf.io.VarLenFeature(tf.string),
         "phase": tf.io.VarLenFeature(tf.string),
-        "phase_data": tf.io.VarLenFeature(tf.string),
     }
+
     parsed_context, parsed_sequence = tf.io.parse_single_sequence_example(record,
                                                                           context_features=context,
                                                                           sequence_features=sequence)
@@ -149,10 +152,12 @@ def sequence_example_parser(record):
         "pick_set": tf.RaggedTensor.from_sparse(parsed_sequence['pick_set']),
 
         "channel": tf.RaggedTensor.from_sparse(parsed_sequence['channel']),
-        "channel_data": tf.RaggedTensor.from_sparse(parsed_sequence['channel_data']),
         "phase": tf.RaggedTensor.from_sparse(parsed_sequence['phase']),
-        "phase_data": tf.RaggedTensor.from_sparse(parsed_sequence['phase_data']),
     }
+
+    for key, trace in zip(['channel', 'phase'], ['trace', 'pdf']):
+        trace_data = tf.io.decode_raw(parsed_context[trace], tf.float32)
+        parsed_example[trace] = tf.reshape(trace_data, [1, 3008, 3])
 
     return parsed_example
 

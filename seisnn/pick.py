@@ -58,11 +58,16 @@ def get_pdf(stream, sigma=0.1):
     tfd = tfp.distributions
     start_time = trace.stats.starttime
     x_time = trace.times(reftime=start_time)
-    stream.pdf = {}
-    for phase, picks in stream.picks.items():
-        phase_pdf = np.zeros((len(x_time),))
+    stream.phase = ['P', 'S']
+    stream.pdf = np.zeros([3008, 3])
 
-        for pick in picks:
+    for i, phase in enumerate(stream.phase):
+        if not stream.picks.get(phase):
+            continue
+        for pick in stream.picks[phase]:
+            phase_pdf = np.zeros((len(x_time),))
+
+
             pick_time = pick.time - start_time
             dist = tfd.Normal(loc=pick_time, scale=sigma)
             pick_pdf = dist.prob(x_time)
@@ -70,10 +75,7 @@ def get_pdf(stream, sigma=0.1):
             if tf.math.reduce_max(pick_pdf):
                 phase_pdf += pick_pdf / tf.math.reduce_max(pick_pdf)
 
-        if tf.math.reduce_max(phase_pdf):
-            phase_pdf = phase_pdf / tf.math.reduce_max(phase_pdf)
-
-        stream.pdf[phase] = phase_pdf.numpy()
+        stream.pdf[:,i] = phase_pdf.numpy()
     return stream
 
 

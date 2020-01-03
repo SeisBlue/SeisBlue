@@ -71,7 +71,7 @@ def read_sds(window):
     config = get_config()
     station = window['station']
     starttime = window['starttime']
-    endtime = window['endtime']
+    endtime = window['endtime'] + 0.1
 
     client = Client(sds_root=config['SDS_ROOT'])
     stream = client.get_waveforms(network="*", station=station, location="*", channel="*",
