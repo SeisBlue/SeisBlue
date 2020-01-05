@@ -7,6 +7,7 @@ docker run -d \
 	-v /etc/passwd:/etc/passwd:ro \
 	-v /etc/shadow:/etc/shadow:ro \
 	-v /etc/group:/etc/group:ro \
+	-v </path/to/seisnn>:/SeisNN \
 	-v </path/to/database>:/mnt/DATA \
 	-v </path/to/workspace>:/home/${USER} \
 	--name tf tf_ssh
