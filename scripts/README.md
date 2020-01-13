@@ -6,7 +6,7 @@ Preprocessing:
  
 - [stream_to_tfrecord.py](preprocessing/stream_to_tfrecord.py)
   - Make S-Files into training .tfrecord.
-- [scanning.py](preprocessing/scanning.py)
+- [scanning.py](prototypes/scanning.py)
   - Scan through all stations available in the given time window, transfer into .pkl dataset.
   
 Training:
@@ -28,7 +28,7 @@ Evaluate:
 
 Output:
 
-- [update_picks.py](output/update_picks.py)
+- [update_picks.py](prototypes/update_picks.py)
 
 Prototypes:
 

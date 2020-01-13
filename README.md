@@ -6,6 +6,8 @@ Main framework: Obspy, Seisan, Tensorflow with Keras
 
 Using U-net to generate pick probability
 
+![workflow](workflow.png)
+
 ![example](example.png)
 
 ---
@@ -47,30 +49,27 @@ In the [scripts](scripts) folder:
 Preprocessing:
 
 - Turn catalog and trace into training set
-- Add coordinate 
-- Scan through continuous data
   
 Training:
 
 - Pre-train
 - Training
-- Predict from saved model
+- Predict 
 
-Evaluate:
+Analysis:
+
+- SNR distribution
+- Model evaluation
+
+Visualization:
 
 - Plot picking instances
-- Calculate F1 score
-- Quality control
-
-Post-processing: (not yet)
-
-- Output picks
-- Earthquake location 
-- Output s-file
+- Plot map view
+- Plot training history
 
 Prototypes:
 
-- Small example of some function
+- Experimental functions
 
 ---
 
