@@ -1,4 +1,6 @@
 import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import argparse
 import pandas as pd
 
@@ -7,7 +9,7 @@ from seisnn.plot import plot_error_distribution, plot_confusion_matrix
 from seisnn.core import Feature
 from seisnn.utils import get_config
 from seisnn.io import read_dataset
-from seisnn.pick import validate_picks_nearby
+from seisnn.pick import validate_picks_nearby, get_time_residual
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-d', '--dataset', required=False, help='dataset', type=str)
@@ -26,8 +28,10 @@ pick_df = pd.DataFrame()
 
 for example in dataset:
     feature = Feature(example)
-    feature.filter_phase('P')
-    picks = feature.picks
+    picks = pd.DataFrame.from_dict({'pick_time': feature.pick_time,
+                                    'pick_phase': feature.pick_phase,
+                                    'pick_set': feature.pick_set})
+
     pred_picks = picks.loc[picks['pick_set'] == pred]
     val_picks = picks.loc[picks['pick_set'] == val]
 
@@ -35,7 +39,7 @@ for example in dataset:
         for j, v in val_picks.iterrows():
 
             if validate_picks_nearby(v, p, delta=0.5):
-                time_residuals.append(p['pick_time'] - v['pick_time'])
+                time_residuals.append(get_time_residual(v, p))
 
             if validate_picks_nearby(v, p, delta=0.1):
                 true_positive += 1

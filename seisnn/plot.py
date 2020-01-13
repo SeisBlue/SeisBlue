@@ -5,22 +5,21 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 import seaborn as sns
+from obspy import UTCDateTime
 from seisnn.utils import make_dirs
+from seisnn.qc import signal_to_noise_ratio, precision_recall_f1_score
 
 
-def color_palette(feature, phase=None, shade=1):
+def color_palette(color=1, shade=1):
     # color palette source:
     # http://www.webfreelancer.com.br/color/colors.html
 
     # shade:     #200       #500       #800
     palette = [['#90CAF9', '#2196F3', '#1565C0'],  # Blue
                ['#FFAB91', '#FF5722', '#D84315'],  # Deep Orange
-               ['#A5D6A7', '#4CAF50', '#2E7D32'],  # Green
-               ]
+               ['#A5D6A7', '#4CAF50', '#2E7D32']]  # Green
 
-    phase_list = list(feature['phase'].keys())
-    phase_index = phase_list.index(phase)
-    return palette[phase_index][shade]
+    return palette[color][shade]
 
 
 def get_time_array(feature):
@@ -29,65 +28,76 @@ def get_time_array(feature):
     return time_array
 
 
-def plot_dataset(feature, enlarge=False, xlim=None, title=None, save_dir=None):
-    start_time = feature['starttime']
-    time_stamp = feature['starttime'].isoformat()
-    picks = feature['picks']
-
+def plot_dataset(feature, snr=False, enlarge=False, xlim=None, title=None, save_dir=None):
     if title is None:
-        title = f'{time_stamp}_{feature["id"][:-3]}'
-    if not picks.empty:
-        first_pick_time = picks['pick_time'].values[0] - start_time
+        title = f'{feature["starttime"]}_{feature["id"][:-3]}'
+    if feature['pick_time']:
+        first_pick_time = UTCDateTime(feature['pick_time'][-1]) - UTCDateTime(feature['starttime'])
     else:
         first_pick_time = 1
 
     subplot = len(feature['channel']) + 1
-
     fig = plt.figure(figsize=(8, subplot * 2))
     for i, chan in enumerate(feature['channel']):
         ax = fig.add_subplot(subplot, 1, i + 1)
-
         plt.title(title + chan)
 
         if xlim:
             plt.xlim(xlim)
         if enlarge:
             plt.xlim((first_pick_time - 1, first_pick_time + 2))
-        ax.plot(get_time_array(feature), feature['channel'][chan], "k-", label=chan)
+        trace = feature['trace'][-1, :, i]
+        ax.plot(get_time_array(feature), trace, "k-", label=chan)
         y_min, y_max = ax.get_ylim()
 
-        if not picks.empty:
-            pick_set_list = picks['pick_set'].unique().tolist()
+        if feature['pick_time']:
             label_set = set()
-            for i in range(len(picks)):
-                pick_set = picks['pick_set'].values[i]
-                pick_phase = picks['pick_phase'].values[i]
-                pick_index = pick_set_list.index(pick_set)
+            pick_type = ['manual', 'predict']
 
-                color = color_palette(feature, pick_phase, pick_index)
+            for i in range(len(feature['pick_time'])):
+                pick_set = feature['pick_set'][i]
+                pick_phase = feature['pick_phase'][i]
+                phase_color = feature['phase'].index(pick_phase)
+                type_color = pick_type.index(pick_set)
+
+                color = color_palette(type_color, 1)
                 label = pick_set + " " + pick_phase
 
-                pick_time = picks['pick_time'].values[i] - start_time
+                pick_time = UTCDateTime(feature['pick_time'][i]) - UTCDateTime(feature['starttime'])
                 if not label in label_set:
-                    ax.vlines(pick_time, y_min / (pick_index + 1), y_max / (pick_index + 1), color=color, lw=2,
+                    ax.vlines(pick_time, y_min, y_max, color=color, lw=1,
                               label=label)
                     label_set.add(label)
                 else:
-                    ax.vlines(pick_time, y_min / (pick_index + 1), y_max / (pick_index + 1), color=color, lw=2)
+                    ax.vlines(pick_time, y_min, y_max, color=color, lw=1)
 
+                if snr and pick_set == 'manual':
+                    try:
+                        index = int(pick_time / feature['delta'])
+                        noise = trace[index - 100:index]
+                        signal = trace[index: index + 100]
+                        snr = signal_to_noise_ratio(signal, noise)
+                        if not snr == float("inf"):
+                            ax.text(pick_time, y_max-0.1, f'SNR: {snr:.2f}')
+                    except IndexError:
+                        pass
         ax.legend(loc=1)
 
     ax = fig.add_subplot(subplot, 1, subplot)
+    ax.set_ylim([-0.05, 1.05])
 
-    if feature['phase']:
-        for phase in feature['phase']:
-            color = color_palette(feature, phase)
-            ax.plot(get_time_array(feature), feature['phase'][phase], color=color, label=phase)
-        ax.legend()
+    for i in range(feature['pdf'].shape[2]):
+        if feature['phase'][i]:
+            color = color_palette(i, 1)
+            ax.plot(get_time_array(feature), feature['pdf'][-1, :, i], color=color, label=feature['phase'][i])
+            ax.legend()
 
-    else:
-        label_only = [Line2D([0], [0], color="#AAAAAA", lw=2)]
-        ax.legend(label_only, ['No phase data'])
+        else:
+            label_only = [Line2D([0], [0], color="#AAAAAA", lw=2)]
+            ax.legend(label_only, ['No phase data'])
+
+    threshold = 0.5
+    ax.hlines(threshold, 0, 30, lw=1, linestyles='--')
 
     if xlim:
         plt.xlim(xlim)
@@ -117,6 +127,8 @@ def plot_loss(log_file, save_dir=None):
 
     ax.plot(loss[:, 0], label='train')
     ax.plot(loss[:, 1], label='validation')
+    plt.xlabel('Steps')
+    plt.ylabel('Loss')
     ax.legend()
     plt.title(f'{file_name[0]} loss')
 
@@ -145,6 +157,7 @@ def plot_error_distribution(time_residuals, save_dir=None):
 
 
 def plot_snr_distribution(pick_snr, save_dir=None):
+    sns.set()
     bins = np.linspace(-1, 10, 55)
     plt.hist(pick_snr, bins=bins)
     plt.xticks(np.arange(-1, 11, step=1))
@@ -164,10 +177,14 @@ def plot_confusion_matrix(true_positive, pred_count, val_count):
     matrix = pd.DataFrame([[true_positive, pred_count - true_positive],
                            [val_count - true_positive, 0]], columns=['True', 'False'], index=['True', 'False'])
 
+    precision, recall, f1 = precision_recall_f1_score(true_positive, pred_count, val_count)
+
+    sns.set(font_scale=1.2)
     sns.heatmap(matrix, annot=True, cbar=False, fmt="d", cmap='Blues', square=True)
     bottom, top = plt.ylim()
     plt.ylim(bottom + 0.5, top - 0.5)
     plt.xlabel('True Label')
     plt.ylabel('Predicted Label')
-    plt.title('Confusion Matrix')
+    plt.title(f'Precision = {precision:.3f}, Recall = {recall:.3f}, F1 = {f1:.3f}')
     plt.show()
+    sns.set(font_scale=1)

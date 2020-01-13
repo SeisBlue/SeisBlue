@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 
 def get_config():
-    config_file = os.path.join(os.path.expanduser('~'), 'SeisNN', 'config.yaml')
+    config_file = os.path.join('/SeisNN', 'config.yaml')
     with open(config_file, 'r') as file:
         config = yaml.full_load(file)
     return config
@@ -25,11 +25,23 @@ def batch(iterable, n=1):
         yield iterable[ndx:min(ndx + n, iter_len)]
 
 
-def parallel(par, file_list, batch_size=1):
+def parallel(par, file_list):
+    batch_size = int(np.ceil(len(file_list) / cpu_count()))
     pool = Pool(processes=cpu_count(), maxtasksperchild=1)
     output = []
     for thread_output in tqdm(pool.imap_unordered(par, batch(file_list, batch_size)),
                               total=int(np.ceil(len(file_list) / batch_size))):
+        if thread_output:
+            output.extend(thread_output)
+
+    pool.close()
+    pool.join()
+    return output
+
+def parallel_iter(par, iterator):
+    pool = Pool(processes=cpu_count(), maxtasksperchild=1)
+    output = []
+    for thread_output in tqdm(pool.imap_unordered(par, iterator)):
         if thread_output:
             output.extend(thread_output)
 

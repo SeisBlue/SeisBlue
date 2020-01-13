@@ -1,5 +1,6 @@
 import os
 import yaml
+from os.path import expanduser
 
 from seisnn.utils import make_dirs
 
@@ -30,6 +31,9 @@ config = {'SDS_ROOT': SDS_ROOT,
 if __name__ == '__main__':
     for d in [TFRECORD_ROOT, DATASET_ROOT, PICK_ROOT, CATALOG_ROOT, MODELS_ROOT, GEOM_ROOT]:
         make_dirs(d)
+
+    with open(os.path.join(expanduser("~"), '.bashrc'), 'w') as file:
+        file.write('export PYTHONPATH=/SeisNN:$PYTHONPATH')
 
     with open('config.yaml', 'w') as file:
         yaml.dump(config, file, sort_keys=False)

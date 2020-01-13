@@ -1,15 +1,11 @@
 from collections import OrderedDict
 
 import numpy as np
-import pandas as pd
 import scipy
+import scipy.stats as ss
 from scipy.signal import find_peaks
 
-from obspy import read
-
-import tensorflow as tf
-import tensorflow_probability as tfp
-
+from obspy import read, UTCDateTime
 from seisnn.utils import binary_search
 
 
@@ -55,50 +51,41 @@ def get_window(pick, trace_length=30):
 
 def get_pdf(stream, sigma=0.1):
     trace = stream[0]
-    tfd = tfp.distributions
     start_time = trace.stats.starttime
     x_time = trace.times(reftime=start_time)
-    stream.phase = ['P', 'S']
-    stream.pdf = np.zeros([3008, 3])
 
-    for i, phase in enumerate(stream.phase):
-        if not stream.picks.get(phase):
+    stream.pdf = np.zeros([3008, 1])
+    stream.phase = []
+
+    for i, phase in enumerate(['P']):
+        if stream.picks.get(phase):
+            stream.phase.append(phase)
+        else:
+            stream.phase.append('')
             continue
+
+        phase_pdf = np.zeros((len(x_time),))
         for pick in stream.picks[phase]:
-            phase_pdf = np.zeros((len(x_time),))
-
-
             pick_time = pick.time - start_time
-            dist = tfd.Normal(loc=pick_time, scale=sigma)
-            pick_pdf = dist.prob(x_time)
+            pick_pdf = ss.norm.pdf(x_time, pick_time, sigma)
 
-            if tf.math.reduce_max(pick_pdf):
-                phase_pdf += pick_pdf / tf.math.reduce_max(pick_pdf)
+            if pick_pdf.max():
+                phase_pdf += pick_pdf / pick_pdf.max()
 
-        stream.pdf[:,i] = phase_pdf.numpy()
+        stream.pdf[:, i] = phase_pdf
     return stream
 
 
-def get_picks_from_pdf(feature, phase_type, height=0.5, distance=100):
-    start_time = feature.starttime
-    peaks, properties = find_peaks(feature.phase[phase_type], height=height, distance=distance)
+def get_picks_from_pdf(feature, phase, pick_set, height=0.5, distance=100):
+    i = feature.phase.index(phase)
+    peaks, properties = find_peaks(feature.pdf[-1, :, i], height=height, distance=distance)
 
-    pick_time = []
-    pick_phase = []
-    pick_set = []
     for p in peaks:
         if p:
-            pick_time.append(start_time + p * feature.delta)
-            pick_phase.append('P')
-            pick_set.append(phase_type)
-
-    picks = {'pick_time': pick_time,
-             'pick_phase': pick_phase,
-             'pick_set': pick_set}
-
-    picks = pd.DataFrame.from_dict(picks)
-
-    return picks
+            pick_time = UTCDateTime(feature.starttime) + p * feature.delta
+            feature.pick_time.append(pick_time.isoformat())
+            feature.pick_phase.append(feature.phase[i])
+            feature.pick_set.append(pick_set)
 
 
 def get_picks_from_dataset(dataset):
@@ -110,7 +97,7 @@ def get_picks_from_dataset(dataset):
 
 
 def search_pick(pick_list, pick_time_key, stream):
-    tmp_pick = {}
+    tmp_pick = {'P': []}
     starttime = stream.traces[0].stats.starttime
     endtime = stream.traces[0].stats.endtime
     station = stream.traces[0].stats.station
@@ -121,24 +108,21 @@ def search_pick(pick_list, pick_time_key, stream):
         if not pick.waveform_id.station_code == station:
             continue
         phase = pick.phase_hint
-        if not tmp_pick.get(phase):
-            tmp_pick[phase] = [pick]
-        else:
+        if phase in tmp_pick:
             tmp_pick[phase].append(pick)
 
     return tmp_pick
 
 
 def validate_picks_nearby(val_pick, pred_pick, delta=0.1):
-    pick_upper_bound = pred_pick['pick_time'] + delta
-    pick_lower_bound = pred_pick['pick_time'] - delta
-    if pick_lower_bound < val_pick['pick_time'] < pick_upper_bound:
+    pick_upper_bound = UTCDateTime(pred_pick['pick_time']) + delta
+    pick_lower_bound = UTCDateTime(pred_pick['pick_time']) - delta
+    if pick_lower_bound < UTCDateTime(val_pick['pick_time']) < pick_upper_bound:
         return True
     else:
         return False
 
 
-def get_time_residual(pred_pick, val_pick):
-    if validate_picks_nearby(pred_pick, val_pick, delta=0.5):
-        residual = val_pick['pick_time'] - pred_pick['pick_time']
-        return residual
+def get_time_residual(val_pick, pred_pick):
+    residual = UTCDateTime(val_pick['pick_time']) - UTCDateTime(pred_pick['pick_time'])
+    return residual

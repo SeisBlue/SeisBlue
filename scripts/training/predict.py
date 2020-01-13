@@ -1,12 +1,14 @@
 import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import argparse
 
 import tensorflow as tf
 
 from seisnn.utils import get_config, make_dirs
-from seisnn.io import read_dataset
-from seisnn.core import Feature
-
+from seisnn.io import read_dataset, write_tfrecord
+from seisnn.core import parallel_to_tfrecord
+from seisnn.example_proto import batch_iterator
 from seisnn.model.settings import model, optimizer
 
 ap = argparse.ArgumentParser()
@@ -24,7 +26,7 @@ OUTPUT_DATASET = os.path.join(config['DATASET_ROOT'], args.output)
 make_dirs(OUTPUT_DATASET)
 
 INPUT_DATASET = os.path.join(config['DATASET_ROOT'], args.input)
-dataset = read_dataset(INPUT_DATASET).take(1000)
+dataset = read_dataset(INPUT_DATASET)
 
 ckpt = tf.train.Checkpoint(model=model, optimizer=optimizer)
 ckpt_manager = tf.train.CheckpointManager(ckpt, MODEL_PATH, max_to_keep=100)
@@ -34,13 +36,22 @@ if ckpt_manager.latest_checkpoint:
     last_epoch = len(ckpt_manager.checkpoints)
     print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
-for example in dataset:
-    feature = Feature(example)
-    feature.filter_phase('P')
-    feature.filter_channel('Z')
+n = 0
+for batch in dataset.take(1000).batch(512).prefetch(2):
+    pdf = model.predict(batch['trace'])
+    batch['pdf'] = tf.concat([batch['pdf'], pdf], axis=3)
 
-    trace = feature.get_trace()
-    feature.phase['predict'] = model.predict(trace)[0, 0, -3001:, 0]
-    feature.get_picks('predict')
-    filename = f'{feature.starttime}_{feature.id}.tfrecord'
-    feature.to_tfrecord(os.path.join(OUTPUT_DATASET, filename))
+    phase = batch['phase'].to_list()
+    for p in phase:
+        if not [b'p'] in p:
+            p.append([b'p'])
+    batch['phase'] = tf.ragged.constant(phase)
+
+    with tf.device('/cpu:0'):
+        example_list = parallel_to_tfrecord(list(batch_iterator(batch)))
+        filename = f'{args.output}_{n}.tfrecord'
+        write_tfrecord(example_list, os.path.join(OUTPUT_DATASET, filename))
+    print(f'save {filename}')
+    n += 1
+
+

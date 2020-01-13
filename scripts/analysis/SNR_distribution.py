@@ -1,5 +1,7 @@
 import os
 import argparse
+import pandas as pd
+from obspy import UTCDateTime
 
 from seisnn.core import Feature
 from seisnn.utils import get_config
@@ -19,20 +21,21 @@ pick_snr = []
 n = 0
 for example in dataset:
     feature = Feature(example)
-    feature.filter_phase('P')
-    picks = feature.picks.loc[feature.picks['pick_set'] == 'manual']
+    picks = pd.DataFrame.from_dict({'pick_time': feature.pick_time,
+                                    'pick_phase': feature.pick_phase,
+                                    'pick_set': feature.pick_set})
+    picks = picks.loc[picks['pick_set'] == "manual"]
 
     for i, p in picks.iterrows():
-        pick_time = p['pick_time'] - feature.starttime
+        pick_time = UTCDateTime(p['pick_time']) - UTCDateTime(feature.starttime)
         index = int(pick_time / feature.delta)
-        for k, v in feature.channel.items():
-            try:
-                noise = v[index - 100:index]
-                signal = v[index: index + 100]
-                snr = signal_to_noise_ratio(signal, noise)
-                pick_snr.append(snr)
-            except IndexError:
-                pass
+
+        trace = feature.trace[-1, :, 0]
+        noise = trace[index - 100:index]
+        signal = trace[index: index + 100]
+        snr = signal_to_noise_ratio(signal, noise)
+        pick_snr.append(snr)
+
     if n % 1000 == 0 and not n == 0:
         print(f'read {n} data')
     n += 1

@@ -45,7 +45,7 @@ def read_event_list(sfile):
     sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile)
     sfile_list = get_dir_list(sfile_dir)
     print(f'reading events from {sfile_dir}')
-    events = parallel(par=get_event, file_list=sfile_list, batch_size=100)
+    events = parallel(par=get_event, file_list=sfile_list)
     print(f'read {len(events)} events from {sfile}')
     return events
 
@@ -90,7 +90,7 @@ def read_sds(window):
     return stream_list
 
 
-def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=20):
+def write_training_dataset(pick_list, geom, dataset, pickset):
     config = get_config()
     dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
     make_dirs(dataset_dir)
@@ -105,7 +105,7 @@ def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=20):
                   geom=geom,
                   pickset=pickset)
 
-    example_list = parallel(par, pick_list, batch_size)
+    example_list = parallel(par, pick_list)
 
     station = pick_list[0].waveform_id.station_code
     file_name = '{}.tfrecord'.format(station)
@@ -117,6 +117,8 @@ def write_training_dataset(pick_list, geom, dataset, pickset, batch_size=20):
 def _write_picked_stream(batch_picks, pick_list, pick_time_key, geom, pickset):
     example_list = []
     for pick in batch_picks:
+        if not pick.phase_hint in ['P']:
+            continue
         window = get_window(pick)
         streams = read_sds(window)
 
@@ -206,3 +208,5 @@ def read_geom(hyp):
                 geom[sta] = location
     print(f'read {len(geom)} stations from {hyp}')
     return geom
+
+

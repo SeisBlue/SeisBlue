@@ -1,16 +1,13 @@
-import numpy as np
-import pandas as pd
 import tensorflow as tf
 
-from seisnn.utils import unet_padding_size
 from seisnn.plot import plot_dataset
 from seisnn.io import write_tfrecord
 from seisnn.pick import get_picks_from_pdf
-from seisnn.example_proto import extract_parsed_example, feature_to_example
+from seisnn.example_proto import eval_eager_tensor, feature_to_example
 
 
 class Feature:
-    def __init__(self, input_data=None):
+    def __init__(self, example):
         self.id = None
         self.station = None
 
@@ -23,17 +20,18 @@ class Feature:
         self.longitude = None
         self.elevation = None
 
-        self.channel = None
-        self.picks = None
-        self.phase = None
-
         self.trace = None
+        self.channel = None
+
+        self.phase = None
         self.pdf = None
 
-        if isinstance(input_data['id'], str):
-            self.from_feature(input_data)
-        if isinstance(input_data['id'], tf.Tensor):
-            self.from_example(input_data)
+        self.pick_time = None
+        self.pick_phase = None
+        self.pick_set = None
+
+        self.from_example(example)
+
 
     def from_feature(self, feature):
         self.id = feature['id']
@@ -48,9 +46,16 @@ class Feature:
         self.longitude = feature['longitude']
         self.elevation = feature['elevation']
 
+        self.trace = feature['trace']
         self.channel = feature['channel']
-        self.picks = feature['picks']
+
+        self.pdf = feature['pdf']
         self.phase = feature['phase']
+
+        self.pick_time = feature['pick_time']
+        self.pick_phase = feature['pick_phase']
+        self.pick_set = feature['pick_set']
+
 
     def to_feature(self):
         feature = {
@@ -58,19 +63,29 @@ class Feature:
             'station': self.station,
             'starttime': self.starttime,
             'endtime': self.endtime,
+
             'npts': self.npts,
             'delta': self.delta,
+
             'latitude': self.latitude,
             'longitude': self.longitude,
             'elevation': self.elevation,
+
+            'trace': self.trace,
             'channel': self.channel,
-            'picks': self.picks,
-            'phase': self.phase
+
+            'phase': self.phase,
+            'pdf': self.pdf,
+
+            'pick_time': self.pick_time,
+            'pick_phase': self.pick_phase,
+            'pick_set': self.pick_set,
+
         }
         return feature
 
     def from_example(self, example):
-        feature = extract_parsed_example(example)
+        feature = eval_eager_tensor(example)
         self.from_feature(feature)
 
     def to_example(self):
@@ -83,51 +98,25 @@ class Feature:
         example = feature_to_example(feature)
         write_tfrecord([example], file_path)
 
-    def filter_phase(self, phase):
-        keys = list(self.phase.keys())
-        for key in keys:
-            if not phase in key:
-                self.phase.pop(key)
-
-        self.picks = self.picks.loc[self.picks['pick_phase'] == phase]
-
-    def filter_channel(self, channel):
-        keys = list(self.channel.keys())
-        for key in keys:
-            if not channel in key:
-                self.channel.pop(key)
-
-    def filter_pickset(self, pickset):
-        self.picks = self.picks.loc[self.picks['pick_set'] in pickset]
-
-    def get_trace(self):
-        traces = []
-        for k, v in self.channel.items():
-            tr = np.pad(v, unet_padding_size(v))
-            traces.append(tr[np.newaxis, np.newaxis, :])
-        if traces:
-            traces = np.stack(traces, axis=-1)
-            self.trace = traces
-            return traces
-        else:
-            return None
-
-    def get_pdf(self):
-        pdf = []
-        for k, v in self.phase.items():
-            tr = np.pad(v, unet_padding_size(v))
-            pdf.append(tr[np.newaxis, np.newaxis, :])
-        if pdf:
-            pdf = np.stack(pdf, axis=-1)
-            self.pdf = pdf
-            return pdf
-        else:
-            return None
-
-    def get_picks(self, phase_type):
-        picks = get_picks_from_pdf(self, phase_type)
-        self.picks = pd.concat([self.picks, picks])
+    def get_picks(self, phase, pick_set):
+        get_picks_from_pdf(self, phase, pick_set)
 
     def plot(self, **kwargs):
         feature = self.to_feature()
         plot_dataset(feature, **kwargs)
+
+
+def parallel_to_tfrecord(batch_list):
+    from seisnn.utils import parallel
+
+    example_list = parallel(par=_to_tfrecord, file_list=batch_list)
+    return example_list
+
+def _to_tfrecord(batch):
+    example_list=[]
+    for example in batch:
+        feature = Feature(example)
+        feature.get_picks('p', 'predict')
+        feature = feature.to_feature()
+        example_list.append(feature_to_example(feature))
+    return example_list

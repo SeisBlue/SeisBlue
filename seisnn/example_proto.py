@@ -1,14 +1,13 @@
 import numpy as np
-import pandas as pd
 import tensorflow as tf
-
-from obspy import UTCDateTime
 
 
 def _bytes_feature(value):
     """Returns a bytes_list from a string / byte."""
     if isinstance(value, type(tf.constant(0))):
         value = value.numpy()  # BytesList won't unpack a string from an EagerTensor.
+    if isinstance(value, str):
+        value = value.encode('utf-8')
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
 
@@ -27,8 +26,8 @@ def stream_to_feature(stream, pickset):
 
     feature = {
         'id': trace.id,
-        'starttime': trace.stats.starttime,
-        'endtime': trace.stats.endtime,
+        'starttime': trace.stats.starttime.isoformat(),
+        'endtime': trace.stats.endtime.isoformat(),
         'station': trace.stats.station,
         'npts': trace.stats.npts,
         'delta': trace.stats.delta,
@@ -39,10 +38,15 @@ def stream_to_feature(stream, pickset):
     }
 
     channel = []
-    trace = np.zeros([3008, 3])
-    for i, tr in enumerate(stream):
-        trace[:, i] = tr.data
-        channel.append(tr.stats.channel)
+    trace = np.zeros([3008, 1])
+    for i, comp in enumerate(['Z']):
+        try:
+            st = stream.select(component=comp)
+            trace[:, i] = st.traces[0].data
+            channel.append(st.traces[0].stats.channel)
+        except IndexError:
+            pass
+
     feature['trace'] = trace
     feature['channel'] = channel
 
@@ -66,11 +70,15 @@ def stream_to_feature(stream, pickset):
 
 
 def feature_to_example(stream_feature):
+    for key in ['trace', 'pdf']:
+        if isinstance(stream_feature[key], tf.Tensor):
+            stream_feature[key] = stream_feature[key].numpy()
+
     context_data = {
-        'id': _bytes_feature(stream_feature['id'].encode('utf-8')),
-        'starttime': _bytes_feature(stream_feature['starttime'].isoformat().encode('utf-8')),
-        'endtime': _bytes_feature(stream_feature['endtime'].isoformat().encode('utf-8')),
-        'station': _bytes_feature(stream_feature['station'].encode('utf-8')),
+        'id': _bytes_feature(stream_feature['id']),
+        'starttime': _bytes_feature(stream_feature['starttime']),
+        'endtime': _bytes_feature(stream_feature['endtime']),
+        'station': _bytes_feature(stream_feature['station']),
 
         'npts': _int64_feature(stream_feature['npts']),
         'delta': _float_feature(stream_feature['delta']),
@@ -89,12 +97,7 @@ def feature_to_example(stream_feature):
         pick_features = []
         if stream_feature[key]:
             for context_data in stream_feature[key]:
-                if isinstance(context_data, UTCDateTime):
-                    pick_feature = _bytes_feature(context_data.isoformat().encode('utf-8'))
-                elif isinstance(context_data, bytes):
-                    pick_feature = _bytes_feature(context_data)
-                else:
-                    pick_feature = _bytes_feature(context_data.encode('utf-8'))
+                pick_feature = _bytes_feature(context_data)
                 pick_features.append(pick_feature)
 
         sequence_data[key] = tf.train.FeatureList(feature=pick_features)
@@ -155,23 +158,23 @@ def sequence_example_parser(record):
         "phase": tf.RaggedTensor.from_sparse(parsed_sequence['phase']),
     }
 
-    for key, trace in zip(['channel', 'phase'], ['trace', 'pdf']):
+    for trace in ['trace', 'pdf']:
         trace_data = tf.io.decode_raw(parsed_context[trace], tf.float32)
-        parsed_example[trace] = tf.reshape(trace_data, [1, 3008, 3])
+        parsed_example[trace] = tf.reshape(trace_data, [1, parsed_example['npts'], -1])
 
     return parsed_example
 
 
-def extract_parsed_example(parsed_example):
+def eval_eager_tensor(parsed_example):
     feature = {
         'id': parsed_example['id'].numpy().decode('utf-8'),
-        'starttime': UTCDateTime(parsed_example['starttime'].numpy().decode('utf-8')),
-        'endtime': UTCDateTime(parsed_example['endtime'].numpy().decode('utf-8')),
+        'starttime': parsed_example['starttime'].numpy().decode('utf-8'),
+        'endtime': parsed_example['endtime'].numpy().decode('utf-8'),
 
         'delta': parsed_example['delta'].numpy(),
         'npts': parsed_example['npts'].numpy(),
 
-        'station': parsed_example['station'].numpy().decode('utf-8'),
+        'station': parsed_example['station'].numpy(),
         'latitude': parsed_example['latitude'].numpy(),
         'longitude': parsed_example['longitude'].numpy(),
         'elevation': parsed_example['elevation'].numpy(),
@@ -180,10 +183,10 @@ def extract_parsed_example(parsed_example):
         "pick_phase": parsed_example['pick_phase'],
         "pick_set": parsed_example['pick_set'],
 
+        "trace": parsed_example['trace'],
         "channel": parsed_example['channel'],
-        "channel_data": parsed_example['channel_data'],
+        "pdf": parsed_example['pdf'],
         "phase": parsed_example['phase'],
-        "phase_data": parsed_example['phase_data'],
     }
 
     for i in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
@@ -191,47 +194,33 @@ def extract_parsed_example(parsed_example):
         data_list = []
         for f in feature_list:
             f = f[0].numpy().decode('utf-8')
-            if i == 'pick_time':
-                f = UTCDateTime(f)
             data_list.append(f)
         feature[i] = data_list
 
-    picks = {'pick_time': feature.pop('pick_time'),
-             'pick_phase': feature.pop('pick_phase'),
-             'pick_set': feature.pop('pick_set')}
-
-    feature['picks'] = pd.DataFrame.from_dict(picks)
-
-    for types in ['channel', 'phase']:
-        type_dict = {}
-        for i, v in enumerate(feature[types]):
-            type_dict[v] = np.fromstring(feature[f'{types}_data'].values[i].numpy(), dtype=np.float32)
-        feature[types] = type_dict
-
     return feature
 
+def batch_iterator(batch):
+    for index in range(batch['id'].shape[0]):
+        parsed_example = {
+            'id': batch['id'][index],
+            'starttime': batch['starttime'][index],
+            'endtime': batch['endtime'][index],
 
-def extract_batch(index, batch):
-    parsed_example = {
-        'id': batch['id'][index],
-        'starttime': batch['starttime'][index],
-        'endtime': batch['endtime'][index],
+            'delta': batch['delta'][index],
+            'npts': batch['npts'][index],
 
-        'delta': batch['delta'][index],
-        'npts': batch['npts'][index],
+            'station': batch['station'][index],
+            'latitude': batch['latitude'][index],
+            'longitude': batch['longitude'][index],
+            'elevation': batch['elevation'][index],
 
-        'station': batch['station'][index],
-        'latitude': batch['latitude'][index],
-        'longitude': batch['longitude'][index],
-        'elevation': batch['elevation'][index],
+            "pick_time": batch['pick_time'][index, :],
+            "pick_phase": batch['pick_phase'][index, :],
+            "pick_set": batch['pick_set'][index, :],
 
-        "pick_time": batch['pick_time'][index, :],
-        "pick_phase": batch['pick_phase'][index, :],
-        "pick_set": batch['pick_set'][index, :],
-
-        "channel": batch['channel'][index, :],
-        "channel_data": batch['channel_data'][index, :],
-        "phase": batch['phase'][index, :],
-        "phase_data": batch['phase_data'][index, :],
-    }
-    return parsed_example
+            "trace": batch['trace'][index, :],
+            "channel": batch['channel'][index, :],
+            "pdf": batch['pdf'][index, :],
+            "phase": batch['phase'][index, :],
+        }
+        yield parsed_example

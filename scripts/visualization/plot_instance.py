@@ -1,9 +1,12 @@
 import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import argparse
 
-from seisnn.core import Feature
 from seisnn.utils import get_config
 from seisnn.io import read_dataset
+from seisnn.core import Feature
+from seisnn.example_proto import batch_iterator
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-d', '--dataset', required=False, help='dataset', type=str)
@@ -11,8 +14,9 @@ args = ap.parse_args()
 
 config = get_config()
 dataset_dir = os.path.join(config['DATASET_ROOT'], args.dataset)
-dataset = read_dataset(dataset_dir).shuffle(100000).prefetch(10)
+dataset = read_dataset(dataset_dir)
 
-for example in dataset:
-    feature = Feature(example)
-    feature.plot(enlarge=True)
+for batch in dataset.shuffle(1000).batch(2):
+    for example in batch_iterator(batch):
+        feature = Feature(example)
+        feature.plot(enlarge=True, snr=True)
