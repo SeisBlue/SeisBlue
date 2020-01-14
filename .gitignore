@@ -60,3 +60,4 @@ fabric.properties
 /kml/
 /.idea/
 /.pypirc
+/.vscode/

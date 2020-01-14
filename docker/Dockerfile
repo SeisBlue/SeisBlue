@@ -9,7 +9,7 @@ RUN apt-get install sudo openssh-server vim htop screen reptyr git ffmpeg libpro
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 RUN pip3 install --upgrade pip
-RUN pip3 uninstall -y enum34; python3 -m pip --no-cache-dir install --upgrade pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn sphinx recommonmark
+RUN pip3 uninstall -y enum34; python3 -m pip --no-cache-dir install --upgrade pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn
 
 RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
