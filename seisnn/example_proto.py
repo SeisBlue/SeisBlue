@@ -1,3 +1,18 @@
+"""
+Example Proto
+=============
+
+.. autosummary::
+    :toctree: generated/
+
+    stream_to_feature
+    feature_to_example
+    sequence_example_parser
+    eval_eager_tensor
+    batch_iterator
+
+"""
+
 import numpy as np
 import tensorflow as tf
 
@@ -22,6 +37,18 @@ def _int64_feature(value):
 
 
 def stream_to_feature(stream, pickset):
+    """
+    Turn Stream object into feature dictionary
+
+    Parameters
+    ----------
+    stream : obspy.Stream
+        Preprocessed stream object from seisnn.flow.stream_preprocessing
+
+    pickset : str
+        Output pickset name
+
+    """
     trace = stream[0]
 
     feature = {
@@ -198,6 +225,7 @@ def eval_eager_tensor(parsed_example):
         feature[i] = data_list
 
     return feature
+
 
 def batch_iterator(batch):
     for index in range(batch['id'].shape[0]):

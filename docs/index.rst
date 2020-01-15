@@ -4,23 +4,31 @@
    contain the root `toctree` directive.
 
 SeisNN
-=======
+======
 Seismic event P phase picking project
+
 Main framework: Obspy, Seisan, Tensorflow with Keras
+
 Using U-net to generate pick probability
 
+Getting started
+---------------
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+    :maxdepth: 1
 
-SeisNN Example Proto
-===================
-.. automodule:: seisnn.example_proto
-   :members:
+    install
+    tutorial
+
+API documentation
+-----------------
+.. toctree::
+    :maxdepth: 1
+
+    example_proto
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
