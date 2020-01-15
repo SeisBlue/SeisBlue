@@ -3,13 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to SeisNN's documentation!
-==================================
+SeisNN
+=======
+Seismic event P phase picking project
+Main framework: Obspy, Seisan, Tensorflow with Keras
+Using U-net to generate pick probability
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
+SeisNN Example Proto
+===================
+.. automodule:: seisnn.example_proto
+   :members:
 
 
 Indices and tables
