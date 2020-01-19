@@ -1,0 +1,8 @@
+SDS_ROOT: /mnt/SDS_ROOT
+WORKSPACE: /home/jimmy
+TFRECORD_ROOT: /home/jimmy/tfrecord
+DATASET_ROOT: /home/jimmy/tfrecord/dataset
+PICK_ROOT: /home/jimmy/tfrecord/picks
+CATALOG_ROOT: /home/jimmy/catalog
+GEOM_ROOT: /home/jimmy/geom
+MODELS_ROOT: /home/jimmy/models
