@@ -1,1 +1,3 @@
+sphinx
 sphinx-bootstrap-theme
+recommonmark
