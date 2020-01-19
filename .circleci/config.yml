@@ -3,12 +3,12 @@ version: 2
 jobs:
   docs-build:
     docker:
-      - image: python:3.6
+      - image: tensorflow/tensorflow:2.1.0-gpu-py3-jupyter
     steps:
       - checkout
       - run:
           name: Install dependencies
-          command: pip install -r docs/requirements.txt
+          command: pip uninstall -y enum34 && pip install -r docs/requirements.txt
       - run:
           name: Build docs
           command: cd docs/ && make html
