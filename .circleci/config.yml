@@ -8,13 +8,13 @@ jobs:
       - checkout
       - run:
           name: Install linux dependencies
-          command: |-
+          command: |
           apt-mark hold libcudnn7
           apt-get update && apt-get upgrade -y
           apt-get install libproj-dev proj-data proj-bin libgeos-dev -y
       - run:
           name: Install python dependencies
-          command: |-
+          command: |
           pip uninstall -y enum34
           pip install -r docs/requirements.txt
       - run:
@@ -36,7 +36,7 @@ jobs:
           command: touch docs/_build/html/.nojekyll
       - run:
           name: Install and configure dependencies
-          command: |-
+          command: |
             npm install -g --silent gh-pages@2.0.1
             git config user.email "bot@circleci.com"
             git config user.name "Circle CI"
