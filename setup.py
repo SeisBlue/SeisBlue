@@ -20,7 +20,6 @@ setup(
         'tensorflow>=2.0.0',
         'obspy>=1.1.1',
         'tqdm>=4.32.1',
-        'pandas>=0.25.3'
     ],
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",

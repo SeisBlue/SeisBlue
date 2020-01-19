@@ -1,3 +1,13 @@
+tensorflow
+obspy
+pyyaml
+obspy
+scikit-learn
+sklearn
+tqdm
+Cartopy
+Pillow
+seaborn
 sphinx
 sphinx-bootstrap-theme
 recommonmark
