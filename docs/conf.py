@@ -14,8 +14,7 @@ import os
 import sys
 import sphinx_bootstrap_theme
 
-sys.path.insert(0, os.path.abspath('../seisnn'))
-
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -32,6 +31,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
+    'sphinx.ext.coverage',
+    'sphinx.ext.napoleon',
     'recommonmark'
 ]
 
