@@ -42,13 +42,11 @@ jobs:
             git config user.name "Circle CI"
       - run:
           name: Deploy docs to gh-pages branch
-          command: gh-pages --dist docs/_build/html
+          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist docs/_build/html
       - add_ssh_keys:
           fingerprints:
             - "a1:8f:df:5f:7a:da:e9:82:21:3c:c1:b1:45:dd:10:de"
-      - run:
-          name: Deploy docs to gh-pages branch
-          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist docs/_build/html
+
 
 workflows:
   version: 2
