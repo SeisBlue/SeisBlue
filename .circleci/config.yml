@@ -7,7 +7,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install linux dependencies
+          command: apt-mark hold libcudnn7 && apt-get update && apt-get upgrade -y && apt-get install libproj-dev proj-data proj-bin libgeos-dev -y
+      - run:
+          name: Install python dependencies
           command: pip uninstall -y enum34 && pip install -r docs/requirements.txt
       - run:
           name: Build docs
