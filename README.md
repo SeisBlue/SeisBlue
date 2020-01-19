@@ -1,5 +1,7 @@
 # SeisNN
 
+Doc Build: [![CircleCI](https://circleci.com/gh/jimmy60504/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/jimmy60504/SeisNN/tree/master)
+
 Seismic event P phase picking project
 
 Main framework: Obspy, Seisan, Tensorflow with Keras

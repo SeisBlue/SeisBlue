@@ -8,17 +8,21 @@ jobs:
       - checkout
       - run:
           name: Install linux dependencies
-          command: apt-mark hold libcudnn7 && apt-get update && apt-get upgrade -y && apt-get install libproj-dev proj-data proj-bin libgeos-dev -y
+          command: |
+          apt-mark hold libcudnn7
+          apt-get update && apt-get upgrade -y
+          apt-get install libproj-dev proj-data proj-bin libgeos-dev -y
       - run:
           name: Install python dependencies
-          command: pip uninstall -y enum34 && pip install -r docs/requirements.txt
+          command: |
+          pip uninstall -y enum34
+          pip install -r docs/requirements.txt
       - run:
           name: Build docs
           command: cd docs/ && make html
       - persist_to_workspace:
           root: docs/_build
           paths: html
-
 
   docs-deploy:
     docker:
@@ -46,14 +50,8 @@ jobs:
           name: Deploy docs to gh-pages branch
           command: gh-pages --dotfiles --message "[skip ci] Updates" --dist docs/_build/html
 
-
 workflows:
   version: 2
-  # If you have testing jobs, put them here...
-  # testing:
-  #   jobs:
-
-  # All deployment
   build:
     jobs:
       - docs-build
