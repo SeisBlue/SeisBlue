@@ -11,3 +11,4 @@ sklearn==0.0
 Sphinx==2.3.1
 sphinx-bootstrap-theme==0.7.1
 tqdm==4.41.1
+recommonmark==0.6.0
