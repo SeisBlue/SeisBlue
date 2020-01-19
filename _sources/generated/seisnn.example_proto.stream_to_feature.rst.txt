@@ -1,0 +1,6 @@
+seisnn.example\_proto.stream\_to\_feature
+=========================================
+
+.. currentmodule:: seisnn.example_proto
+
+.. autofunction:: stream_to_feature
