@@ -8,7 +8,7 @@ env:
   DOCKER_REPO: jimmy60504/tf_ssh
 
 jobs:
-  Build_Docker_image:
+  Build_Docker_Image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

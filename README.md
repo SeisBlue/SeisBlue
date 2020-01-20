@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/jimmy60504/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/jimmy60504/SeisNN/tree/master)
 
-[![Docker Build](https://github.com/jimmy60504/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/jimmy60504/SeisNN/actions?query=workflow%3A%22Docker+Image+CI%22)
+[![Docker Build](https://github.com/jimmy60504/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/jimmy60504/SeisNN/actions?query=workflow%3A%22Docker+Image%22)
 
 Seismic event P phase picking project
 
