@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:latest-gpu-py3-jupyter
+FROM tensorflow/tensorflow:2.1.0-gpu-py3-jupyter
 
 RUN apt-mark hold libcudnn7
 
