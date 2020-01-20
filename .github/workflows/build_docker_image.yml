@@ -1,0 +1,15 @@
+name: Docker Image CI
+
+on:
+  push:
+    paths: 
+      - 'docker/Dockerfile'
+
+jobs:
+  build_docker_image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker build . --file docker/Dockerfile --tag tf_ssh:$(date +%s)
