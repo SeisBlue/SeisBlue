@@ -25,6 +25,8 @@ RUN mv /etc/bash.bashrc /etc/bash.bashrc.old
 RUN touch /etc/bash.bashrc
 
 ENV LD_LIBRARY_PATH /usr/local/cuda-10.1/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+
+# Add SeisNN into Python PATH
 RUN echo "export PYTHONPATH=$PYTHONPATH:/SeisNN" >> /etc/profile
 
 EXPOSE 22
