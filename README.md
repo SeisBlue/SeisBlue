@@ -1,6 +1,8 @@
 # SeisNN
 
-Doc Build: [![CircleCI](https://circleci.com/gh/jimmy60504/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/jimmy60504/SeisNN/tree/master)
+[![CircleCI](https://circleci.com/gh/jimmy60504/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/jimmy60504/SeisNN/tree/master)
+
+![Docker Build](https://github.com/jimmy60504/SeisNN/workflows/Docker%20Image%20CI/badge.svg)
 
 Seismic event P phase picking project
 

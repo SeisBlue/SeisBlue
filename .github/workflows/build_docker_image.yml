@@ -8,16 +8,16 @@ env:
   DOCKER_REPO: jimmy60504/tf_ssh
 
 jobs:
-  build_and_push_image:
+  Build_Docker_image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build image
-      run: docker build . --file docker/Dockerfile --tag $DOCKER_REPO
-
     - name: Login Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+    - name: Build image
+      run: docker build . --file docker/Dockerfile --tag $DOCKER_REPO
 
     - name: Push image
       run: docker push $DOCKER_REPO
