@@ -1,12 +1,11 @@
 FROM tensorflow/tensorflow:latest-gpu-py3-jupyter
 
-RUN sed -i 's/archive.ubuntu.com/free.nchc.org.tw/g' /etc/apt/sources.list
 RUN apt-mark hold libcudnn7
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install sudo openssh-server vim htop screen reptyr git ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y
 
-# Add all existing user into sudoers
+# Add all user into sudoers
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 RUN pip3 install --upgrade pip
