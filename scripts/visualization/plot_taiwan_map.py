@@ -7,7 +7,7 @@ import cartopy.crs as ccrs
 import cartopy.io.img_tiles as cimgt
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
-from seisnn.io import read_geom, read_event_list
+from seisnn.io import read_hyp, read_event_list
 from seisnn.utils import get_config
 
 W, E, S, N = 119, 123, 21.5, 25.7
@@ -33,7 +33,7 @@ MN_eq = np.array(MN_eq).T
 ax.scatter(MN_eq[0], MN_eq[1],
            transform=ccrs.Geodetic(), color='#333333', edgecolors='k', linewidth=0.3, marker='o', s=0.5)
 
-geom = read_geom('HL2017.HYP')
+geom = read_hyp('HL2017.HYP')
 HL_station = []
 for k, station in geom.items():
     HL_station.append([station['longitude'], station['latitude'], ])
@@ -41,7 +41,7 @@ HL_station = np.array(HL_station).T
 ax.scatter(HL_station[0], HL_station[1], label='HL station',
            transform=ccrs.Geodetic(), color='#3F51B5', edgecolors='k', linewidth=0.1, marker='v', s=5)
 
-geom = read_geom('HL2018.HYP')
+geom = read_hyp('HL2018.HYP')
 HL_station = []
 for k, station in geom.items():
     if station['latitude'] > 23.65:
@@ -50,7 +50,7 @@ HL_station = np.array(HL_station).T
 ax.scatter(HL_station[0], HL_station[1],
            transform=ccrs.Geodetic(), color='#3F51B5', edgecolors='k', linewidth=0.1, marker='v', s=5)
 
-geom = read_geom('MN2016.HYP')
+geom = read_hyp('MN2016.HYP')
 MN_station = []
 for k, station in geom.items():
     MN_station.append([station['longitude'], station['latitude'], ])

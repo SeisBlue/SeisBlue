@@ -6,7 +6,7 @@ import cartopy.crs as ccrs
 import cartopy.io.img_tiles as cimgt
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
-from seisnn.io import read_geom, read_event_list
+from seisnn.io import read_hyp, read_event_list
 from seisnn.utils import get_config
 
 W, E, S, N = 121.3, 121.8, 23.5, 24.25
@@ -24,7 +24,7 @@ HL_eq = np.array(HL_eq).T
 ax.scatter(HL_eq[0], HL_eq[1], label='Earthquake',
            transform=ccrs.Geodetic(), color='#555555', edgecolors='k', linewidth=0.3, marker='o', s=10)
 
-geom = read_geom('HL2017.HYP')
+geom = read_hyp('HL2017.HYP')
 HL_station = []
 for k, station in geom.items():
     HL_station.append([station['longitude'], station['latitude'], ])
@@ -32,7 +32,7 @@ HL_station = np.array(HL_station).T
 ax.scatter(HL_station[0], HL_station[1], label='HL 2017 station',
            transform=ccrs.Geodetic(), color='#b71c1c', edgecolors='k', marker='v', linewidth=0.5, s=60)
 
-geom = read_geom('HL2018.HYP')
+geom = read_hyp('HL2018.HYP')
 HL_station = []
 for k, station in geom.items():
     if station['latitude'] > 23.65:

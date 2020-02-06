@@ -6,7 +6,7 @@ from tqdm import tqdm
 from multiprocessing import cpu_count
 import tensorflow as tf
 
-from seisnn.io import read_event_list, write_training_dataset, read_geom
+from seisnn.io import read_event_list, write_training_dataset, read_hyp
 from seisnn.pick import get_pick_dict
 from seisnn.utils import get_config
 
@@ -21,7 +21,7 @@ ap.add_argument('-p', '--pickset', required=True, help='output pickset name', ty
 args = ap.parse_args()
 config = get_config()
 
-geom = read_geom(args.geometry)
+geom = read_hyp(args.geometry)
 events = read_event_list(args.catalog)
 pick_dict = get_pick_dict(events)
 pick_dict_keys = pick_dict.keys()

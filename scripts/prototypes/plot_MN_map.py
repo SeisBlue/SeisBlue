@@ -6,7 +6,7 @@ import cartopy.crs as ccrs
 import cartopy.io.img_tiles as cimgt
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
-from seisnn.io import read_geom, read_event_list
+from seisnn.io import read_hyp, read_event_list
 from seisnn.utils import get_config
 
 W, E, S, N = 120.1, 120.85, 22.75, 23.25
@@ -24,7 +24,7 @@ MN_eq = np.array(MN_eq).T
 ax.scatter(MN_eq[0], MN_eq[1], label='Earthquake',
            transform=ccrs.Geodetic(), color='#555555', edgecolors='k', linewidth=0.3, marker='o', s=10)
 
-geom = read_geom('MN2016.HYP')
+geom = read_hyp('MN2016.HYP')
 MN_station = []
 for k, station in geom.items():
     MN_station.append([station['longitude'], station['latitude'], ])

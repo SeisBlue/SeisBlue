@@ -1,6 +1,7 @@
 import os
 import pickle
 import shutil
+from lxml import etree
 from functools import partial
 from multiprocessing import cpu_count
 import tensorflow as tf
@@ -164,7 +165,7 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
     t += trace_length
 
 
-def read_geom(hyp):
+def read_hyp(hyp):
     config = get_config()
     hyp_file = os.path.join(config['GEOM_ROOT'], hyp)
     geom = {}
@@ -210,3 +211,21 @@ def read_geom(hyp):
     return geom
 
 
+def read_kml(kml):
+    config = get_config()
+    kml_file = os.path.join(config['GEOM_ROOT'], kml)
+
+    parser = etree.XMLParser()
+    root = etree.parse(kml_file, parser).getroot()
+    geom = {}
+    for Placemark in root.findall('.//Placemark', root.nsmap):
+        sta = Placemark.find('.//name', Placemark.nsmap).text
+        coord = Placemark.find('.//coordinates', Placemark.nsmap).text
+        coord = coord.split(",")
+        location = {'latitude': coord[1],
+                    'longitude': coord[0],
+                    'elevation': coord[2]}
+        geom[sta] = location
+
+    print(f'read {len(geom)} stations from {kml}')
+    return geom
