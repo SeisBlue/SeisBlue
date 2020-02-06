@@ -211,7 +211,35 @@ def read_hyp(hyp):
     return geom
 
 
-def read_kml(kml):
+def write_hyp_station(geom, save_file):
+    config = get_config()
+    hyp = []
+    for sta, loc in geom.items():
+        lat = int(loc['latitude'])
+        lat_min = (loc['latitude'] - lat) * 60
+
+        NS = 'N'
+        if lat < 0:
+            NS = 'S'
+
+        lon = int(loc['longitude'])
+        lon_min = (loc['longitude'] - lon) * 60
+
+        EW = 'E'
+        if lat < 0:
+            EW = 'W'
+
+        elev = int(loc['elevation'])
+
+        hyp.append(f' {sta: >5}{lat: >2d}{lat_min:>5.2f}{NS}{lon: >3d}{lon_min:>5.2f}{EW}{elev: >4d}\n')
+    hyp.sort()
+
+    output = os.path.join(config['GEOM_ROOT'], save_file)
+    with open(output, 'w') as f:
+        f.writelines(hyp)
+
+
+def read_kml_placemark(kml):
     config = get_config()
     kml_file = os.path.join(config['GEOM_ROOT'], kml)
 
@@ -219,12 +247,12 @@ def read_kml(kml):
     root = etree.parse(kml_file, parser).getroot()
     geom = {}
     for Placemark in root.findall('.//Placemark', root.nsmap):
-        sta = Placemark.find('.//name', Placemark.nsmap).text
-        coord = Placemark.find('.//coordinates', Placemark.nsmap).text
+        sta = Placemark.find('.//name', root.nsmap).text
+        coord = Placemark.find('.//coordinates', root.nsmap).text
         coord = coord.split(",")
-        location = {'latitude': coord[1],
-                    'longitude': coord[0],
-                    'elevation': coord[2]}
+        location = {'latitude': float(coord[1]),
+                    'longitude': float(coord[0]),
+                    'elevation': float(coord[2])}
         geom[sta] = location
 
     print(f'read {len(geom)} stations from {kml}')
