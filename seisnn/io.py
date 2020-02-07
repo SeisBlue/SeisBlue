@@ -187,15 +187,13 @@ def read_hyp(hyp):
                 elev = float(line[23:])
                 sta = line[1:6].strip()
 
+                NS = 1
                 if lat[-1] == 'S':
                     NS = -1
-                else:
-                    NS = 1
 
+                EW = 1
                 if lon[-1] == 'W':
                     EW = -1
-                else:
-                    EW = 1
 
                 lat = (int(lat[0:2]) + float(lat[2:-1]) / 60) * NS
                 lat = Latitude(lat)
