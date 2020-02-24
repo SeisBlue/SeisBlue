@@ -1,9 +1,9 @@
-FROM tensorflow/tensorflow:2.1.0-gpu-py3-jupyter
+FROM tensorflow/tensorflow:2.1.0-gpu-jupyter
 
 RUN apt-mark hold libcudnn7
 
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install sudo openssh-server vim htop screen reptyr git sqlite3 ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y
+RUN apt-get install sudo openssh-server vim htop screen reptyr git ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y
 
 # Add all user into sudoers
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
