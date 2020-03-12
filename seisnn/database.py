@@ -5,9 +5,6 @@ from sqlalchemy.orm import sessionmaker
 
 from seisnn.utils import get_config
 
-config = get_config()
-db_path = os.path.join(config['DATABASE_ROOT'], 'test.db')
-
 Base = declarative_base()
 
 
@@ -38,26 +35,29 @@ class Picks(Base):
     snr = Column(Float)
     err = Column(Float)
 
-    def __init__(self, sta, pick):
+    def __init__(self, sta, pick, name):
         self.time = pick.time.datetime
         self.station = sta
         self.phase = pick.phase_hint
-        self.name = 'manual'
+        self.name = name
 
     def add_db(self, session):
         session.add(self)
 
 
-engine = create_engine(f'sqlite:///{db_path}', echo=True)
-Base.metadata.create_all(bind=engine)
+class Client:
+    def __init__(self, database, echo=False):
+        config = get_config()
+        db_path = os.path.join(config['DATABASE_ROOT'], f'{database}.db')
+        self.engine = create_engine(f'sqlite:///{db_path}', echo=echo)
+        Base.metadata.create_all(bind=self.engine)
+        self.session = sessionmaker(bind=self.engine)
 
-
-def db_session(func):
-    def wrapper(*args):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+    def add_geom(self, geom):
+        session = self.session()
         try:
-            func(*args, session)
+            for sta, loc in geom.items():
+                Geometry(sta, loc).add_db(session)
             session.commit()
         except:
             session.rollback()
@@ -65,16 +65,15 @@ def db_session(func):
         finally:
             session.close()
 
-    return wrapper
-
-
-@db_session
-def add_geom(geom, session):
-    for sta, loc in geom.items():
-        Geometry(sta, loc).add_db(session)
-
-@db_session
-def add_picks(pick_dict, session):
-    for sta, picks in pick_dict.items():
-        for pick in picks:
-            Picks(sta, pick).add_db(session)
+    def add_picks(self, pick_dict, name):
+        session = self.session()
+        try:
+            for sta, picks in pick_dict.items():
+                for pick in picks:
+                    Picks(sta, pick, name).add_db(session)
+            session.commit()
+        except:
+            session.rollback()
+            raise
+        finally:
+            session.close()
