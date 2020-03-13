@@ -1,0 +1,6 @@
+seisnn.pick.get\_pdf
+====================
+
+.. currentmodule:: seisnn.pick
+
+.. autofunction:: get_pdf

@@ -1,0 +1,6 @@
+seisnn.pick.validate\_picks\_nearby
+===================================
+
+.. currentmodule:: seisnn.pick
+
+.. autofunction:: validate_picks_nearby

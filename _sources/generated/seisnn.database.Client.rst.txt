@@ -1,0 +1,24 @@
+seisnn.database.Client
+======================
+
+.. currentmodule:: seisnn.database
+
+.. autoclass:: Client
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Client.__init__
+      ~Client.add_geom
+      ~Client.add_picks
+   
+   
+
+   
+   
+   

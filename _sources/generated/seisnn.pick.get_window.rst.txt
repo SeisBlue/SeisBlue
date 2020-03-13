@@ -1,0 +1,6 @@
+seisnn.pick.get\_window
+=======================
+
+.. currentmodule:: seisnn.pick
+
+.. autofunction:: get_window
