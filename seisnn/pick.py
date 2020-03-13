@@ -1,3 +1,20 @@
+"""
+Pick
+=============
+
+.. autosummary::
+    :toctree: generated/
+
+    get_pick_dict
+    get_window
+    get_pdf
+    get_picks_from_pdf
+    get_picks_from_dataset
+    search_pick
+    validate_picks_nearby
+    get_time_residual
+
+"""
 from collections import OrderedDict
 
 import numpy as np
