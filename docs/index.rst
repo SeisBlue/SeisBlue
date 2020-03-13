@@ -24,6 +24,7 @@ API documentation
 .. toctree::
     :maxdepth: 1
 
+    pick
     example_proto
     database
 
