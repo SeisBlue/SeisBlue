@@ -3,19 +3,13 @@ version: 2
 jobs:
   docs-build:
     docker:
-      - image: tensorflow/tensorflow:2.1.0-gpu-py3-jupyter
+      - image: jimmy60504/tf_ssh:latest
     steps:
       - checkout
       - run:
-          name: Install linux dependencies
-          command: |
-            apt-mark hold libcudnn7
-            apt-get update && apt-get upgrade -y
-            apt-get install libproj-dev proj-data proj-bin libgeos-dev -y
-      - run:
           name: Install python dependencies
           command: |
-            pip uninstall -y enum34
+            python -m pip install --upgrade pip
             pip install -r docs/requirements.txt
       - run:
           name: Build docs
