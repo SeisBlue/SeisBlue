@@ -1,3 +1,15 @@
+"""
+Database
+=============
+
+.. autosummary::
+    :toctree: generated/
+
+    Geometry
+    Picks
+    Client
+
+"""
 import os
 from sqlalchemy import create_engine, Column, Integer, BigInteger, ForeignKey, String, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
@@ -9,6 +21,7 @@ Base = declarative_base()
 
 
 class Geometry(Base):
+    """Geometry table for sql database."""
     __tablename__ = 'geometry'
     station = Column(String, primary_key=True)
     latitude = Column(Float, nullable=False)
@@ -26,6 +39,7 @@ class Geometry(Base):
 
 
 class Picks(Base):
+    """Picks table for sql database."""
     __tablename__ = 'picks'
     id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     time = Column(DateTime, nullable=False)
@@ -35,17 +49,18 @@ class Picks(Base):
     snr = Column(Float)
     err = Column(Float)
 
-    def __init__(self, sta, pick, name):
+    def __init__(self, sta, pick, pickset):
         self.time = pick.time.datetime
         self.station = sta
         self.phase = pick.phase_hint
-        self.name = name
+        self.pickset = pickset
 
     def add_db(self, session):
         session.add(self)
 
 
 class Client:
+    """A client for manipulate sql database"""
     def __init__(self, database, echo=False):
         config = get_config()
         db_path = os.path.join(config['DATABASE_ROOT'], f'{database}.db')
@@ -65,12 +80,13 @@ class Client:
         finally:
             session.close()
 
-    def add_picks(self, pick_dict, name):
+    def add_picks(self, pick_dict, pickset):
         session = self.session()
         try:
             for sta, picks in pick_dict.items():
                 for pick in picks:
-                    Picks(sta, pick, name).add_db(session)
+
+                    Picks(sta, pick, pickset).add_db(session)
             session.commit()
         except:
             session.rollback()

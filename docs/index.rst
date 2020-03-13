@@ -25,6 +25,7 @@ API documentation
     :maxdepth: 1
 
     example_proto
+    database
 
 
 Indices and tables
