@@ -18,6 +18,8 @@ SeisNN
 
 """
 
+__version__ = '0.3.0dev'
+
 from seisnn import model
 from seisnn import core
 from seisnn import database
