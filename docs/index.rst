@@ -22,11 +22,9 @@ Getting started
 API documentation
 -----------------
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
-    pick
-    example_proto
-    database
+    seisnn
 
 
 Indices and tables

@@ -1,3 +1,14 @@
+"""
+Logger
+=============
+
+.. autosummary::
+    :toctree: generated/
+
+    save_loss
+
+"""
+
 import os
 import numpy as np
 from seisnn.utils import make_dirs, get_config

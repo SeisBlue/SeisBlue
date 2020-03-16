@@ -1,3 +1,14 @@
+"""
+Model settings
+=============
+
+.. autosummary::
+    :toctree: generated/
+
+    train_step
+
+"""
+
 import tensorflow as tf
 from seisnn.model.unet import Nest_Net
 

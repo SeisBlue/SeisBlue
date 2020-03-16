@@ -5,11 +5,11 @@ Example Proto
 .. autosummary::
     :toctree: generated/
 
-    stream_to_feature
+    batch_iterator
+    eval_eager_tensor
     feature_to_example
     sequence_example_parser
-    eval_eager_tensor
-    batch_iterator
+    stream_to_feature
 
 """
 
@@ -58,10 +58,6 @@ def stream_to_feature(stream, pickset):
         'station': trace.stats.station,
         'npts': trace.stats.npts,
         'delta': trace.stats.delta,
-
-        'latitude': stream.location['latitude'],
-        'longitude': stream.location['longitude'],
-        'elevation': stream.location['elevation'],
     }
 
     channel = []
@@ -110,10 +106,6 @@ def feature_to_example(stream_feature):
         'npts': _int64_feature(stream_feature['npts']),
         'delta': _float_feature(stream_feature['delta']),
 
-        'latitude': _float_feature(stream_feature['latitude']),
-        'longitude': _float_feature(stream_feature['longitude']),
-        'elevation': _float_feature(stream_feature['elevation']),
-
         'trace': _bytes_feature(stream_feature['trace'].astype(dtype=np.float32).tostring()),
         'pdf': _bytes_feature(stream_feature['pdf'].astype(dtype=np.float32).tostring()),
     }
@@ -145,10 +137,6 @@ def sequence_example_parser(record):
         "npts": tf.io.FixedLenFeature((), tf.int64, default_value=tf.zeros([], dtype=tf.int64)),
         "delta": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
 
-        "latitude": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
-        "longitude": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
-        "elevation": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
-
         "trace": tf.io.FixedLenFeature((), tf.string, default_value=""),
         "pdf": tf.io.FixedLenFeature((), tf.string, default_value=""),
     }
@@ -173,9 +161,6 @@ def sequence_example_parser(record):
         'npts': parsed_context['npts'],
 
         'station': parsed_context['station'],
-        'latitude': parsed_context['latitude'],
-        'longitude': parsed_context['longitude'],
-        'elevation': parsed_context['elevation'],
 
         "pick_time": tf.RaggedTensor.from_sparse(parsed_sequence['pick_time']),
         "pick_phase": tf.RaggedTensor.from_sparse(parsed_sequence['pick_phase']),
@@ -202,9 +187,6 @@ def eval_eager_tensor(parsed_example):
         'npts': parsed_example['npts'].numpy(),
 
         'station': parsed_example['station'].numpy(),
-        'latitude': parsed_example['latitude'].numpy(),
-        'longitude': parsed_example['longitude'].numpy(),
-        'elevation': parsed_example['elevation'].numpy(),
 
         "pick_time": parsed_example['pick_time'],
         "pick_phase": parsed_example['pick_phase'],
@@ -238,9 +220,6 @@ def batch_iterator(batch):
             'npts': batch['npts'][index],
 
             'station': batch['station'][index],
-            'latitude': batch['latitude'][index],
-            'longitude': batch['longitude'][index],
-            'elevation': batch['elevation'][index],
 
             "pick_time": batch['pick_time'][index, :],
             "pick_phase": batch['pick_phase'][index, :],

@@ -1,3 +1,18 @@
+"""
+Data processing flow
+=============
+
+.. autosummary::
+    :toctree: generated/
+
+    stream_preprocessing
+    signal_preprocessing
+    get_exist_picks
+    get_stream_geom
+    trim_trace
+
+"""
+
 from seisnn.pick import search_pick, get_pdf
 
 

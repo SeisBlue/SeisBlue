@@ -1,3 +1,15 @@
+"""
+Core
+=============
+
+.. autosummary::
+    :toctree: generated/
+
+    Feature
+    parallel_to_tfrecord
+
+"""
+
 import tensorflow as tf
 
 from seisnn.plot import plot_dataset
