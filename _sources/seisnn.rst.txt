@@ -1,0 +1,4 @@
+seisnn
+====================
+
+.. automodule:: seisnn
