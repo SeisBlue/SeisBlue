@@ -13,8 +13,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.database.Geometry" href="generated/seisnn.database.Geometry.html" />
-    <link rel="prev" title="seisnn.core.parallel_to_tfrecord" href="generated/seisnn.core.parallel_to_tfrecord.html" />
+    <link rel="next" title="seisnn.example_proto" href="seisnn.example_proto.html" />
+    <link rel="prev" title="seisnn.core" href="seisnn.core.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,6 +56,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">Scripts</a></li>
+</ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../seisnn.html">seisnn</a></li>
 </ul>
@@ -84,11 +87,11 @@
               
                 
   <li>
-    <a href="generated/seisnn.core.parallel_to_tfrecord.html" title="Previous Chapter: seisnn.core.parallel_to_tfrecord"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.core.p...</span>
+    <a href="seisnn.core.html" title="Previous Chapter: seisnn.core"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.core</span>
     </a>
   </li>
   <li>
-    <a href="generated/seisnn.database.Geometry.html" title="Next Chapter: seisnn.database.Geometry"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.databa... &raquo;</span>
+    <a href="seisnn.example_proto.html" title="Next Chapter: seisnn.example_proto"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.example_proto &raquo;</span>
     </a>
   </li>
               
@@ -126,23 +129,6 @@
 <span id="seisnn-database"></span><h1>seisnn.database<a class="headerlink" href="#module-seisnn.database" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="database">
 <h2>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.database.Geometry.html#seisnn.database.Geometry" title="seisnn.database.Geometry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Geometry</span></code></a>(sta, loc)</p></td>
-<td><p>Geometry table for sql database.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.database.Picks.html#seisnn.database.Picks" title="seisnn.database.Picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Picks</span></code></a>(sta, pick, pickset)</p></td>
-<td><p>Picks table for sql database.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.database.Client.html#seisnn.database.Client" title="seisnn.database.Client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Client</span></code></a>(database[, echo])</p></td>
-<td><p>A client for manipulate sql database</p></td>
-</tr>
-</tbody>
-</table>
 <p class="rubric">Classes</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -150,13 +136,13 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.database.Client.html#seisnn.database.Client" title="seisnn.database.Client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Client</span></code></a>(database[, echo])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Client</span></code>(database[, echo])</p></td>
 <td><p>A client for manipulate sql database</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.database.Geometry.html#seisnn.database.Geometry" title="seisnn.database.Geometry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Geometry</span></code></a>(sta, loc)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Geometry</span></code>(sta, loc)</p></td>
 <td><p>Geometry table for sql database.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.database.Picks.html#seisnn.database.Picks" title="seisnn.database.Picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Picks</span></code></a>(sta, pick, pickset)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Picks</span></code>(sta, pick, pickset)</p></td>
 <td><p>Picks table for sql database.</p></td>
 </tr>
 </tbody>

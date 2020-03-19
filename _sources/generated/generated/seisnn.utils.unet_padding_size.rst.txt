@@ -1,6 +1,0 @@
-seisnn.utils.unet\_padding\_size
-================================
-
-.. currentmodule:: seisnn.utils
-
-.. autofunction:: unet_padding_size

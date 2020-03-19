@@ -1,6 +1,0 @@
-seisnn.io.write\_tfrecord
-=========================
-
-.. currentmodule:: seisnn.io
-
-.. autofunction:: write_tfrecord

@@ -19,10 +19,19 @@ Getting started
     install
     tutorial
 
+
+Scripts
+---------------
+.. toctree::
+    :maxdepth: 1
+
+    scripts
+
+
 API documentation
 -----------------
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     seisnn
 

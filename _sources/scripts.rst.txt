@@ -1,1 +1,14 @@
-.. automodule:: scripts
+Scripts
+^^^^^^^^^
+
+Preprocessing
+--------------
+
+Visualization
+--------------
+
+Analysis
+--------------
+
+Training
+--------------

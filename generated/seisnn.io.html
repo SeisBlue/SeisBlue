@@ -13,8 +13,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.io.get_event" href="generated/seisnn.io.get_event.html" />
-    <link rel="prev" title="seisnn.flow.trim_trace" href="generated/seisnn.flow.trim_trace.html" />
+    <link rel="next" title="seisnn.logger" href="seisnn.logger.html" />
+    <link rel="prev" title="seisnn.flow" href="seisnn.flow.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,6 +56,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">Scripts</a></li>
+</ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../seisnn.html">seisnn</a></li>
 </ul>
@@ -84,11 +87,11 @@
               
                 
   <li>
-    <a href="generated/seisnn.flow.trim_trace.html" title="Previous Chapter: seisnn.flow.trim_trace"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.flow.t...</span>
+    <a href="seisnn.flow.html" title="Previous Chapter: seisnn.flow"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.flow</span>
     </a>
   </li>
   <li>
-    <a href="generated/seisnn.io.get_event.html" title="Next Chapter: seisnn.io.get_event"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.io.get_event &raquo;</span>
+    <a href="seisnn.logger.html" title="Next Chapter: seisnn.logger"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.logger &raquo;</span>
     </a>
   </li>
               
@@ -126,50 +129,6 @@
 <span id="seisnn-io"></span><h1>seisnn.io<a class="headerlink" href="#module-seisnn.io" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="input-output">
 <h2>Input / Output<a class="headerlink" href="#input-output" title="Permalink to this headline">¶</a></h2>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.get_event.html#seisnn.io.get_event" title="seisnn.io.get_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code></a>(filename)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.read_dataset.html#seisnn.io.read_dataset" title="seisnn.io.read_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_dataset</span></code></a>(dataset_dir)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.read_event_list.html#seisnn.io.read_event_list" title="seisnn.io.read_event_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_event_list</span></code></a>(sfile)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.read_hyp.html#seisnn.io.read_hyp" title="seisnn.io.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.read_kml_placemark.html#seisnn.io.read_kml_placemark" title="seisnn.io.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.read_pkl.html#seisnn.io.read_pkl" title="seisnn.io.read_pkl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_pkl</span></code></a>(pkl)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.read_sds.html#seisnn.io.read_sds" title="seisnn.io.read_sds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sds</span></code></a>(window)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.write_hyp_station.html#seisnn.io.write_hyp_station" title="seisnn.io.write_hyp_station"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code></a>(geom, save_file)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.write_pkl.html#seisnn.io.write_pkl" title="seisnn.io.write_pkl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_pkl</span></code></a>(obj, file)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.write_station_dataset.html#seisnn.io.write_station_dataset" title="seisnn.io.write_station_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_station_dataset</span></code></a>(dataset_output_dir, …)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.write_tfrecord.html#seisnn.io.write_tfrecord" title="seisnn.io.write_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code></a>(example_list, save_file)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.write_training_dataset.html#seisnn.io.write_training_dataset" title="seisnn.io.write_training_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_training_dataset</span></code></a>(pick_list, geom, …)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
 <p class="rubric">Functions</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -177,40 +136,40 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.get_event.html#seisnn.io.get_event" title="seisnn.io.get_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code></a>(filename)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code>(filename)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.read_dataset.html#seisnn.io.read_dataset" title="seisnn.io.read_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_dataset</span></code></a>(dataset_dir)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_dataset</span></code>(dataset_dir)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.read_event_list.html#seisnn.io.read_event_list" title="seisnn.io.read_event_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_event_list</span></code></a>(sfile)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_event_list</span></code>(sfile)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.read_hyp.html#seisnn.io.read_hyp" title="seisnn.io.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code>(hyp)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.read_kml_placemark.html#seisnn.io.read_kml_placemark" title="seisnn.io.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code>(kml)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.read_pkl.html#seisnn.io.read_pkl" title="seisnn.io.read_pkl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_pkl</span></code></a>(pkl)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_pkl</span></code>(pkl)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.read_sds.html#seisnn.io.read_sds" title="seisnn.io.read_sds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sds</span></code></a>(window)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sds</span></code>(window)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.write_hyp_station.html#seisnn.io.write_hyp_station" title="seisnn.io.write_hyp_station"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code></a>(geom, save_file)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code>(geom, save_file)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.write_pkl.html#seisnn.io.write_pkl" title="seisnn.io.write_pkl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_pkl</span></code></a>(obj, file)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_pkl</span></code>(obj, file)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.write_station_dataset.html#seisnn.io.write_station_dataset" title="seisnn.io.write_station_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_station_dataset</span></code></a>(dataset_output_dir, …)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_station_dataset</span></code>(dataset_output_dir, …)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/seisnn.io.write_tfrecord.html#seisnn.io.write_tfrecord" title="seisnn.io.write_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code></a>(example_list, save_file)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code>(example_list, save_file)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/seisnn.io.write_training_dataset.html#seisnn.io.write_training_dataset" title="seisnn.io.write_training_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_training_dataset</span></code></a>(pick_list, geom, …)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_training_dataset</span></code>(pick_list, geom, …)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>

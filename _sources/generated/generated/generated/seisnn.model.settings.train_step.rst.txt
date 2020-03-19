@@ -1,6 +1,0 @@
-seisnn.model.settings.train\_step
-=================================
-
-.. currentmodule:: seisnn.model
-
-.. autoattribute:: settings.train_step

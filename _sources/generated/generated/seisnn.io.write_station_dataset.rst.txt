@@ -1,6 +1,0 @@
-seisnn.io.write\_station\_dataset
-=================================
-
-.. currentmodule:: seisnn.io
-
-.. autofunction:: write_station_dataset

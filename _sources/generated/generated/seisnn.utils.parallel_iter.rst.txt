@@ -1,6 +1,0 @@
-seisnn.utils.parallel\_iter
-===========================
-
-.. currentmodule:: seisnn.utils
-
-.. autofunction:: parallel_iter
