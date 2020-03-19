@@ -2,6 +2,9 @@
 Input / Output
 =============
 
+.. autosummary::
+   :toctree: io
+
 """
 
 import os

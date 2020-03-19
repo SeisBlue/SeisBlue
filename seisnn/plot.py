@@ -2,6 +2,9 @@
 Plot
 =============
 
+.. autosummary::
+   :toctree: plot
+
 """
 
 import os

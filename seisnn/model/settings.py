@@ -2,6 +2,9 @@
 Model settings
 =============
 
+.. autosummary::
+   :toctree: settings
+
 """
 
 import tensorflow as tf

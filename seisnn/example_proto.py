@@ -2,6 +2,9 @@
 Example Proto
 =============
 
+.. autosummary::
+   :toctree: example_proto
+
 """
 
 import numpy as np

@@ -1,9 +1,3 @@
-"""
-Utilities
-=============
-
-"""
-
 import os
 from bisect import bisect_left, bisect_right
 from multiprocessing import Pool, cpu_count

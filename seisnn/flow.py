@@ -2,6 +2,9 @@
 Data processing flow
 ====================
 
+.. autosummary::
+   :toctree: flow
+
 """
 
 from seisnn.pick import search_pick, get_pdf

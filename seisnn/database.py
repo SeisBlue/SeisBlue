@@ -2,6 +2,9 @@
 Database
 =============
 
+.. autosummary::
+   :toctree: database
+
 """
 
 import os

@@ -2,6 +2,9 @@
 Pick
 =============
 
+.. autosummary::
+   :toctree: pick
+
 """
 
 from collections import OrderedDict

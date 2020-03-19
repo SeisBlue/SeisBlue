@@ -2,6 +2,9 @@
 Core
 =============
 
+.. autosummary::
+   :toctree: core
+
 """
 
 import tensorflow as tf

@@ -2,6 +2,8 @@
 Unet
 =============
 
+.. autosummary::
+   :toctree: unet
 
 """
 

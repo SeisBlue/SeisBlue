@@ -1,7 +1,7 @@
 .. SeisNN documentation master file, created by
-   sphinx-quickstart on Tue Jan 14 09:07:01 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+sphinx-quickstart on Tue Jan 14 09:07:01 2020.
+You can adapt this file completely to your liking, but it should at least
+contain the root `toctree` directive.
 
 SeisNN
 ======
@@ -30,8 +30,8 @@ Scripts
 
 API documentation
 -----------------
-.. toctree::
-    :maxdepth: 1
+.. autosummary::
+    :toctree: generate
 
     seisnn
 

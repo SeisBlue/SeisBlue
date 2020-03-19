@@ -2,6 +2,9 @@
 Logger
 =============
 
+.. autosummary::
+   :toctree: logger
+
 """
 
 import os
