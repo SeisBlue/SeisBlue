@@ -33,7 +33,7 @@ API documentation
 .. toctree::
     :maxdepth: 1
 
-    seisnn
+    source/modules
 
 
 Indices and tables

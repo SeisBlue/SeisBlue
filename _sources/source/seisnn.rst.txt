@@ -1,0 +1,101 @@
+seisnn package
+==============
+
+Subpackages
+-----------
+
+.. toctree::
+
+   seisnn.model
+
+Submodules
+----------
+
+seisnn.core module
+------------------
+
+.. automodule:: seisnn.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.database module
+----------------------
+
+.. automodule:: seisnn.database
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.example\_proto module
+----------------------------
+
+.. automodule:: seisnn.example_proto
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.flow module
+------------------
+
+.. automodule:: seisnn.flow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.io module
+----------------
+
+.. automodule:: seisnn.io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.logger module
+--------------------
+
+.. automodule:: seisnn.logger
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.pick module
+------------------
+
+.. automodule:: seisnn.pick
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.plot module
+------------------
+
+.. automodule:: seisnn.plot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.qc module
+----------------
+
+.. automodule:: seisnn.qc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+seisnn.utils module
+-------------------
+
+.. automodule:: seisnn.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: seisnn
+   :members:
+   :undoc-members:
+   :show-inheritance:
