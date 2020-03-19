@@ -33,7 +33,7 @@ Documentation
 .. toctree::
     :maxdepth: 1
 
-    package/index
+    reference
 
 
 Indices and tables

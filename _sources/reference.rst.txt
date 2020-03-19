@@ -2,9 +2,7 @@ SeisNN Library Reference
 ========================
 
 .. autosummary::
-   :template: module.rst
    :toctree: autogen
-   :nosignatures:
 
       seisnn.model
       seisnn.core
