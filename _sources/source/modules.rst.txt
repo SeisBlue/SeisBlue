@@ -1,7 +1,0 @@
-seisnn
-======
-
-.. toctree::
-   :maxdepth: 4
-
-   seisnn
