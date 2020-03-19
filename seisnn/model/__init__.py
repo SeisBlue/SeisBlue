@@ -3,7 +3,7 @@ Model
 ======
 
 .. autosummary::
-    :toctree: generated/
+    :toctree: model/
 
     settings
     unet

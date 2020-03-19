@@ -2,13 +2,6 @@
 Database
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    Geometry
-    Picks
-    Client
-
 """
 
 import os

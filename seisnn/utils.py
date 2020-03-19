@@ -2,18 +2,6 @@
 Utilities
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    batch
-    binary_search
-    get_config
-    get_dir_list
-    make_dirs
-    parallel
-    parallel_iter
-    unet_padding_size
-
 """
 
 import os
@@ -26,7 +14,7 @@ from tqdm import tqdm
 
 
 def get_config():
-    config_file = os.path.join('/SeisNN', 'config.yaml')
+    config_file = os.path.abspath('../config.yaml')
     with open(config_file, 'r') as file:
         config = yaml.full_load(file)
     return config

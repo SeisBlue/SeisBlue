@@ -2,15 +2,6 @@
 Example Proto
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    batch_iterator
-    eval_eager_tensor
-    feature_to_example
-    sequence_example_parser
-    stream_to_feature
-
 """
 
 import numpy as np

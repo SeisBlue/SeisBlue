@@ -2,12 +2,6 @@
 Quality control
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    precision_recall_f1_score
-    signal_to_noise_ratio
-
 """
 
 import numpy as np

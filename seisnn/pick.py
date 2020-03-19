@@ -2,18 +2,6 @@
 Pick
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    get_pdf
-    get_pick_dict
-    get_picks_from_dataset
-    get_picks_from_pdf
-    get_time_residual
-    get_window
-    search_pick
-    validate_picks_nearby
-
 """
 
 from collections import OrderedDict

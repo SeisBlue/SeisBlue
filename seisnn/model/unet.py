@@ -2,12 +2,6 @@
 Unet
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    Nest_Net
-    standard_unit
-    U_Net
 
 """
 

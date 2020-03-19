@@ -2,11 +2,6 @@
 Logger
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    save_loss
-
 """
 
 import os

@@ -2,12 +2,6 @@
 Core
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    Feature
-    parallel_to_tfrecord
-
 """
 
 import tensorflow as tf

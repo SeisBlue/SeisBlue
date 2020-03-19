@@ -2,11 +2,6 @@
 Model settings
 =============
 
-.. autosummary::
-    :toctree: generated/
-
-    train_step
-
 """
 
 import tensorflow as tf
@@ -30,3 +25,6 @@ def train_step(train_trace, train_pdf, val_trace, val_pdf):
         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
         return pred_loss, val_loss
+
+if __name__ == "__main__":
+    pass
