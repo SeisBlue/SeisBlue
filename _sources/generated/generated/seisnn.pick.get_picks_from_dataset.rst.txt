@@ -1,0 +1,6 @@
+seisnn.pick.get\_picks\_from\_dataset
+=====================================
+
+.. currentmodule:: seisnn.pick
+
+.. autofunction:: get_picks_from_dataset

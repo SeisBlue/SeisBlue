@@ -1,0 +1,6 @@
+seisnn.flow.trim\_trace
+=======================
+
+.. currentmodule:: seisnn.flow
+
+.. autofunction:: trim_trace

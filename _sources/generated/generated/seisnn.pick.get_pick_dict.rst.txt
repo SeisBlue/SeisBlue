@@ -1,0 +1,6 @@
+seisnn.pick.get\_pick\_dict
+===========================
+
+.. currentmodule:: seisnn.pick
+
+.. autofunction:: get_pick_dict

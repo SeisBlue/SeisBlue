@@ -1,0 +1,33 @@
+seisnn.database.Geometry
+========================
+
+.. currentmodule:: seisnn.database
+
+.. autoclass:: Geometry
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Geometry.__init__
+      ~Geometry.add_db
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Geometry.elevation
+      ~Geometry.latitude
+      ~Geometry.longitude
+      ~Geometry.metadata
+      ~Geometry.station
+   
+   

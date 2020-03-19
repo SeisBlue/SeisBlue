@@ -1,0 +1,6 @@
+seisnn.pick.search\_pick
+========================
+
+.. currentmodule:: seisnn.pick
+
+.. autofunction:: search_pick

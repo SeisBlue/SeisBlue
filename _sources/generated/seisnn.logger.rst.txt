@@ -1,0 +1,22 @@
+seisnn.logger
+=============
+
+.. automodule:: seisnn.logger
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      save_loss
+   
+   
+
+   
+   
+   
+
+   
+   
+   

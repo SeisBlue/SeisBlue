@@ -1,0 +1,6 @@
+seisnn.flow.get\_stream\_geom
+=============================
+
+.. currentmodule:: seisnn.flow
+
+.. autofunction:: get_stream_geom
