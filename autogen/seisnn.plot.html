@@ -13,8 +13,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.qc" href="seisnn.qc.html" />
-    <link rel="prev" title="seisnn.pick" href="seisnn.pick.html" />
+    <link rel="next" title="seisnn.plot.color_palette" href="plot/seisnn.plot.color_palette.html" />
+    <link rel="prev" title="seisnn.pick.validate_picks_nearby" href="pick/seisnn.pick.validate_picks_nearby.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -74,7 +74,10 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.plot</a></li>
+<li><a class="reference internal" href="#">seisnn.plot</a><ul>
+<li><a class="reference internal" href="#plot">Plot</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -84,11 +87,11 @@
               
                 
   <li>
-    <a href="seisnn.pick.html" title="Previous Chapter: seisnn.pick"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.pick</span>
+    <a href="pick/seisnn.pick.validate_picks_nearby.html" title="Previous Chapter: seisnn.pick.validate_picks_nearby"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.pick.v...</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.qc.html" title="Next Chapter: seisnn.qc"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.qc &raquo;</span>
+    <a href="plot/seisnn.plot.color_palette.html" title="Next Chapter: seisnn.plot.color_palette"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.plot.c... &raquo;</span>
     </a>
   </li>
               
@@ -124,6 +127,37 @@
       
   <div class="section" id="module-seisnn.plot">
 <span id="seisnn-plot"></span><h1>seisnn.plot<a class="headerlink" href="#module-seisnn.plot" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="plot">
+<h2>Plot<a class="headerlink" href="#plot" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="plot/seisnn.plot.color_palette.html#seisnn.plot.color_palette" title="seisnn.plot.color_palette"><code class="xref py py-obj docutils literal notranslate"><span class="pre">color_palette</span></code></a>([color, shade])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="plot/seisnn.plot.get_time_array.html#seisnn.plot.get_time_array" title="seisnn.plot.get_time_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_array</span></code></a>(feature)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_confusion_matrix.html#seisnn.plot.plot_confusion_matrix" title="seisnn.plot.plot_confusion_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_confusion_matrix</span></code></a>(true_positive, …)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_dataset.html#seisnn.plot.plot_dataset" title="seisnn.plot.plot_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_dataset</span></code></a>(feature[, snr, enlarge, xlim, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_error_distribution.html#seisnn.plot.plot_error_distribution" title="seisnn.plot.plot_error_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_error_distribution</span></code></a>(time_residuals[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_loss.html#seisnn.plot.plot_loss" title="seisnn.plot.plot_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss</span></code></a>(log_file[, save_dir])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_snr_distribution.html#seisnn.plot.plot_snr_distribution" title="seisnn.plot.plot_snr_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_snr_distribution</span></code></a>(pick_snr[, save_dir])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Functions</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -131,29 +165,30 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">color_palette</span></code>([color, shade])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="plot/seisnn.plot.color_palette.html#seisnn.plot.color_palette" title="seisnn.plot.color_palette"><code class="xref py py-obj docutils literal notranslate"><span class="pre">color_palette</span></code></a>([color, shade])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_array</span></code>(feature)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="plot/seisnn.plot.get_time_array.html#seisnn.plot.get_time_array" title="seisnn.plot.get_time_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_array</span></code></a>(feature)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_confusion_matrix</span></code>(true_positive, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_confusion_matrix.html#seisnn.plot.plot_confusion_matrix" title="seisnn.plot.plot_confusion_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_confusion_matrix</span></code></a>(true_positive, …)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_dataset</span></code>(feature[, snr, enlarge, xlim, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_dataset.html#seisnn.plot.plot_dataset" title="seisnn.plot.plot_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_dataset</span></code></a>(feature[, snr, enlarge, xlim, …])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_error_distribution</span></code>(time_residuals[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_error_distribution.html#seisnn.plot.plot_error_distribution" title="seisnn.plot.plot_error_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_error_distribution</span></code></a>(time_residuals[, …])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss</span></code>(log_file[, save_dir])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_loss.html#seisnn.plot.plot_loss" title="seisnn.plot.plot_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss</span></code></a>(log_file[, save_dir])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_snr_distribution</span></code>(pick_snr[, save_dir])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="plot/seisnn.plot.plot_snr_distribution.html#seisnn.plot.plot_snr_distribution" title="seisnn.plot.plot_snr_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_snr_distribution</span></code></a>(pick_snr[, save_dir])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 
 

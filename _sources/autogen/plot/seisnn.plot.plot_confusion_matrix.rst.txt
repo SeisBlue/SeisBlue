@@ -1,0 +1,6 @@
+seisnn.plot.plot\_confusion\_matrix
+===================================
+
+.. currentmodule:: seisnn.plot
+
+.. autofunction:: plot_confusion_matrix

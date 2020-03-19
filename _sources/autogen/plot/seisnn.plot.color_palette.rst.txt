@@ -1,0 +1,6 @@
+seisnn.plot.color\_palette
+==========================
+
+.. currentmodule:: seisnn.plot
+
+.. autofunction:: color_palette

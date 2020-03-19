@@ -1,0 +1,6 @@
+seisnn.plot.plot\_error\_distribution
+=====================================
+
+.. currentmodule:: seisnn.plot
+
+.. autofunction:: plot_error_distribution

@@ -1,0 +1,6 @@
+seisnn.qc.signal\_to\_noise\_ratio
+==================================
+
+.. currentmodule:: seisnn.qc
+
+.. autofunction:: signal_to_noise_ratio

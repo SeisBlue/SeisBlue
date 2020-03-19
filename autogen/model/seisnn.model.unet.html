@@ -13,8 +13,8 @@
     <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="seisnn.core" href="../seisnn.core.html" />
-    <link rel="prev" title="seisnn.model.settings" href="seisnn.model.settings.html" />
+    <link rel="next" title="seisnn.model.unet.Nest_Net" href="unet/seisnn.model.unet.Nest_Net.html" />
+    <link rel="prev" title="seisnn.model.settings.train_step" href="settings/seisnn.model.settings.train_step.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -74,7 +74,10 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.model.unet</a></li>
+<li><a class="reference internal" href="#">seisnn.model.unet</a><ul>
+<li><a class="reference internal" href="#unet">Unet</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -84,11 +87,11 @@
               
                 
   <li>
-    <a href="seisnn.model.settings.html" title="Previous Chapter: seisnn.model.settings"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model.settings</span>
+    <a href="settings/seisnn.model.settings.train_step.html" title="Previous Chapter: seisnn.model.settings.train_step"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model....</span>
     </a>
   </li>
   <li>
-    <a href="../seisnn.core.html" title="Next Chapter: seisnn.core"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.core &raquo;</span>
+    <a href="unet/seisnn.model.unet.Nest_Net.html" title="Next Chapter: seisnn.model.unet.Nest_Net"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.... &raquo;</span>
     </a>
   </li>
               
@@ -124,6 +127,25 @@
       
   <div class="section" id="module-seisnn.model.unet">
 <span id="seisnn-model-unet"></span><h1>seisnn.model.unet<a class="headerlink" href="#module-seisnn.model.unet" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="unet">
+<h2>Unet<a class="headerlink" href="#unet" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="unet/seisnn.model.unet.Nest_Net.html#seisnn.model.unet.Nest_Net" title="seisnn.model.unet.Nest_Net"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nest_Net</span></code></a>([img_rows, img_cols, color_type, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="unet/seisnn.model.unet.standard_unit.html#seisnn.model.unet.standard_unit" title="seisnn.model.unet.standard_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_unit</span></code></a>(input_tensor, stage, …)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="unet/seisnn.model.unet.U_Net.html#seisnn.model.unet.U_Net" title="seisnn.model.unet.U_Net"><code class="xref py py-obj docutils literal notranslate"><span class="pre">U_Net</span></code></a>(img_rows, img_cols[, color_type, …])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Functions</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -131,17 +153,18 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nest_Net</span></code>([img_rows, img_cols, color_type, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="unet/seisnn.model.unet.Nest_Net.html#seisnn.model.unet.Nest_Net" title="seisnn.model.unet.Nest_Net"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nest_Net</span></code></a>([img_rows, img_cols, color_type, …])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">U_Net</span></code>(img_rows, img_cols[, color_type, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="unet/seisnn.model.unet.U_Net.html#seisnn.model.unet.U_Net" title="seisnn.model.unet.U_Net"><code class="xref py py-obj docutils literal notranslate"><span class="pre">U_Net</span></code></a>(img_rows, img_cols[, color_type, …])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_unit</span></code>(input_tensor, stage, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="unet/seisnn.model.unet.standard_unit.html#seisnn.model.unet.standard_unit" title="seisnn.model.unet.standard_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_unit</span></code></a>(input_tensor, stage, …)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 
 
