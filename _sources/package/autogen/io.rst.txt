@@ -1,0 +1,38 @@
+io
+==
+
+.. automodule:: io
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      OpenWrapper
+      open
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BufferedIOBase
+      IOBase
+      RawIOBase
+      TextIOBase
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      UnsupportedOperation
+   
+   
