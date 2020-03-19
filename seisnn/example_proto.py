@@ -231,3 +231,7 @@ def batch_iterator(batch):
             "phase": batch['phase'][index, :],
         }
         yield parsed_example
+
+
+if __name__ == "__main__":
+    pass

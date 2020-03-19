@@ -22,3 +22,6 @@ def save_loss(loss_buffer, title, save_dir):
     loss_buffer = np.asarray(loss_buffer)
     with open(file_path, 'ab') as f:
         np.savetxt(f, loss_buffer)
+
+if __name__ == "__main__":
+    pass

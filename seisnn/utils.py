@@ -96,3 +96,6 @@ def binary_search(key_list, min_value, max_value):
     left = bisect_left(key_list, min_value)
     right = bisect_right(key_list, max_value)
     return left, right
+
+if __name__ == "__main__":
+    pass

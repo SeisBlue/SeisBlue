@@ -205,3 +205,6 @@ def plot_confusion_matrix(true_positive, pred_count, val_count):
     plt.title(f'Precision = {precision:.3f}, Recall = {recall:.3f}, F1 = {f1:.3f}')
     plt.show()
     sns.set(font_scale=1)
+
+if __name__ == "__main__":
+    pass

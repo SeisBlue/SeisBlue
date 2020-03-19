@@ -277,3 +277,6 @@ def read_kml_placemark(kml):
 
     print(f'read {len(geom)} stations from {kml}')
     return geom
+
+if __name__ == "__main__":
+    pass

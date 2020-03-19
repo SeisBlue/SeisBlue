@@ -52,3 +52,6 @@ def trim_trace(stream, points=3008):
     end_time = start_time + dt * (points - 1)
     stream.trim(start_time, end_time, nearest_sample=True, pad=True, fill_value=0)
     return stream
+
+if __name__ == "__main__":
+    pass

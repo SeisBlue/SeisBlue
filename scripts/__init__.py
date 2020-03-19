@@ -1,6 +1,6 @@
 """
 SeisNN scripts
-======
+==============
 
 Preprocessing
 -----------------

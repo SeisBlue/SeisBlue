@@ -32,3 +32,7 @@ from seisnn import qc
 from seisnn import utils
 
 name = "seisnn"
+
+if __name__ == "__main__":
+    pass
+

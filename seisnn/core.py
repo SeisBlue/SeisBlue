@@ -44,7 +44,6 @@ class Feature:
 
         self.from_example(example)
 
-
     def from_feature(self, feature):
         self.id = feature['id']
         self.station = feature['station']
@@ -67,7 +66,6 @@ class Feature:
         self.pick_time = feature['pick_time']
         self.pick_phase = feature['pick_phase']
         self.pick_set = feature['pick_set']
-
 
     def to_feature(self):
         feature = {
@@ -124,11 +122,16 @@ def parallel_to_tfrecord(batch_list):
     example_list = parallel(par=_to_tfrecord, file_list=batch_list)
     return example_list
 
+
 def _to_tfrecord(batch):
-    example_list=[]
+    example_list = []
     for example in batch:
         feature = Feature(example)
         feature.get_picks('p', 'predict')
         feature = feature.to_feature()
         example_list.append(feature_to_example(feature))
     return example_list
+
+
+if __name__ == "__main__":
+    pass

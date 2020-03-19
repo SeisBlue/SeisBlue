@@ -144,3 +144,6 @@ def validate_picks_nearby(val_pick, pred_pick, delta=0.1):
 def get_time_residual(val_pick, pred_pick):
     residual = UTCDateTime(val_pick['pick_time']) - UTCDateTime(pred_pick['pick_time'])
     return residual
+
+if __name__ == "__main__":
+    pass

@@ -25,3 +25,6 @@ def signal_to_noise_ratio(signal, noise):
     noise_power = np.sum(np.square(noise))
     snr = np.log10(signal_power / noise_power)
     return snr
+
+if __name__ == "__main__":
+    pass
