@@ -1,0 +1,6 @@
+seisnn.model.train\_step
+========================
+
+.. currentmodule:: seisnn
+
+.. autoattribute:: model.train_step

@@ -1,0 +1,6 @@
+seisnn.model.U\_Net
+===================
+
+.. currentmodule:: seisnn.model
+
+.. autofunction:: U_Net

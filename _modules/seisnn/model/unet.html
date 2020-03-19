@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>seisnn.model.unet &#8212; SeisNN  documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          SeisNN</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/database.html">Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/example_proto.html">Example Proto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/flow.html">Data processing flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/io.html">Input / Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/logger.html">Logger</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/pick.html">Pick</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/plot.html">Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/qc.html">Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/utils.html">Utilities</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for seisnn.model.unet</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">Conv2DTranspose</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">MaxPooling2D</span><span class="p">,</span> \
+    <span class="n">concatenate</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.regularizers</span> <span class="kn">import</span> <span class="n">l2</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">U-net, Nest-Net model from: </span>
+<span class="sd">https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="c1">########################################</span>
+<span class="c1"># 2D Standard</span>
+<span class="c1">########################################</span>
+
+<div class="viewcode-block" id="standard_unit"><a class="viewcode-back" href="../../../package/model/seisnn.model.standard_unit.html#seisnn.model.standard_unit">[docs]</a><span class="k">def</span> <span class="nf">standard_unit</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">nb_filter</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">):</span>
+    <span class="n">dropout_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">act</span> <span class="o">=</span> <span class="s2">&quot;relu&quot;</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">act</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;conv&#39;</span> <span class="o">+</span> <span class="n">stage</span> <span class="o">+</span> <span class="s1">&#39;_1&#39;</span><span class="p">,</span>
+               <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">))(</span><span class="n">input_tensor</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;dp&#39;</span> <span class="o">+</span> <span class="n">stage</span> <span class="o">+</span> <span class="s1">&#39;_1&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">act</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;conv&#39;</span> <span class="o">+</span> <span class="n">stage</span> <span class="o">+</span> <span class="s1">&#39;_2&#39;</span><span class="p">,</span>
+               <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;dp&#39;</span> <span class="o">+</span> <span class="n">stage</span> <span class="o">+</span> <span class="s1">&#39;_2&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x</span></div>
+
+
+<span class="c1">########################################</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Standard U-Net [Ronneberger et.al, 2015]</span>
+<span class="sd">Total params: 420,249</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="U_Net"><a class="viewcode-back" href="../../../package/model/seisnn.model.U_Net.html#seisnn.model.U_Net">[docs]</a><span class="k">def</span> <span class="nf">U_Net</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">nb_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+    <span class="c1"># nb_filter = [8, 16, 32, 64, 128]</span>
+    <span class="n">pool_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">kernel_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+
+    <span class="n">img_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;main_input&#39;</span><span class="p">)</span>
+
+    <span class="n">conv1_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">img_input</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">pool1</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pool1&#39;</span><span class="p">)(</span><span class="n">conv1_1</span><span class="p">)</span>
+
+    <span class="n">conv2_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">pool1</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;21&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">pool2</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pool2&#39;</span><span class="p">)(</span><span class="n">conv2_1</span><span class="p">)</span>
+
+    <span class="n">conv3_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">pool2</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;31&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">pool3</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pool3&#39;</span><span class="p">)(</span><span class="n">conv3_1</span><span class="p">)</span>
+
+    <span class="n">conv4_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">pool3</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;41&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">pool4</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pool4&#39;</span><span class="p">)(</span><span class="n">conv4_1</span><span class="p">)</span>
+
+    <span class="n">conv5_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">pool4</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;51&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up4_2</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up42&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv5_1</span><span class="p">)</span>
+    <span class="n">conv4_2</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up4_2</span><span class="p">,</span> <span class="n">conv4_1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge42&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv4_2</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv4_2</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;42&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up3_3</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up33&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv4_2</span><span class="p">)</span>
+    <span class="n">conv3_3</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up3_3</span><span class="p">,</span> <span class="n">conv3_1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge33&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv3_3</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv3_3</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;33&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up2_4</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up24&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv3_3</span><span class="p">)</span>
+    <span class="n">conv2_4</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up2_4</span><span class="p">,</span> <span class="n">conv2_1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge24&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv2_4</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv2_4</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;24&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up1_5</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up15&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv2_4</span><span class="p">)</span>
+    <span class="n">conv1_5</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up1_5</span><span class="p">,</span> <span class="n">conv1_1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge15&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv1_5</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv1_5</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;15&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">unet_output</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">num_class</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
+                         <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="mf">3e-4</span><span class="p">))(</span><span class="n">conv1_5</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">img_input</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">unet_output</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Standard UNet++ [Zhou et.al, 2018]</span>
+<span class="sd">Total params: 496,225</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="Nest_Net"><a class="viewcode-back" href="../../../package/model/seisnn.model.Nest_Net.html#seisnn.model.Nest_Net">[docs]</a><span class="k">def</span> <span class="nf">Nest_Net</span><span class="p">(</span><span class="n">img_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">nb_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">]</span>
+    <span class="n">pool_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">kernel_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+
+    <span class="n">img_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;main_input&#39;</span><span class="p">)</span>
+
+    <span class="n">conv1_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">img_input</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">pool1</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pool1&#39;</span><span class="p">)(</span><span class="n">conv1_1</span><span class="p">)</span>
+
+    <span class="n">conv2_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">pool1</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;21&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">pool2</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pool2&#39;</span><span class="p">)(</span><span class="n">conv2_1</span><span class="p">)</span>
+
+    <span class="n">up1_2</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up12&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv2_1</span><span class="p">)</span>
+    <span class="n">conv1_2</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up1_2</span><span class="p">,</span> <span class="n">conv1_1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge12&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv1_2</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv1_2</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;12&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">conv3_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">pool2</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;31&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">pool3</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pool3&#39;</span><span class="p">)(</span><span class="n">conv3_1</span><span class="p">)</span>
+
+    <span class="n">up2_2</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up22&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv3_1</span><span class="p">)</span>
+    <span class="n">conv2_2</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up2_2</span><span class="p">,</span> <span class="n">conv2_1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge22&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv2_2</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv2_2</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;22&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up1_3</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up13&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv2_2</span><span class="p">)</span>
+    <span class="n">conv1_3</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up1_3</span><span class="p">,</span> <span class="n">conv1_1</span><span class="p">,</span> <span class="n">conv1_2</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge13&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv1_3</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv1_3</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;13&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">conv4_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">pool3</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;41&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+    <span class="n">pool4</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pool4&#39;</span><span class="p">)(</span><span class="n">conv4_1</span><span class="p">)</span>
+
+    <span class="n">up3_2</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up32&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv4_1</span><span class="p">)</span>
+    <span class="n">conv3_2</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up3_2</span><span class="p">,</span> <span class="n">conv3_1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge32&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv3_2</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv3_2</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;32&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up2_3</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up23&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv3_2</span><span class="p">)</span>
+    <span class="n">conv2_3</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up2_3</span><span class="p">,</span> <span class="n">conv2_1</span><span class="p">,</span> <span class="n">conv2_2</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge23&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv2_3</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv2_3</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;23&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up1_4</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up14&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv2_3</span><span class="p">)</span>
+    <span class="n">conv1_4</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up1_4</span><span class="p">,</span> <span class="n">conv1_1</span><span class="p">,</span> <span class="n">conv1_2</span><span class="p">,</span> <span class="n">conv1_3</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge14&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv1_4</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv1_4</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">conv5_1</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">pool4</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;51&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up4_2</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up42&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv5_1</span><span class="p">)</span>
+    <span class="n">conv4_2</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up4_2</span><span class="p">,</span> <span class="n">conv4_1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge42&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv4_2</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv4_2</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;42&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up3_3</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up33&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv4_2</span><span class="p">)</span>
+    <span class="n">conv3_3</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up3_3</span><span class="p">,</span> <span class="n">conv3_1</span><span class="p">,</span> <span class="n">conv3_2</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge33&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv3_3</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv3_3</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;33&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up2_4</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up24&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv3_3</span><span class="p">)</span>
+    <span class="n">conv2_4</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up2_4</span><span class="p">,</span> <span class="n">conv2_1</span><span class="p">,</span> <span class="n">conv2_2</span><span class="p">,</span> <span class="n">conv2_3</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge24&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv2_4</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv2_4</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;24&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">up1_5</span> <span class="o">=</span> <span class="n">Conv2DTranspose</span><span class="p">(</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;up15&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv2_4</span><span class="p">)</span>
+    <span class="n">conv1_5</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">up1_5</span><span class="p">,</span> <span class="n">conv1_1</span><span class="p">,</span> <span class="n">conv1_2</span><span class="p">,</span> <span class="n">conv1_3</span><span class="p">,</span> <span class="n">conv1_4</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;merge15&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">conv1_5</span> <span class="o">=</span> <span class="n">standard_unit</span><span class="p">(</span><span class="n">conv1_5</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;15&#39;</span><span class="p">,</span> <span class="n">nb_filter</span><span class="o">=</span><span class="n">nb_filter</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">)</span>
+
+    <span class="n">nestnet_output</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">num_class</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
+                            <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">))(</span><span class="n">conv1_5</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">img_input</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">nestnet_output</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># model = U_Net(1, 3008, 1)</span>
+    <span class="c1"># model.summary()</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Nest_Net</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3008</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Jimmy.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
