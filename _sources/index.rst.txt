@@ -23,12 +23,22 @@ Scripts
     scripts
 
 
-Documentation
+Library Reference
 -----------------
 .. toctree::
     :maxdepth: 1
 
-    package/index
+    package/model
+    package/core
+    package/database
+    package/example_proto
+    package/flow
+    package/io
+    package/logger
+    package/pick
+    package/plot
+    package/qc
+    package/utils
 
 
 Indices and tables
