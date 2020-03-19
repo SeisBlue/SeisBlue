@@ -28,12 +28,12 @@ Scripts
     scripts
 
 
-API documentation
+Documentation
 -----------------
-.. autosummary::
-    :toctree: generate
+.. toctree::
+    :maxdepth: 1
 
-    seisnn
+    package/index
 
 
 Indices and tables

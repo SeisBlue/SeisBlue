@@ -1,0 +1,10 @@
+Model
+========================
+
+.. autosummary::
+   :template: module.rst
+   :toctree: autogen
+   :nosignatures:
+
+      seisnn.model.settings
+      seisnn.model.unet

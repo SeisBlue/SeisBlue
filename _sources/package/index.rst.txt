@@ -1,0 +1,19 @@
+SeisNN Library Reference
+========================
+
+.. autosummary::
+   :template: module.rst
+   :toctree: autogen
+   :nosignatures:
+
+      seisnn.model
+      seisnn.core
+      seisnn.database
+      seisnn.example_proto
+      seisnn.flow
+      seisnn.io
+      seisnn.logger
+      seisnn.pick
+      seisnn.plot
+      seisnn.qc
+      seisnn.utils

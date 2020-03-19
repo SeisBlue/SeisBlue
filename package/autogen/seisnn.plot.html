@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>seisnn.core &#8212; SeisNN  documentation</title>
+    <title>seisnn.plot &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -13,8 +13,8 @@
     <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="seisnn.database" href="seisnn.database.html" />
-    <link rel="prev" title="seisnn.model.unet" href="model/seisnn.model.unet.html" />
+    <link rel="next" title="seisnn.qc" href="seisnn.qc.html" />
+    <link rel="prev" title="seisnn.pick" href="seisnn.pick.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -60,7 +60,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../seisnn.html">seisnn</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">SeisNN Library Reference</a></li>
 </ul>
 </ul>
 </li>
@@ -74,10 +74,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.core</a><ul>
-<li><a class="reference internal" href="#core">Core</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">seisnn.plot</a></li>
 </ul>
 </ul>
 </li>
@@ -87,11 +84,11 @@
               
                 
   <li>
-    <a href="model/seisnn.model.unet.html" title="Previous Chapter: seisnn.model.unet"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model.unet</span>
+    <a href="seisnn.pick.html" title="Previous Chapter: seisnn.pick"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.pick</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.database.html" title="Next Chapter: seisnn.database"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.database &raquo;</span>
+    <a href="seisnn.qc.html" title="Next Chapter: seisnn.qc"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.qc &raquo;</span>
     </a>
   </li>
               
@@ -101,7 +98,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../../_sources/generate/generated/seisnn.core.rst.txt"
+  <a href="../../_sources/package/autogen/seisnn.plot.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -125,18 +122,8 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="module-seisnn.core">
-<span id="seisnn-core"></span><h1>seisnn.core<a class="headerlink" href="#module-seisnn.core" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="core">
-<h2>Core<a class="headerlink" href="#core" title="Permalink to this headline">¶</a></h2>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-</tbody>
-</table>
+  <div class="section" id="module-seisnn.plot">
+<span id="seisnn-plot"></span><h1>seisnn.plot<a class="headerlink" href="#module-seisnn.plot" title="Permalink to this headline">¶</a></h1>
 <p class="rubric">Functions</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -144,24 +131,29 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parallel_to_tfrecord</span></code>(batch_list)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">color_palette</span></code>([color, shade])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_array</span></code>(feature)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_confusion_matrix</span></code>(true_positive, …)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_dataset</span></code>(feature[, snr, enlarge, xlim, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_error_distribution</span></code>(time_residuals[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_loss</span></code>(log_file[, save_dir])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_snr_distribution</span></code>(pick_snr[, save_dir])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Classes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Feature</span></code>(example)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 
 

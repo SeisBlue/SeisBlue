@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>seisnn.model &#8212; SeisNN  documentation</title>
+    <title>seisnn.io &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -13,8 +13,8 @@
     <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="seisnn.model.settings" href="model/seisnn.model.settings.html" />
-    <link rel="prev" title="seisnn" href="../seisnn.html" />
+    <link rel="next" title="seisnn.logger" href="seisnn.logger.html" />
+    <link rel="prev" title="seisnn.flow" href="seisnn.flow.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -60,7 +60,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../seisnn.html">seisnn</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">SeisNN Library Reference</a></li>
 </ul>
 </ul>
 </li>
@@ -74,10 +74,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.model</a><ul>
-<li><a class="reference internal" href="#model">Model</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">seisnn.io</a></li>
 </ul>
 </ul>
 </li>
@@ -87,11 +84,11 @@
               
                 
   <li>
-    <a href="../seisnn.html" title="Previous Chapter: seisnn"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn</span>
+    <a href="seisnn.flow.html" title="Previous Chapter: seisnn.flow"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.flow</span>
     </a>
   </li>
   <li>
-    <a href="model/seisnn.model.settings.html" title="Next Chapter: seisnn.model.settings"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.settings &raquo;</span>
+    <a href="seisnn.logger.html" title="Next Chapter: seisnn.logger"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.logger &raquo;</span>
     </a>
   </li>
               
@@ -101,7 +98,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../../_sources/generate/generated/seisnn.model.rst.txt"
+  <a href="../../_sources/package/autogen/seisnn.io.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -125,25 +122,53 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="module-seisnn.model">
-<span id="seisnn-model"></span><h1>seisnn.model<a class="headerlink" href="#module-seisnn.model" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="model">
-<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="module-seisnn.io">
+<span id="seisnn-io"></span><h1>seisnn.io<a class="headerlink" href="#module-seisnn.io" title="Permalink to this headline">¶</a></h1>
+<p class="rubric">Functions</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="model/seisnn.model.settings.html#module-seisnn.model.settings" title="seisnn.model.settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">settings</span></code></a></p></td>
-<td><p>Model settings</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code>(filename)</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="model/seisnn.model.unet.html#module-seisnn.model.unet" title="seisnn.model.unet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unet</span></code></a></p></td>
-<td><p>Unet</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_dataset</span></code>(dataset_dir)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_event_list</span></code>(sfile)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code>(hyp)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code>(kml)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_pkl</span></code>(pkl)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sds</span></code>(window)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code>(geom, save_file)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_pkl</span></code>(obj, file)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_station_dataset</span></code>(dataset_output_dir, …)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code>(example_list, save_file)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_training_dataset</span></code>(pick_list, geom, …)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 
 
