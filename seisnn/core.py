@@ -3,7 +3,10 @@ Core
 =============
 
 .. autosummary::
-   :toctree: core
+    :toctree: core
+
+    Feature
+    parallel_to_tfrecord
 
 """
 

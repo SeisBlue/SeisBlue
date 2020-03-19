@@ -3,7 +3,11 @@ Database
 =============
 
 .. autosummary::
-   :toctree: database
+    :toctree: database
+
+    Geometry
+    Picks
+    Client
 
 """
 

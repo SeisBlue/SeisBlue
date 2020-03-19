@@ -1,14 +1,28 @@
 """
 Model
-======
+=============
+
+
+Model Settings
+---------------
 
 .. autosummary::
-    :toctree: model/
+    :toctree: model
 
-    settings
-    unet
+    train_step
+
+
+Unet
+---------------
+
+.. autosummary::
+    :toctree: model
+
+    Nest_Net
+    standard_unit
+    U_Net
 
 """
 
-from seisnn.model import settings
-from seisnn.model import unet
+from .settings import train_step
+from .unet import Nest_Net, standard_unit, U_Net

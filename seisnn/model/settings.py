@@ -1,12 +1,3 @@
-"""
-Model settings
-=============
-
-.. autosummary::
-   :toctree: settings
-
-"""
-
 import tensorflow as tf
 from seisnn.model.unet import Nest_Net
 

@@ -1,12 +1,3 @@
-"""
-Unet
-=============
-
-.. autosummary::
-   :toctree: unet
-
-"""
-
 import tensorflow as tf
 
 from tensorflow.keras.layers import Conv2D, Conv2DTranspose, Dropout, Input, MaxPooling2D, \

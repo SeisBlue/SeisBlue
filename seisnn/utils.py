@@ -1,3 +1,21 @@
+"""
+Utilities
+=============
+
+.. autosummary::
+    :toctree: utils
+
+    batch
+    binary_search
+    get_config
+    get_dir_list
+    make_dirs
+    parallel
+    parallel_iter
+    unet_padding_size
+
+"""
+
 import os
 from bisect import bisect_left, bisect_right
 from multiprocessing import Pool, cpu_count

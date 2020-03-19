@@ -3,7 +3,9 @@ Logger
 =============
 
 .. autosummary::
-   :toctree: logger
+    :toctree: logger
+
+    save_loss
 
 """
 
