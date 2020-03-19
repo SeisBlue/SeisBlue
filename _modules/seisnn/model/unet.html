@@ -58,7 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../scripts.html">Scripts</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">SeisNN Library Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/index.html">SeisNN Library Reference</a></li>
 </ul>
 </ul>
 </li>
@@ -135,7 +135,7 @@
 <span class="c1"># 2D Standard</span>
 <span class="c1">########################################</span>
 
-<div class="viewcode-block" id="standard_unit"><a class="viewcode-back" href="../../../autogen/model/unet/seisnn.model.unet.standard_unit.html#seisnn.model.unet.standard_unit">[docs]</a><span class="k">def</span> <span class="nf">standard_unit</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">nb_filter</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">):</span>
+<div class="viewcode-block" id="standard_unit"><a class="viewcode-back" href="../../../package/model/unet/seisnn.model.unet.standard_unit.html#seisnn.model.unet.standard_unit">[docs]</a><span class="k">def</span> <span class="nf">standard_unit</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">nb_filter</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">):</span>
     <span class="n">dropout_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
     <span class="n">act</span> <span class="o">=</span> <span class="s2">&quot;relu&quot;</span>
 
@@ -157,7 +157,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="U_Net"><a class="viewcode-back" href="../../../autogen/model/unet/seisnn.model.unet.U_Net.html#seisnn.model.unet.U_Net">[docs]</a><span class="k">def</span> <span class="nf">U_Net</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="U_Net"><a class="viewcode-back" href="../../../package/model/unet/seisnn.model.unet.U_Net.html#seisnn.model.unet.U_Net">[docs]</a><span class="k">def</span> <span class="nf">U_Net</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">nb_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
     <span class="c1"># nb_filter = [8, 16, 32, 64, 128]</span>
     <span class="n">pool_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -209,7 +209,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="Nest_Net"><a class="viewcode-back" href="../../../autogen/model/unet/seisnn.model.unet.Nest_Net.html#seisnn.model.unet.Nest_Net">[docs]</a><span class="k">def</span> <span class="nf">Nest_Net</span><span class="p">(</span><span class="n">img_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Nest_Net"><a class="viewcode-back" href="../../../package/model/unet/seisnn.model.unet.Nest_Net.html#seisnn.model.unet.Nest_Net">[docs]</a><span class="k">def</span> <span class="nf">Nest_Net</span><span class="p">(</span><span class="n">img_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">nb_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">]</span>
     <span class="n">pool_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">kernel_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>

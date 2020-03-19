@@ -58,7 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../reference.html">SeisNN Library Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/index.html">SeisNN Library Reference</a></li>
 </ul>
 </ul>
 </li>
@@ -121,14 +121,14 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="precision_recall_f1_score"><a class="viewcode-back" href="../../autogen/qc/seisnn.qc.precision_recall_f1_score.html#seisnn.qc.precision_recall_f1_score">[docs]</a><span class="k">def</span> <span class="nf">precision_recall_f1_score</span><span class="p">(</span><span class="n">true_positive</span><span class="p">,</span> <span class="n">pred_count</span><span class="p">,</span> <span class="n">val_count</span><span class="p">):</span>
+<div class="viewcode-block" id="precision_recall_f1_score"><a class="viewcode-back" href="../../package/qc/seisnn.qc.precision_recall_f1_score.html#seisnn.qc.precision_recall_f1_score">[docs]</a><span class="k">def</span> <span class="nf">precision_recall_f1_score</span><span class="p">(</span><span class="n">true_positive</span><span class="p">,</span> <span class="n">pred_count</span><span class="p">,</span> <span class="n">val_count</span><span class="p">):</span>
     <span class="n">precision</span> <span class="o">=</span> <span class="n">true_positive</span> <span class="o">/</span> <span class="n">pred_count</span>
     <span class="n">recall</span> <span class="o">=</span> <span class="n">true_positive</span> <span class="o">/</span> <span class="n">val_count</span>
     <span class="n">f1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1</span></div>
 
 
-<div class="viewcode-block" id="signal_to_noise_ratio"><a class="viewcode-back" href="../../autogen/qc/seisnn.qc.signal_to_noise_ratio.html#seisnn.qc.signal_to_noise_ratio">[docs]</a><span class="k">def</span> <span class="nf">signal_to_noise_ratio</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">noise</span><span class="p">):</span>
+<div class="viewcode-block" id="signal_to_noise_ratio"><a class="viewcode-back" href="../../package/qc/seisnn.qc.signal_to_noise_ratio.html#seisnn.qc.signal_to_noise_ratio">[docs]</a><span class="k">def</span> <span class="nf">signal_to_noise_ratio</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">noise</span><span class="p">):</span>
     <span class="n">signal_power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">signal</span><span class="p">))</span>
     <span class="n">noise_power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">noise</span><span class="p">))</span>
     <span class="n">snr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">signal_power</span> <span class="o">/</span> <span class="n">noise_power</span><span class="p">)</span>

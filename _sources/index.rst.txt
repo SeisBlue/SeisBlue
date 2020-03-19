@@ -28,7 +28,7 @@ Documentation
 .. toctree::
     :maxdepth: 1
 
-    reference
+    package/index
 
 
 Indices and tables

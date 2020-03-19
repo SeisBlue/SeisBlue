@@ -58,7 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../reference.html">SeisNN Library Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/index.html">SeisNN Library Reference</a></li>
 </ul>
 </ul>
 </li>
@@ -144,7 +144,7 @@
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">int64_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Int64List</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
 
 
-<div class="viewcode-block" id="stream_to_feature"><a class="viewcode-back" href="../../autogen/example_proto/seisnn.example_proto.stream_to_feature.html#seisnn.example_proto.stream_to_feature">[docs]</a><span class="k">def</span> <span class="nf">stream_to_feature</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pickset</span><span class="p">):</span>
+<div class="viewcode-block" id="stream_to_feature"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.stream_to_feature.html#seisnn.example_proto.stream_to_feature">[docs]</a><span class="k">def</span> <span class="nf">stream_to_feature</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pickset</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Turn Stream object into feature dictionary</span>
 
@@ -200,7 +200,7 @@
     <span class="k">return</span> <span class="n">feature</span></div>
 
 
-<div class="viewcode-block" id="feature_to_example"><a class="viewcode-back" href="../../autogen/example_proto/seisnn.example_proto.feature_to_example.html#seisnn.example_proto.feature_to_example">[docs]</a><span class="k">def</span> <span class="nf">feature_to_example</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">):</span>
+<div class="viewcode-block" id="feature_to_example"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.feature_to_example.html#seisnn.example_proto.feature_to_example">[docs]</a><span class="k">def</span> <span class="nf">feature_to_example</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
             <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
@@ -235,7 +235,7 @@
     <span class="k">return</span> <span class="n">example</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="sequence_example_parser"><a class="viewcode-back" href="../../autogen/example_proto/seisnn.example_proto.sequence_example_parser.html#seisnn.example_proto.sequence_example_parser">[docs]</a><span class="k">def</span> <span class="nf">sequence_example_parser</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+<div class="viewcode-block" id="sequence_example_parser"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.sequence_example_parser.html#seisnn.example_proto.sequence_example_parser">[docs]</a><span class="k">def</span> <span class="nf">sequence_example_parser</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
         <span class="s2">&quot;starttime&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
@@ -285,7 +285,7 @@
     <span class="k">return</span> <span class="n">parsed_example</span></div>
 
 
-<div class="viewcode-block" id="eval_eager_tensor"><a class="viewcode-back" href="../../autogen/example_proto/seisnn.example_proto.eval_eager_tensor.html#seisnn.example_proto.eval_eager_tensor">[docs]</a><span class="k">def</span> <span class="nf">eval_eager_tensor</span><span class="p">(</span><span class="n">parsed_example</span><span class="p">):</span>
+<div class="viewcode-block" id="eval_eager_tensor"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.eval_eager_tensor.html#seisnn.example_proto.eval_eager_tensor">[docs]</a><span class="k">def</span> <span class="nf">eval_eager_tensor</span><span class="p">(</span><span class="n">parsed_example</span><span class="p">):</span>
     <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
         <span class="s1">&#39;starttime&#39;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
@@ -317,7 +317,7 @@
     <span class="k">return</span> <span class="n">feature</span></div>
 
 
-<div class="viewcode-block" id="batch_iterator"><a class="viewcode-back" href="../../autogen/example_proto/seisnn.example_proto.batch_iterator.html#seisnn.example_proto.batch_iterator">[docs]</a><span class="k">def</span> <span class="nf">batch_iterator</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
+<div class="viewcode-block" id="batch_iterator"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.batch_iterator.html#seisnn.example_proto.batch_iterator">[docs]</a><span class="k">def</span> <span class="nf">batch_iterator</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="n">parsed_example</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">],</span>

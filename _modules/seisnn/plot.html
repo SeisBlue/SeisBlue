@@ -58,7 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../reference.html">SeisNN Library Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/index.html">SeisNN Library Reference</a></li>
 </ul>
 </ul>
 </li>
@@ -135,7 +135,7 @@
 <span class="kn">from</span> <span class="nn">seisnn.qc</span> <span class="kn">import</span> <span class="n">signal_to_noise_ratio</span><span class="p">,</span> <span class="n">precision_recall_f1_score</span>
 
 
-<div class="viewcode-block" id="color_palette"><a class="viewcode-back" href="../../autogen/plot/seisnn.plot.color_palette.html#seisnn.plot.color_palette">[docs]</a><span class="k">def</span> <span class="nf">color_palette</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="color_palette"><a class="viewcode-back" href="../../package/plot/seisnn.plot.color_palette.html#seisnn.plot.color_palette">[docs]</a><span class="k">def</span> <span class="nf">color_palette</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="c1"># color palette source:</span>
     <span class="c1"># http://www.webfreelancer.com.br/color/colors.html</span>
 
@@ -147,13 +147,13 @@
     <span class="k">return</span> <span class="n">palette</span><span class="p">[</span><span class="n">color</span><span class="p">][</span><span class="n">shade</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="get_time_array"><a class="viewcode-back" href="../../autogen/plot/seisnn.plot.get_time_array.html#seisnn.plot.get_time_array">[docs]</a><span class="k">def</span> <span class="nf">get_time_array</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+<div class="viewcode-block" id="get_time_array"><a class="viewcode-back" href="../../package/plot/seisnn.plot.get_time_array.html#seisnn.plot.get_time_array">[docs]</a><span class="k">def</span> <span class="nf">get_time_array</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
     <span class="n">time_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">])</span>
     <span class="n">time_array</span> <span class="o">=</span> <span class="n">time_array</span> <span class="o">*</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">time_array</span></div>
 
 
-<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../autogen/plot/seisnn.plot.plot_dataset.html#seisnn.plot.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">snr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enlarge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_dataset.html#seisnn.plot.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">snr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enlarge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">feature</span><span class="p">[</span><span class="s2">&quot;starttime&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">feature</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">][:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">]:</span>
@@ -237,7 +237,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_loss"><a class="viewcode-back" href="../../autogen/plot/seisnn.plot.plot_loss.html#seisnn.plot.plot_loss">[docs]</a><span class="k">def</span> <span class="nf">plot_loss</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_loss"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_loss.html#seisnn.plot.plot_loss">[docs]</a><span class="k">def</span> <span class="nf">plot_loss</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">loss</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
@@ -265,7 +265,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_error_distribution"><a class="viewcode-back" href="../../autogen/plot/seisnn.plot.plot_error_distribution.html#seisnn.plot.plot_error_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_error_distribution</span><span class="p">(</span><span class="n">time_residuals</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_error_distribution"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_error_distribution.html#seisnn.plot.plot_error_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_error_distribution</span><span class="p">(</span><span class="n">time_residuals</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">time_residuals</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.51</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
@@ -281,7 +281,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_snr_distribution"><a class="viewcode-back" href="../../autogen/plot/seisnn.plot.plot_snr_distribution.html#seisnn.plot.plot_snr_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_snr_distribution</span><span class="p">(</span><span class="n">pick_snr</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_snr_distribution"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_snr_distribution.html#seisnn.plot.plot_snr_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_snr_distribution</span><span class="p">(</span><span class="n">pick_snr</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
     <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">55</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">pick_snr</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
@@ -298,7 +298,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_confusion_matrix"><a class="viewcode-back" href="../../autogen/plot/seisnn.plot.plot_confusion_matrix.html#seisnn.plot.plot_confusion_matrix">[docs]</a><span class="k">def</span> <span class="nf">plot_confusion_matrix</span><span class="p">(</span><span class="n">true_positive</span><span class="p">,</span> <span class="n">pred_count</span><span class="p">,</span> <span class="n">val_count</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_confusion_matrix"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_confusion_matrix.html#seisnn.plot.plot_confusion_matrix">[docs]</a><span class="k">def</span> <span class="nf">plot_confusion_matrix</span><span class="p">(</span><span class="n">true_positive</span><span class="p">,</span> <span class="n">pred_count</span><span class="p">,</span> <span class="n">val_count</span><span class="p">):</span>
     <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="n">true_positive</span><span class="p">,</span> <span class="n">pred_count</span> <span class="o">-</span> <span class="n">true_positive</span><span class="p">],</span>
                            <span class="p">[</span><span class="n">val_count</span> <span class="o">-</span> <span class="n">true_positive</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">])</span>
 

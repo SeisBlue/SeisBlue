@@ -58,7 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../reference.html">SeisNN Library Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/index.html">SeisNN Library Reference</a></li>
 </ul>
 </ul>
 </li>
@@ -124,7 +124,7 @@
 <span class="kn">from</span> <span class="nn">seisnn.pick</span> <span class="kn">import</span> <span class="n">search_pick</span><span class="p">,</span> <span class="n">get_pdf</span>
 
 
-<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../autogen/flow/seisnn.flow.stream_preprocessing.html#seisnn.flow.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/flow/seisnn.flow.stream_preprocessing.html#seisnn.flow.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">get_exist_picks</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
@@ -132,7 +132,7 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="signal_preprocessing"><a class="viewcode-back" href="../../autogen/flow/seisnn.flow.signal_preprocessing.html#seisnn.flow.signal_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
+<div class="viewcode-block" id="signal_preprocessing"><a class="viewcode-back" href="../../package/flow/seisnn.flow.signal_preprocessing.html#seisnn.flow.signal_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">detrend</span><span class="p">(</span><span class="s1">&#39;demean&#39;</span><span class="p">)</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">detrend</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
@@ -141,19 +141,19 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="get_exist_picks"><a class="viewcode-back" href="../../autogen/flow/seisnn.flow.get_exist_picks.html#seisnn.flow.get_exist_picks">[docs]</a><span class="k">def</span> <span class="nf">get_exist_picks</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">):</span>
+<div class="viewcode-block" id="get_exist_picks"><a class="viewcode-back" href="../../package/flow/seisnn.flow.get_exist_picks.html#seisnn.flow.get_exist_picks">[docs]</a><span class="k">def</span> <span class="nf">get_exist_picks</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">):</span>
     <span class="n">picks</span> <span class="o">=</span> <span class="n">search_pick</span><span class="p">(</span><span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">picks</span> <span class="o">=</span> <span class="n">picks</span>
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="get_stream_geom"><a class="viewcode-back" href="../../autogen/flow/seisnn.flow.get_stream_geom.html#seisnn.flow.get_stream_geom">[docs]</a><span class="k">def</span> <span class="nf">get_stream_geom</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+<div class="viewcode-block" id="get_stream_geom"><a class="viewcode-back" href="../../package/flow/seisnn.flow.get_stream_geom.html#seisnn.flow.get_stream_geom">[docs]</a><span class="k">def</span> <span class="nf">get_stream_geom</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
     <span class="n">station</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">station</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">geom</span><span class="p">[</span><span class="n">station</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="trim_trace"><a class="viewcode-back" href="../../autogen/flow/seisnn.flow.trim_trace.html#seisnn.flow.trim_trace">[docs]</a><span class="k">def</span> <span class="nf">trim_trace</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">3008</span><span class="p">):</span>
+<div class="viewcode-block" id="trim_trace"><a class="viewcode-back" href="../../package/flow/seisnn.flow.trim_trace.html#seisnn.flow.trim_trace">[docs]</a><span class="k">def</span> <span class="nf">trim_trace</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">3008</span><span class="p">):</span>
     <span class="n">trace</span> <span class="o">=</span> <span class="n">stream</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span>
     <span class="n">dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">endtime</span> <span class="o">-</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
