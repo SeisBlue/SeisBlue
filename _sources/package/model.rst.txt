@@ -1,2 +1,1 @@
-.. automodule:: seisnn.model.settings
-.. automodule:: seisnn.model.unet
+.. automodule:: seisnn.model
