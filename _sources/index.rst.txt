@@ -30,8 +30,8 @@ Scripts
 
 API documentation
 -----------------
-.. toctree::
-    :maxdepth: 1
+.. autosummary::
+    :toctree: generate
 
     seisnn
 

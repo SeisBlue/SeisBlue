@@ -1,0 +1,24 @@
+seisnn.model.unet
+=================
+
+.. automodule:: seisnn.model.unet
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      Nest_Net
+      U_Net
+      standard_unit
+   
+   
+
+   
+   
+   
+
+   
+   
+   

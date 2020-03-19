@@ -1,0 +1,28 @@
+seisnn.core
+===========
+
+.. automodule:: seisnn.core
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      parallel_to_tfrecord
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Feature
+   
+   
+
+   
+   
+   
