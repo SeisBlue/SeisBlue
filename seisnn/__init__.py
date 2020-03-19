@@ -20,19 +20,15 @@ SeisNN
 
 __version__ = '0.3.0dev'
 
-from seisnn import model
-from seisnn import core
-from seisnn import database
-from seisnn import example_proto
-from seisnn import flow
-from seisnn import io
-from seisnn import logger
-from seisnn import pick
-from seisnn import qc
-from seisnn import utils
+from . import model
+from . import core
+from . import database
+from . import example_proto
+from . import flow
+from . import io
+from . import logger
+from . import pick
+from . import qc
+from . import utils
 
 name = "seisnn"
-
-if __name__ == "__main__":
-    pass
-
