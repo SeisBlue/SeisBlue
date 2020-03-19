@@ -1,3 +1,4 @@
-.. _seisnn:
+seisnn
+======
 
 .. automodule:: seisnn

@@ -1,6 +1,0 @@
-seisnn.pick.get\_time\_residual
-===============================
-
-.. currentmodule:: seisnn.pick
-
-.. autofunction:: get_time_residual

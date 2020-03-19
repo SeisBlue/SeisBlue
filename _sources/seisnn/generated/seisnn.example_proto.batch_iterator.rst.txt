@@ -1,6 +1,0 @@
-seisnn.example\_proto.batch\_iterator
-=====================================
-
-.. currentmodule:: seisnn.example_proto
-
-.. autofunction:: batch_iterator

@@ -1,6 +1,0 @@
-seisnn.utils.make\_dirs
-=======================
-
-.. currentmodule:: seisnn.utils
-
-.. autofunction:: make_dirs

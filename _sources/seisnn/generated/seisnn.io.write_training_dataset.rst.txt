@@ -1,6 +1,0 @@
-seisnn.io.write\_training\_dataset
-==================================
-
-.. currentmodule:: seisnn.io
-
-.. autofunction:: write_training_dataset
