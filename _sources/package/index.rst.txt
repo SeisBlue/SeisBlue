@@ -4,14 +4,14 @@ SeisNN Library Reference
 .. toctree::
     :maxdepth: 1
 
-      model
-      core
-      database
-      example_proto
-      flow
-      io
-      logger
-      pick
-      plot
-      qc
-      utils
+      package/model
+      package/core
+      package/database
+      package/example_proto
+      package/flow
+      package/io
+      package/logger
+      package/pick
+      package/plot
+      package/qc
+      package/utils
