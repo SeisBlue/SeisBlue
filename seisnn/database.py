@@ -2,6 +2,8 @@
 Database
 =============
 
+SQLite database for metadata.
+
 .. autosummary::
     :toctree: database
 
