@@ -84,7 +84,7 @@ docker run -d \
         -v </path/to/workspace>:/home/${USER} \
         -v </path/to/sfile>:/mnt/sfile \
         -v </path/to/database>:/mnt/SDS_ROOT:ro \
-        --name tf_ssh tf_ssh
+        --name tf_ssh jimmy60504/tf_ssh
 ```
 
 Now you can SSH into the container with your username and password.
@@ -92,6 +92,10 @@ Now you can SSH into the container with your username and password.
 `ssh username@localhost -p49154`  
 
 ---
+
+Update image:
+
+`docker pull jimmy60504/tf_ssh`
 
 Remove container:
 
