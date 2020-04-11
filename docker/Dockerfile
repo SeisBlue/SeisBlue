@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.2.0rc0-gpu-jupyter
+FROM tensorflow/tensorflow:2.2.0rc2-gpu-jupyter
 
 RUN apt-mark hold libcudnn7
 
@@ -9,7 +9,7 @@ RUN apt-get install sudo openssh-server vim htop screen reptyr git ffmpeg libpro
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 RUN python -m pip install --upgrade pip
-RUN python -m pip uninstall -y enum34; python -m pip --no-cache-dir install --upgrade pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn Sphinx sphinx-bootstrap-theme recommonmark
+RUN python -m pip uninstall -y enum34; python -m pip --no-cache-dir install --upgrade jupyterlab pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn Sphinx sphinx-bootstrap-theme recommonmark
 
 RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
