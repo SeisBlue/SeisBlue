@@ -99,9 +99,9 @@ Update image:
 
 Remove container:
 
-`docker container rm tf`
+`docker container rm tf_ssh`
 
 Remove image:
 
-`docker image rm tf_ssh`
+`docker image rm jimmy60504/tf_ssh`
 
