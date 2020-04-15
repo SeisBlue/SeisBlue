@@ -5,7 +5,7 @@ on:
     paths: 
       - 'docker/Dockerfile'
 env:
-  DOCKER_REPO: jimmy60504/tf_ssh
+  DOCKER_REPO: seisnn/tf_ssh
 
 jobs:
   Build_Docker_Image:
