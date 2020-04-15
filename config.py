@@ -4,8 +4,9 @@ from os.path import expanduser
 
 from seisnn.utils import make_dirs
 
-SDS_ROOT = '/mnt/SDS_ROOT'
 WORKSPACE = os.path.expanduser('~')
+SDS_ROOT = os.path.join(WORKSPACE, 'SDS_ROOT')
+SFILE_ROOT = os.path.join(WORKSPACE, 'SFILE_ROOT')
 
 TFRECORD_ROOT = os.path.join(WORKSPACE, 'tfrecord')
 DATABASE_ROOT = os.path.join(WORKSPACE, 'database')
@@ -14,8 +15,9 @@ CATALOG_ROOT = os.path.join(WORKSPACE, 'catalog')
 GEOM_ROOT = os.path.join(WORKSPACE, 'geom')
 MODELS_ROOT = os.path.join(WORKSPACE, 'models')
 
-config = {'SDS_ROOT': SDS_ROOT,
-          'WORKSPACE': WORKSPACE,
+config = {'WORKSPACE': WORKSPACE,
+          'SDS_ROOT': SDS_ROOT,
+          'SFILE_ROOT': SFILE_ROOT,
 
           'TFRECORD_ROOT': TFRECORD_ROOT,
           'DATABASE_ROOT': DATABASE_ROOT,
