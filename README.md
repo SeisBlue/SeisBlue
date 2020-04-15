@@ -35,43 +35,30 @@ Installation:
 
 - Follow the instructions in the [Docker](docker) folder to create a Docker container.
 - SSH into the Docker container you create.
-- Clone this repo in the home folder.
 
-      cd ~
-      git clone https://github.com/SeisNN/SeisNN.git
+      ssh username@localhost -p49154
 
-- Run  [config.py](config.py) to generate [config.yaml](config.yaml)
+- Copy `/SeisNN/jupyter.sh` to your workspace and execute to start jupyter lab server
 
-      python config.py
+      cp /SeisNN/jupyter.sh ~/.
+      chmod 777 jupyter.sh
+      ./jupyter.sh
+
+- Copy `/SeisNN/notebook to your workspace
+
+      cp -r /SeisNN/notebook ~/notebook
+
+- Paste the URL with generate token into your local browser
+
+      http://127.0.0.1:8888/?token=36b31a373a9d18cc9b30a50883ad5a3638b19bed47be8074
+      
+- Go through [notebook/00_initialize.ipynb](notebook/00_initialize.ipynb) to generate [config.yaml](config.yaml)
 
 ---
 
-In the [scripts](scripts) folder:
+In the [notebook](notebook) folder:
 
-Preprocessing:
-
-- Turn catalog and trace into training set
-
-Training:
-
-- Pre-train
-- Training
-- Predict 
-
-Analysis:
-
-- SNR distribution
-- Model evaluation
-
-Visualization:
-
-- Plot picking instances
-- Plot map view
-- Plot training history
-
-Prototypes:
-
-- Experimental functions
+[00_initialize](notebook/00_initialize.ipynb)
 
 ---
 
