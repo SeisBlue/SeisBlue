@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 jobs:
   docs-build:
@@ -44,7 +44,7 @@ jobs:
 
 
 workflows:
-  version: 2
+  version: 2.1
   build:
     jobs:
       - docs-build
