@@ -1,6 +1,6 @@
 # SeisNN [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
-[![CircleCI](https://circleci.com/gh/jimmy60504/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/jimmy60504/SeisNN/tree/master) [![Docker Build](https://github.com/jimmy60504/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/jimmy60504/SeisNN/actions?query=workflow%3A%22Docker+Image%22)
+[![CircleCI](https://circleci.com/gh/SeisNN/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/jimmy60504/SeisNN/tree/master) [![Docker Build](https://github.com/jimmy60504/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/jimmy60504/SeisNN/actions?query=workflow%3A%22Docker+Image%22)
 
 Seismic event P phase picking project
 
@@ -38,7 +38,7 @@ Installation:
 - Clone this repo in the home folder.
 
       cd ~
-      git clone https://github.com/jimmy60504/SeisNN.git
+      git clone https://github.com/SeisNN/SeisNN.git
 
 - Run  [config.py](config.py) to generate [config.yaml](config.yaml)
 

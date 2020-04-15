@@ -3,7 +3,7 @@ version: 2
 jobs:
   docs-build:
     docker:
-      - image: jimmy60504/tf_ssh:latest
+      - image: seisnn/tf_ssh:latest
     steps:
       - checkout
       - run:

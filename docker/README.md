@@ -5,11 +5,11 @@ Install [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [n
 
 You can pull the pre-built image from the dockerhub:
 
-`docker pull jimmy60504/tf_ssh`
+`docker pull seisnn/tf_ssh`
 
 Clone this repo:
 
-`git clone https://github.com/jimmy60504/SeisNN.git`
+`git clone https://github.com/SeisNN/SeisNN.git`
 
 Create workspace for home, will mount later into the container:
 
@@ -57,7 +57,7 @@ Build the Docker image:
 
 Clone this repo:
 
-`git clone https://github.com/jimmy60504/SeisNN.git`
+`git clone https://github.com/SeisNN/SeisNN.git`
 
 Create workspace for home, will mount later into the container:
 
@@ -84,7 +84,7 @@ docker run -d \
         -v </path/to/workspace>:/home/${USER} \
         -v </path/to/sfile>:/mnt/sfile \
         -v </path/to/database>:/mnt/SDS_ROOT:ro \
-        --name tf_ssh jimmy60504/tf_ssh
+        --name tf_ssh seisnn/tf_ssh
 ```
 
 Now you can SSH into the container with your username and password.
@@ -95,7 +95,7 @@ Now you can SSH into the container with your username and password.
 
 Update image:
 
-`docker pull jimmy60504/tf_ssh`
+`docker pull seisnn/tf_ssh`
 
 Remove container:
 
@@ -103,5 +103,5 @@ Remove container:
 
 Remove image:
 
-`docker image rm jimmy60504/tf_ssh`
+`docker image rm seisnn/tf_ssh`
 
