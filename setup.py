@@ -16,11 +16,6 @@ setup(
     author_email='jimmy60504@gmail.com',
     url='https://github.com/jimmy60504/SeisNN',
     python_requires='>=3.6',
-    install_requires=[
-        'tensorflow>=2.0.0',
-        'obspy>=1.1.1',
-        'tqdm>=4.32.1',
-    ],
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.6",
