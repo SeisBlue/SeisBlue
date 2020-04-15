@@ -12,17 +12,17 @@ Create workspace for home, will mount later into the container:
 `mkdir workspace`
 
 Run docker container, change the followings in [run.sh](run.sh): 
-- 49154 for ssh port
-- </path/to/seisnn> for this project folder
-- </path/to/workspace> for home in the container
-- </path/to/sfile> for S-file folder
-- </path/to/database> for database or trace data folder
+- `49154` for ssh port
+- `</path/to/seisnn>` for this project folder
+- `</path/to/workspace>` for home in the container
+- `</path/to/sfile>` for S-file folder
+- `</path/to/database>` for database or trace data folder
 
 Now you can SSH into the container with your username and password.  
 
-`ssh username@localhost -p49154`
+    ssh username@localhost -p49154
 
----
+## Data transfer between host and container
 
 Mounted volumes are data bridges between the host and containers.
 
@@ -30,21 +30,25 @@ Your data will stayed in the mounted volumes, any modifications will be destroye
 
 Put your scripts in the workspace folder and you will find them in the container's home folder. 
 
----
+## Notes
 
 You can customized your [Dockerfile](Dockerfile) by your needs.
 
-Remove all Docker container and images with [docker_clean_all.sh](docker_clean_all)
+After modified the Dockerfile, run [build_docker_image.sh](build_docker_image.sh) to make your own image.
+
+Force remove all Docker container and images with [docker_clean_all.sh](docker_clean_all.sh) (Use it carefully!)
+
+## Useful docker commands
 
 Update image:
 
-`docker pull seisnn/tf_ssh`
+    docker pull seisnn/tf_ssh
 
 Remove container:
 
-`docker container rm tf_ssh`
+    docker container rm tf_ssh
 
 Remove image:
 
-`docker image rm seisnn/tf_ssh`
+    docker image rm seisnn/tf_ssh
 

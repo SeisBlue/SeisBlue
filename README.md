@@ -44,7 +44,7 @@ Installation:
       chmod 777 jupyter.sh
       ./jupyter.sh
 
-- Copy `/SeisNN/notebook to your workspace
+- Copy `/SeisNN/notebook` to your workspace
 
       cp -r /SeisNN/notebook ~/notebook
 
