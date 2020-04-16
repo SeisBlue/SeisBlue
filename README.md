@@ -46,7 +46,7 @@ Installation:
 
 - Copy `/SeisNN/notebook` to your workspace
 
-      cp -r /SeisNN/notebook ~/notebook
+      cp -r /SeisNN/notebook ~/.
 
 - Paste the URL with generate token into your local browser
 
