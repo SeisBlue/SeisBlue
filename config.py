@@ -1,6 +1,5 @@
 import os
 import yaml
-from os.path import expanduser
 
 from seisnn.utils import make_dirs
 
@@ -32,10 +31,10 @@ if __name__ == '__main__':
     for d in [TFRECORD_ROOT, DATABASE_ROOT, CATALOG_ROOT, MODELS_ROOT, GEOM_ROOT]:
         make_dirs(d)
 
-    with open(os.path.join(expanduser("~"), '.bashrc'), 'w') as file:
+    with open(os.path.join(os.path.expanduser("~"), '.bashrc'), 'w') as file:
         file.write('export PYTHONPATH=/SeisNN:$PYTHONPATH')
 
-    with open('config.yaml', 'w') as file:
+    with open(os.path.join(os.path.expanduser("~"), 'config.yaml'), 'w') as file:
         yaml.dump(config, file, sort_keys=False)
 
     print('SeisNN initialized.')

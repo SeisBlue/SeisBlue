@@ -26,7 +26,7 @@ from tqdm import tqdm
 
 
 def get_config():
-    config_file = os.path.abspath('../config.yaml')
+    config_file = os.path.abspath(os.path.join(os.path.expanduser("~"), 'config.yaml'))
     with open(config_file, 'r') as file:
         config = yaml.full_load(file)
     return config
