@@ -52,11 +52,11 @@ class Picks(Base):
     snr = Column(Float)
     err = Column(Float)
 
-    def __init__(self, sta, pick, pickset):
+    def __init__(self, sta, pick, name):
         self.time = pick.time.datetime
         self.station = sta
         self.phase = pick.phase_hint
-        self.pickset = pickset
+        self.name = name
 
     def add_db(self, session):
         session.add(self)
@@ -83,13 +83,13 @@ class Client:
         finally:
             session.close()
 
-    def add_picks(self, pick_dict, pickset):
+    def add_picks(self, pick_dict, name):
         session = self.session()
         try:
             for sta, picks in pick_dict.items():
                 for pick in picks:
 
-                    Picks(sta, pick, pickset).add_db(session)
+                    Picks(sta, pick, name).add_db(session)
             session.commit()
         except:
             session.rollback()
