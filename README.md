@@ -60,6 +60,8 @@ In the [notebook](notebook) folder:
 
 [00_initialize](notebook/00_initialize.ipynb)
 
+[01_load_database](notebook/01_load_database.ipynb)
+
 ---
 
 Reference:
