@@ -1,20 +1,25 @@
-import argparse
-
 from seisnn.io import read_hyp, read_event_list
-from seisnn.pick import get_pick_dict
-from seisnn.database import Client
+from seisnn.database import Client, Picks
 
-ap = argparse.ArgumentParser()
-ap.add_argument('-d', '--database', required=True, help='sql database file', type=str)
-ap.add_argument('-c', '--catalog', required=True, help='catalog s-file dir', type=str)
-ap.add_argument('-g', '--geometry', required=True, help='geometry STATION0.HYP', type=str)
-ap.add_argument('-p', '--name', required=True, help='output pickset name', type=str)
-args = ap.parse_args()
+from itertools import groupby
+from operator import attrgetter
 
-geom = read_hyp(args.geometry)
-events = read_event_list(args.catalog)
-pick_dict = get_pick_dict(events)
+database = "test.db"
+catalog = "test"
+geometry = "HL2017.HYP"
+name = "manual"
 
-db = Client(args.database)
+geom = read_hyp(geometry)
+events = read_event_list(catalog)
+db = Client(database)
+
 db.add_geom(geom)
-db.add_picks(pick_dict, args.name)
+query = db.get_geom()
+for i in query:
+    print(i)
+
+db.add_picks(events, name)
+query = db.get_picks().order_by(Picks.station)
+listings = [list(g) for k, g in groupby(query, attrgetter('station'))]
+for i in listings:
+    print(i)

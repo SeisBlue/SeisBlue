@@ -28,19 +28,11 @@ class Feature:
         self.npts = None
         self.delta = None
 
-        self.latitude = None
-        self.longitude = None
-        self.elevation = None
-
         self.trace = None
         self.channel = None
 
         self.phase = None
         self.pdf = None
-
-        self.pick_time = None
-        self.pick_phase = None
-        self.pick_set = None
 
         self.from_example(example)
 
@@ -53,19 +45,12 @@ class Feature:
         self.npts = feature['npts']
         self.delta = feature['delta']
 
-        self.latitude = feature['latitude']
-        self.longitude = feature['longitude']
-        self.elevation = feature['elevation']
-
         self.trace = feature['trace']
         self.channel = feature['channel']
 
         self.pdf = feature['pdf']
         self.phase = feature['phase']
 
-        self.pick_time = feature['pick_time']
-        self.pick_phase = feature['pick_phase']
-        self.pick_set = feature['pick_set']
 
     def to_feature(self):
         feature = {
@@ -77,20 +62,12 @@ class Feature:
             'npts': self.npts,
             'delta': self.delta,
 
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'elevation': self.elevation,
 
             'trace': self.trace,
             'channel': self.channel,
 
             'phase': self.phase,
             'pdf': self.pdf,
-
-            'pick_time': self.pick_time,
-            'pick_phase': self.pick_phase,
-            'pick_set': self.pick_set,
-
         }
         return feature
 

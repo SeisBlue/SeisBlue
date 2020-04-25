@@ -29,7 +29,7 @@ from multiprocessing import cpu_count
 import tensorflow as tf
 
 from obspy import Stream
-from obspy.clients.filesystem.sds import Client
+from obspy.clients.filesystem import sds
 from obspy.io.nordic.core import read_nordic
 from obspy.core.inventory.util import Latitude, Longitude
 
@@ -96,7 +96,7 @@ def read_sds(window):
     starttime = window['starttime']
     endtime = window['endtime'] + 0.1
 
-    client = Client(sds_root=config['SDS_ROOT'])
+    client = sds.Client(sds_root=config['SDS_ROOT'])
     stream = client.get_waveforms(network="*", station=station, location="*", channel="*",
                                   starttime=starttime, endtime=endtime)
 
@@ -113,41 +113,42 @@ def read_sds(window):
     return stream_list
 
 
-def write_training_dataset(pick_list, geom, dataset, pickset):
+def database_to_tfrecord(database, output):
+    from seisnn.database import Client, Picks
+    from itertools import groupby
+    from operator import attrgetter
     config = get_config()
-    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
+    dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
     make_dirs(dataset_dir)
 
-    pick_time_key = []
-    for pick in pick_list:
-        pick_time_key.append(pick.time)
+    db = Client(database)
+    query = db.get_picks().order_by(Picks.station)
+    picks_groupby_station = [list(g) for k, g in groupby(query, attrgetter('station'))]
 
-    par = partial(_write_picked_stream,
-                  pick_list=pick_list,
-                  pick_time_key=pick_time_key,
-                  geom=geom,
-                  pickset=pickset)
+    par = partial(_write_picked_stream, database=database)
+    for station_picks in picks_groupby_station:
+        station = station_picks[0].station
+        file_name = '{}.tfrecord'.format(station)
 
-    example_list = parallel(par, pick_list)
-
-    station = pick_list[0].waveform_id.station_code
-    file_name = '{}.tfrecord'.format(station)
-    save_file = os.path.join(dataset_dir, file_name)
-
-    write_tfrecord(example_list, save_file)
+        example_list = parallel(par, station_picks)
+        save_file = os.path.join(dataset_dir, file_name)
+        write_tfrecord(example_list, save_file)
+        print(f'{file_name} done')
 
 
-def _write_picked_stream(batch_picks, pick_list, pick_time_key, geom, pickset):
+
+def _write_picked_stream(batch_picks, database):
     example_list = []
     for pick in batch_picks:
-        if not pick.phase_hint in ['P']:
+        if not pick.phase in ['P']:
             continue
         window = get_window(pick)
         streams = read_sds(window)
 
         for _, stream in streams.items():
-            stream = stream_preprocessing(stream, pick_list, pick_time_key, geom)
-            feature = stream_to_feature(stream, pickset)
+            stream.station = pick.station
+            stream = stream_preprocessing(stream, database)
+            feature = stream_to_feature(stream)
             example = feature_to_example(feature)
             example_list.append(example)
     return example_list
@@ -159,7 +160,7 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
     os.makedirs(dataset_output_dir, exist_ok=True)
 
-    client = Client(sds_root=sds_root)
+    client = sds.Client(sds_root=sds_root)
     net, sta, loc, chan = nslc
     t = start_time
     counter = 0

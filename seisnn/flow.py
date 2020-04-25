@@ -13,23 +13,14 @@ Data processing flow
 
 """
 
-from seisnn.pick import search_pick, get_pdf
+from seisnn.pick import get_pdf
+from seisnn.database import Client
 
 
-def stream_preprocessing(stream, pick_list, pick_time_key, geom):
-    """
-    Main data preprocessing flow.
-
-    :param stream:
-    :param pick_list:
-    :param pick_time_key:
-    :param geom:
-    :return:
-    """
+def stream_preprocessing(stream, database):
     stream = signal_preprocessing(stream)
-    stream = get_exist_picks(stream, pick_list, pick_time_key)
+    stream = get_exist_picks(stream, database)
     stream = get_pdf(stream)
-    stream = get_stream_geom(stream, geom)
     return stream
 
 
@@ -48,30 +39,18 @@ def signal_preprocessing(stream):
     return stream
 
 
-def get_exist_picks(stream, pick_list, pick_time_key):
-    """
-    Search picks in a given time window.
-
-    :param stream:
-    :param pick_list:
-    :param pick_time_key:
-    :return:
-    """
-    picks = search_pick(pick_list, pick_time_key, stream)
-    stream.picks = picks
-    return stream
-
-
-def get_stream_geom(stream, geom):
-    """
-    Get station name from header.
-
-    :param stream:
-    :param geom:
-    :return:
-    """
+def get_exist_picks(stream, database):
+    db = Client(database)
+    starttime = stream.traces[0].stats.starttime.datetime
+    endtime = stream.traces[0].stats.endtime.datetime
     station = stream.traces[0].stats.station
-    stream.location = geom[station]
+    phase_list = db.list_pick_phase()
+    picks = {}
+    for phase in phase_list:
+        phase = phase[0]
+        picks[phase] = db.get_picks(starttime=starttime, endtime=endtime,
+                                    station=station, phase=phase)
+    stream.picks = picks
     return stream
 
 

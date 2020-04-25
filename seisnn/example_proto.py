@@ -36,7 +36,7 @@ def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 
 
-def stream_to_feature(stream, pickset):
+def stream_to_feature(stream):
     """
     Turn Stream object into feature dictionary
 
@@ -76,19 +76,6 @@ def stream_to_feature(stream, pickset):
     feature['phase'] = stream.phase
     feature['pdf'] = np.asarray(stream.pdf)
 
-    pick_time = []
-    pick_phase = []
-    pick_set = []
-    if stream.picks:
-        for _, picks in stream.picks.items():
-            for pick in picks:
-                pick_time.append(pick.time.isoformat())
-                pick_phase.append(pick.phase_hint)
-                pick_set.append(pickset)
-    feature['pick_time'] = pick_time
-    feature['pick_phase'] = pick_phase
-    feature['pick_set'] = pick_set
-
     return feature
 
 
@@ -112,7 +99,7 @@ def feature_to_example(stream_feature):
     context = tf.train.Features(feature=context_data)
 
     sequence_data = {}
-    for key in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
+    for key in ['channel', 'phase']:
         pick_features = []
         if stream_feature[key]:
             for context_data in stream_feature[key]:
@@ -141,10 +128,6 @@ def sequence_example_parser(record):
         "pdf": tf.io.FixedLenFeature((), tf.string, default_value=""),
     }
     sequence = {
-        "pick_time": tf.io.VarLenFeature(tf.string),
-        "pick_phase": tf.io.VarLenFeature(tf.string),
-        "pick_set": tf.io.VarLenFeature(tf.string),
-
         "channel": tf.io.VarLenFeature(tf.string),
         "phase": tf.io.VarLenFeature(tf.string),
     }
@@ -161,10 +144,6 @@ def sequence_example_parser(record):
         'npts': parsed_context['npts'],
 
         'station': parsed_context['station'],
-
-        "pick_time": tf.RaggedTensor.from_sparse(parsed_sequence['pick_time']),
-        "pick_phase": tf.RaggedTensor.from_sparse(parsed_sequence['pick_phase']),
-        "pick_set": tf.RaggedTensor.from_sparse(parsed_sequence['pick_set']),
 
         "channel": tf.RaggedTensor.from_sparse(parsed_sequence['channel']),
         "phase": tf.RaggedTensor.from_sparse(parsed_sequence['phase']),
@@ -188,17 +167,13 @@ def eval_eager_tensor(parsed_example):
 
         'station': parsed_example['station'].numpy(),
 
-        "pick_time": parsed_example['pick_time'],
-        "pick_phase": parsed_example['pick_phase'],
-        "pick_set": parsed_example['pick_set'],
-
         "trace": parsed_example['trace'],
         "channel": parsed_example['channel'],
         "pdf": parsed_example['pdf'],
         "phase": parsed_example['phase'],
     }
 
-    for i in ['pick_time', 'pick_phase', 'pick_set', 'channel', 'phase']:
+    for i in ['channel', 'phase']:
         feature_list = feature[i]
         data_list = []
         for f in feature_list:
@@ -220,10 +195,6 @@ def batch_iterator(batch):
             'npts': batch['npts'][index],
 
             'station': batch['station'][index],
-
-            "pick_time": batch['pick_time'][index, :],
-            "pick_phase": batch['pick_phase'][index, :],
-            "pick_set": batch['pick_set'][index, :],
 
             "trace": batch['trace'][index, :],
             "channel": batch['channel'][index, :],
