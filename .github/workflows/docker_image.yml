@@ -25,9 +25,11 @@ jobs:
 
     - name: Push image with version
       run: |
-        VERSION=$(python -c "import seisnn; print(seisnn.__version__)")
+        CURRENT_FOLDER=$(pwd)
+        VERSION=$(docker run -v $CURRENT_FOLDER:/SeisNN $DOCKER_REPO /bin/bash -c "cd /SeisNN; python -c 'import seisnn; print(seisnn.__version__)'")
         docker tag $DOCKER_REPO $DOCKER_REPO:v$VERSION
         docker push $DOCKER_REPO:v$VERSION
+
     - name: Push image with git commit hash
       run: |
         docker tag $DOCKER_REPO $DOCKER_REPO:${GITHUB_SHA::7}
