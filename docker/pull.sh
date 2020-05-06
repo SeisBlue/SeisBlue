@@ -1,1 +1,0 @@
-docker pull seisnn/tf_ssh

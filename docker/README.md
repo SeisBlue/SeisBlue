@@ -52,3 +52,10 @@ Remove image:
 
     docker image rm seisnn/tf_ssh
 
+Remove all containers(!):
+
+    docker rm -f $(docker ps -a -q)
+
+Remove all images(!):
+
+    docker rmi -f $(docker images -q)
