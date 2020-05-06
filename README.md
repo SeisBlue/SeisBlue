@@ -1,4 +1,4 @@
-# SeisNN ![Version](http://img.shields.io/:version-v0.0.3dev-yellow.svg?style=flat-square) [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+# SeisNN ![Version](http://img.shields.io/:version-v0.3.0dev-yellow.svg?style=flat-square) [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 Docs build: [![CircleCI](https://circleci.com/gh/SeisNN/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/jimmy60504/SeisNN/tree/master) [![Docker Build](https://github.com/jimmy60504/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/jimmy60504/SeisNN/actions?query=workflow%3A%22Docker+Image%22)
 
