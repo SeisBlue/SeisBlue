@@ -73,23 +73,22 @@ def read_event_list(sfile):
     return events
 
 
-def get_event(filename):
+def get_event(filename, debug=False):
     import warnings
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
+        if not debug:
+            warnings.simplefilter("ignore")
         events = []
         for file in filename:
             try:
-                catalog, wavename = read_nordic(file, return_wavnames=True)
+                catalog = read_nordic(file)
             except Exception as err:
-                print(err)
+                if debug:
+                    print(err)
                 continue
             for event in catalog.events:
-                for pick in event.picks:
-                    pick.waveform_id.wavename = wavename
                 events.append(event)
-            return events
-
+        return events
 
 
 def read_sds(window):
@@ -136,7 +135,6 @@ def database_to_tfrecord(database, output):
         save_file = os.path.join(dataset_dir, file_name)
         write_tfrecord(example_list, save_file)
         print(f'{file_name} done')
-
 
 
 def _write_picked_stream(batch_picks, database):
@@ -280,6 +278,7 @@ def read_kml_placemark(kml):
 
     print(f'read {len(geom)} stations from {kml}')
     return geom
+
 
 if __name__ == "__main__":
     pass

@@ -8,7 +8,7 @@ RUN apt-get install sudo openssh-server vim htop screen reptyr git ffmpeg libpro
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 RUN python -m pip install --upgrade pip
-RUN python -m pip uninstall -y enum34 shapely; pip install shapely --no-binary shapely; python -m pip --no-cache-dir install --upgrade jupyterlab pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn Sphinx sphinx-bootstrap-theme recommonmark
+RUN pip install shapely --no-binary shapely; python -m pip --no-cache-dir install --upgrade jupyterlab pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn Sphinx sphinx-bootstrap-theme recommonmark
 
 RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config

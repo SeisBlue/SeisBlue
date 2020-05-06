@@ -21,6 +21,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
+import cartopy.crs as ccrs
+import cartopy.io.img_tiles as cimgt
+from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
+
 import seaborn as sns
 from obspy import UTCDateTime
 from seisnn.utils import make_dirs
@@ -205,6 +209,37 @@ def plot_confusion_matrix(true_positive, pred_count, val_count):
     plt.title(f'Precision = {precision:.3f}, Recall = {recall:.3f}, F1 = {f1:.3f}')
     plt.show()
     sns.set(font_scale=1)
+
+
+def plot_geometry(query):
+    geom = []
+    network = query[0].network
+    for station in query:
+        geom.append([station.longitude, station.latitude])
+    geom = np.array(geom).T
+
+    W, E, S, N = min(geom[0]), max(geom[0]), min(geom[1]), max(geom[1])
+    stamen_terrain = cimgt.Stamen('terrain-background')
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1, projection=stamen_terrain.crs)
+    ax.add_image(stamen_terrain, 11)
+
+    ax.scatter(geom[0], geom[1], label=network, transform=ccrs.PlateCarree(),
+               color='#3F51B5', edgecolors='k', linewidth=0.1, marker='v', s=40)
+
+    tick = 0.5
+    ax.set_xticks(np.arange(np.ceil(W / tick) * tick, np.floor(E / tick) * tick + tick, tick), crs=ccrs.PlateCarree())
+    ax.set_yticks(np.arange(np.ceil(S / tick) * tick, np.floor(N / tick) * tick + tick, tick), crs=ccrs.PlateCarree())
+    lon_formatter = LongitudeFormatter(zero_direction_label=True)
+    lat_formatter = LatitudeFormatter()
+    ax.xaxis.set_major_formatter(lon_formatter)
+    ax.yaxis.set_major_formatter(lat_formatter)
+    ax.tick_params(labelbottom=True, labeltop=True, labelleft=True, labelright=True,
+                   bottom=True, top=True, left=True, right=True)
+
+    ax.legend(markerscale=1)
+    plt.show()
+
 
 if __name__ == "__main__":
     pass

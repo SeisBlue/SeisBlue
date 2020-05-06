@@ -27,19 +27,22 @@ Base = declarative_base()
 class Geometry(Base):
     """Geometry table for sql database."""
     __tablename__ = 'geometry'
+    network = Column(String, nullable=False)
     station = Column(String, primary_key=True)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     elevation = Column(Float, nullable=False)
 
-    def __init__(self, sta, loc):
+    def __init__(self, net, sta, loc):
+        self.network = net
         self.station = sta
         self.latitude = loc['latitude']
         self.longitude = loc['longitude']
         self.elevation = loc['elevation']
 
     def __repr__(self):
-        return f"Geometry(Station={self.station}, " \
+        return f"Geometry(Network={self.network}, " \
+               f"Station={self.station}, " \
                f"Latitude={self.latitude:>7.4f}, " \
                f"Longitude={self.longitude:>8.4f}, " \
                f"Elevation={self.elevation:>6.1f})"
@@ -127,58 +130,75 @@ class Client:
         Base.metadata.create_all(bind=self.engine)
         self.session = sessionmaker(bind=self.engine)
 
-    def add_geom(self, geom):
+    def add_geom(self, geom, network):
         session = self.session()
         try:
+            counter = 0
             for sta, loc in geom.items():
-                Geometry(sta, loc).add_db(session)
+                Geometry(network, sta, loc).add_db(session)
+                counter += 1
             session.commit()
+            print(f'Input {counter} stations')
         except IntegrityError as err:
             print(f'Error: {err.orig}')
             session.rollback()
         finally:
             session.close()
 
-    def get_geom(self, station=None):
+    def get_geom(self, station=None, network=None):
         session = self.session()
         query = session.query(Geometry)
         if station:
-            if '*' in station or '?' in station:
-                station = station.replace('?', '_')
-                station = station.replace('*', '%')
-                query = query.filter(Geometry.station.like(station))
-            else:
-                query = query.filter(Geometry.station == station)
+            station = replace_sql_wildcard(station)
+            query = query.filter(Geometry.station.like(station))
+        if network:
+            network = replace_sql_wildcard(network)
+            query = query.filter(Geometry.network.like(network))
         session.close()
         return query
 
-    def add_picks(self, events, name):
+    def geom_summery(self):
         session = self.session()
-        counter = 0
+        query = session.query(Geometry.station).count()
+        print(f'Total {query} stations')
+
+    def plot_geom(self, station=None, network=None):
+        from seisnn.plot import plot_geometry
+        query = self.get_geom(station=station, network=network)
+        plot_geometry(query)
+
+    def add_picks(self, events, tag, remove_duplicates=True):
+        session = self.session()
         try:
+            counter = 0
             for event in events:
                 for pick in event.picks:
+                    Picks(pick, tag).add_db(session)
                     counter += 1
-                    Picks(pick, name).add_db(session)
             session.commit()
-            print(f'add {counter} picks')
+            print(f'Input {counter} picks')
         except IntegrityError as err:
             print(f'Error: {err.orig}')
             session.rollback()
         finally:
             session.close()
+        if remove_duplicates:
+            self.remove_duplicate_picks()
 
     def remove_duplicate_picks(self):
         session = self.session()
-        query = session.query(Picks, func.min(Picks.id)) \
-            .group_by(Picks.time, Picks.phase, Picks.station) \
+        distinct_picks = session.query(Picks, func.min(Picks.id)) \
+            .group_by(Picks.time, Picks.phase, Picks.station, Picks.tag) \
             .order_by(Picks.time)
-
+        duplicate = session.query(Picks) \
+            .filter(Picks.id.notin_(distinct_picks.with_entities(Picks.id))) \
+            .delete(synchronize_session='fetch')
+        session.commit()
         session.close()
-        return query
+        print(f'Remove {duplicate} duplicate picks')
 
     def get_picks(self, starttime=None, endtime=None,
-                  station=None, phase=None, name=None):
+                  station=None, phase=None, tag=None):
         session = self.session()
         query = session.query(Picks)
         if starttime:
@@ -186,23 +206,27 @@ class Client:
         if endtime:
             query = query.filter(Picks.time <= endtime)
         if station:
-            if '*' in station or '?' in station:
-                station = station.replace('?', '_')
-                station = station.replace('*', '%')
-                query = query.filter(Picks.station.like(station))
-            else:
-                query = query.filter(Picks.station == station)
+            station = replace_sql_wildcard(station)
+            query = query.filter(Picks.station.like(station))
         if phase:
             query = query.filter(Picks.phase.like(phase))
-        if name:
-            query = query.filter(Picks.phase.like(name))
+        if tag:
+            query = query.filter(Picks.tag.like(tag))
         session.close()
         return query
 
-    def pick_summery(self):
+    def picks_summery(self):
         session = self.session()
-        query = session.query(Picks.phase).distinct()
-        return query
+        query = session.query(Picks.phase, func.count(Picks.phase))\
+            .group_by(Picks.phase).all()
+        for phase, count in query:
+            print(f'{count} "{phase}" picks')
+
+
+def replace_sql_wildcard(string):
+    string = string.replace('?', '_')
+    string = string.replace('*', '%')
+    return string
 
 
 if __name__ == "__main__":
