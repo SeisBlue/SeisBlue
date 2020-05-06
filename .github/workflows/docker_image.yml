@@ -4,6 +4,7 @@ on:
   push:
     paths: 
       - 'docker/Dockerfile'
+      - '.github/workflows/docker_image.yml'
 env:
   DOCKER_REPO: seisnn/tf_ssh
 
@@ -21,3 +22,13 @@ jobs:
 
     - name: Push image
       run: docker push $DOCKER_REPO
+
+    - name: Push image with version
+      run: |
+        VERSION=$(python -c "import seisnn; print(seisnn.__version__)")
+        docker tag $DOCKER_REPO $DOCKER_REPO:v$VERSION
+        docker push $DOCKER_REPO:v$VERSION
+    - name: Push image with git commit hash
+      run: |
+        docker tag $DOCKER_REPO $DOCKER_REPO:${GITHUB_SHA::7}
+        docker push $DOCKER_REPO:${GITHUB_SHA::7}
