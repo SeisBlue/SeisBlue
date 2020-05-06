@@ -1,5 +1,5 @@
 """
-Database
+SQL Database
 =============
 
 SQLite database for metadata.
@@ -14,7 +14,7 @@ SQLite database for metadata.
 """
 
 import os
-from sqlalchemy import create_engine, Column, Integer, BigInteger, ForeignKey, String, DateTime, Float
+from sqlalchemy import create_engine, Column, Integer, BigInteger, ForeignKey, String, DateTime, Float, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
@@ -55,23 +55,63 @@ class Picks(Base):
     time = Column(DateTime, nullable=False)
     station = Column(String, ForeignKey('geometry.station'))
     phase = Column(String, nullable=False)
-    name = Column(String, nullable=False)
+    tag = Column(String, nullable=False)
     snr = Column(Float)
-    err = Column(Float)
 
-    def __init__(self, pick, name):
+    def __init__(self, pick, tag):
         self.time = pick.time.datetime
         self.station = pick.waveform_id.station_code
         self.phase = pick.phase_hint
-        self.name = name
+        self.tag = tag
 
     def __repr__(self):
         return f"Pick(Time={self.time}, " \
                f"Station={self.station}, " \
                f"Phase={self.phase}, " \
-               f"Name={self.name}, " \
-               f"SNR={self.snr}, " \
-               f"ERR={self.err:})"
+               f"Tag={self.tag}, " \
+               f"SNR={self.snr})"
+
+    def add_db(self, session):
+        session.add(self)
+
+
+class TFRecord(Base):
+    """TFRecord table for sql database."""
+    __tablename__ = 'tfrecord'
+    id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    file = Column(String)
+    tag = Column(String)
+    station = Column(String, ForeignKey('geometry.station'))
+
+    def __init__(self, tfrecord):
+        pass
+
+    def __repr__(self):
+        return f"TFRecord(File={self.file}, " \
+               f"Tag={self.tag}, " \
+               f"Station={self.station})"
+
+    def add_db(self, session):
+        session.add(self)
+
+
+class Waveform(Base):
+    """Waveform table for sql database."""
+    __tablename__ = 'waveform'
+    id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    starttime = Column(DateTime, nullable=False)
+    endtime = Column(DateTime, nullable=False)
+    station = Column(String, ForeignKey('geometry.station'))
+    tfrecord = Column(String, ForeignKey('tfrecord.file'))
+
+    def __init__(self, waveform):
+        pass
+
+    def __repr__(self):
+        return f"Waveform(Start Time={self.starttime}, " \
+               f"End Time={self.endtime}, " \
+               f"Station={self.station}, " \
+               f"TFRecord={self.tfrecord})"
 
     def add_db(self, session):
         session.add(self)
@@ -114,16 +154,28 @@ class Client:
 
     def add_picks(self, events, name):
         session = self.session()
+        counter = 0
         try:
             for event in events:
                 for pick in event.picks:
+                    counter += 1
                     Picks(pick, name).add_db(session)
             session.commit()
+            print(f'add {counter} picks')
         except IntegrityError as err:
             print(f'Error: {err.orig}')
             session.rollback()
         finally:
             session.close()
+
+    def remove_duplicate_picks(self):
+        session = self.session()
+        query = session.query(Picks, func.min(Picks.id)) \
+            .group_by(Picks.time, Picks.phase, Picks.station) \
+            .order_by(Picks.time)
+
+        session.close()
+        return query
 
     def get_picks(self, starttime=None, endtime=None,
                   station=None, phase=None, name=None):
@@ -147,7 +199,7 @@ class Client:
         session.close()
         return query
 
-    def list_pick_phase(self):
+    def pick_summery(self):
         session = self.session()
         query = session.query(Picks.phase).distinct()
         return query

@@ -77,17 +77,19 @@ def get_event(filename):
     import warnings
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        try:
-            events = []
-            for file in filename:
+        events = []
+        for file in filename:
+            try:
                 catalog, wavename = read_nordic(file, return_wavnames=True)
-                for event in catalog.events:
-                    for pick in event.picks:
-                        pick.waveform_id.wavename = wavename
-                    events.append(event)
+            except Exception as err:
+                print(err)
+                continue
+            for event in catalog.events:
+                for pick in event.picks:
+                    pick.waveform_id.wavename = wavename
+                events.append(event)
             return events
-        except:
-            pass
+
 
 
 def read_sds(window):
@@ -114,7 +116,7 @@ def read_sds(window):
 
 
 def database_to_tfrecord(database, output):
-    from seisnn.database import Client, Picks
+    from seisnn.sql import Client, Picks
     from itertools import groupby
     from operator import attrgetter
     config = get_config()

@@ -1,19 +1,14 @@
 import os
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-import argparse
-
 from seisnn.utils import get_config
 from seisnn.io import read_dataset
 from seisnn.core import Feature
 from seisnn.example_proto import batch_iterator
 
-ap = argparse.ArgumentParser()
-ap.add_argument('-d', '--dataset', required=False, help='dataset', type=str)
-args = ap.parse_args()
+dataset = 'test'
 
 config = get_config()
-dataset_dir = os.path.join(config['DATASET_ROOT'], args.dataset)
+dataset_dir = os.path.join(config['TFRECORD_ROOT'], dataset)
 dataset = read_dataset(dataset_dir)
 
 for batch in dataset.shuffle(1000).batch(2):
