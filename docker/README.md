@@ -30,14 +30,6 @@ Your data will stayed in the mounted volumes, any modifications will be destroye
 
 Put your scripts in the workspace folder and you will find them in the container's home folder. 
 
-## Notes
-
-You can customized your [Dockerfile](Dockerfile) by your needs.
-
-After modified the Dockerfile, run [build_docker_image.sh](build_docker_image.sh) to make your own image.
-
-Force remove all Docker container and images with [docker_clean_all.sh](docker_clean_all.sh) (Use it carefully!)
-
 ## Useful docker commands
 
 Update image:
