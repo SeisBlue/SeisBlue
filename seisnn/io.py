@@ -100,7 +100,6 @@ def read_sds(window):
     client = sds.Client(sds_root=config['SDS_ROOT'])
     stream = client.get_waveforms(network="*", station=station, location="*", channel="*",
                                   starttime=starttime, endtime=endtime)
-
     stream.sort(keys=['channel'], reverse=True)
     stream_list = {}
 
@@ -115,7 +114,7 @@ def read_sds(window):
 
 
 def database_to_tfrecord(database, output):
-    from seisnn.sql import Client, Picks
+    from seisnn.db import Client, Pick
     from itertools import groupby
     from operator import attrgetter
     config = get_config()
@@ -123,7 +122,7 @@ def database_to_tfrecord(database, output):
     make_dirs(dataset_dir)
 
     db = Client(database)
-    query = db.get_picks().order_by(Picks.station)
+    query = db.get_picks().order_by(Pick.station)
     picks_groupby_station = [list(g) for k, g in groupby(query, attrgetter('station'))]
 
     par = partial(_write_picked_stream, database=database)

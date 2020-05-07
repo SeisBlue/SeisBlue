@@ -44,6 +44,7 @@ def batch(iterable, n=1):
 
 
 def parallel(par, file_list):
+    print(f'Parallel in {cpu_count()} threads:')
     batch_size = int(np.ceil(len(file_list) / cpu_count()))
     pool = Pool(processes=cpu_count(), maxtasksperchild=1)
     output = []

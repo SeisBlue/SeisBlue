@@ -36,7 +36,7 @@ ax.scatter(MN_eq[0], MN_eq[1],
 geom = read_hyp('HL2017.HYP')
 HL_station = []
 for k, station in geom.items():
-    HL_station.append([station['longitude'], station['latitude'], ])
+    HL_station.append([station['longitude'], station['latitude']])
 HL_station = np.array(HL_station).T
 ax.scatter(HL_station[0], HL_station[1], label='HL station',
            transform=ccrs.Geodetic(), color='#3F51B5', edgecolors='k', linewidth=0.1, marker='v', s=5)

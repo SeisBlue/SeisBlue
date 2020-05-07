@@ -14,7 +14,7 @@ Data processing flow
 """
 
 from seisnn.pick import get_pdf
-from seisnn.sql import Client
+from seisnn.db import Client
 
 
 def stream_preprocessing(stream, database):

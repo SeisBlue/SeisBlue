@@ -1,6 +1,6 @@
 from . import model
 from . import core
-from . import sql
+from . import db
 from . import example_proto
 from . import flow
 from . import io
