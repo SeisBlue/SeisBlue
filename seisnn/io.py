@@ -63,13 +63,13 @@ def write_tfrecord(example_list, save_file):
             writer.write(example)
 
 
-def read_event_list(sfile):
+def read_event_list(sfile_dir):
     config = get_config()
-    sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile)
+    sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
     sfile_list = get_dir_list(sfile_dir)
-    print(f'reading events from {sfile_dir}')
+    print(f'Reading events from {sfile_dir}')
     events = parallel(par=get_event, file_list=sfile_list)
-    print(f'read {len(events)} events from {sfile}')
+    print(f'Read {len(events)} events ')
     return events
 
 

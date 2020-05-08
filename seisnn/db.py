@@ -22,8 +22,6 @@ from sqlalchemy.exc import IntegrityError
 
 from seisnn.utils import get_config
 
-# from seisnn.io import read_event_list
-
 Base = declarative_base()
 
 
@@ -64,7 +62,10 @@ class Event(Base):
     depth = Column(Float, nullable=False)
 
     def __init__(self, event):
-        pass
+        self.time = event.origins[0].time.datetime
+        self.latitude = event.origins[0].latitude
+        self.longitude = event.origins[0].longitude
+        self.depth = event.origins[0].depth
 
     def __repr__(self):
         return f"Event(Time={self.time}" \
@@ -184,22 +185,31 @@ class Client:
 
     def geom_summery(self):
         session = self.session()
-        query = session.query(Geometry.station).count()
-        print(f'Total {query} stations')
+        print('--------------------------------')
+        print('Geometry Summery:')
+        print('--------------------------------')
+        station = session.query(Geometry.station).order_by(Geometry.station)
+        print(f'{station[0][0]}, {station[1][0]}, {station[2][0]} ... {station[-1][0]}')
 
-    def plot_geom(self, station=None, network=None):
-        from seisnn.plot import plot_geometry
-        query = self.get_geom(station=station, network=network)
-        plot_geometry(query)
+        station_count = session.query(Geometry.station).count()
+        print(f'Total {station_count} stations')
+        print('--------------------------------')
 
-    def add_events(self, hyp, remove_duplicates=True):
-        # events = read_event_list(hyp)
-        events = hyp
+    def plot_map(self):
+        from seisnn.plot import plot_map
+        session = self.session()
+        geometry = session.query(Geometry.latitude, Geometry.longitude, Geometry.network).all()
+        events = session.query(Event.latitude, Event.longitude).all()
+        session.close()
+        plot_map(geometry, events)
+
+    def add_events(self, events, remove_duplicates=True):
         session = self.session()
         try:
             counter = 0
             for event in events:
                 Event(event).add_db(session)
+                counter += 1
             session.commit()
             print(f'Input {counter} events')
         except IntegrityError as err:
@@ -257,14 +267,21 @@ class Client:
         for phase, count in phase_group_count:
             print(f'{count} "{phase}" picks')
 
-        station = session.query(Pick.station.distinct()).order_by(Pick.station).all()
-        for stat in station:
-            print(stat[0])
-
         station_count = session.query(Pick.station.distinct()).count()
-        print(f'Picks cover {station_count} stations')
+        print(f'Picks cover {station_count} stations:')
+
+        station = session.query(Pick.station.distinct()).order_by(Pick.station).all()
+        print(f'{station[0][0]}, {station[1][0]}, {station[2][0]} ... {station[-1][0]}')
+
+        no_pick_station = session.query(Geometry.station)\
+            .filter(Geometry.station.notin_(session.query(Pick.station))).all()
+        if no_pick_station:
+            print(f'{len(no_pick_station)} stations without picks:')
+            for stat in no_pick_station:
+                print(stat[0])
 
         time = session.query(func.min(Pick.time), func.max(Pick.time)).all()
+        print(f'Time duration')
         print(f'From: {time[0][0].isoformat()}')
         print(f'To:   {time[0][1].isoformat()}')
 
