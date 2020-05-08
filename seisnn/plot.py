@@ -22,8 +22,8 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 import cartopy.crs as ccrs
-import cartopy.io.img_tiles as cimgt
-from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
+from cartopy.io.img_tiles import Stamen
+from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter, LongitudeLocator, LatitudeLocator
 
 import seaborn as sns
 from obspy import UTCDateTime
@@ -211,34 +211,60 @@ def plot_confusion_matrix(true_positive, pred_count, val_count):
     sns.set(font_scale=1)
 
 
-def plot_geometry(query):
-    geom = []
-    network = query[0].network
-    for station in query:
-        geom.append([station.longitude, station.latitude])
-    geom = np.array(geom).T
-
-    W, E, S, N = min(geom[0]), max(geom[0]), min(geom[1]), max(geom[1])
-    stamen_terrain = cimgt.Stamen('terrain-background')
+def plot_map(geometry, events):
+    stamen_terrain = Stamen('terrain-background')
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1, projection=stamen_terrain.crs)
     ax.add_image(stamen_terrain, 11)
 
-    ax.scatter(geom[0], geom[1], label=network, transform=ccrs.PlateCarree(),
-               color='#3F51B5', edgecolors='k', linewidth=0.1, marker='v', s=40)
+    if events:
+        eq = []
+        for event in events:
+            eq.append([event.longitude, event.latitude])
+        eq = np.array(eq).T
+        ax.scatter(eq[0], eq[1], label='Event', transform=ccrs.PlateCarree(),
+                   color='#555555', edgecolors='k', linewidth=0.3, marker='o', s=10)
 
-    tick = 0.5
-    ax.set_xticks(np.arange(np.ceil(W / tick) * tick, np.floor(E / tick) * tick + tick, tick), crs=ccrs.PlateCarree())
-    ax.set_yticks(np.arange(np.ceil(S / tick) * tick, np.floor(N / tick) * tick + tick, tick), crs=ccrs.PlateCarree())
-    lon_formatter = LongitudeFormatter(zero_direction_label=True)
-    lat_formatter = LatitudeFormatter()
-    ax.xaxis.set_major_formatter(lon_formatter)
-    ax.yaxis.set_major_formatter(lat_formatter)
-    ax.tick_params(labelbottom=True, labeltop=True, labelleft=True, labelright=True,
-                   bottom=True, top=True, left=True, right=True)
+    if geometry:
+        geom = []
+        network = geometry[0].network
+        for station in geometry:
+            geom.append([station.longitude, station.latitude])
+        geom = np.array(geom).T
+        ax.scatter(geom[0], geom[1], label=network, transform=ccrs.PlateCarree(),
+                   color='#4F61C5', edgecolors='k', linewidth=0.1, marker='v', s=40)
+
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+
+    min_point = max_point = TransferProjection(stamen_terrain.crs, ccrs.PlateCarree())
+    xmin, ymin = min_point.transfer(xmin, ymin)
+    xmax, ymax = max_point.transfer(xmax, ymax)
+
+    xticks = LongitudeLocator(nbins=2)._raw_ticks(xmin, xmax)
+    yticks = LatitudeLocator(nbins=3)._raw_ticks(ymin, ymax)
+
+    ax.set_xticks(xticks, crs=ccrs.PlateCarree())
+    ax.set_yticks(yticks, crs=ccrs.PlateCarree())
+    ax.xaxis.set_major_formatter(LongitudeFormatter(zero_direction_label=True))
+    ax.yaxis.set_major_formatter(LatitudeFormatter())
 
     ax.legend(markerscale=1)
     plt.show()
+
+
+class TransferProjection:
+    x = y = None
+
+    def __init__(self, source_proj, target_proj):
+        self.source_proj = source_proj
+        self.target_proj = target_proj
+
+    def transfer(self, x, y):
+        self.x = x
+        self.y = y
+        result = self.target_proj._project_point(self, self.source_proj)
+        return result.x, result.y
 
 
 if __name__ == "__main__":
