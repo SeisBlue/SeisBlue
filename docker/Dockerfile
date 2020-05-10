@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.2.0rc3-gpu-jupyter
+FROM tensorflow/tensorflow:2.2.0-gpu-jupyter
 
 RUN apt-mark hold libcudnn7
 RUN apt-get update && apt-get upgrade -y
