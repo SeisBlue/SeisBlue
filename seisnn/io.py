@@ -69,7 +69,7 @@ def read_event_list(sfile_dir):
     sfile_list = get_dir_list(sfile_dir)
     print(f'Reading events from {sfile_dir}')
     events = parallel(par=get_event, file_list=sfile_list)
-    print(f'Read {len(events)} events ')
+    print(f'Read {len(events)} events\n')
     return events
 
 
