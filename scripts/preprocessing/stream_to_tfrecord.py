@@ -1,11 +1,6 @@
-from multiprocessing import cpu_count
-import tensorflow as tf
+from seisnn.db import Client
 
-from seisnn.io import database_to_tfrecord
 
-print(f'cpu counts: {cpu_count()} threads')
+db = Client('HL2017.db')
 
-database = 'test.db'
-
-with tf.device('/cpu:0'):
-    database_to_tfrecord(database, 'test')
+db.generate_training_data('HL2017')

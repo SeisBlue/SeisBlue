@@ -157,7 +157,8 @@ class Client:
 
     def __init__(self, database, echo=False):
         config = get_config()
-        db_path = os.path.join(config['DATABASE_ROOT'], database)
+        self.database = database
+        db_path = os.path.join(config['DATABASE_ROOT'], self.database)
         self.engine = create_engine(f'sqlite:///{db_path}?check_same_thread=False', echo=echo)
         Base.metadata.create_all(bind=self.engine)
         self.session = sessionmaker(bind=self.engine)
@@ -312,6 +313,24 @@ class Client:
                 print(f'{len(no_geom_station)} stations without geometry:')
                 print([stat[0] for stat in no_geom_station], '\n')
 
+    def generate_training_data(self, output):
+        from functools import partial
+        from seisnn.utils import make_dirs, parallel
+        from seisnn.io import _write_picked_stream, write_tfrecord
+        config = get_config()
+        dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
+        make_dirs(dataset_dir)
+        par = partial(_write_picked_stream, database=self.database)
+
+        station_list = self.list_distinct_items(Pick, 'station')
+        for station in station_list:
+            file_name = '{}.tfrecord'.format(station)
+            picks = self.get_picks(station=station).all()
+            example_list = parallel(par, picks)
+            save_file = os.path.join(dataset_dir, file_name)
+            write_tfrecord(example_list, save_file)
+            print(f'{file_name} done')
+
     def remove_duplicates(self, table, match_columns: list):
         with self.session_scope() as session:
             attrs = attrgetter(*match_columns)
@@ -322,6 +341,13 @@ class Client:
                 .filter(table.id.notin_(distinct.with_entities(table.id))) \
                 .delete(synchronize_session='fetch')
             print(f'Remove {duplicate} duplicate {table.__tablename__}s')
+
+    def list_distinct_items(self, table, column):
+        with self.session_scope() as session:
+            col = attrgetter(column)
+            query = session.query(col(table).distinct()).order_by(col(table)).all()
+            query = [q[0] for q in query]
+            return query
 
     @contextmanager
     def session_scope(self):
