@@ -20,16 +20,15 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine, Column, Integer, BigInteger, ForeignKey, String, DateTime, Float, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
 
 from seisnn.utils import get_config
 
 Base = declarative_base()
 
 
-class Geometry(Base):
-    """Geometry table for sql database."""
-    __tablename__ = 'geometry'
+class Inventory(Base):
+    """Inventory table for sql database."""
+    __tablename__ = 'inventory'
     network = Column(String, nullable=False)
     station = Column(String, primary_key=True)
     latitude = Column(Float, nullable=False)
@@ -86,7 +85,7 @@ class Pick(Base):
     __tablename__ = 'pick'
     id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     time = Column(DateTime, nullable=False)
-    station = Column(String, ForeignKey('geometry.station'), nullable=False)
+    station = Column(String, ForeignKey('inventory.station'), nullable=False)
     phase = Column(String, nullable=False)
     tag = Column(String, nullable=False)
     snr = Column(Float)
@@ -115,7 +114,7 @@ class TFRecord(Base):
     id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     file = Column(String)
     tag = Column(String)
-    station = Column(String, ForeignKey('geometry.station'))
+    station = Column(String, ForeignKey('inventory.station'))
 
     def __init__(self, tfrecord):
         pass
@@ -136,7 +135,7 @@ class Waveform(Base):
     id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     starttime = Column(DateTime, nullable=False)
     endtime = Column(DateTime, nullable=False)
-    station = Column(String, ForeignKey('geometry.station'))
+    station = Column(String, ForeignKey('inventory.station'))
     tfrecord = Column(String, ForeignKey('tfrecord.file'))
 
     def __init__(self, waveform):
@@ -163,37 +162,49 @@ class Client:
         Base.metadata.create_all(bind=self.engine)
         self.session = sessionmaker(bind=self.engine)
 
+    def read_hyp(self, hyp, network):
+        """seisnn.io.read_hyp wrap up"""
+        from seisnn.io import read_hyp
+        geom = read_hyp(hyp)
+        self.add_geom(geom, network)
+
+    def read_kml_placemark(self, kml, network):
+        """seisnn.io.read_kml_placemark wrap up"""
+        from seisnn.io import read_kml_placemark
+        geom = read_kml_placemark(kml)
+        self.add_geom(geom, network)
+
     def add_geom(self, geom, network):
         with self.session_scope() as session:
             counter = 0
             for sta, loc in geom.items():
-                Geometry(network, sta, loc).add_db(session)
+                Inventory(network, sta, loc).add_db(session)
                 counter += 1
             session.commit()
             print(f'Input {counter} stations')
 
     def get_geom(self, station=None, network=None):
         with self.session_scope() as session:
-            query = session.query(Geometry)
+            query = session.query(Inventory)
             if station:
                 station = self.replace_sql_wildcard(station)
-                query = query.filter(Geometry.station.like(station))
+                query = query.filter(Inventory.station.like(station))
             if network:
                 network = self.replace_sql_wildcard(network)
-                query = query.filter(Geometry.network.like(network))
+                query = query.filter(Inventory.network.like(network))
 
         return query
 
     def geom_summery(self):
         with self.session_scope() as session:
-            station = session.query(Geometry.station).order_by(Geometry.station)
-            station_count = session.query(Geometry.station).count()
+            station = session.query(Inventory.station).order_by(Inventory.station)
+            station_count = session.query(Inventory.station).count()
             print(f'Station name:')
             print([stat[0] for stat in station], '\n')
             print(f'Total {station_count} stations\n')
 
-            boundary = session.query(func.min(Geometry.longitude), func.max(Geometry.longitude),
-                                     func.min(Geometry.latitude), func.max(Geometry.latitude)).all()
+            boundary = session.query(func.min(Inventory.longitude), func.max(Inventory.longitude),
+                                     func.min(Inventory.latitude), func.max(Inventory.latitude)).all()
             print(f'Station boundary:')
             print(f'West: {boundary[0][0]:>8.4f}')
             print(f'East: {boundary[0][1]:>8.4f}')
@@ -203,12 +214,14 @@ class Client:
     def plot_map(self):
         from seisnn.plot import plot_map
         with self.session_scope() as session:
-            geometry = session.query(Geometry.latitude, Geometry.longitude, Geometry.network).all()
+            geometry = session.query(Inventory.latitude, Inventory.longitude, Inventory.network).all()
             events = session.query(Event.latitude, Event.longitude).all()
 
         plot_map(geometry, events)
 
-    def add_events(self, events, tag, remove_duplicates=True):
+    def add_events(self, catalog, tag, remove_duplicates=True):
+        from seisnn.io import read_event_list
+        events = read_event_list(catalog)
         with self.session_scope() as session:
             event_count = 0
             pick_count = 0
@@ -285,16 +298,16 @@ class Client:
             station = session.query(Pick.station.distinct()).order_by(Pick.station).all()
             print([stat[0] for stat in station], '\n')
 
-            no_pick_station = session.query(Geometry.station)\
-                .order_by(Geometry.station) \
-                .filter(Geometry.station.notin_(session.query(Pick.station))).all()
+            no_pick_station = session.query(Inventory.station) \
+                .order_by(Inventory.station) \
+                .filter(Inventory.station.notin_(session.query(Pick.station))).all()
             if no_pick_station:
                 print(f'{len(no_pick_station)} stations without picks:')
                 print([stat[0] for stat in no_pick_station], '\n')
 
-            no_geom_station = session.query(Pick.station.distinct())\
+            no_geom_station = session.query(Pick.station.distinct()) \
                 .order_by(Pick.station) \
-                .filter(Pick.station.notin_(session.query(Geometry.station))).all()
+                .filter(Pick.station.notin_(session.query(Inventory.station))).all()
             if no_geom_station:
                 print(f'{len(no_geom_station)} stations without geometry:')
                 print([stat[0] for stat in no_geom_station], '\n')
@@ -317,8 +330,8 @@ class Client:
         try:
             yield session
             session.commit()
-        except IntegrityError as err:
-            print(f'Error: {err.orig}')
+        except Exception as exception:
+            print(f'{exception.__class__.__name__}: {exception.__cause__}')
             session.rollback()
         finally:
             session.close()

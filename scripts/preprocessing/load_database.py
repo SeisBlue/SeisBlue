@@ -1,18 +1,11 @@
-from seisnn.io import read_hyp, read_event_list
 from seisnn.db import Client
 
-database = "HL2017.db"
-catalog = "HL2017"
-geometry = "HL2017.HYP"
+db = Client("HL2017.db")
 
-db = Client(database)
-
-geom = read_hyp(geometry)
-db.add_geom(geom, network="HL2017")
+db.read_hyp("HL2017.HYP", network="HL2017")
 db.geom_summery()
 
-events = read_event_list(catalog)
-db.add_events(events, tag="manual")
-db.plot_map()
-
+db.add_events("HL2017", tag="manual")
 db.event_summery()
+
+db.plot_map()

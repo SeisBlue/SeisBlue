@@ -232,7 +232,7 @@ def plot_map(geometry, events):
             geom.append([station.longitude, station.latitude])
         geom = np.array(geom).T
         ax.scatter(geom[0], geom[1], label=network, transform=ccrs.PlateCarree(),
-                   color='#4F61C5', edgecolors='k', linewidth=0.1, marker='v', s=40)
+                   color='#c72c2c', edgecolors='k', linewidth=0.1, marker='v', s=40)
 
     xmin, xmax = ax.get_xlim()
     ymin, ymax = ax.get_ylim()
