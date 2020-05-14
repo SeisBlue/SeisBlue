@@ -1,6 +1,6 @@
 FROM tensorflow/tensorflow:2.2.0-gpu-jupyter
 
-RUN curl -sL https://deb.nodesource.com/setup_12.x | -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-mark hold libcudnn7
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install sudo openssh-server vim htop screen reptyr git nodejs ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y
