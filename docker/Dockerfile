@@ -1,14 +1,16 @@
 FROM tensorflow/tensorflow:2.2.0-gpu-jupyter
 
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 RUN apt-mark hold libcudnn7
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install sudo openssh-server vim htop screen reptyr git ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y
+RUN apt-get install sudo openssh-server vim htop screen reptyr git nodejs ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y
 
 # Add all user into sudoers
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 RUN python -m pip install --upgrade pip
-RUN pip install shapely --no-binary shapely; python -m pip --no-cache-dir install --upgrade jupyterlab pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn Sphinx sphinx-bootstrap-theme recommonmark
+RUN pip install shapely --no-binary shapely; python -m pip --no-cache-dir install --upgrade jupyterlab ipympl pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn Sphinx sphinx-bootstrap-theme recommonmark
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyter-matplotlib
 
 RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
