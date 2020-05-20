@@ -1,4 +1,4 @@
-# SeisNN [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+# SeisNN [![License](http://img.shields.io/:license-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
 
 ![Version](http://img.shields.io/:version-v0.3.0dev-yellow.svg?style=flat-square) ![Docker](http://img.shields.io/:Docker-build.20200520-blue.svg?style=flat-square)
 
