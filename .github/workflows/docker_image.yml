@@ -29,6 +29,12 @@ jobs:
         docker tag $DOCKER_REPO $DOCKER_REPO:v$VERSION
         docker push $DOCKER_REPO:v$VERSION
 
+    - name: Push image with date
+      run: |
+        DATE=$(date +'%Y%m%d')
+        docker tag $DOCKER_REPO $DOCKER_REPO:build.$DATE
+        docker push $DOCKER_REPO:build.$DATE
+
     - name: Push image with git commit hash
       run: |
         docker tag $DOCKER_REPO $DOCKER_REPO:${GITHUB_SHA::7}
