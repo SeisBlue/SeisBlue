@@ -10,7 +10,12 @@ RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 RUN python -m pip install --upgrade pip
 RUN pip install shapely --no-binary shapely; python -m pip --no-cache-dir install --upgrade jupyterlab ipympl pyyaml obspy scikit-learn sklearn tqdm Cartopy Pillow seaborn Sphinx sphinx-bootstrap-theme recommonmark
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyter-matplotlib
+
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build && jupyter labextension install jupyter-matplotlib --no-build
+RUN jupyter lab build
+
+# Change jupyter python kernel
+RUN sed -i 's/\/usr\/bin\/python3/\/usr\/local\/bin\/python/g' /usr/local/share/jupyter/kernels/python3/kernel.json
 
 RUN mkdir /var/run/sshd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
