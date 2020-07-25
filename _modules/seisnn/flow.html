@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seisnn.flow &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -60,7 +61,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Proto</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
@@ -131,29 +131,32 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">seisnn.pick</span> <span class="kn">import</span> <span class="n">search_pick</span><span class="p">,</span> <span class="n">get_pdf</span>
 
-
-<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/flow/seisnn.flow.stream_preprocessing.html#seisnn.flow.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Main data preprocessing flow.</span>
-
-<span class="sd">    :param stream:</span>
-<span class="sd">    :param pick_list:</span>
-<span class="sd">    :param pick_time_key:</span>
-<span class="sd">    :param geom:</span>
-<span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/flow/seisnn.flow.stream_preprocessing.html#seisnn.flow.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return processed stream with pdf.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">seisnn.pick</span> <span class="kn">import</span> <span class="n">get_pdf</span>
+    <span class="kn">from</span> <span class="nn">seisnn.db</span> <span class="kn">import</span> <span class="n">Client</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-    <span class="n">stream</span> <span class="o">=</span> <span class="n">get_exist_picks</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">)</span>
+
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span><span class="o">.</span><span class="n">datetime</span>
+    <span class="n">endtime</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">endtime</span><span class="o">.</span><span class="n">datetime</span>
+    <span class="n">station</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">station</span>
+
+    <span class="n">stream</span><span class="o">.</span><span class="n">picks</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">]:</span>
+        <span class="n">picks</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="n">starttime</span><span class="o">=</span><span class="n">starttime</span><span class="p">,</span> <span class="n">endtime</span><span class="o">=</span><span class="n">endtime</span><span class="p">,</span>
+                             <span class="n">station</span><span class="o">=</span><span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">phase</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">picks</span><span class="p">:</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">picks</span><span class="p">[</span><span class="n">phase</span><span class="p">]</span> <span class="o">=</span> <span class="n">picks</span>
+
     <span class="n">stream</span> <span class="o">=</span> <span class="n">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-    <span class="n">stream</span> <span class="o">=</span> <span class="n">get_stream_geom</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">geom</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
 <div class="viewcode-block" id="signal_preprocessing"><a class="viewcode-back" href="../../package/flow/seisnn.flow.signal_preprocessing.html#seisnn.flow.signal_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Main signal processing flow.</span>
+<span class="sd">    Return a signal processed stream.</span>
 
 <span class="sd">    :param stream:</span>
 <span class="sd">    :return:</span>
@@ -166,36 +169,9 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="get_exist_picks"><a class="viewcode-back" href="../../package/flow/seisnn.flow.get_exist_picks.html#seisnn.flow.get_exist_picks">[docs]</a><span class="k">def</span> <span class="nf">get_exist_picks</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Search picks in a given time window.</span>
-
-<span class="sd">    :param stream:</span>
-<span class="sd">    :param pick_list:</span>
-<span class="sd">    :param pick_time_key:</span>
-<span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">picks</span> <span class="o">=</span> <span class="n">search_pick</span><span class="p">(</span><span class="n">pick_list</span><span class="p">,</span> <span class="n">pick_time_key</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
-    <span class="n">stream</span><span class="o">.</span><span class="n">picks</span> <span class="o">=</span> <span class="n">picks</span>
-    <span class="k">return</span> <span class="n">stream</span></div>
-
-
-<div class="viewcode-block" id="get_stream_geom"><a class="viewcode-back" href="../../package/flow/seisnn.flow.get_stream_geom.html#seisnn.flow.get_stream_geom">[docs]</a><span class="k">def</span> <span class="nf">get_stream_geom</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get station name from header.</span>
-
-<span class="sd">    :param stream:</span>
-<span class="sd">    :param geom:</span>
-<span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">station</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">station</span>
-    <span class="n">stream</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">geom</span><span class="p">[</span><span class="n">station</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">stream</span></div>
-
-
 <div class="viewcode-block" id="trim_trace"><a class="viewcode-back" href="../../package/flow/seisnn.flow.trim_trace.html#seisnn.flow.trim_trace">[docs]</a><span class="k">def</span> <span class="nf">trim_trace</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">3008</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Trim traces in required length for unet.</span>
+<span class="sd">    Return trimmed stream in a given length.</span>
 
 <span class="sd">    :param stream:</span>
 <span class="sd">    :param points:</span>
@@ -207,6 +183,7 @@
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">points</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">nearest_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">stream</span></div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">pass</span>
@@ -224,7 +201,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

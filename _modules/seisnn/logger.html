@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seisnn.logger &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -60,7 +61,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Proto</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
@@ -129,12 +129,10 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">seisnn.utils</span> <span class="kn">import</span> <span class="n">make_dirs</span><span class="p">,</span> <span class="n">get_config</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
-
+<span class="kn">from</span> <span class="nn">seisnn.utils</span> <span class="kn">import</span> <span class="n">make_dirs</span>
 
 <div class="viewcode-block" id="save_loss"><a class="viewcode-back" href="../../package/logger/seisnn.logger.save_loss.html#seisnn.logger.save_loss">[docs]</a><span class="k">def</span> <span class="nf">save_loss</span><span class="p">(</span><span class="n">loss_buffer</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">):</span>
+
     <span class="n">make_dirs</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span>
     <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">.log&#39;</span><span class="p">)</span>
     <span class="n">loss_buffer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">loss_buffer</span><span class="p">)</span>
@@ -157,7 +155,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

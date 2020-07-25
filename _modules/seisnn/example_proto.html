@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seisnn.example_proto &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -60,7 +61,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Proto</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
@@ -154,7 +154,7 @@
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">int64_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Int64List</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
 
 
-<div class="viewcode-block" id="stream_to_feature"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.stream_to_feature.html#seisnn.example_proto.stream_to_feature">[docs]</a><span class="k">def</span> <span class="nf">stream_to_feature</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">pickset</span><span class="p">):</span>
+<div class="viewcode-block" id="stream_to_feature"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.stream_to_feature.html#seisnn.example_proto.stream_to_feature">[docs]</a><span class="k">def</span> <span class="nf">stream_to_feature</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Turn Stream object into feature dictionary</span>
 
@@ -194,19 +194,6 @@
     <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">phase</span>
     <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">pdf</span><span class="p">)</span>
 
-    <span class="n">pick_time</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">pick_phase</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">pick_set</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">picks</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">picks</span> <span class="ow">in</span> <span class="n">stream</span><span class="o">.</span><span class="n">picks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">:</span>
-                <span class="n">pick_time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">())</span>
-                <span class="n">pick_phase</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">phase_hint</span><span class="p">)</span>
-                <span class="n">pick_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pickset</span><span class="p">)</span>
-    <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pick_time</span>
-    <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pick_phase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pick_phase</span>
-    <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pick_set&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pick_set</span>
-
     <span class="k">return</span> <span class="n">feature</span></div>
 
 
@@ -230,7 +217,7 @@
     <span class="n">context</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Features</span><span class="p">(</span><span class="n">feature</span><span class="o">=</span><span class="n">context_data</span><span class="p">)</span>
 
     <span class="n">sequence_data</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">,</span> <span class="s1">&#39;pick_phase&#39;</span><span class="p">,</span> <span class="s1">&#39;pick_set&#39;</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">]:</span>
         <span class="n">pick_features</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">context_data</span> <span class="ow">in</span> <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
@@ -259,10 +246,6 @@
         <span class="s2">&quot;pdf&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
     <span class="p">}</span>
     <span class="n">sequence</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;pick_time&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VarLenFeature</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">),</span>
-        <span class="s2">&quot;pick_phase&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VarLenFeature</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">),</span>
-        <span class="s2">&quot;pick_set&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VarLenFeature</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">),</span>
-
         <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VarLenFeature</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">),</span>
         <span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VarLenFeature</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">),</span>
     <span class="p">}</span>
@@ -279,10 +262,6 @@
         <span class="s1">&#39;npts&#39;</span><span class="p">:</span> <span class="n">parsed_context</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">],</span>
 
         <span class="s1">&#39;station&#39;</span><span class="p">:</span> <span class="n">parsed_context</span><span class="p">[</span><span class="s1">&#39;station&#39;</span><span class="p">],</span>
-
-        <span class="s2">&quot;pick_time&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">RaggedTensor</span><span class="o">.</span><span class="n">from_sparse</span><span class="p">(</span><span class="n">parsed_sequence</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">]),</span>
-        <span class="s2">&quot;pick_phase&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">RaggedTensor</span><span class="o">.</span><span class="n">from_sparse</span><span class="p">(</span><span class="n">parsed_sequence</span><span class="p">[</span><span class="s1">&#39;pick_phase&#39;</span><span class="p">]),</span>
-        <span class="s2">&quot;pick_set&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">RaggedTensor</span><span class="o">.</span><span class="n">from_sparse</span><span class="p">(</span><span class="n">parsed_sequence</span><span class="p">[</span><span class="s1">&#39;pick_set&#39;</span><span class="p">]),</span>
 
         <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">RaggedTensor</span><span class="o">.</span><span class="n">from_sparse</span><span class="p">(</span><span class="n">parsed_sequence</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">]),</span>
         <span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">RaggedTensor</span><span class="o">.</span><span class="n">from_sparse</span><span class="p">(</span><span class="n">parsed_sequence</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]),</span>
@@ -306,17 +285,13 @@
 
         <span class="s1">&#39;station&#39;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;station&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
 
-        <span class="s2">&quot;pick_time&quot;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">],</span>
-        <span class="s2">&quot;pick_phase&quot;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;pick_phase&#39;</span><span class="p">],</span>
-        <span class="s2">&quot;pick_set&quot;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;pick_set&#39;</span><span class="p">],</span>
-
         <span class="s2">&quot;trace&quot;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">],</span>
         <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">],</span>
         <span class="s2">&quot;pdf&quot;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">],</span>
         <span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">],</span>
     <span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">,</span> <span class="s1">&#39;pick_phase&#39;</span><span class="p">,</span> <span class="s1">&#39;pick_set&#39;</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">]:</span>
         <span class="n">feature_list</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">data_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">feature_list</span><span class="p">:</span>
@@ -338,10 +313,6 @@
             <span class="s1">&#39;npts&#39;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">],</span>
 
             <span class="s1">&#39;station&#39;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;station&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">],</span>
-
-            <span class="s2">&quot;pick_time&quot;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">,</span> <span class="p">:],</span>
-            <span class="s2">&quot;pick_phase&quot;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;pick_phase&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">,</span> <span class="p">:],</span>
-            <span class="s2">&quot;pick_set&quot;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;pick_set&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">,</span> <span class="p">:],</span>
 
             <span class="s2">&quot;trace&quot;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">,</span> <span class="p">:],</span>
             <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">,</span> <span class="p">:],</span>
@@ -367,7 +338,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

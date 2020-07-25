@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seisnn.core &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -60,7 +61,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Proto</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
@@ -146,19 +146,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">npts</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span> <span class="o">=</span> <span class="kc">None</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pdf</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">pick_time</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pick_phase</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pick_set</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">example</span><span class="p">)</span></div>
 
@@ -171,19 +163,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">npts</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;elevation&#39;</span><span class="p">]</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pdf</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pick_time</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pick_phase</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pick_phase&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pick_set</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pick_set&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">to_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
@@ -195,20 +180,12 @@
             <span class="s1">&#39;npts&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">npts</span><span class="p">,</span>
             <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">,</span>
 
-            <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-            <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
-            <span class="s1">&#39;elevation&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span><span class="p">,</span>
 
             <span class="s1">&#39;trace&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">,</span>
             <span class="s1">&#39;channel&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
 
             <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span>
             <span class="s1">&#39;pdf&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span>
-
-            <span class="s1">&#39;pick_time&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_time</span><span class="p">,</span>
-            <span class="s1">&#39;pick_phase&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_phase</span><span class="p">,</span>
-            <span class="s1">&#39;pick_set&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_set</span><span class="p">,</span>
-
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">feature</span>
 
@@ -267,7 +244,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

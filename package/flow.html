@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data processing flow &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -62,7 +63,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="example_proto.html">Example Proto</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">Input / Output</a></li>
@@ -140,20 +140,14 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="flow/seisnn.flow.stream_preprocessing.html#seisnn.flow.stream_preprocessing" title="seisnn.flow.stream_preprocessing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stream_preprocessing</span></code></a>(stream, pick_list, …)</p></td>
-<td><p>Main data preprocessing flow.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="flow/seisnn.flow.stream_preprocessing.html#seisnn.flow.stream_preprocessing" title="seisnn.flow.stream_preprocessing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stream_preprocessing</span></code></a>(stream, database)</p></td>
+<td><p>Return processed stream with pdf.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="flow/seisnn.flow.signal_preprocessing.html#seisnn.flow.signal_preprocessing" title="seisnn.flow.signal_preprocessing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signal_preprocessing</span></code></a>(stream)</p></td>
-<td><p>Main signal processing flow.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="flow/seisnn.flow.get_exist_picks.html#seisnn.flow.get_exist_picks" title="seisnn.flow.get_exist_picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_exist_picks</span></code></a>(stream, pick_list, pick_time_key)</p></td>
-<td><p>Search picks in a given time window.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="flow/seisnn.flow.get_stream_geom.html#seisnn.flow.get_stream_geom" title="seisnn.flow.get_stream_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stream_geom</span></code></a>(stream, geom)</p></td>
-<td><p>Get station name from header.</p></td>
+<td><p>Return a signal processed stream.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="flow/seisnn.flow.trim_trace.html#seisnn.flow.trim_trace" title="seisnn.flow.trim_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim_trace</span></code></a>(stream[, points])</p></td>
-<td><p>Trim traces in required length for unet.</p></td>
+<td><p>Return trimmed stream in a given length.</p></td>
 </tr>
 </tbody>
 </table>
@@ -172,7 +166,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

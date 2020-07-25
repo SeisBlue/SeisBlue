@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -61,7 +61,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="package/database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="package/example_proto.html">Example Proto</a></li>
 <li class="toctree-l1"><a class="reference internal" href="package/flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="package/io.html">Input / Output</a></li>
@@ -141,15 +140,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="package/core/seisnn.core.Feature.html#seisnn.core.Feature.__init__">__init__() (seisnn.core.Feature method)</a>
-
-      <ul>
-        <li><a href="package/database/seisnn.database.Client.html#seisnn.database.Client.__init__">(seisnn.database.Client method)</a>
 </li>
-        <li><a href="package/database/seisnn.database.Geometry.html#seisnn.database.Geometry.__init__">(seisnn.database.Geometry method)</a>
-</li>
-        <li><a href="package/database/seisnn.database.Picks.html#seisnn.database.Picks.__init__">(seisnn.database.Picks method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -169,10 +160,6 @@
 
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="package/database/seisnn.database.Client.html#seisnn.database.Client">Client (class in seisnn.database)</a>
-</li>
-  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="package/plot/seisnn.plot.color_palette.html#seisnn.plot.color_palette">color_palette() (in module seisnn.plot)</a>
 </li>
@@ -202,27 +189,19 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="package/database/seisnn.database.Geometry.html#seisnn.database.Geometry">Geometry (class in seisnn.database)</a>
-</li>
       <li><a href="package/utils/seisnn.utils.get_config.html#seisnn.utils.get_config">get_config() (in module seisnn.utils)</a>
 </li>
       <li><a href="package/utils/seisnn.utils.get_dir_list.html#seisnn.utils.get_dir_list">get_dir_list() (in module seisnn.utils)</a>
 </li>
       <li><a href="package/io/seisnn.io.get_event.html#seisnn.io.get_event">get_event() (in module seisnn.io)</a>
 </li>
-      <li><a href="package/flow/seisnn.flow.get_exist_picks.html#seisnn.flow.get_exist_picks">get_exist_picks() (in module seisnn.flow)</a>
-</li>
       <li><a href="package/pick/seisnn.pick.get_pdf.html#seisnn.pick.get_pdf">get_pdf() (in module seisnn.pick)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="package/pick/seisnn.pick.get_pick_dict.html#seisnn.pick.get_pick_dict">get_pick_dict() (in module seisnn.pick)</a>
-</li>
       <li><a href="package/pick/seisnn.pick.get_picks_from_dataset.html#seisnn.pick.get_picks_from_dataset">get_picks_from_dataset() (in module seisnn.pick)</a>
 </li>
       <li><a href="package/pick/seisnn.pick.get_picks_from_pdf.html#seisnn.pick.get_picks_from_pdf">get_picks_from_pdf() (in module seisnn.pick)</a>
-</li>
-      <li><a href="package/flow/seisnn.flow.get_stream_geom.html#seisnn.flow.get_stream_geom">get_stream_geom() (in module seisnn.flow)</a>
 </li>
       <li><a href="package/plot/seisnn.plot.get_time_array.html#seisnn.plot.get_time_array">get_time_array() (in module seisnn.plot)</a>
 </li>
@@ -243,8 +222,6 @@
 
       <ul>
         <li><a href="package/core.html#module-seisnn.core">seisnn.core</a>
-</li>
-        <li><a href="package/database.html#module-seisnn.database">seisnn.database</a>
 </li>
         <li><a href="package/example_proto.html#module-seisnn.example_proto">seisnn.example_proto</a>
 </li>
@@ -284,8 +261,6 @@
       <li><a href="package/utils/seisnn.utils.parallel_iter.html#seisnn.utils.parallel_iter">parallel_iter() (in module seisnn.utils)</a>
 </li>
       <li><a href="package/core/seisnn.core.parallel_to_tfrecord.html#seisnn.core.parallel_to_tfrecord">parallel_to_tfrecord() (in module seisnn.core)</a>
-</li>
-      <li><a href="package/database/seisnn.database.Picks.html#seisnn.database.Picks">Picks (class in seisnn.database)</a>
 </li>
       <li><a href="package/plot/seisnn.plot.plot_confusion_matrix.html#seisnn.plot.plot_confusion_matrix">plot_confusion_matrix() (in module seisnn.plot)</a>
 </li>
@@ -329,20 +304,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="package/logger/seisnn.logger.save_loss.html#seisnn.logger.save_loss">save_loss() (in module seisnn.logger)</a>
 </li>
-      <li><a href="package/pick/seisnn.pick.search_pick.html#seisnn.pick.search_pick">search_pick() (in module seisnn.pick)</a>
-</li>
       <li>
     seisnn.core
 
       <ul>
         <li><a href="package/core.html#module-seisnn.core">module</a>
-</li>
-      </ul></li>
-      <li>
-    seisnn.database
-
-      <ul>
-        <li><a href="package/database.html#module-seisnn.database">module</a>
 </li>
       </ul></li>
       <li>
@@ -470,8 +436,6 @@
 </li>
       <li><a href="package/io/seisnn.io.write_tfrecord.html#seisnn.io.write_tfrecord">write_tfrecord() (in module seisnn.io)</a>
 </li>
-      <li><a href="package/io/seisnn.io.write_training_dataset.html#seisnn.io.write_training_dataset">write_training_dataset() (in module seisnn.io)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -489,7 +453,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>

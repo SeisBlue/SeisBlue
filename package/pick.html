@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pick &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -62,7 +63,6 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="example_proto.html">Example Proto</a></li>
 <li class="toctree-l1"><a class="reference internal" href="flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">Input / Output</a></li>
@@ -143,23 +143,17 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="pick/seisnn.pick.get_pdf.html#seisnn.pick.get_pdf" title="seisnn.pick.get_pdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pdf</span></code></a>(stream[, sigma])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pick/seisnn.pick.get_pick_dict.html#seisnn.pick.get_pick_dict" title="seisnn.pick.get_pick_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pick_dict</span></code></a>(events)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pick/seisnn.pick.get_picks_from_dataset.html#seisnn.pick.get_picks_from_dataset" title="seisnn.pick.get_picks_from_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_dataset</span></code></a>(dataset)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pick/seisnn.pick.get_picks_from_dataset.html#seisnn.pick.get_picks_from_dataset" title="seisnn.pick.get_picks_from_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_dataset</span></code></a>(dataset)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pick/seisnn.pick.get_picks_from_pdf.html#seisnn.pick.get_picks_from_pdf" title="seisnn.pick.get_picks_from_pdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_pdf</span></code></a>(feature, phase, pick_set)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pick/seisnn.pick.get_picks_from_pdf.html#seisnn.pick.get_picks_from_pdf" title="seisnn.pick.get_picks_from_pdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_pdf</span></code></a>(feature, phase, pick_set)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pick/seisnn.pick.get_time_residual.html#seisnn.pick.get_time_residual" title="seisnn.pick.get_time_residual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_residual</span></code></a>(val_pick, pred_pick)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pick/seisnn.pick.get_time_residual.html#seisnn.pick.get_time_residual" title="seisnn.pick.get_time_residual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_residual</span></code></a>(val_pick, pred_pick)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pick/seisnn.pick.get_window.html#seisnn.pick.get_window" title="seisnn.pick.get_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_window</span></code></a>(pick[, trace_length])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pick/seisnn.pick.search_pick.html#seisnn.pick.search_pick" title="seisnn.pick.search_pick"><code class="xref py py-obj docutils literal notranslate"><span class="pre">search_pick</span></code></a>(pick_list, pick_time_key, stream)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pick/seisnn.pick.get_window.html#seisnn.pick.get_window" title="seisnn.pick.get_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_window</span></code></a>(pick[, trace_length])</p></td>
+<td><p>Return window from a pick</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="pick/seisnn.pick.validate_picks_nearby.html#seisnn.pick.validate_picks_nearby" title="seisnn.pick.validate_picks_nearby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_picks_nearby</span></code></a>(val_pick, pred_pick[, …])</p></td>
 <td><p></p></td>
@@ -181,7 +175,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
     </p>
   </div>
 </footer>
