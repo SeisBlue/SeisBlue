@@ -23,6 +23,7 @@ from obspy import read, UTCDateTime
 
 
 def get_window(pick, trace_length=30):
+    """Return window from a pick"""
     scipy.random.seed()
     pick_time = UTCDateTime(pick.time)
 

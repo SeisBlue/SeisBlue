@@ -47,17 +47,20 @@ def read_dataset(dataset_dir):
 
 
 def read_pkl(pkl):
+    """Read python pickle file."""
     with open(pkl, "rb") as f:
         obj = pickle.load(f)
         return obj
 
 
 def write_pkl(obj, file):
+    """Write python pickle file."""
     with open(file, "wb") as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
 def write_tfrecord(example_list, save_file):
+    """Write TFRecord file."""
     with tf.io.TFRecordWriter(save_file) as writer:
         for example in example_list:
             writer.write(example)
@@ -92,6 +95,7 @@ def get_event(filename, debug=False):
 
 
 def read_sds(window):
+    """Read SDS database"""
     config = get_config()
     station = window['station']
     starttime = window['starttime']
@@ -188,6 +192,7 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
 
 
 def read_hyp(hyp):
+    """Read STATION0.HYP file."""
     config = get_config()
     hyp_file = os.path.join(config['GEOM_ROOT'], hyp)
     geom = {}
@@ -232,6 +237,7 @@ def read_hyp(hyp):
 
 
 def write_hyp_station(geom, save_file):
+    """Write STATION0.HYP file."""
     config = get_config()
     hyp = []
     for sta, loc in geom.items():
@@ -260,6 +266,7 @@ def write_hyp_station(geom, save_file):
 
 
 def read_kml_placemark(kml):
+    """Read Google Earth KML file."""
     config = get_config()
     kml_file = os.path.join(config['GEOM_ROOT'], kml)
 

@@ -32,6 +32,7 @@ from seisnn.qc import signal_to_noise_ratio, precision_recall_f1_score
 
 
 def color_palette(color=1, shade=1):
+    """Return a color palette form a selected color and shade level."""
     # color palette source:
     # http://www.webfreelancer.com.br/color/colors.html
 

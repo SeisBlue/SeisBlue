@@ -153,7 +153,7 @@ class Waveform(Base):
 
 
 class Client:
-    """A client for manipulate sql database"""
+    """Client for sql database"""
 
     def __init__(self, database, echo=False):
         config = get_config()

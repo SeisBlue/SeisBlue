@@ -26,6 +26,7 @@ from tqdm import tqdm
 
 
 def get_config():
+    """Return path dict in config.yaml."""
     config_file = os.path.abspath(os.path.join(os.path.expanduser("~"), 'config.yaml'))
     with open(config_file, 'r') as file:
         config = yaml.full_load(file)
@@ -33,17 +34,20 @@ def get_config():
 
 
 def make_dirs(path):
+    """Create dir if path does not exist."""
     if not os.path.isdir(path):
         os.makedirs(path, mode=0o777)
 
 
 def batch(iterable, n=1):
+    """Return a batch generator from an iterable and batch size."""
     iter_len = len(iterable)
     for ndx in range(0, iter_len, n):
         yield iterable[ndx:min(ndx + n, iter_len)]
 
 
 def parallel(par, file_list):
+    """Parallelize a partial function and return results in a list."""
     print(f'Parallel in {cpu_count()} threads:')
     batch_size = int(np.ceil(len(file_list) / cpu_count()))
     pool = Pool(processes=cpu_count(), maxtasksperchild=1)
@@ -71,6 +75,7 @@ def parallel_iter(par, iterator):
 
 
 def get_dir_list(file_dir, suffix=""):
+    """Return directory list from the given path."""
     file_list = []
     for file_name in os.listdir(file_dir):
         f = os.path.join(file_dir, file_name)
@@ -81,6 +86,7 @@ def get_dir_list(file_dir, suffix=""):
 
 
 def unet_padding_size(trace, pool_size=2, layers=4):
+    """Return left and right padding size for a given trace."""
     length = len(trace)
     output = length
     for _ in range(layers):

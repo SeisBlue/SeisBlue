@@ -15,6 +15,7 @@ Data processing flow
 
 
 def stream_preprocessing(stream, database):
+    """Return processed stream with pdf."""
     from seisnn.pick import get_pdf
     from seisnn.db import Client
     db = Client(database)
@@ -37,7 +38,7 @@ def stream_preprocessing(stream, database):
 
 def signal_preprocessing(stream):
     """
-    Main signal processing flow.
+    Return a signal processed stream.
 
     :param stream:
     :return:
@@ -52,7 +53,7 @@ def signal_preprocessing(stream):
 
 def trim_trace(stream, points=3008):
     """
-    Trim traces in required length for unet.
+    Return trimmed stream in a given length.
 
     :param stream:
     :param points:
