@@ -59,15 +59,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Proto</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/pick.html">Pick</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Pick</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/sql.html">SQL Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/utils.html">Utilities</a></li>
 </ul>
 </ul>
@@ -124,7 +127,6 @@
 <span class="sd">    :toctree: utils</span>
 
 <span class="sd">    batch</span>
-<span class="sd">    binary_search</span>
 <span class="sd">    get_config</span>
 <span class="sd">    get_dir_list</span>
 <span class="sd">    make_dirs</span>
@@ -134,18 +136,18 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">bisect</span> <span class="kn">import</span> <span class="n">bisect_left</span><span class="p">,</span> <span class="n">bisect_right</span>
-<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span><span class="p">,</span> <span class="n">cpu_count</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 
 <div class="viewcode-block" id="get_config"><a class="viewcode-back" href="../../package/utils/seisnn.utils.get_config.html#seisnn.utils.get_config">[docs]</a><span class="k">def</span> <span class="nf">get_config</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Return path dict in config.yaml.&quot;&quot;&quot;</span>
-    <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s1">&#39;config.yaml&#39;</span><span class="p">))</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s1">&#39;config.yaml&#39;</span><span class="p">))</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">full_load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">config</span></div>
@@ -166,12 +168,13 @@
 
 <div class="viewcode-block" id="parallel"><a class="viewcode-back" href="../../package/utils/seisnn.utils.parallel.html#seisnn.utils.parallel">[docs]</a><span class="k">def</span> <span class="nf">parallel</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">file_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parallelize a partial function and return results in a list.&quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Parallel in </span><span class="si">{</span><span class="n">cpu_count</span><span class="p">()</span><span class="si">}</span><span class="s1"> threads:&#39;</span><span class="p">)</span>
-    <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">cpu_count</span><span class="p">()))</span>
-    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">cpu_count</span><span class="p">(),</span> <span class="n">maxtasksperchild</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Parallel in </span><span class="si">{</span><span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span><span class="si">}</span><span class="s1"> threads:&#39;</span><span class="p">)</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()))</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span> <span class="n">maxtasksperchild</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">thread_output</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">batch</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)),</span>
-                              <span class="n">total</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">batch_size</span><span class="p">))):</span>
+    <span class="k">for</span> <span class="n">thread_output</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">batch</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)),</span>
+            <span class="n">total</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">batch_size</span><span class="p">))):</span>
         <span class="k">if</span> <span class="n">thread_output</span><span class="p">:</span>
             <span class="n">output</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">thread_output</span><span class="p">)</span>
 
@@ -181,9 +184,9 @@
 
 
 <div class="viewcode-block" id="parallel_iter"><a class="viewcode-back" href="../../package/utils/seisnn.utils.parallel_iter.html#seisnn.utils.parallel_iter">[docs]</a><span class="k">def</span> <span class="nf">parallel_iter</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">iterator</span><span class="p">):</span>
-    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">cpu_count</span><span class="p">(),</span> <span class="n">maxtasksperchild</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span> <span class="n">maxtasksperchild</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">thread_output</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">iterator</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">thread_output</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">iterator</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">thread_output</span><span class="p">:</span>
             <span class="n">output</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">thread_output</span><span class="p">)</span>
 
@@ -215,13 +218,6 @@
     <span class="n">rpad</span> <span class="o">=</span> <span class="n">padding</span>
 
     <span class="k">return</span> <span class="n">lpad</span><span class="p">,</span> <span class="n">rpad</span></div>
-
-
-<div class="viewcode-block" id="binary_search"><a class="viewcode-back" href="../../package/utils/seisnn.utils.binary_search.html#seisnn.utils.binary_search">[docs]</a><span class="k">def</span> <span class="nf">binary_search</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">):</span>
-    <span class="c1"># binary search, key_list must be sorted by time</span>
-    <span class="n">left</span> <span class="o">=</span> <span class="n">bisect_left</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="n">min_value</span><span class="p">)</span>
-    <span class="n">right</span> <span class="o">=</span> <span class="n">bisect_right</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="n">max_value</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

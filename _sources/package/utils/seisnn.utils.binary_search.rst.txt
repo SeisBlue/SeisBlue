@@ -1,6 +1,0 @@
-seisnn.utils.binary\_search
-===========================
-
-.. currentmodule:: seisnn.utils
-
-.. autofunction:: binary_search

@@ -59,15 +59,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Proto</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/pick.html">Pick</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Pick</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/sql.html">SQL Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/utils.html">Utilities</a></li>
 </ul>
 </ul>
@@ -128,12 +131,10 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-
-<span class="kn">from</span> <span class="nn">seisnn.plot</span> <span class="kn">import</span> <span class="n">plot_dataset</span>
-<span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">write_tfrecord</span>
-<span class="kn">from</span> <span class="nn">seisnn.pick</span> <span class="kn">import</span> <span class="n">get_picks_from_pdf</span>
-<span class="kn">from</span> <span class="nn">seisnn.example_proto</span> <span class="kn">import</span> <span class="n">eval_eager_tensor</span><span class="p">,</span> <span class="n">feature_to_example</span>
+<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">example_proto</span>
+<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">plot</span>
+<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">processing</span>
 
 
 <div class="viewcode-block" id="Feature"><a class="viewcode-back" href="../../package/core/seisnn.core.Feature.html#seisnn.core.Feature">[docs]</a><span class="k">class</span> <span class="nc">Feature</span><span class="p">:</span>
@@ -169,7 +170,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pdf</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span>
 
-
     <span class="k">def</span> <span class="nf">to_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
@@ -180,7 +180,6 @@
             <span class="s1">&#39;npts&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">npts</span><span class="p">,</span>
             <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">,</span>
 
-
             <span class="s1">&#39;trace&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">,</span>
             <span class="s1">&#39;channel&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
 
@@ -190,25 +189,25 @@
         <span class="k">return</span> <span class="n">feature</span>
 
     <span class="k">def</span> <span class="nf">from_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
-        <span class="n">feature</span> <span class="o">=</span> <span class="n">eval_eager_tensor</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">eval_eager_tensor</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">from_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">to_example</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
-        <span class="n">example</span> <span class="o">=</span> <span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">example</span>
 
     <span class="k">def</span> <span class="nf">to_tfrecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
-        <span class="n">example</span> <span class="o">=</span> <span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
-        <span class="n">write_tfrecord</span><span class="p">([</span><span class="n">example</span><span class="p">],</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">write_tfrecord</span><span class="p">([</span><span class="n">example</span><span class="p">],</span> <span class="n">file_path</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">):</span>
-        <span class="n">get_picks_from_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">)</span>
+        <span class="n">processing</span><span class="o">.</span><span class="n">get_picks_from_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
-        <span class="n">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="n">plot</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="parallel_to_tfrecord"><a class="viewcode-back" href="../../package/core/seisnn.core.parallel_to_tfrecord.html#seisnn.core.parallel_to_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">parallel_to_tfrecord</span><span class="p">(</span><span class="n">batch_list</span><span class="p">):</span>
@@ -224,7 +223,7 @@
         <span class="n">feature</span> <span class="o">=</span> <span class="n">Feature</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
         <span class="n">feature</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;predict&#39;</span><span class="p">)</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
-        <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">))</span>
+        <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">example_list</span>
 
 

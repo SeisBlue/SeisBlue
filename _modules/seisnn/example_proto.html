@@ -59,15 +59,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Proto</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/flow.html">Data processing flow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/pick.html">Pick</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Pick</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/sql.html">SQL Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/utils.html">Utilities</a></li>
 </ul>
 </ul>
@@ -138,7 +141,8 @@
 <span class="k">def</span> <span class="nf">_bytes_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a bytes_list from a string / byte.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">0</span><span class="p">))):</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>  <span class="c1"># BytesList won&#39;t unpack a string from an EagerTensor.</span>
+        <span class="c1"># BytesList won&#39;t unpack a string from an EagerTensor.</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">bytes_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">BytesList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>

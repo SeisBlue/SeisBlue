@@ -23,21 +23,28 @@ Scripts
     scripts
 
 
+Notebooks
+---------------
+.. toctree::
+    :maxdepth: 1
+
+    notebooks
+
+
 Library Reference
 -----------------
 .. toctree::
     :maxdepth: 1
 
-    package/model
     package/core
-    package/database
     package/example_proto
-    package/flow
     package/io
     package/logger
-    package/pick
+    package/model
     package/plot
+    package/processing
     package/qc
+    package/sql
     package/utils
 
 

@@ -1,0 +1,6 @@
+seisnn.processing.stream\_preprocessing
+=======================================
+
+.. currentmodule:: seisnn.processing
+
+.. autofunction:: stream_preprocessing
