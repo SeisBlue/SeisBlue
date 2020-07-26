@@ -20,29 +20,30 @@ Input / Output
 
 """
 
+import collections
+import functools
+import multiprocessing as mp
 import os
 import pickle
 import shutil
-from lxml import etree
-from functools import partial
-from multiprocessing import cpu_count
-import tensorflow as tf
 
+from lxml import etree
 from obspy import Stream
 from obspy.clients.filesystem import sds
+from obspy.core import inventory
 from obspy.io.nordic.core import read_nordic
-from obspy.core.inventory.util import Latitude, Longitude
+import tensorflow as tf
 
-from seisnn.pick import get_window
-from seisnn.flow import signal_preprocessing, stream_preprocessing, trim_trace
-from seisnn.example_proto import stream_to_feature, feature_to_example, sequence_example_parser
-from seisnn.utils import get_config, make_dirs, parallel, get_dir_list
+from seisnn import example_proto
+from seisnn import processing
+from seisnn import utils
 
 
 def read_dataset(dataset_dir):
-    file_list = get_dir_list(dataset_dir)
+    file_list = utils.get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
-    dataset = dataset.map(sequence_example_parser, num_parallel_calls=cpu_count())
+    dataset = dataset.map(example_proto.sequence_example_parser,
+                          num_parallel_calls=mp.cpu_count())
     return dataset
 
 
@@ -67,11 +68,13 @@ def write_tfrecord(example_list, save_file):
 
 
 def read_event_list(sfile_dir):
-    config = get_config()
+    config = utils.get_config()
     sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
-    sfile_list = get_dir_list(sfile_dir)
+
+    sfile_list = utils.get_dir_list(sfile_dir)
     print(f'Reading events from {sfile_dir}')
-    events = parallel(par=get_event, file_list=sfile_list)
+
+    events = utils.parallel(par=get_event, file_list=sfile_list)
     print(f'Read {len(events)} events\n')
     return events
 
@@ -96,45 +99,47 @@ def get_event(filename, debug=False):
 
 def read_sds(window):
     """Read SDS database"""
-    config = get_config()
+    config = utils.get_config()
     station = window['station']
     starttime = window['starttime']
     endtime = window['endtime'] + 0.1
 
     client = sds.Client(sds_root=config['SDS_ROOT'])
-    stream = client.get_waveforms(network="*", station=station, location="*", channel="*",
-                                  starttime=starttime, endtime=endtime)
+    stream = client.get_waveforms(network="*",
+                                  station=station,
+                                  location="*",
+                                  channel="*",
+                                  starttime=starttime,
+                                  endtime=endtime)
     stream.sort(keys=['channel'], reverse=True)
-    stream_list = {}
 
+    stream_dict = collections.defaultdict(Stream)
     for trace in stream:
         geophone_type = trace.stats.channel[0:2]
-        if not stream_list.get(geophone_type):
-            stream_list[geophone_type] = Stream(trace)
-        else:
-            stream_list[geophone_type].append(trace)
+        stream_dict[geophone_type].append(trace)
 
-    return stream_list
+    return stream_dict
 
 
 def database_to_tfrecord(database, output):
-    from seisnn.db import Client, Pick
-    from itertools import groupby
-    from operator import attrgetter
-    config = get_config()
+    import itertools
+    import operator
+    from seisnn.sql import Client, Pick
+    config = utils.get_config()
     dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
-    make_dirs(dataset_dir)
+    utils.make_dirs(dataset_dir)
 
     db = Client(database)
     query = db.get_picks().order_by(Pick.station)
-    picks_groupby_station = [list(g) for k, g in groupby(query, attrgetter('station'))]
+    picks_groupby_station = [list(g) for k, g in itertools.groupby(
+        query, operator.attrgetter('station'))]
 
-    par = partial(_write_picked_stream, database=database)
+    par = functools.partial(_write_picked_stream, database=database)
     for station_picks in picks_groupby_station:
         station = station_picks[0].station
         file_name = '{}.tfrecord'.format(station)
 
-        example_list = parallel(par, station_picks)
+        example_list = utils.parallel(par, station_picks)
         save_file = os.path.join(dataset_dir, file_name)
         write_tfrecord(example_list, save_file)
         print(f'{file_name} done')
@@ -145,20 +150,23 @@ def _write_picked_stream(batch_picks, database):
     for pick in batch_picks:
         if not pick.phase in ['P']:
             continue
-        window = get_window(pick)
+        window = pick.get_window(pick)
         streams = read_sds(window)
 
         for _, stream in streams.items():
             stream.station = pick.station
-            stream = stream_preprocessing(stream, database)
-            feature = stream_to_feature(stream)
-            example = feature_to_example(feature)
+            stream = processing.stream_preprocessing(stream, database)
+            feature = example_proto.stream_to_feature(stream)
+            example = example_proto.feature_to_example(feature)
             example_list.append(example)
     return example_list
 
 
-def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_time,
-                          trace_length=30, sample_rate=100, remove_dir=False):
+def write_station_dataset(dataset_output_dir, sds_root,
+                          nslc,
+                          start_time, end_time,
+                          trace_length=30, sample_rate=100,
+                          remove_dir=False):
     if remove_dir:
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
     os.makedirs(dataset_output_dir, exist_ok=True)
@@ -169,13 +177,14 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
     counter = 0
 
     while t < end_time:
-        stream = client.get_waveforms(net, sta, loc, chan, t, t + trace_length + 1)
-        stream = signal_preprocessing(stream)
+        stream = client.get_waveforms(net, sta, loc, chan, t,
+                                      t + trace_length + 1)
+        stream = processing.signal_preprocessing(stream)
         points = trace_length * sample_rate + 1
 
         for trace in stream:
             try:
-                trim_trace(trace, points)
+                processing.trim_trace(trace, points)
 
             except IndexError as err:
                 print(err)
@@ -185,7 +194,9 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
             finally:
                 trace.picks = []
                 time_stamp = trace.stats.starttime.isoformat()
-                trace.write(dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl", format="PICKLE")
+                trace.write(
+                    dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl",
+                    format="PICKLE")
                 counter += 1
 
     t += trace_length
@@ -193,7 +204,7 @@ def write_station_dataset(dataset_output_dir, sds_root, nslc, start_time, end_ti
 
 def read_hyp(hyp):
     """Read STATION0.HYP file."""
-    config = get_config()
+    config = utils.get_config()
     hyp_file = os.path.join(config['GEOM_ROOT'], hyp)
     geom = {}
     with open(hyp_file, 'r') as file:
@@ -223,10 +234,10 @@ def read_hyp(hyp):
                     EW = -1
 
                 lat = (int(lat[0:2]) + float(lat[2:-1]) / 60) * NS
-                lat = Latitude(lat)
+                lat = inventory.util.Latitude(lat)
 
                 lon = (int(lon[0:3]) + float(lon[3:-1]) / 60) * EW
-                lon = Longitude(lon)
+                lon = inventory.util.Longitude(lon)
 
                 location = {'latitude': lat,
                             'longitude': lon,
@@ -238,7 +249,7 @@ def read_hyp(hyp):
 
 def write_hyp_station(geom, save_file):
     """Write STATION0.HYP file."""
-    config = get_config()
+    config = utils.get_config()
     hyp = []
     for sta, loc in geom.items():
         lat = int(loc['latitude'])
@@ -257,7 +268,8 @@ def write_hyp_station(geom, save_file):
 
         elev = int(loc['elevation'])
 
-        hyp.append(f' {sta: >5}{lat: >2d}{lat_min:>5.2f}{NS}{lon: >3d}{lon_min:>5.2f}{EW}{elev: >4d}\n')
+        hyp.append(
+            f' {sta: >5}{lat: >2d}{lat_min:>5.2f}{NS}{lon: >3d}{lon_min:>5.2f}{EW}{elev: >4d}\n')
     hyp.sort()
 
     output = os.path.join(config['GEOM_ROOT'], save_file)
@@ -267,7 +279,7 @@ def write_hyp_station(geom, save_file):
 
 def read_kml_placemark(kml):
     """Read Google Earth KML file."""
-    config = get_config()
+    config = utils.get_config()
     kml_file = os.path.join(config['GEOM_ROOT'], kml)
 
     parser = etree.XMLParser()

@@ -20,7 +20,8 @@ import tensorflow as tf
 def _bytes_feature(value):
     """Returns a bytes_list from a string / byte."""
     if isinstance(value, type(tf.constant(0))):
-        value = value.numpy()  # BytesList won't unpack a string from an EagerTensor.
+        # BytesList won't unpack a string from an EagerTensor.
+        value = value.numpy()
     if isinstance(value, str):
         value = value.encode('utf-8')
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))

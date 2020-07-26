@@ -14,14 +14,14 @@ SQLite database for metadata.
 """
 
 import os
-from operator import attrgetter
+import operator
 from contextlib import contextmanager
 
-from sqlalchemy import create_engine, Column, Integer, BigInteger, ForeignKey, String, DateTime, Float, func
+import sqlalchemy as sqla
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import orm
 
-from seisnn.utils import get_config
+from seisnn import utils
 
 Base = declarative_base()
 
@@ -29,11 +29,11 @@ Base = declarative_base()
 class Inventory(Base):
     """Inventory table for sql database."""
     __tablename__ = 'inventory'
-    network = Column(String, nullable=False)
-    station = Column(String, primary_key=True)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
-    elevation = Column(Float, nullable=False)
+    network = sqla.Column(sqla.String, nullable=False)
+    station = sqla.Column(sqla.String, primary_key=True)
+    latitude = sqla.Column(sqla.Float, nullable=False)
+    longitude = sqla.Column(sqla.Float, nullable=False)
+    elevation = sqla.Column(sqla.Float, nullable=False)
 
     def __init__(self, net, sta, loc):
         self.network = net
@@ -43,7 +43,7 @@ class Inventory(Base):
         self.elevation = loc['elevation']
 
     def __repr__(self):
-        return f"Geometry(" \
+        return f"Inventory(" \
                f"Network={self.network}, " \
                f"Station={self.station}, " \
                f"Latitude={self.latitude:>7.4f}, " \
@@ -57,11 +57,13 @@ class Inventory(Base):
 class Event(Base):
     """Event table for sql database."""
     __tablename__ = 'event'
-    id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
-    time = Column(DateTime, nullable=False)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
-    depth = Column(Float, nullable=False)
+    id = sqla.Column("id",
+                     sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
+                     primary_key=True)
+    time = sqla.Column(sqla.DateTime, nullable=False)
+    latitude = sqla.Column(sqla.Float, nullable=False)
+    longitude = sqla.Column(sqla.Float, nullable=False)
+    depth = sqla.Column(sqla.Float, nullable=False)
 
     def __init__(self, event):
         self.time = event.origins[0].time.datetime
@@ -83,12 +85,16 @@ class Event(Base):
 class Pick(Base):
     """Pick table for sql database."""
     __tablename__ = 'pick'
-    id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
-    time = Column(DateTime, nullable=False)
-    station = Column(String, ForeignKey('inventory.station'), nullable=False)
-    phase = Column(String, nullable=False)
-    tag = Column(String, nullable=False)
-    snr = Column(Float)
+    id = sqla.Column("id",
+                     sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
+                     primary_key=True)
+    time = sqla.Column(sqla.DateTime, nullable=False)
+    station = sqla.Column(sqla.String,
+                          sqla.ForeignKey('inventory.station'),
+                          nullable=False)
+    phase = sqla.Column(sqla.String, nullable=False)
+    tag = sqla.Column(sqla.String, nullable=False)
+    snr = sqla.Column(sqla.Float)
 
     def __init__(self, pick, tag):
         self.time = pick.time.datetime
@@ -111,10 +117,12 @@ class Pick(Base):
 class TFRecord(Base):
     """TFRecord table for sql database."""
     __tablename__ = 'tfrecord'
-    id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
-    file = Column(String)
-    tag = Column(String)
-    station = Column(String, ForeignKey('inventory.station'))
+    id = sqla.Column("id",
+                     sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
+                     primary_key=True)
+    file = sqla.Column(sqla.String)
+    tag = sqla.Column(sqla.String)
+    station = sqla.Column(sqla.String, sqla.ForeignKey('inventory.station'))
 
     def __init__(self, tfrecord):
         pass
@@ -132,11 +140,14 @@ class TFRecord(Base):
 class Waveform(Base):
     """Waveform table for sql database."""
     __tablename__ = 'waveform'
-    id = Column("id", BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
-    starttime = Column(DateTime, nullable=False)
-    endtime = Column(DateTime, nullable=False)
-    station = Column(String, ForeignKey('inventory.station'))
-    tfrecord = Column(String, ForeignKey('tfrecord.file'))
+    id = sqla.Column("id",
+                     sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
+                     primary_key=True)
+    starttime = sqla.Column(sqla.DateTime, nullable=False)
+    endtime = sqla.Column(sqla.DateTime, nullable=False)
+    station = sqla.Column(sqla.String, sqla.ForeignKey('inventory.station'))
+    tfrecord = sqla.Column(sqla.String)
+    record_position = sqla.Column(sqla.Integer)
 
     def __init__(self, waveform):
         pass
@@ -152,16 +163,33 @@ class Waveform(Base):
         session.add(self)
 
 
+def get_table_class(table):
+    table_dict = {
+        'inventory': Inventory,
+        'event': Event,
+        'pick': Pick,
+        'waveform': Waveform,
+    }
+    table_class = table_dict.get(table)
+    if table_class:
+        return table_class
+    else:
+        msg = 'Please select table: inventory, event, pick, tfrecord, waveform'
+        raise KeyError(msg)
+
+
 class Client:
     """Client for sql database"""
 
     def __init__(self, database, echo=False):
-        config = get_config()
+        config = utils.get_config()
         self.database = database
         db_path = os.path.join(config['DATABASE_ROOT'], self.database)
-        self.engine = create_engine(f'sqlite:///{db_path}?check_same_thread=False', echo=echo)
+        self.engine = sqla.create_engine(
+            f'sqlite:///{db_path}?check_same_thread=False',
+            echo=echo)
         Base.metadata.create_all(bind=self.engine)
-        self.session = sessionmaker(bind=self.engine)
+        self.session = orm.sessionmaker(bind=self.engine)
 
     def read_hyp(self, hyp, network):
         """seisnn.io.read_hyp wrap up"""
@@ -198,14 +226,22 @@ class Client:
 
     def geom_summery(self):
         with self.session_scope() as session:
-            station = session.query(Inventory.station).order_by(Inventory.station)
-            station_count = session.query(Inventory.station).count()
+            station = session \
+                .query(Inventory.station) \
+                .order_by(Inventory.station)
+            station_count = session \
+                .query(Inventory.station) \
+                .count()
             print(f'Station name:')
             print([stat[0] for stat in station], '\n')
             print(f'Total {station_count} stations\n')
 
-            boundary = session.query(func.min(Inventory.longitude), func.max(Inventory.longitude),
-                                     func.min(Inventory.latitude), func.max(Inventory.latitude)).all()
+            boundary = session \
+                .query(sqla.func.min(Inventory.longitude),
+                       sqla.func.max(Inventory.longitude),
+                       sqla.func.min(Inventory.latitude),
+                       sqla.func.max(Inventory.latitude)) \
+                .all()
             print(f'Station boundary:')
             print(f'West: {boundary[0][0]:>8.4f}')
             print(f'East: {boundary[0][1]:>8.4f}')
@@ -215,8 +251,15 @@ class Client:
     def plot_map(self):
         from seisnn.plot import plot_map
         with self.session_scope() as session:
-            geometry = session.query(Inventory.latitude, Inventory.longitude, Inventory.network).all()
-            events = session.query(Event.latitude, Event.longitude).all()
+            geometry = session \
+                .query(Inventory.latitude,
+                       Inventory.longitude,
+                       Inventory.network) \
+                .all()
+            events = session \
+                .query(Event.latitude,
+                       Event.longitude) \
+                .all()
 
         plot_map(geometry, events)
 
@@ -236,8 +279,12 @@ class Client:
             print(f'Input {event_count} events, {pick_count} picks')
 
         if remove_duplicates:
-            self.remove_duplicates(Event, ['time', 'latitude', 'longitude', 'depth'])
-            self.remove_duplicates(Pick, ['time', 'phase', 'station', 'tag'])
+            self.remove_duplicates(
+                'event',
+                ['time', 'latitude', 'longitude', 'depth'])
+            self.remove_duplicates(
+                'pick',
+                ['time', 'phase', 'station', 'tag'])
 
     def get_picks(self, starttime=None, endtime=None,
                   station=None, phase=None, tag=None):
@@ -259,7 +306,10 @@ class Client:
 
     def event_summery(self):
         with self.session_scope() as session:
-            time = session.query(func.min(Event.time), func.max(Event.time)).all()
+            time = session \
+                .query(sqla.func.min(Event.time),
+                       sqla.func.max(Event.time)) \
+                .all()
             print(f'Event time duration:')
             print(f'From: {time[0][0].isoformat()}')
             print(f'To:   {time[0][1].isoformat()}\n')
@@ -267,8 +317,12 @@ class Client:
             event_count = session.query(Event).count()
             print(f'Total {event_count} events\n')
 
-            boundary = session.query(func.min(Event.longitude), func.max(Event.longitude),
-                                     func.min(Event.latitude), func.max(Event.latitude)).all()
+            boundary = session \
+                .query(sqla.func.min(Event.longitude),
+                       sqla.func.max(Event.longitude),
+                       sqla.func.min(Event.latitude),
+                       sqla.func.max(Event.latitude)) \
+                .all()
             print(f'Event boundary:')
             print(f'West: {boundary[0][0]:>8.4f}')
             print(f'East: {boundary[0][1]:>8.4f}')
@@ -278,14 +332,19 @@ class Client:
 
     def pick_summery(self):
         with self.session_scope() as session:
-            time = session.query(func.min(Pick.time), func.max(Pick.time)).all()
+            time = session \
+                .query(sqla.func.min(Pick.time),
+                       sqla.func.max(Pick.time)) \
+                .all()
             print(f'Pick time duration:')
             print(f'From: {time[0][0].isoformat()}')
             print(f'To:   {time[0][1].isoformat()}\n')
 
             print(f'Phase count:')
-            phase_group_count = session.query(Pick.phase, func.count(Pick.phase)) \
-                .group_by(Pick.phase).all()
+            phase_group_count = session \
+                .query(Pick.phase, sqla.func.count(Pick.phase)) \
+                .group_by(Pick.phase) \
+                .all()
             ps_picks = 0
             for phase, count in phase_group_count:
                 if phase in ['P', 'S']:
@@ -293,49 +352,59 @@ class Client:
                 print(f'{count} "{phase}" picks')
             print(f'Total {ps_picks} P + S picks\n')
 
-            station_count = session.query(Pick.station.distinct()).count()
+            station_count = session \
+                .query(Pick.station.distinct()) \
+                .count()
             print(f'Picks cover {station_count} stations:')
 
-            station = session.query(Pick.station.distinct()).order_by(Pick.station).all()
+            station = session \
+                .query(Pick.station.distinct()) \
+                .order_by(Pick.station) \
+                .all()
             print([stat[0] for stat in station], '\n')
 
-            no_pick_station = session.query(Inventory.station) \
+            no_pick_station = session \
+                .query(Inventory.station) \
                 .order_by(Inventory.station) \
-                .filter(Inventory.station.notin_(session.query(Pick.station))).all()
+                .filter(Inventory.station.notin_(session.query(Pick.station))) \
+                .all()
             if no_pick_station:
                 print(f'{len(no_pick_station)} stations without picks:')
                 print([stat[0] for stat in no_pick_station], '\n')
 
-            no_geom_station = session.query(Pick.station.distinct()) \
+            no_geom_station = session \
+                .query(Pick.station.distinct()) \
                 .order_by(Pick.station) \
-                .filter(Pick.station.notin_(session.query(Inventory.station))).all()
+                .filter(Pick.station.notin_(session.query(Inventory.station))) \
+                .all()
             if no_geom_station:
                 print(f'{len(no_geom_station)} stations without geometry:')
                 print([stat[0] for stat in no_geom_station], '\n')
 
     def generate_training_data(self, output):
         from functools import partial
-        from seisnn.utils import make_dirs, parallel
-        from seisnn.io import _write_picked_stream, write_tfrecord
-        config = get_config()
+        from seisnn import utils
+        from seisnn import io
+        config = utils.get_config()
         dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
-        make_dirs(dataset_dir)
-        par = partial(_write_picked_stream, database=self.database)
+        utils.make_dirs(dataset_dir)
+        par = partial(io._write_picked_stream, database=self.database)
 
         station_list = self.list_distinct_items(Pick, 'station')
         for station in station_list:
             file_name = '{}.tfrecord'.format(station)
             picks = self.get_picks(station=station).all()
-            example_list = parallel(par, picks)
+            example_list = utils.parallel(par, picks)
             save_file = os.path.join(dataset_dir, file_name)
-            write_tfrecord(example_list, save_file)
+            io.write_tfrecord(example_list, save_file)
             print(f'{file_name} done')
 
     def remove_duplicates(self, table, match_columns: list):
+        table = get_table_class(table)
         with self.session_scope() as session:
-            attrs = attrgetter(*match_columns)
+            attrs = operator.attrgetter(*match_columns)
             table_columns = attrs(table)
-            distinct = session.query(table, func.min(table.id)) \
+            distinct = session.query(table, sqla.func.min(table.id)) \
                 .group_by(*table_columns)
             duplicate = session.query(table) \
                 .filter(table.id.notin_(distinct.with_entities(table.id))) \
@@ -343,9 +412,11 @@ class Client:
             print(f'Remove {duplicate} duplicate {table.__tablename__}s')
 
     def list_distinct_items(self, table, column):
+        table = get_table_class(table)
         with self.session_scope() as session:
-            col = attrgetter(column)
-            query = session.query(col(table).distinct()).order_by(col(table)).all()
+            col = operator.attrgetter(column)
+            query = session.query(col(table).distinct()).order_by(
+                col(table)).all()
             query = [q[0] for q in query]
             return query
 

@@ -6,7 +6,6 @@ Utilities
     :toctree: utils
 
     batch
-    binary_search
     get_config
     get_dir_list
     make_dirs
@@ -16,18 +15,18 @@ Utilities
 
 """
 
+import multiprocessing as mp
 import os
-from bisect import bisect_left, bisect_right
-from multiprocessing import Pool, cpu_count
 
 import numpy as np
+import tqdm
 import yaml
-from tqdm import tqdm
 
 
 def get_config():
     """Return path dict in config.yaml."""
-    config_file = os.path.abspath(os.path.join(os.path.expanduser("~"), 'config.yaml'))
+    config_file = os.path.abspath(
+        os.path.join(os.path.expanduser("~"), 'config.yaml'))
     with open(config_file, 'r') as file:
         config = yaml.full_load(file)
     return config
@@ -48,12 +47,13 @@ def batch(iterable, n=1):
 
 def parallel(par, file_list):
     """Parallelize a partial function and return results in a list."""
-    print(f'Parallel in {cpu_count()} threads:')
-    batch_size = int(np.ceil(len(file_list) / cpu_count()))
-    pool = Pool(processes=cpu_count(), maxtasksperchild=1)
+    print(f'Parallel in {mp.cpu_count()} threads:')
+    batch_size = int(np.ceil(len(file_list) / mp.cpu_count()))
+    pool = mp.Pool(processes=mp.cpu_count(), maxtasksperchild=1)
     output = []
-    for thread_output in tqdm(pool.imap_unordered(par, batch(file_list, batch_size)),
-                              total=int(np.ceil(len(file_list) / batch_size))):
+    for thread_output in tqdm.tqdm(
+            pool.imap_unordered(par, batch(file_list, batch_size)),
+            total=int(np.ceil(len(file_list) / batch_size))):
         if thread_output:
             output.extend(thread_output)
 
@@ -63,9 +63,9 @@ def parallel(par, file_list):
 
 
 def parallel_iter(par, iterator):
-    pool = Pool(processes=cpu_count(), maxtasksperchild=1)
+    pool = mp.Pool(processes=mp.cpu_count(), maxtasksperchild=1)
     output = []
-    for thread_output in tqdm(pool.imap_unordered(par, iterator)):
+    for thread_output in tqdm.tqdm(pool.imap_unordered(par, iterator)):
         if thread_output:
             output.extend(thread_output)
 
@@ -97,13 +97,6 @@ def unet_padding_size(trace, pool_size=2, layers=4):
     rpad = padding
 
     return lpad, rpad
-
-
-def binary_search(key_list, min_value, max_value):
-    # binary search, key_list must be sorted by time
-    left = bisect_left(key_list, min_value)
-    right = bisect_right(key_list, max_value)
-    return left, right
 
 
 if __name__ == "__main__":

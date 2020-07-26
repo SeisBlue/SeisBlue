@@ -10,12 +10,10 @@ Core
 
 """
 
-import tensorflow as tf
-
-from seisnn.plot import plot_dataset
-from seisnn.io import write_tfrecord
-from seisnn.pick import get_picks_from_pdf
-from seisnn.example_proto import eval_eager_tensor, feature_to_example
+from seisnn import example_proto
+from seisnn import io
+from seisnn import plot
+from seisnn import processing
 
 
 class Feature:
@@ -51,7 +49,6 @@ class Feature:
         self.pdf = feature['pdf']
         self.phase = feature['phase']
 
-
     def to_feature(self):
         feature = {
             'id': self.id,
@@ -62,7 +59,6 @@ class Feature:
             'npts': self.npts,
             'delta': self.delta,
 
-
             'trace': self.trace,
             'channel': self.channel,
 
@@ -72,25 +68,25 @@ class Feature:
         return feature
 
     def from_example(self, example):
-        feature = eval_eager_tensor(example)
+        feature = example_proto.eval_eager_tensor(example)
         self.from_feature(feature)
 
     def to_example(self):
         feature = self.to_feature()
-        example = feature_to_example(feature)
+        example = example_proto.feature_to_example(feature)
         return example
 
     def to_tfrecord(self, file_path):
         feature = self.to_feature()
-        example = feature_to_example(feature)
-        write_tfrecord([example], file_path)
+        example = example_proto.feature_to_example(feature)
+        io.write_tfrecord([example], file_path)
 
     def get_picks(self, phase, pick_set):
-        get_picks_from_pdf(self, phase, pick_set)
+        processing.get_picks_from_pdf(self, phase, pick_set)
 
     def plot(self, **kwargs):
         feature = self.to_feature()
-        plot_dataset(feature, **kwargs)
+        plot.plot_dataset(feature, **kwargs)
 
 
 def parallel_to_tfrecord(batch_list):
@@ -106,7 +102,7 @@ def _to_tfrecord(batch):
         feature = Feature(example)
         feature.get_picks('p', 'predict')
         feature = feature.to_feature()
-        example_list.append(feature_to_example(feature))
+        example_list.append(example_proto.feature_to_example(feature))
     return example_list
 
 

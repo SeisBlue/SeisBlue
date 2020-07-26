@@ -1,20 +1,23 @@
-from setuptools import setup
+"""
+SeisNN - Deep learning seismic phase picking project
+"""
 
+import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setup(
+setuptools.setup(
     name='SeisNN',
     packages=['seisnn'],
     version='0.3.0dev',
-    description='Deep learning seismic phase picking package',
+    description='Deep learning seismic phase picking project',
     long_description=long_description,
     long_description_content_type="text/markdown",
     license='MIT',
     author='jimmy',
     author_email='jimmy60504@gmail.com',
-    url='https://github.com/jimmy60504/SeisNN',
+    url='https://github.com/SeisNN/SeisNN',
     python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",

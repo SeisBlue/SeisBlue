@@ -1,5 +1,4 @@
-from seisnn.db import Client
-
+from seisnn.sql import Client, get_table_class
 
 db = Client('HL2017.db')
 
