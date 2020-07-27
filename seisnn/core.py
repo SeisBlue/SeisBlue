@@ -1,13 +1,5 @@
 """
-Core
-=============
-
-.. autosummary::
-    :toctree: core
-
-    Feature
-    parallel_to_tfrecord
-
+Data exchange
 """
 
 from seisnn import example_proto
@@ -17,6 +9,8 @@ from seisnn import processing
 
 
 class Feature:
+    """
+    """
     def __init__(self, example):
         self.id = None
         self.station = None
