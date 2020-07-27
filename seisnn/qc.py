@@ -1,6 +1,5 @@
 """
-
-
+Quality control
 """
 
 import numpy as np

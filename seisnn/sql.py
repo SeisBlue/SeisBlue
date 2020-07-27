@@ -1,5 +1,5 @@
 """
-SQLite database for metadata.
+SQL Database
 """
 
 import os

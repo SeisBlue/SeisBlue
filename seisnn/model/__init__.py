@@ -1,7 +1,5 @@
 """
 Model
-=============
-
 """
 
 from .settings import train_step

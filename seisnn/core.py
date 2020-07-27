@@ -1,5 +1,5 @@
 """
-Data exchange
+Core
 """
 
 from seisnn import example_proto
