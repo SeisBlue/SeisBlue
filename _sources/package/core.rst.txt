@@ -8,6 +8,7 @@ Class
 .. autosummary::
     :toctree: core
     :nosignatures:
+    :recursive:
 
     Feature
 
