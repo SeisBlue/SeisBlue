@@ -5,6 +5,7 @@ Input / Output
 .. autosummary::
     :toctree: io
 
+    database_to_tfrecord
     get_event
     read_dataset
     read_event_list
@@ -16,7 +17,6 @@ Input / Output
     write_pkl
     write_station_dataset
     write_tfrecord
-    write_training_dataset
 
 """
 

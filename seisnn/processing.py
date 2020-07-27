@@ -1,5 +1,5 @@
 """
-Pick
+Processing
 =============
 
 .. autosummary::

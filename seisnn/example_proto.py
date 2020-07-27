@@ -1,6 +1,6 @@
 """
-Example Proto
-=============
+Example Protocol
+================
 
 .. autosummary::
     :toctree: example_proto

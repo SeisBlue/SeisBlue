@@ -7,9 +7,13 @@ SQLite database for metadata.
 .. autosummary::
     :toctree: database
 
-    Geometry
-    Picks
     Client
+    Event
+    Inventory
+    Pick
+    TFRecord
+    Waveform
+    get_table_class
 
 """
 
