@@ -1,0 +1,23 @@
+seisnn.plot.ProjectionConverter
+===============================
+
+.. currentmodule:: seisnn.plot
+
+.. autoclass:: ProjectionConverter
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProjectionConverter.__init__
+      ~ProjectionConverter.convert
+   
+   
+
+   
+   
+   

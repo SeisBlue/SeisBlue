@@ -1,0 +1,33 @@
+seisnn.sql.TFRecord
+===================
+
+.. currentmodule:: seisnn.sql
+
+.. autoclass:: TFRecord
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TFRecord.__init__
+      ~TFRecord.add_db
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TFRecord.file
+      ~TFRecord.id
+      ~TFRecord.metadata
+      ~TFRecord.station
+      ~TFRecord.tag
+   
+   

@@ -1,9 +1,11 @@
+SQL Database
+===================
 .. currentmodule:: seisnn.sql
 .. automodule:: seisnn.sql
 
 Class
 -------------------
-.. autoclass::
+.. autosummary::
     :toctree: sql
     :nosignatures:
 

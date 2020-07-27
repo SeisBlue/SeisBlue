@@ -62,23 +62,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/core.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/core.html#private-functions">Private Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html#private-functions">Private Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/io.html#private-functions">Private Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model Settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html#unet">Unet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/plot.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/sql.html">Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/sql.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/utils.html">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/sql.html">SQL Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/utils.html">Utilities</a></li>
 </ul>
 </ul>
 </li>
@@ -136,10 +129,10 @@
 <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">processing</span>
 
 
-<span class="k">class</span> <span class="nc">Feature</span><span class="p">:</span>
+<div class="viewcode-block" id="Feature"><a class="viewcode-back" href="../../package/core/seisnn.core.Feature.html#seisnn.core.Feature">[docs]</a><span class="k">class</span> <span class="nc">Feature</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
+<div class="viewcode-block" id="Feature.__init__"><a class="viewcode-back" href="../../package/core/seisnn.core.Feature.html#seisnn.core.Feature.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -154,7 +147,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pdf</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">example</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">from_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -237,7 +230,7 @@
 <span class="sd">        :param kwargs:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
-        <span class="n">plot</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">plot</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="parallel_to_tfrecord"><a class="viewcode-back" href="../../package/core/seisnn.core.parallel_to_tfrecord.html#seisnn.core.parallel_to_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">parallel_to_tfrecord</span><span class="p">(</span><span class="n">batch_list</span><span class="p">):</span>

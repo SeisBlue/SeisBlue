@@ -1,0 +1,35 @@
+seisnn.sql.Waveform
+===================
+
+.. currentmodule:: seisnn.sql
+
+.. autoclass:: Waveform
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Waveform.__init__
+      ~Waveform.add_db
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Waveform.endtime
+      ~Waveform.id
+      ~Waveform.metadata
+      ~Waveform.record_position
+      ~Waveform.starttime
+      ~Waveform.station
+      ~Waveform.tfrecord
+   
+   

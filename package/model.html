@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Settings &#8212; SeisNN  documentation</title>
+    <title>Model &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Class" href="plot.html" />
+    <link rel="next" title="Plot" href="plot.html" />
     <link rel="prev" title="seisnn.logger.save_loss" href="logger/seisnn.logger.save_loss.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -64,23 +64,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../notebooks.html">Notebooks</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="core.html">Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="core.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="core.html#private-functions">Private Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example_proto.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example_proto.html#private-functions">Private Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io.html#private-functions">Private Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logger.html">Functions</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Model Settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#unet">Unet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plot.html">Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plot.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="processing.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qc.html">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sql.html">Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sql.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_proto.html">Example Protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">Input / Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processing.html">Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qc.html">Quality Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sql.html">SQL Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
 </ul>
 </ul>
 </li>
@@ -94,8 +87,11 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Model Settings</a></li>
+<li><a class="reference internal" href="#">Model</a><ul>
+<li><a class="reference internal" href="#model-settings">Model Settings</a></li>
 <li><a class="reference internal" href="#unet">Unet</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -109,7 +105,7 @@
     </a>
   </li>
   <li>
-    <a href="plot.html" title="Next Chapter: Class"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Class &raquo;</span>
+    <a href="plot.html" title="Next Chapter: Plot"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Plot &raquo;</span>
     </a>
   </li>
               
@@ -143,19 +139,25 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="model-settings">
-<h1>Model Settings<a class="headerlink" href="#model-settings" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-seisnn.model">
+<span id="model"></span><h1>Model<a class="headerlink" href="#module-seisnn.model" title="Permalink to this headline">¶</a></h1>
+<p>Model</p>
+<div class="section" id="model-settings">
+<h2>Model Settings<a class="headerlink" href="#model-settings" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_step</span></code></p></td>
+<td><p>Main training loop.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="unet">
-<h1>Unet<a class="headerlink" href="#unet" title="Permalink to this headline">¶</a></h1>
+<h2>Unet<a class="headerlink" href="#unet" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -173,6 +175,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 
 
