@@ -143,7 +143,13 @@ def get_time_residual(val_pick, pred_pick):
 
 
 def stream_preprocessing(stream, database):
-    """Return processed stream with pdf."""
+    """
+    Return processed stream with pdf.
+
+    :param stream:
+    :param database:
+    :return:
+    """
     from seisnn import sql
     db = sql.Client(database)
     stream = signal_preprocessing(stream)

@@ -34,8 +34,18 @@ def standard_unit(input_tensor, stage, nb_filter, kernel_size):
 
 
 def U_Net(img_rows, img_cols, color_type=1, num_class=1):
-    # Standard U-Net [Ronneberger et.al, 2015]
-    # Total params: 420,249
+    """
+    Standard U-Net [Ronneberger et.al, 2015]
+
+    Total params: 420,249
+
+    :param img_rows:
+    :param img_cols:
+    :param color_type:
+    :param num_class:
+    :return:
+    """
+
     nb_filter = [8, 11, 16, 22, 32]
     # nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 2)
@@ -99,8 +109,17 @@ def U_Net(img_rows, img_cols, color_type=1, num_class=1):
 
 
 def Nest_Net(img_rows=None, img_cols=None, color_type=1, num_class=1):
-    # Standard UNet++ [Zhou et.al, 2018]
-    # Total params: 496,225
+    """
+    Standard UNet++ [Zhou et.al, 2018]
+
+    Total params: 496,225
+
+    :param img_rows:
+    :param img_cols:
+    :param color_type:
+    :param num_class:
+    :return:
+    """
     nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 2)
     kernel_size = (1, 7)
