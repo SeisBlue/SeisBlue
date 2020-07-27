@@ -1,7 +1,7 @@
 Core
 =============
-.. currentmodule:: obspy.core
-.. automodule:: obspy.core
+.. currentmodule:: seisnn.core
+.. automodule:: seisnn.core
 
     Classes & Functions
     -------------------
@@ -9,5 +9,5 @@ Core
         :toctree: core
         :nosignatures:
 
-        ~Feature
-        ~parallel_to_tfrecord
+        Feature
+        parallel_to_tfrecord
