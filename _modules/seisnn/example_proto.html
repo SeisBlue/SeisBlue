@@ -164,11 +164,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    stream : obspy.Stream</span>
-<span class="sd">        Preprocessed stream object from seisnn.flow.stream_preprocessing</span>
-
-<span class="sd">    pickset : str</span>
-<span class="sd">        Output pickset name</span>
+<span class="sd">    :param stream: Preprocessed stream object from</span>
+<span class="sd">        seisnn.processing.stream_preprocessing</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    :return: feature dict</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">trace</span> <span class="o">=</span> <span class="n">stream</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -215,8 +214,10 @@
         <span class="s1">&#39;npts&#39;</span><span class="p">:</span> <span class="n">_int64_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">]),</span>
         <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="n">_float_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]),</span>
 
-        <span class="s1">&#39;trace&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tostring</span><span class="p">()),</span>
-        <span class="s1">&#39;pdf&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tostring</span><span class="p">()),</span>
+        <span class="s1">&#39;trace&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span>
+            <span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tostring</span><span class="p">()),</span>
+        <span class="s1">&#39;pdf&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span>
+            <span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tostring</span><span class="p">()),</span>
     <span class="p">}</span>
     <span class="n">context</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Features</span><span class="p">(</span><span class="n">feature</span><span class="o">=</span><span class="n">context_data</span><span class="p">)</span>
 
@@ -232,7 +233,8 @@
 
     <span class="n">feature_list</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FeatureLists</span><span class="p">(</span><span class="n">feature_list</span><span class="o">=</span><span class="n">sequence_data</span><span class="p">)</span>
 
-    <span class="n">example</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">SequenceExample</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="n">feature_lists</span><span class="o">=</span><span class="n">feature_list</span><span class="p">)</span>
+    <span class="n">example</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">SequenceExample</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
+                                       <span class="n">feature_lists</span><span class="o">=</span><span class="n">feature_list</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">example</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span></div>
 
 
@@ -243,8 +245,11 @@
         <span class="s2">&quot;endtime&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
         <span class="s2">&quot;station&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
 
-        <span class="s2">&quot;npts&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">)),</span>
-        <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)),</span>
+        <span class="s2">&quot;npts&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([],</span>
+                                                                           <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">)),</span>
+        <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                                       <span class="n">default_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([],</span>
+                                                              <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)),</span>
 
         <span class="s2">&quot;trace&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
         <span class="s2">&quot;pdf&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
@@ -254,9 +259,10 @@
         <span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VarLenFeature</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">),</span>
     <span class="p">}</span>
 
-    <span class="n">parsed_context</span><span class="p">,</span> <span class="n">parsed_sequence</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">parse_single_sequence_example</span><span class="p">(</span><span class="n">record</span><span class="p">,</span>
-                                                                          <span class="n">context_features</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
-                                                                          <span class="n">sequence_features</span><span class="o">=</span><span class="n">sequence</span><span class="p">)</span>
+    <span class="n">parsed_context</span><span class="p">,</span> <span class="n">parsed_sequence</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">parse_single_sequence_example</span><span class="p">(</span>
+        <span class="n">record</span><span class="p">,</span>
+        <span class="n">context_features</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
+        <span class="n">sequence_features</span><span class="o">=</span><span class="n">sequence</span><span class="p">)</span>
     <span class="n">parsed_example</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">parsed_context</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
         <span class="s1">&#39;starttime&#39;</span><span class="p">:</span> <span class="n">parsed_context</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">],</span>
@@ -273,7 +279,8 @@
 
     <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">]:</span>
         <span class="n">trace_data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">decode_raw</span><span class="p">(</span><span class="n">parsed_context</span><span class="p">[</span><span class="n">trace</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">parsed_example</span><span class="p">[</span><span class="n">trace</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">trace_data</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">parsed_example</span><span class="p">[</span><span class="n">trace</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">trace_data</span><span class="p">,</span>
+                                           <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">parsed_example</span></div>
 
