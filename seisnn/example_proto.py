@@ -43,11 +43,10 @@ def stream_to_feature(stream):
 
     Parameters
     ----------
-    stream : obspy.Stream
-        Preprocessed stream object from seisnn.flow.stream_preprocessing
-
-    pickset : str
-        Output pickset name
+    :param stream: Preprocessed stream object from
+        seisnn.processing.stream_preprocessing
+    :rtype: dict
+    :return: feature dict
 
     """
     trace = stream[0]
@@ -94,8 +93,10 @@ def feature_to_example(stream_feature):
         'npts': _int64_feature(stream_feature['npts']),
         'delta': _float_feature(stream_feature['delta']),
 
-        'trace': _bytes_feature(stream_feature['trace'].astype(dtype=np.float32).tostring()),
-        'pdf': _bytes_feature(stream_feature['pdf'].astype(dtype=np.float32).tostring()),
+        'trace': _bytes_feature(
+            stream_feature['trace'].astype(dtype=np.float32).tostring()),
+        'pdf': _bytes_feature(
+            stream_feature['pdf'].astype(dtype=np.float32).tostring()),
     }
     context = tf.train.Features(feature=context_data)
 
@@ -111,7 +112,8 @@ def feature_to_example(stream_feature):
 
     feature_list = tf.train.FeatureLists(feature_list=sequence_data)
 
-    example = tf.train.SequenceExample(context=context, feature_lists=feature_list)
+    example = tf.train.SequenceExample(context=context,
+                                       feature_lists=feature_list)
     return example.SerializeToString()
 
 
@@ -122,8 +124,11 @@ def sequence_example_parser(record):
         "endtime": tf.io.FixedLenFeature((), tf.string, default_value=""),
         "station": tf.io.FixedLenFeature((), tf.string, default_value=""),
 
-        "npts": tf.io.FixedLenFeature((), tf.int64, default_value=tf.zeros([], dtype=tf.int64)),
-        "delta": tf.io.FixedLenFeature((), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
+        "npts": tf.io.FixedLenFeature((), tf.int64, default_value=tf.zeros([],
+                                                                           dtype=tf.int64)),
+        "delta": tf.io.FixedLenFeature((), tf.float32,
+                                       default_value=tf.zeros([],
+                                                              dtype=tf.float32)),
 
         "trace": tf.io.FixedLenFeature((), tf.string, default_value=""),
         "pdf": tf.io.FixedLenFeature((), tf.string, default_value=""),
@@ -133,9 +138,10 @@ def sequence_example_parser(record):
         "phase": tf.io.VarLenFeature(tf.string),
     }
 
-    parsed_context, parsed_sequence = tf.io.parse_single_sequence_example(record,
-                                                                          context_features=context,
-                                                                          sequence_features=sequence)
+    parsed_context, parsed_sequence = tf.io.parse_single_sequence_example(
+        record,
+        context_features=context,
+        sequence_features=sequence)
     parsed_example = {
         'id': parsed_context['id'],
         'starttime': parsed_context['starttime'],
@@ -152,7 +158,8 @@ def sequence_example_parser(record):
 
     for trace in ['trace', 'pdf']:
         trace_data = tf.io.decode_raw(parsed_context[trace], tf.float32)
-        parsed_example[trace] = tf.reshape(trace_data, [1, parsed_example['npts'], -1])
+        parsed_example[trace] = tf.reshape(trace_data,
+                                           [1, parsed_example['npts'], -1])
 
     return parsed_example
 
