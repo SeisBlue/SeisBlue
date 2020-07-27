@@ -139,7 +139,9 @@
 
 
 <span class="k">def</span> <span class="nf">_bytes_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a bytes_list from a string / byte.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a bytes_list from a string / byte.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">0</span><span class="p">))):</span>
         <span class="c1"># BytesList won&#39;t unpack a string from an EagerTensor.</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
@@ -149,12 +151,16 @@
 
 
 <span class="k">def</span> <span class="nf">_float_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a float_list from a float / double.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a float_list from a float / double.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">float_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FloatList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
 
 
 <span class="k">def</span> <span class="nf">_int64_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns an int64_list from a bool / enum / int / uint.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns an int64_list from a bool / enum / int / uint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">int64_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Int64List</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
 
 
@@ -199,6 +205,11 @@
 
 
 <div class="viewcode-block" id="feature_to_example"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.feature_to_example.html#seisnn.example_proto.feature_to_example">[docs]</a><span class="k">def</span> <span class="nf">feature_to_example</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param stream_feature:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
             <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
@@ -237,6 +248,11 @@
 
 
 <div class="viewcode-block" id="sequence_example_parser"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.sequence_example_parser.html#seisnn.example_proto.sequence_example_parser">[docs]</a><span class="k">def</span> <span class="nf">sequence_example_parser</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param record:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
         <span class="s2">&quot;starttime&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
@@ -284,6 +300,11 @@
 
 
 <div class="viewcode-block" id="eval_eager_tensor"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.eval_eager_tensor.html#seisnn.example_proto.eval_eager_tensor">[docs]</a><span class="k">def</span> <span class="nf">eval_eager_tensor</span><span class="p">(</span><span class="n">parsed_example</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param parsed_example:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
         <span class="s1">&#39;starttime&#39;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
@@ -312,6 +333,10 @@
 
 
 <div class="viewcode-block" id="batch_iterator"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.batch_iterator.html#seisnn.example_proto.batch_iterator">[docs]</a><span class="k">def</span> <span class="nf">batch_iterator</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param batch:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="n">parsed_example</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">],</span>

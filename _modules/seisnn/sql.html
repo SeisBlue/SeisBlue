@@ -152,7 +152,9 @@
 
 
 <div class="viewcode-block" id="Inventory"><a class="viewcode-back" href="../../package/database/seisnn.sql.Inventory.html#seisnn.sql.Inventory">[docs]</a><span class="k">class</span> <span class="nc">Inventory</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Inventory table for sql database.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inventory table for sql database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;inventory&#39;</span>
     <span class="n">network</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">station</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -176,11 +178,17 @@
                <span class="sa">f</span><span class="s2">&quot;Elevation=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">elevation</span><span class="si">:</span><span class="s2">&gt;6.1f</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param session:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Event"><a class="viewcode-back" href="../../package/database/seisnn.sql.Event.html#seisnn.sql.Event">[docs]</a><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Event table for sql database.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event table for sql database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;event&#39;</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
                      <span class="n">sqla</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span><span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
@@ -204,11 +212,17 @@
                <span class="sa">f</span><span class="s2">&quot;Depth=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="si">:</span><span class="s2">&gt;6.1f</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param session:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Pick"><a class="viewcode-back" href="../../package/database/seisnn.sql.Pick.html#seisnn.sql.Pick">[docs]</a><span class="k">class</span> <span class="nc">Pick</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Pick table for sql database.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pick table for sql database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;pick&#39;</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
                      <span class="n">sqla</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span><span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
@@ -236,11 +250,17 @@
                <span class="sa">f</span><span class="s2">&quot;SNR=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snr</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param session:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TFRecord"><a class="viewcode-back" href="../../package/database/seisnn.sql.TFRecord.html#seisnn.sql.TFRecord">[docs]</a><span class="k">class</span> <span class="nc">TFRecord</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;TFRecord table for sql database.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TFRecord table for sql database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;tfrecord&#39;</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
                      <span class="n">sqla</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span><span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
@@ -259,11 +279,14 @@
                <span class="sa">f</span><span class="s2">&quot;Station=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">station</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param session:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Waveform"><a class="viewcode-back" href="../../package/database/seisnn.sql.Waveform.html#seisnn.sql.Waveform">[docs]</a><span class="k">class</span> <span class="nc">Waveform</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Waveform table for sql database.&quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;waveform&#39;</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
                      <span class="n">sqla</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span><span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
@@ -285,10 +308,19 @@
                <span class="sa">f</span><span class="s2">&quot;TFRecord=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tfrecord</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param session:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_table_class"><a class="viewcode-back" href="../../package/database/seisnn.sql.get_table_class.html#seisnn.sql.get_table_class">[docs]</a><span class="k">def</span> <span class="nf">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param table:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">table_dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;inventory&#39;</span><span class="p">:</span> <span class="n">Inventory</span><span class="p">,</span>
         <span class="s1">&#39;event&#39;</span><span class="p">:</span> <span class="n">Event</span><span class="p">,</span>
@@ -304,8 +336,9 @@
 
 
 <div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../package/database/seisnn.sql.Client.html#seisnn.sql.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Client for sql database&quot;&quot;&quot;</span>
-
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Client for sql database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Client.__init__"><a class="viewcode-back" href="../../package/database/seisnn.sql.Client.html#seisnn.sql.Client.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
@@ -317,18 +350,33 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">orm</span><span class="o">.</span><span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">read_hyp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyp</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;seisnn.io.read_hyp wrap up&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        seisnn.io.read_hyp wrap up</span>
+
+<span class="sd">        :param hyp:</span>
+<span class="sd">        :param network:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_hyp</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">read_hyp</span><span class="p">(</span><span class="n">hyp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">read_kml_placemark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kml</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;seisnn.io.read_kml_placemark wrap up&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        seisnn.io.read_kml_placemark wrap up</span>
+
+<span class="sd">        :param kml:</span>
+<span class="sd">        :param network:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_kml_placemark</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">read_kml_placemark</span><span class="p">(</span><span class="n">kml</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param geom:</span>
+<span class="sd">        :param network:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -338,6 +386,12 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input </span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s1"> stations&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param station:</span>
+<span class="sd">        :param network:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">station</span><span class="p">:</span>
@@ -350,6 +404,8 @@
         <span class="k">return</span> <span class="n">query</span>
 
     <span class="k">def</span> <span class="nf">geom_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">station</span> <span class="o">=</span> <span class="n">session</span> \
                 <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
@@ -357,7 +413,7 @@
             <span class="n">station_count</span> <span class="o">=</span> <span class="n">session</span> \
                 <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
                 <span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Station name:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Station name:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">station_count</span><span class="si">}</span><span class="s1"> stations</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -367,13 +423,15 @@
                        <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">),</span>
                        <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Station boundary:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Station boundary:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;West: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;East: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;South: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;North: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">plot_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">seisnn.plot</span> <span class="kn">import</span> <span class="n">plot_map</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">geometry</span> <span class="o">=</span> <span class="n">session</span> \
@@ -389,6 +447,12 @@
         <span class="n">plot_map</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param catalog:</span>
+<span class="sd">        :param tag:</span>
+<span class="sd">        :param remove_duplicates:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_event_list</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">read_event_list</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
@@ -413,6 +477,15 @@
 
     <span class="k">def</span> <span class="nf">get_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">starttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param starttime:</span>
+<span class="sd">        :param endtime:</span>
+<span class="sd">        :param station:</span>
+<span class="sd">        :param phase:</span>
+<span class="sd">        :param tag:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">starttime</span><span class="p">:</span>
@@ -430,12 +503,14 @@
         <span class="k">return</span> <span class="n">query</span>
 
     <span class="k">def</span> <span class="nf">event_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
                 <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
                        <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Event time duration:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event time duration:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -448,7 +523,7 @@
                        <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">),</span>
                        <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Event boundary:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event boundary:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;West: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;East: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;South: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -456,16 +531,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pick_summery</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">pick_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
                 <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
                        <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pick time duration:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Pick time duration:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Phase count:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Phase count:&#39;</span><span class="p">)</span>
             <span class="n">phase_group_count</span> <span class="o">=</span> <span class="n">session</span> \
                 <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span> \
@@ -507,6 +584,10 @@
                 <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">no_geom_station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param output:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
         <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
         <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">io</span>
@@ -525,6 +606,11 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> done&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">match_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param table:</span>
+<span class="sd">        :param match_columns:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">attrs</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="o">*</span><span class="n">match_columns</span><span class="p">)</span>
@@ -537,6 +623,12 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Remove </span><span class="si">{</span><span class="n">duplicate</span><span class="si">}</span><span class="s1"> duplicate </span><span class="si">{</span><span class="n">table</span><span class="o">.</span><span class="n">__tablename__</span><span class="si">}</span><span class="s1">s&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">list_distinct_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param table:</span>
+<span class="sd">        :param column:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">col</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
@@ -547,7 +639,9 @@
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">session_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Provide a transactional scope around a series of operations.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provide a transactional scope around a series of operations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">session</span>
@@ -560,6 +654,11 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">replace_sql_wildcard</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param string:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;%&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">string</span></div>

@@ -138,6 +138,12 @@
 
 
 <div class="viewcode-block" id="save_loss"><a class="viewcode-back" href="../../package/logger/seisnn.logger.save_loss.html#seisnn.logger.save_loss">[docs]</a><span class="k">def</span> <span class="nf">save_loss</span><span class="p">(</span><span class="n">loss_buffer</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param loss_buffer:</span>
+<span class="sd">    :param title:</span>
+<span class="sd">    :param save_dir:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span>
     <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">.log&#39;</span><span class="p">)</span>
     <span class="n">loss_buffer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">loss_buffer</span><span class="p">)</span>

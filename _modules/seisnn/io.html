@@ -161,6 +161,11 @@
 
 
 <div class="viewcode-block" id="read_dataset"><a class="viewcode-back" href="../../package/io/seisnn.io.read_dataset.html#seisnn.io.read_dataset">[docs]</a><span class="k">def</span> <span class="nf">read_dataset</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param dataset_dir:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">file_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_dir_list</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TFRecordDataset</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">example_proto</span><span class="o">.</span><span class="n">sequence_example_parser</span><span class="p">,</span>
@@ -169,26 +174,46 @@
 
 
 <div class="viewcode-block" id="read_pkl"><a class="viewcode-back" href="../../package/io/seisnn.io.read_pkl.html#seisnn.io.read_pkl">[docs]</a><span class="k">def</span> <span class="nf">read_pkl</span><span class="p">(</span><span class="n">pkl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read python pickle file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read python pickle file.</span>
+
+<span class="sd">    :param pkl:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pkl</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 
 <div class="viewcode-block" id="write_pkl"><a class="viewcode-back" href="../../package/io/seisnn.io.write_pkl.html#seisnn.io.write_pkl">[docs]</a><span class="k">def</span> <span class="nf">write_pkl</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Write python pickle file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write python pickle file.</span>
+
+<span class="sd">    :param obj:</span>
+<span class="sd">    :param file:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="write_tfrecord"><a class="viewcode-back" href="../../package/io/seisnn.io.write_tfrecord.html#seisnn.io.write_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">write_tfrecord</span><span class="p">(</span><span class="n">example_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Write TFRecord file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write TFRecord file.</span>
+
+<span class="sd">    :param example_list:</span>
+<span class="sd">    :param save_file:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">TFRecordWriter</span><span class="p">(</span><span class="n">save_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">example_list</span><span class="p">:</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">example</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="read_event_list"><a class="viewcode-back" href="../../package/io/seisnn.io.read_event_list.html#seisnn.io.read_event_list">[docs]</a><span class="k">def</span> <span class="nf">read_event_list</span><span class="p">(</span><span class="n">sfile_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param sfile_dir:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
     <span class="n">sfile_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CATALOG_ROOT&#39;</span><span class="p">],</span> <span class="n">sfile_dir</span><span class="p">)</span>
 
@@ -201,6 +226,12 @@
 
 
 <div class="viewcode-block" id="get_event"><a class="viewcode-back" href="../../package/io/seisnn.io.get_event.html#seisnn.io.get_event">[docs]</a><span class="k">def</span> <span class="nf">get_event</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param filename:</span>
+<span class="sd">    :param debug:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">warnings</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">debug</span><span class="p">:</span>
@@ -219,7 +250,12 @@
 
 
 <div class="viewcode-block" id="read_sds"><a class="viewcode-back" href="../../package/io/seisnn.io.read_sds.html#seisnn.io.read_sds">[docs]</a><span class="k">def</span> <span class="nf">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read SDS database&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read SDS database</span>
+
+<span class="sd">    :param window:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
     <span class="n">station</span> <span class="o">=</span> <span class="n">window</span><span class="p">[</span><span class="s1">&#39;station&#39;</span><span class="p">]</span>
     <span class="n">starttime</span> <span class="o">=</span> <span class="n">window</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">]</span>
@@ -243,6 +279,11 @@
 
 
 <div class="viewcode-block" id="database_to_tfrecord"><a class="viewcode-back" href="../../package/io/seisnn.io.database_to_tfrecord.html#seisnn.io.database_to_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">database_to_tfrecord</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param database:</span>
+<span class="sd">    :param output:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">itertools</span>
     <span class="kn">import</span> <span class="nn">operator</span>
     <span class="kn">from</span> <span class="nn">seisnn.sql</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Pick</span>
@@ -267,9 +308,11 @@
 
 
 <span class="k">def</span> <span class="nf">_write_picked_stream</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">batch_picks</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">pick</span><span class="o">.</span><span class="n">phase</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">pick</span><span class="o">.</span><span class="n">phase</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]:</span>
             <span class="k">continue</span>
         <span class="n">window</span> <span class="o">=</span> <span class="n">pick</span><span class="o">.</span><span class="n">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">)</span>
         <span class="n">streams</span> <span class="o">=</span> <span class="n">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
@@ -288,6 +331,17 @@
                           <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span>
                           <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                           <span class="n">remove_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param dataset_output_dir:</span>
+<span class="sd">    :param sds_root:</span>
+<span class="sd">    :param nslc:</span>
+<span class="sd">    :param start_time:</span>
+<span class="sd">    :param end_time:</span>
+<span class="sd">    :param trace_length:</span>
+<span class="sd">    :param sample_rate:</span>
+<span class="sd">    :param remove_dir:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">remove_dir</span><span class="p">:</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dataset_output_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dataset_output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -324,7 +378,12 @@
 
 
 <div class="viewcode-block" id="read_hyp"><a class="viewcode-back" href="../../package/io/seisnn.io.read_hyp.html#seisnn.io.read_hyp">[docs]</a><span class="k">def</span> <span class="nf">read_hyp</span><span class="p">(</span><span class="n">hyp</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read STATION0.HYP file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read STATION0.HYP file.</span>
+
+<span class="sd">    :param hyp:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
     <span class="n">hyp_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;GEOM_ROOT&#39;</span><span class="p">],</span> <span class="n">hyp</span><span class="p">)</span>
     <span class="n">geom</span> <span class="o">=</span> <span class="p">{}</span>
@@ -369,7 +428,12 @@
 
 
 <div class="viewcode-block" id="write_hyp_station"><a class="viewcode-back" href="../../package/io/seisnn.io.write_hyp_station.html#seisnn.io.write_hyp_station">[docs]</a><span class="k">def</span> <span class="nf">write_hyp_station</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">save_file</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Write STATION0.HYP file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write STATION0.HYP file.</span>
+
+<span class="sd">    :param geom:</span>
+<span class="sd">    :param save_file:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
     <span class="n">hyp</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -399,7 +463,12 @@
 
 
 <div class="viewcode-block" id="read_kml_placemark"><a class="viewcode-back" href="../../package/io/seisnn.io.read_kml_placemark.html#seisnn.io.read_kml_placemark">[docs]</a><span class="k">def</span> <span class="nf">read_kml_placemark</span><span class="p">(</span><span class="n">kml</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read Google Earth KML file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read Google Earth KML file.</span>
+
+<span class="sd">    :param kml:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
     <span class="n">kml_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;GEOM_ROOT&#39;</span><span class="p">],</span> <span class="n">kml</span><span class="p">)</span>
 

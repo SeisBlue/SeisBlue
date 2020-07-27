@@ -156,6 +156,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">example</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">from_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param feature:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;station&#39;</span><span class="p">]</span>
 
@@ -171,6 +175,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">to_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="s1">&#39;station&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
@@ -189,28 +197,54 @@
         <span class="k">return</span> <span class="n">feature</span>
 
     <span class="k">def</span> <span class="nf">from_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param example:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">eval_eager_tensor</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">from_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">to_example</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
         <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">example</span>
 
     <span class="k">def</span> <span class="nf">to_tfrecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param file_path:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
         <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
         <span class="n">io</span><span class="o">.</span><span class="n">write_tfrecord</span><span class="p">([</span><span class="n">example</span><span class="p">],</span> <span class="n">file_path</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param phase:</span>
+<span class="sd">        :param pick_set:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">processing</span><span class="o">.</span><span class="n">get_picks_from_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param kwargs:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="parallel_to_tfrecord"><a class="viewcode-back" href="../../package/core/seisnn.core.parallel_to_tfrecord.html#seisnn.core.parallel_to_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">parallel_to_tfrecord</span><span class="p">(</span><span class="n">batch_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param batch_list:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">seisnn.utils</span> <span class="kn">import</span> <span class="n">parallel</span>
 
     <span class="n">example_list</span> <span class="o">=</span> <span class="n">parallel</span><span class="p">(</span><span class="n">par</span><span class="o">=</span><span class="n">_to_tfrecord</span><span class="p">,</span> <span class="n">file_list</span><span class="o">=</span><span class="n">batch_list</span><span class="p">)</span>
@@ -218,6 +252,8 @@
 
 
 <span class="k">def</span> <span class="nf">_to_tfrecord</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="n">Feature</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
