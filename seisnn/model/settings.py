@@ -1,3 +1,7 @@
+"""
+Training step settings.
+"""
+
 import tensorflow as tf
 
 from seisnn.model import unet
@@ -20,6 +24,7 @@ def train_step(train_trace, train_pdf, val_trace, val_pdf):
         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
         return pred_loss, val_loss
+
 
 if __name__ == "__main__":
     pass

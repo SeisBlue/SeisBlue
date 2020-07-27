@@ -32,7 +32,13 @@ from seisnn import qc
 
 
 def color_palette(color=1, shade=1):
-    """Return a color palette form a selected color and shade level."""
+    """
+    Return a color palette form a selected color and shade level.
+
+    :param color:
+    :param shade:
+    :return:
+    """
     # color palette source:
     # http://www.webfreelancer.com.br/color/colors.html
 
@@ -45,6 +51,11 @@ def color_palette(color=1, shade=1):
 
 
 def get_time_array(feature):
+    """
+
+    :param feature:
+    :return:
+    """
     time_array = np.arange(feature['npts'])
     time_array = time_array * feature['delta']
     return time_array
@@ -52,6 +63,15 @@ def get_time_array(feature):
 
 def plot_dataset(feature, snr=False, enlarge=False, xlim=None, title=None,
                  save_dir=None):
+    """
+
+    :param feature:
+    :param snr:
+    :param enlarge:
+    :param xlim:
+    :param title:
+    :param save_dir:
+    """
     if title is None:
         title = f'{feature["starttime"]}_{feature["id"][:-3]}'
     # if feature['pick_time']:
@@ -137,6 +157,11 @@ def plot_dataset(feature, snr=False, enlarge=False, xlim=None, title=None,
 
 
 def plot_loss(log_file, save_dir=None):
+    """
+
+    :param log_file:
+    :param save_dir:
+    """
     loss = []
     with open(log_file, 'r') as f:
         for line in f.readlines():
@@ -165,6 +190,11 @@ def plot_loss(log_file, save_dir=None):
 
 
 def plot_error_distribution(time_residuals, save_dir=None):
+    """
+
+    :param time_residuals:
+    :param save_dir:
+    """
     bins = np.linspace(-0.5, 0.5, 100)
     plt.hist(time_residuals, bins=bins)
     plt.xticks(np.arange(-0.5, 0.51, step=0.1))
@@ -181,6 +211,11 @@ def plot_error_distribution(time_residuals, save_dir=None):
 
 
 def plot_snr_distribution(pick_snr, save_dir=None):
+    """
+
+    :param pick_snr:
+    :param save_dir:
+    """
     sns.set()
     bins = np.linspace(-1, 10, 55)
     plt.hist(pick_snr, bins=bins)
@@ -198,6 +233,12 @@ def plot_snr_distribution(pick_snr, save_dir=None):
 
 
 def plot_confusion_matrix(true_positive, pred_count, val_count):
+    """
+
+    :param true_positive:
+    :param pred_count:
+    :param val_count:
+    """
     matrix = pd.DataFrame([[true_positive, pred_count - true_positive],
                            [val_count - true_positive, 0]],
                           columns=['True', 'False'],
@@ -221,6 +262,11 @@ def plot_confusion_matrix(true_positive, pred_count, val_count):
 
 
 def plot_map(geometry, events):
+    """
+
+    :param geometry:
+    :param events:
+    """
     stamen_terrain = img_tiles.Stamen('terrain-background')
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1, projection=stamen_terrain.crs)
@@ -283,6 +329,12 @@ class ProjectionConverter:
         self.target_proj = target_proj
 
     def convert(self, x, y):
+        """
+
+        :param x:
+        :param y:
+        :return:
+        """
         self.x = x
         self.y = y
         result = self.target_proj._project_point(self, self.source_proj)

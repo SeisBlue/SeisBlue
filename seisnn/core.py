@@ -35,6 +35,10 @@ class Feature:
         self.from_example(example)
 
     def from_feature(self, feature):
+        """
+
+        :param feature:
+        """
         self.id = feature['id']
         self.station = feature['station']
 
@@ -50,6 +54,10 @@ class Feature:
         self.phase = feature['phase']
 
     def to_feature(self):
+        """
+
+        :return:
+        """
         feature = {
             'id': self.id,
             'station': self.station,
@@ -68,28 +76,54 @@ class Feature:
         return feature
 
     def from_example(self, example):
+        """
+
+        :param example:
+        """
         feature = example_proto.eval_eager_tensor(example)
         self.from_feature(feature)
 
     def to_example(self):
+        """
+
+        :return:
+        """
         feature = self.to_feature()
         example = example_proto.feature_to_example(feature)
         return example
 
     def to_tfrecord(self, file_path):
+        """
+
+        :param file_path:
+        """
         feature = self.to_feature()
         example = example_proto.feature_to_example(feature)
         io.write_tfrecord([example], file_path)
 
     def get_picks(self, phase, pick_set):
+        """
+
+        :param phase:
+        :param pick_set:
+        """
         processing.get_picks_from_pdf(self, phase, pick_set)
 
     def plot(self, **kwargs):
+        """
+
+        :param kwargs:
+        """
         feature = self.to_feature()
         plot.plot_dataset(feature, **kwargs)
 
 
 def parallel_to_tfrecord(batch_list):
+    """
+
+    :param batch_list:
+    :return:
+    """
     from seisnn.utils import parallel
 
     example_list = parallel(par=_to_tfrecord, file_list=batch_list)
@@ -97,6 +131,8 @@ def parallel_to_tfrecord(batch_list):
 
 
 def _to_tfrecord(batch):
+    """
+    """
     example_list = []
     for example in batch:
         feature = Feature(example)

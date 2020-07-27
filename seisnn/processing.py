@@ -25,6 +25,12 @@ import obspy
 
 
 def get_window(pick, trace_length=30):
+    """
+
+    :param pick:
+    :param trace_length:
+    :return:
+    """
     scipy.random.seed()
     pick_time = obspy.UTCDateTime(pick.time)
 
@@ -40,6 +46,12 @@ def get_window(pick, trace_length=30):
 
 
 def get_pdf(stream, sigma=0.1):
+    """
+
+    :param stream:
+    :param sigma:
+    :return:
+    """
     trace = stream[0]
     start_time = trace.stats.starttime
     x_time = trace.times(reftime=start_time)
@@ -67,20 +79,34 @@ def get_pdf(stream, sigma=0.1):
 
 
 def get_picks_from_pdf(feature, phase, pick_set, height=0.5, distance=100):
+    """
+
+    :param feature:
+    :param phase:
+    :param pick_set:
+    :param height:
+    :param distance:
+    """
     i = feature.phase.index(phase)
     peaks, properties = signal.find_peaks(feature.pdf[-1, :, i],
-                                   height=height,
-                                   distance=distance)
+                                          height=height,
+                                          distance=distance)
 
     for p in peaks:
         if p:
-            pick_time = obspy.UTCDateTime(feature.starttime) + p * feature.delta
+            pick_time = obspy.UTCDateTime(
+                feature.starttime) + p * feature.delta
             feature.pick_time.append(pick_time.isoformat())
             feature.pick_phase.append(feature.phase[i])
             feature.pick_set.append(pick_set)
 
 
 def get_picks_from_dataset(dataset):
+    """
+
+    :param dataset:
+    :return:
+    """
     pick_list = []
     trace = obspy.read(dataset, headonly=True).traces[0]
     picks = trace.picks
@@ -89,6 +115,13 @@ def get_picks_from_dataset(dataset):
 
 
 def validate_picks_nearby(val_pick, pred_pick, delta=0.1):
+    """
+
+    :param val_pick:
+    :param pred_pick:
+    :param delta:
+    :return:
+    """
     upper_bound = obspy.UTCDateTime(pred_pick['pick_time']) + delta
     lower_bound = obspy.UTCDateTime(pred_pick['pick_time']) - delta
     if lower_bound < obspy.UTCDateTime(val_pick['pick_time']) < upper_bound:
@@ -98,13 +131,15 @@ def validate_picks_nearby(val_pick, pred_pick, delta=0.1):
 
 
 def get_time_residual(val_pick, pred_pick):
+    """
+
+    :param val_pick:
+    :param pred_pick:
+    :return:
+    """
     residual = obspy.UTCDateTime(val_pick['pick_time']) \
                - obspy.UTCDateTime(pred_pick['pick_time'])
     return residual
-
-
-if __name__ == "__main__":
-    pass
 
 
 def stream_preprocessing(stream, database):
@@ -155,5 +190,10 @@ def trim_trace(stream, points=3008):
     start_time = trace.stats.starttime
     dt = (trace.stats.endtime - trace.stats.starttime) / (trace.data.size - 1)
     end_time = start_time + dt * (points - 1)
-    stream.trim(start_time, end_time, nearest_sample=True, pad=True, fill_value=0)
+    stream.trim(start_time, end_time, nearest_sample=True, pad=True,
+                fill_value=0)
     return stream
+
+
+if __name__ == "__main__":
+    pass

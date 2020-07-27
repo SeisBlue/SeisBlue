@@ -40,6 +40,11 @@ from seisnn import utils
 
 
 def read_dataset(dataset_dir):
+    """
+
+    :param dataset_dir:
+    :return:
+    """
     file_list = utils.get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
     dataset = dataset.map(example_proto.sequence_example_parser,
@@ -48,26 +53,46 @@ def read_dataset(dataset_dir):
 
 
 def read_pkl(pkl):
-    """Read python pickle file."""
+    """
+    Read python pickle file.
+
+    :param pkl:
+    :return:
+    """
     with open(pkl, "rb") as f:
         obj = pickle.load(f)
         return obj
 
 
 def write_pkl(obj, file):
-    """Write python pickle file."""
+    """
+    Write python pickle file.
+
+    :param obj:
+    :param file:
+    """
     with open(file, "wb") as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
 def write_tfrecord(example_list, save_file):
-    """Write TFRecord file."""
+    """
+    Write TFRecord file.
+
+    :param example_list:
+    :param save_file:
+    """
     with tf.io.TFRecordWriter(save_file) as writer:
         for example in example_list:
             writer.write(example)
 
 
 def read_event_list(sfile_dir):
+    """
+
+    :param sfile_dir:
+    :return:
+    """
     config = utils.get_config()
     sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
 
@@ -80,6 +105,12 @@ def read_event_list(sfile_dir):
 
 
 def get_event(filename, debug=False):
+    """
+
+    :param filename:
+    :param debug:
+    :return:
+    """
     import warnings
     with warnings.catch_warnings():
         if not debug:
@@ -98,7 +129,12 @@ def get_event(filename, debug=False):
 
 
 def read_sds(window):
-    """Read SDS database"""
+    """
+    Read SDS database
+
+    :param window:
+    :return:
+    """
     config = utils.get_config()
     station = window['station']
     starttime = window['starttime']
@@ -122,6 +158,11 @@ def read_sds(window):
 
 
 def database_to_tfrecord(database, output):
+    """
+
+    :param database:
+    :param output:
+    """
     import itertools
     import operator
     from seisnn.sql import Client, Pick
@@ -146,9 +187,11 @@ def database_to_tfrecord(database, output):
 
 
 def _write_picked_stream(batch_picks, database):
+    """
+    """
     example_list = []
     for pick in batch_picks:
-        if not pick.phase in ['P']:
+        if pick.phase not in ['P']:
             continue
         window = pick.get_window(pick)
         streams = read_sds(window)
@@ -167,6 +210,17 @@ def write_station_dataset(dataset_output_dir, sds_root,
                           start_time, end_time,
                           trace_length=30, sample_rate=100,
                           remove_dir=False):
+    """
+
+    :param dataset_output_dir:
+    :param sds_root:
+    :param nslc:
+    :param start_time:
+    :param end_time:
+    :param trace_length:
+    :param sample_rate:
+    :param remove_dir:
+    """
     if remove_dir:
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
     os.makedirs(dataset_output_dir, exist_ok=True)
@@ -203,7 +257,12 @@ def write_station_dataset(dataset_output_dir, sds_root,
 
 
 def read_hyp(hyp):
-    """Read STATION0.HYP file."""
+    """
+    Read STATION0.HYP file.
+
+    :param hyp:
+    :return:
+    """
     config = utils.get_config()
     hyp_file = os.path.join(config['GEOM_ROOT'], hyp)
     geom = {}
@@ -248,7 +307,12 @@ def read_hyp(hyp):
 
 
 def write_hyp_station(geom, save_file):
-    """Write STATION0.HYP file."""
+    """
+    Write STATION0.HYP file.
+
+    :param geom:
+    :param save_file:
+    """
     config = utils.get_config()
     hyp = []
     for sta, loc in geom.items():
@@ -278,7 +342,12 @@ def write_hyp_station(geom, save_file):
 
 
 def read_kml_placemark(kml):
-    """Read Google Earth KML file."""
+    """
+    Read Google Earth KML file.
+
+    :param kml:
+    :return:
+    """
     config = utils.get_config()
     kml_file = os.path.join(config['GEOM_ROOT'], kml)
 

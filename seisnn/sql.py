@@ -31,7 +31,9 @@ Base = declarative_base()
 
 
 class Inventory(Base):
-    """Inventory table for sql database."""
+    """
+    Inventory table for sql database.
+    """
     __tablename__ = 'inventory'
     network = sqla.Column(sqla.String, nullable=False)
     station = sqla.Column(sqla.String, primary_key=True)
@@ -55,11 +57,17 @@ class Inventory(Base):
                f"Elevation={self.elevation:>6.1f})"
 
     def add_db(self, session):
+        """
+
+        :param session:
+        """
         session.add(self)
 
 
 class Event(Base):
-    """Event table for sql database."""
+    """
+    Event table for sql database.
+    """
     __tablename__ = 'event'
     id = sqla.Column("id",
                      sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
@@ -83,11 +91,17 @@ class Event(Base):
                f"Depth={self.depth:>6.1f})"
 
     def add_db(self, session):
+        """
+
+        :param session:
+        """
         session.add(self)
 
 
 class Pick(Base):
-    """Pick table for sql database."""
+    """
+    Pick table for sql database.
+    """
     __tablename__ = 'pick'
     id = sqla.Column("id",
                      sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
@@ -115,11 +129,17 @@ class Pick(Base):
                f"SNR={self.snr})"
 
     def add_db(self, session):
+        """
+
+        :param session:
+        """
         session.add(self)
 
 
 class TFRecord(Base):
-    """TFRecord table for sql database."""
+    """
+    TFRecord table for sql database.
+    """
     __tablename__ = 'tfrecord'
     id = sqla.Column("id",
                      sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
@@ -138,11 +158,14 @@ class TFRecord(Base):
                f"Station={self.station})"
 
     def add_db(self, session):
+        """
+
+        :param session:
+        """
         session.add(self)
 
 
 class Waveform(Base):
-    """Waveform table for sql database."""
     __tablename__ = 'waveform'
     id = sqla.Column("id",
                      sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
@@ -164,10 +187,19 @@ class Waveform(Base):
                f"TFRecord={self.tfrecord})"
 
     def add_db(self, session):
+        """
+
+        :param session:
+        """
         session.add(self)
 
 
 def get_table_class(table):
+    """
+
+    :param table:
+    :return:
+    """
     table_dict = {
         'inventory': Inventory,
         'event': Event,
@@ -183,8 +215,9 @@ def get_table_class(table):
 
 
 class Client:
-    """Client for sql database"""
-
+    """
+    Client for sql database
+    """
     def __init__(self, database, echo=False):
         config = utils.get_config()
         self.database = database
@@ -196,18 +229,33 @@ class Client:
         self.session = orm.sessionmaker(bind=self.engine)
 
     def read_hyp(self, hyp, network):
-        """seisnn.io.read_hyp wrap up"""
+        """
+        seisnn.io.read_hyp wrap up
+
+        :param hyp:
+        :param network:
+        """
         from seisnn.io import read_hyp
         geom = read_hyp(hyp)
         self.add_geom(geom, network)
 
     def read_kml_placemark(self, kml, network):
-        """seisnn.io.read_kml_placemark wrap up"""
+        """
+        seisnn.io.read_kml_placemark wrap up
+
+        :param kml:
+        :param network:
+        """
         from seisnn.io import read_kml_placemark
         geom = read_kml_placemark(kml)
         self.add_geom(geom, network)
 
     def add_geom(self, geom, network):
+        """
+
+        :param geom:
+        :param network:
+        """
         with self.session_scope() as session:
             counter = 0
             for sta, loc in geom.items():
@@ -217,6 +265,12 @@ class Client:
             print(f'Input {counter} stations')
 
     def get_geom(self, station=None, network=None):
+        """
+
+        :param station:
+        :param network:
+        :return:
+        """
         with self.session_scope() as session:
             query = session.query(Inventory)
             if station:
@@ -229,6 +283,8 @@ class Client:
         return query
 
     def geom_summery(self):
+        """
+        """
         with self.session_scope() as session:
             station = session \
                 .query(Inventory.station) \
@@ -236,7 +292,7 @@ class Client:
             station_count = session \
                 .query(Inventory.station) \
                 .count()
-            print(f'Station name:')
+            print('Station name:')
             print([stat[0] for stat in station], '\n')
             print(f'Total {station_count} stations\n')
 
@@ -246,13 +302,15 @@ class Client:
                        sqla.func.min(Inventory.latitude),
                        sqla.func.max(Inventory.latitude)) \
                 .all()
-            print(f'Station boundary:')
+            print('Station boundary:')
             print(f'West: {boundary[0][0]:>8.4f}')
             print(f'East: {boundary[0][1]:>8.4f}')
             print(f'South: {boundary[0][2]:>7.4f}')
             print(f'North: {boundary[0][3]:>7.4f}\n')
 
     def plot_map(self):
+        """
+        """
         from seisnn.plot import plot_map
         with self.session_scope() as session:
             geometry = session \
@@ -268,6 +326,12 @@ class Client:
         plot_map(geometry, events)
 
     def add_events(self, catalog, tag, remove_duplicates=True):
+        """
+
+        :param catalog:
+        :param tag:
+        :param remove_duplicates:
+        """
         from seisnn.io import read_event_list
         events = read_event_list(catalog)
         with self.session_scope() as session:
@@ -292,6 +356,15 @@ class Client:
 
     def get_picks(self, starttime=None, endtime=None,
                   station=None, phase=None, tag=None):
+        """
+
+        :param starttime:
+        :param endtime:
+        :param station:
+        :param phase:
+        :param tag:
+        :return:
+        """
         with self.session_scope() as session:
             query = session.query(Pick)
             if starttime:
@@ -309,12 +382,14 @@ class Client:
         return query
 
     def event_summery(self):
+        """
+        """
         with self.session_scope() as session:
             time = session \
                 .query(sqla.func.min(Event.time),
                        sqla.func.max(Event.time)) \
                 .all()
-            print(f'Event time duration:')
+            print('Event time duration:')
             print(f'From: {time[0][0].isoformat()}')
             print(f'To:   {time[0][1].isoformat()}\n')
 
@@ -327,7 +402,7 @@ class Client:
                        sqla.func.min(Event.latitude),
                        sqla.func.max(Event.latitude)) \
                 .all()
-            print(f'Event boundary:')
+            print('Event boundary:')
             print(f'West: {boundary[0][0]:>8.4f}')
             print(f'East: {boundary[0][1]:>8.4f}')
             print(f'South: {boundary[0][2]:>7.4f}')
@@ -335,16 +410,18 @@ class Client:
             self.pick_summery()
 
     def pick_summery(self):
+        """
+        """
         with self.session_scope() as session:
             time = session \
                 .query(sqla.func.min(Pick.time),
                        sqla.func.max(Pick.time)) \
                 .all()
-            print(f'Pick time duration:')
+            print('Pick time duration:')
             print(f'From: {time[0][0].isoformat()}')
             print(f'To:   {time[0][1].isoformat()}\n')
 
-            print(f'Phase count:')
+            print('Phase count:')
             phase_group_count = session \
                 .query(Pick.phase, sqla.func.count(Pick.phase)) \
                 .group_by(Pick.phase) \
@@ -386,6 +463,10 @@ class Client:
                 print([stat[0] for stat in no_geom_station], '\n')
 
     def generate_training_data(self, output):
+        """
+
+        :param output:
+        """
         from functools import partial
         from seisnn import utils
         from seisnn import io
@@ -404,6 +485,11 @@ class Client:
             print(f'{file_name} done')
 
     def remove_duplicates(self, table, match_columns: list):
+        """
+
+        :param table:
+        :param match_columns:
+        """
         table = get_table_class(table)
         with self.session_scope() as session:
             attrs = operator.attrgetter(*match_columns)
@@ -416,6 +502,12 @@ class Client:
             print(f'Remove {duplicate} duplicate {table.__tablename__}s')
 
     def list_distinct_items(self, table, column):
+        """
+
+        :param table:
+        :param column:
+        :return:
+        """
         table = get_table_class(table)
         with self.session_scope() as session:
             col = operator.attrgetter(column)
@@ -426,7 +518,9 @@ class Client:
 
     @contextmanager
     def session_scope(self):
-        """Provide a transactional scope around a series of operations."""
+        """
+        Provide a transactional scope around a series of operations.
+        """
         session = self.session()
         try:
             yield session
@@ -439,6 +533,11 @@ class Client:
 
     @staticmethod
     def replace_sql_wildcard(string):
+        """
+
+        :param string:
+        :return:
+        """
         string = string.replace('?', '_')
         string = string.replace('*', '%')
         return string

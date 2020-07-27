@@ -18,7 +18,9 @@ import tensorflow as tf
 
 
 def _bytes_feature(value):
-    """Returns a bytes_list from a string / byte."""
+    """
+    Returns a bytes_list from a string / byte.
+    """
     if isinstance(value, type(tf.constant(0))):
         # BytesList won't unpack a string from an EagerTensor.
         value = value.numpy()
@@ -28,12 +30,16 @@ def _bytes_feature(value):
 
 
 def _float_feature(value):
-    """Returns a float_list from a float / double."""
+    """
+    Returns a float_list from a float / double.
+    """
     return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
 
 
 def _int64_feature(value):
-    """Returns an int64_list from a bool / enum / int / uint."""
+    """
+    Returns an int64_list from a bool / enum / int / uint.
+    """
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 
 
@@ -78,6 +84,11 @@ def stream_to_feature(stream):
 
 
 def feature_to_example(stream_feature):
+    """
+
+    :param stream_feature:
+    :return:
+    """
     for key in ['trace', 'pdf']:
         if isinstance(stream_feature[key], tf.Tensor):
             stream_feature[key] = stream_feature[key].numpy()
@@ -116,6 +127,11 @@ def feature_to_example(stream_feature):
 
 
 def sequence_example_parser(record):
+    """
+
+    :param record:
+    :return:
+    """
     context = {
         "id": tf.io.FixedLenFeature((), tf.string, default_value=""),
         "starttime": tf.io.FixedLenFeature((), tf.string, default_value=""),
@@ -163,6 +179,11 @@ def sequence_example_parser(record):
 
 
 def eval_eager_tensor(parsed_example):
+    """
+
+    :param parsed_example:
+    :return:
+    """
     feature = {
         'id': parsed_example['id'].numpy().decode('utf-8'),
         'starttime': parsed_example['starttime'].numpy().decode('utf-8'),
@@ -191,6 +212,10 @@ def eval_eager_tensor(parsed_example):
 
 
 def batch_iterator(batch):
+    """
+
+    :param batch:
+    """
     for index in range(batch['id'].shape[0]):
         parsed_example = {
             'id': batch['id'][index],
