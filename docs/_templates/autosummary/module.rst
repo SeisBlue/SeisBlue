@@ -1,34 +1,60 @@
-{{ fullname | escape | underline}}
+{{ fullname }}
+{{ underline }}
 
+.. currentmodule:: {{ fullname }}
 .. automodule:: {{ fullname }}
 
-   {% block attributes %}
-   {% if attributes %}
-   .. rubric:: {{ _('Module Attributes') }}
-
-   .. autosummary::
-   {% for item in attributes %}
-      {{ item }}
-   {%- endfor %}
-   {% endif %}
-   {% endblock %}
+   .. comment to end block
 
    {% block functions %}
-   {% if functions %}
-   .. rubric:: {{ _('Functions') }}
+
+   {% set public_functions = [] %}
+   {% set private_functions = [] %}
+   {% for m in all_functions %}
+   {% if m in functions %}
+   {% do public_functions.append(m) %}
+   {% else %}
+   {% do private_functions.append(m) %}
+   {% endif %}
+   {%- endfor %}
+
+   {% if public_functions %}
+   .. rubric:: Public Functions
 
    .. autosummary::
-   {% for item in functions %}
+      :toctree: .
+      :nosignatures:
+
+   {% for item in public_functions %}
       {{ item }}
    {%- endfor %}
    {% endif %}
+
+   {% if private_functions %}
+   .. rubric:: Private Functions
+
+   .. warning::
+
+       Private functions are mainly for internal/developer use and their API might change without notice.
+
+   .. autosummary::
+     :toctree: .
+     :nosignatures:
+   {% for item in private_functions %}
+       {{ item }}
+   {%- endfor %}
+   {% endif %}
+
    {% endblock %}
 
    {% block classes %}
    {% if classes %}
-   .. rubric:: {{ _('Classes') }}
+   .. rubric:: Classes
 
    .. autosummary::
+      :toctree: .
+      :nosignatures:
+
    {% for item in classes %}
       {{ item }}
    {%- endfor %}
@@ -37,24 +63,14 @@
 
    {% block exceptions %}
    {% if exceptions %}
-   .. rubric:: {{ _('Exceptions') }}
+   .. rubric:: Exceptions
 
    .. autosummary::
+      :toctree: .
+      :nosignatures:
+
    {% for item in exceptions %}
       {{ item }}
    {%- endfor %}
    {% endif %}
    {% endblock %}
-
-{% block modules %}
-{% if modules %}
-.. rubric:: Modules
-
-.. autosummary::
-   :toctree:
-   :recursive:
-{% for item in modules %}
-   {{ item }}
-{%- endfor %}
-{% endif %}
-{% endblock %}
