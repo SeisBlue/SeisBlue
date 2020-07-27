@@ -1,30 +1,28 @@
-Core
-=============
 .. currentmodule:: seisnn.core
 .. automodule:: seisnn.core
-    Class
-    -------------------
-    .. autoclass::
-        :toctree: core
-        :nosignatures:
 
-        Feature
+Class
+-------------------
+.. autoclass::
+    :toctree: core
+    :nosignatures:
 
-
-    Functions
-    -------------------
-    .. autosummary::
-        :toctree: core
-        :nosignatures:
+    Feature
 
 
-        parallel_to_tfrecord
+Functions
+-------------------
+.. autosummary::
+    :toctree: core
+    :nosignatures:
+
+    parallel_to_tfrecord
 
 
-    Private Functions
-    -------------------
-    .. autosummary::
-        :toctree: core
-        :nosignatures:
+Private Functions
+-------------------
+.. autosummary::
+    :toctree: core
+    :nosignatures:
 
-        _to_tfrecord
+    _to_tfrecord

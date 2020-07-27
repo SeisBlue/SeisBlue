@@ -1,12 +1,10 @@
-Logger
-=============
 .. currentmodule:: seisnn.logger
 .. automodule:: seisnn.logger
 
-    Functions
-    -------------------
-    .. autosummary::
-        :toctree: logger
-        :nosignatures:
+Functions
+-------------------
+.. autosummary::
+    :toctree: logger
+    :nosignatures:
 
-        save_loss
+    save_loss

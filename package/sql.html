@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Database &#8212; SeisNN  documentation</title>
+    <title>Class &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Utilities" href="utils.html" />
-    <link rel="prev" title="Quality control" href="qc.html" />
+    <link rel="next" title="Functions" href="utils.html" />
+    <link rel="prev" title="seisnn.qc.signal_to_noise_ratio" href="qc/seisnn.qc.signal_to_noise_ratio.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -64,15 +64,23 @@
 <li class="toctree-l1"><a class="reference internal" href="../notebooks.html">Notebooks</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example_proto.html">Example Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io.html">Input / Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plot.html">Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="processing.html">Processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="qc.html">Quality control</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">SQL Database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html#private-functions">Private Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_proto.html">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_proto.html#private-functions">Private Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html#private-functions">Private Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html#unet">Unet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processing.html">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qc.html">Functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Functions</a></li>
 </ul>
 </ul>
 </li>
@@ -86,7 +94,8 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">SQL Database</a></li>
+<li><a class="reference internal" href="#">Class</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </ul>
 </li>
@@ -96,11 +105,11 @@
               
                 
   <li>
-    <a href="qc.html" title="Previous Chapter: Quality control"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Quality control</span>
+    <a href="qc/seisnn.qc.signal_to_noise_ratio.html" title="Previous Chapter: seisnn.qc.signal_to_noise_ratio"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.qc.sig...</span>
     </a>
   </li>
   <li>
-    <a href="utils.html" title="Next Chapter: Utilities"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Utilities &raquo;</span>
+    <a href="utils.html" title="Next Chapter: Functions"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Functions &raquo;</span>
     </a>
   </li>
               
@@ -134,8 +143,19 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="sql-database">
-<h1>SQL Database<a class="headerlink" href="#sql-database" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="class">
+<h1>Class<a class="headerlink" href="#class" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="functions">
+<h1>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h1>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+</tbody>
+</table>
 </div>
 
 
