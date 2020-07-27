@@ -1,3 +1,5 @@
+Model
+===============
 .. currentmodule:: seisnn.model
 .. automodule:: seisnn.model
 

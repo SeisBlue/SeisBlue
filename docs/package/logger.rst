@@ -1,3 +1,5 @@
+Logger
+===================
 .. currentmodule:: seisnn.logger
 .. automodule:: seisnn.logger
 

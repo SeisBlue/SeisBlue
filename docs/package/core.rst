@@ -1,9 +1,11 @@
+Core
+===================
 .. currentmodule:: seisnn.core
 .. automodule:: seisnn.core
 
 Class
 -------------------
-.. autoclass::
+.. autosummary::
     :toctree: core
     :nosignatures:
 

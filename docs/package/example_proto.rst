@@ -1,3 +1,5 @@
+Example Protocol
+===================
 .. currentmodule:: seisnn.example_proto
 .. automodule:: seisnn.example_proto
 

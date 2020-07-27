@@ -4,9 +4,9 @@ Training step settings.
 
 import tensorflow as tf
 
-from seisnn.model import unet
+from seisnn.model.unet import nest_net
 
-model = unet.Nest_Net()
+model = nest_net()
 optimizer = tf.keras.optimizers.Adam(1e-4)
 bce = tf.keras.losses.BinaryCrossentropy()
 

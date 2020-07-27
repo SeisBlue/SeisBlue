@@ -1,3 +1,5 @@
+Processing
+===================
 .. currentmodule:: seisnn.processing
 .. automodule:: seisnn.processing
 

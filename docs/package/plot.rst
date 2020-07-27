@@ -1,9 +1,11 @@
+Plot
+===================
 .. currentmodule:: seisnn.plot
 .. automodule:: seisnn.plot
 
 Class
 -------------------
-.. autoclass::
+.. autosummary::
     :toctree: plot
     :nosignatures:
 

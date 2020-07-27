@@ -1,3 +1,5 @@
+Input / Output
+===================
 .. currentmodule:: seisnn.io
 .. automodule:: seisnn.io
 
