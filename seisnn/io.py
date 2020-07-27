@@ -1,23 +1,4 @@
 """
-Input / Output
-======================
-
-.. autosummary::
-    :toctree: io
-
-    database_to_tfrecord
-    get_event
-    read_dataset
-    read_event_list
-    read_hyp
-    read_kml_placemark
-    read_pkl
-    read_sds
-    write_hyp_station
-    write_pkl
-    write_station_dataset
-    write_tfrecord
-
 """
 
 import collections

@@ -1,20 +1,5 @@
 """
-SQL Database
-=============
-
 SQLite database for metadata.
-
-.. autosummary::
-    :toctree: database
-
-    Client
-    Event
-    Inventory
-    Pick
-    TFRecord
-    Waveform
-    get_table_class
-
 """
 
 import os

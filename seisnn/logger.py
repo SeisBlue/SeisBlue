@@ -1,12 +1,4 @@
 """
-Logger
-=============
-
-.. autosummary::
-    :toctree: logger
-
-    save_loss
-
 """
 
 import os

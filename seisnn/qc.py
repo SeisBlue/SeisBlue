@@ -1,12 +1,5 @@
 """
-Quality control
-======================
 
-.. autosummary::
-    :toctree: qc
-
-    precision_recall_f1_score
-    signal_to_noise_ratio
 
 """
 

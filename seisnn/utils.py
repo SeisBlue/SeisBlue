@@ -1,18 +1,4 @@
 """
-Utilities
-=============
-
-.. autosummary::
-    :toctree: utils
-
-    batch
-    get_config
-    get_dir_list
-    make_dirs
-    parallel
-    parallel_iter
-    unet_padding_size
-
 """
 
 import multiprocessing as mp

@@ -13,6 +13,15 @@ bce = tf.keras.losses.BinaryCrossentropy()
 
 @tf.function
 def train_step(train_trace, train_pdf, val_trace, val_pdf):
+    """
+    Main training loop.
+
+    :param train_trace:
+    :param train_pdf:
+    :param val_trace:
+    :param val_pdf:
+    :return:
+    """
     with tf.GradientTape(persistent=True) as tape:
         pred_pdf = model(train_trace, training=True)
         pred_loss = bce(train_pdf, pred_pdf)
