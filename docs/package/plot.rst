@@ -8,6 +8,7 @@ Class
 .. autosummary::
     :toctree: plot
     :nosignatures:
+    :recursive:
 
     ProjectionConverter
 

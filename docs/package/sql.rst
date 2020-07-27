@@ -8,6 +8,7 @@ Class
 .. autosummary::
     :toctree: sql
     :nosignatures:
+    :recursive:
 
     Client
     Event
