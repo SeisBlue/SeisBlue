@@ -66,7 +66,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Protocol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality control</a></li>
@@ -120,25 +119,6 @@
       
   <h1>Source code for seisnn.io</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Input / Output</span>
-<span class="sd">======================</span>
-
-<span class="sd">.. autosummary::</span>
-<span class="sd">    :toctree: io</span>
-
-<span class="sd">    database_to_tfrecord</span>
-<span class="sd">    get_event</span>
-<span class="sd">    read_dataset</span>
-<span class="sd">    read_event_list</span>
-<span class="sd">    read_hyp</span>
-<span class="sd">    read_kml_placemark</span>
-<span class="sd">    read_pkl</span>
-<span class="sd">    read_sds</span>
-<span class="sd">    write_hyp_station</span>
-<span class="sd">    write_pkl</span>
-<span class="sd">    write_station_dataset</span>
-<span class="sd">    write_tfrecord</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
@@ -307,7 +287,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> done&#39;</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_write_picked_stream</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+<div class="viewcode-block" id="_write_picked_stream"><a class="viewcode-back" href="../../package/io/seisnn.io._write_picked_stream.html#seisnn.io._write_picked_stream">[docs]</a><span class="k">def</span> <span class="nf">_write_picked_stream</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -323,7 +303,7 @@
             <span class="n">feature</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">stream_to_feature</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
             <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
             <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">example_list</span>
+    <span class="k">return</span> <span class="n">example_list</span></div>
 
 
 <div class="viewcode-block" id="write_station_dataset"><a class="viewcode-back" href="../../package/io/seisnn.io.write_station_dataset.html#seisnn.io.write_station_dataset">[docs]</a><span class="k">def</span> <span class="nf">write_station_dataset</span><span class="p">(</span><span class="n">dataset_output_dir</span><span class="p">,</span> <span class="n">sds_root</span><span class="p">,</span>

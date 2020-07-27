@@ -66,7 +66,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Protocol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality control</a></li>
@@ -127,7 +126,7 @@
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
 
-<span class="k">def</span> <span class="nf">_bytes_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="_bytes_feature"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto._bytes_feature.html#seisnn.example_proto._bytes_feature">[docs]</a><span class="k">def</span> <span class="nf">_bytes_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a bytes_list from a string / byte.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -136,21 +135,21 @@
         <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">bytes_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">BytesList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">bytes_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">BytesList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span></div>
 
 
-<span class="k">def</span> <span class="nf">_float_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="_float_feature"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto._float_feature.html#seisnn.example_proto._float_feature">[docs]</a><span class="k">def</span> <span class="nf">_float_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a float_list from a float / double.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">float_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FloatList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">float_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FloatList</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span></div>
 
 
-<span class="k">def</span> <span class="nf">_int64_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="_int64_feature"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto._int64_feature.html#seisnn.example_proto._int64_feature">[docs]</a><span class="k">def</span> <span class="nf">_int64_feature</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns an int64_list from a bool / enum / int / uint.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">int64_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Int64List</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">int64_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Int64List</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">]))</span></div>
 
 
 <div class="viewcode-block" id="stream_to_feature"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.stream_to_feature.html#seisnn.example_proto.stream_to_feature">[docs]</a><span class="k">def</span> <span class="nf">stream_to_feature</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>

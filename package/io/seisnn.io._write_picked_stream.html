@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.core.Feature &#8212; SeisNN  documentation</title>
+    <title>seisnn.io._write_picked_stream &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="seisnn.core.parallel_to_tfrecord" href="seisnn.core.parallel_to_tfrecord.html" />
-    <link rel="prev" title="Core" href="../core.html" />
+    <link rel="next" title="Logger" href="../logger.html" />
+    <link rel="prev" title="seisnn.io.write_tfrecord" href="seisnn.io.write_tfrecord.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -64,11 +64,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../example_proto.html">Example Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../io.html">Input / Output</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../qc.html">Quality control</a></li>
@@ -87,7 +86,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.core.Feature</a></li>
+<li><a class="reference internal" href="#">seisnn.io._write_picked_stream</a></li>
 </ul>
 </ul>
 </li>
@@ -97,11 +96,11 @@
               
                 
   <li>
-    <a href="../core.html" title="Previous Chapter: Core"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Core</span>
+    <a href="seisnn.io.write_tfrecord.html" title="Previous Chapter: seisnn.io.write_tfrecord"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.io.wri...</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.core.parallel_to_tfrecord.html" title="Next Chapter: seisnn.core.parallel_to_tfrecord"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.core.p... &raquo;</span>
+    <a href="../logger.html" title="Next Chapter: Logger"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Logger &raquo;</span>
     </a>
   </li>
               
@@ -111,7 +110,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../../_sources/package/core/seisnn.core.Feature.rst.txt"
+  <a href="../../_sources/package/io/seisnn.io._write_picked_stream.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -135,79 +134,12 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-core-feature">
-<h1>seisnn.core.Feature<a class="headerlink" href="#seisnn-core-feature" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="seisnn.core.Feature">
-<em class="property">class </em><code class="sig-prename descclassname">seisnn.core.</code><code class="sig-name descname">Feature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">example</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/core.html#Feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.core.Feature" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
-<dt id="seisnn.core.Feature.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">example</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/core.html#Feature.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.core.Feature.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.core.Feature.__init__" title="seisnn.core.Feature.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(example)</p></td>
-<td><p>Initialize self.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_example</span></code>(example)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param example</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_feature</span></code>(feature)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param feature</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks</span></code>(phase, pick_set)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param phase</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(**kwargs)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param kwargs</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_example</span></code>()</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">return</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_feature</span></code>()</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">return</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_tfrecord</span></code>(file_path)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param file_path</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+  <div class="section" id="seisnn-io-write-picked-stream">
+<h1>seisnn.io._write_picked_stream<a class="headerlink" href="#seisnn-io-write-picked-stream" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="seisnn.io._write_picked_stream">
+<code class="sig-prename descclassname">seisnn.io.</code><code class="sig-name descname">_write_picked_stream</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">batch_picks</span></em>, <em class="sig-param"><span class="n">database</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/io.html#_write_picked_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.io._write_picked_stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

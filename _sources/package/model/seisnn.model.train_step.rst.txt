@@ -1,6 +1,0 @@
-seisnn.model.train\_step
-========================
-
-.. currentmodule:: seisnn.model
-
-.. autofunction:: train_step

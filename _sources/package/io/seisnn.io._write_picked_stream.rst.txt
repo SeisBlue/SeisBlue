@@ -1,0 +1,6 @@
+seisnn.io.\_write\_picked\_stream
+=================================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: _write_picked_stream

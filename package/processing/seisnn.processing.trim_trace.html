@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.processing.stream_preprocessing &#8212; SeisNN  documentation</title>
+    <title>seisnn.processing.trim_trace &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,6 @@
     <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="seisnn.processing.trim_trace" href="seisnn.processing.trim_trace.html" />
-    <link rel="prev" title="seisnn.processing.signal_preprocessing" href="seisnn.processing.signal_preprocessing.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -63,14 +61,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
 </ul>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../example_proto.html">Example Protocol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Plot</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../processing.html">Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../qc.html">Quality control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sql.html">SQL Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utilities</a></li>
@@ -87,7 +84,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.processing.stream_preprocessing</a></li>
+<li><a class="reference internal" href="#">seisnn.processing.trim_trace</a></li>
 </ul>
 </ul>
 </li>
@@ -96,14 +93,6 @@
             
               
                 
-  <li>
-    <a href="seisnn.processing.signal_preprocessing.html" title="Previous Chapter: seisnn.processing.signal_preprocessing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.proces...</span>
-    </a>
-  </li>
-  <li>
-    <a href="seisnn.processing.trim_trace.html" title="Next Chapter: seisnn.processing.trim_trace"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.proces... &raquo;</span>
-    </a>
-  </li>
               
             
             
@@ -111,7 +100,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../../_sources/package/pick/seisnn.processing.stream_preprocessing.rst.txt"
+  <a href="../../_sources/package/processing/seisnn.processing.trim_trace.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -135,17 +124,17 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-processing-stream-preprocessing">
-<h1>seisnn.processing.stream_preprocessing<a class="headerlink" href="#seisnn-processing-stream-preprocessing" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="seisnn-processing-trim-trace">
+<h1>seisnn.processing.trim_trace<a class="headerlink" href="#seisnn-processing-trim-trace" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="seisnn.processing.stream_preprocessing">
-<code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">stream_preprocessing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stream</span></em>, <em class="sig-param"><span class="n">database</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/processing.html#stream_preprocessing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.stream_preprocessing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return processed stream with pdf.</p>
+<dt id="seisnn.processing.trim_trace">
+<code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">trim_trace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stream</span></em>, <em class="sig-param"><span class="n">points</span><span class="o">=</span><span class="default_value">3008</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/processing.html#trim_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.trim_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return trimmed stream in a given length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stream</strong> – </p></li>
-<li><p><strong>database</strong> – </p></li>
+<li><p><strong>points</strong> – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

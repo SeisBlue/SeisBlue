@@ -1,0 +1,6 @@
+seisnn.core.\_to\_tfrecord
+==========================
+
+.. currentmodule:: seisnn.core
+
+.. autofunction:: _to_tfrecord

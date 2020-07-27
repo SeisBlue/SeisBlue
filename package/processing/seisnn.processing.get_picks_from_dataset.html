@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.sql.Event &#8212; SeisNN  documentation</title>
+    <title>seisnn.processing.get_picks_from_dataset &#8212; SeisNN  documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,6 @@
     <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="seisnn.sql.Inventory" href="seisnn.sql.Inventory.html" />
-    <link rel="prev" title="seisnn.sql.Client" href="seisnn.sql.Client.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -63,16 +61,15 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
 </ul>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../core.html">Core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../example_proto.html">Example Protocol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plot.html">Plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../qc.html">Quality control</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../sql.html">SQL Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sql.html">SQL Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../utils.html">Utilities</a></li>
 </ul>
 </ul>
@@ -87,7 +84,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.sql.Event</a></li>
+<li><a class="reference internal" href="#">seisnn.processing.get_picks_from_dataset</a></li>
 </ul>
 </ul>
 </li>
@@ -96,14 +93,6 @@
             
               
                 
-  <li>
-    <a href="seisnn.sql.Client.html" title="Previous Chapter: seisnn.sql.Client"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.sql.Client</span>
-    </a>
-  </li>
-  <li>
-    <a href="seisnn.sql.Inventory.html" title="Next Chapter: seisnn.sql.Inventory"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.sql.Inventory &raquo;</span>
-    </a>
-  </li>
               
             
             
@@ -111,7 +100,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../../_sources/package/database/seisnn.sql.Event.rst.txt"
+  <a href="../../_sources/package/processing/seisnn.processing.get_picks_from_dataset.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -135,69 +124,19 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-sql-event">
-<h1>seisnn.sql.Event<a class="headerlink" href="#seisnn-sql-event" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="seisnn.sql.Event">
-<em class="property">class </em><code class="sig-prename descclassname">seisnn.sql.</code><code class="sig-name descname">Event</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/sql.html#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.sql.Event" title="Permalink to this definition">¶</a></dt>
-<dd><p>Event table for sql database.</p>
-<dl class="py method">
-<dt id="seisnn.sql.Event.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.sql.Event.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>A simple constructor that allows initialization from kwargs.</p>
-<p>Sets attributes on the constructed instance using the names and
-values in <code class="docutils literal notranslate"><span class="pre">kwargs</span></code>.</p>
-<p>Only keys that are present as
-attributes of the instance’s class are allowed. These could be,
-for example, any mapped columns or relationships.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Event.__init__" title="seisnn.sql.Event.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(event)</p></td>
-<td><p>A simple constructor that allows initialization from kwargs.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_db</span></code>(session)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param session</dt>
-<dd class="field-odd"><p></p></dd>
+  <div class="section" id="seisnn-processing-get-picks-from-dataset">
+<h1>seisnn.processing.get_picks_from_dataset<a class="headerlink" href="#seisnn-processing-get-picks-from-dataset" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="seisnn.processing.get_picks_from_dataset">
+<code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">get_picks_from_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/processing.html#get_picks_from_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.get_picks_from_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataset</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
 </dl>
-</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">depth</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">latitude</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">longitude</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">time</span></code></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>

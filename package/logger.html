@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="seisnn.logger.save_loss" href="logger/seisnn.logger.save_loss.html" />
-    <link rel="prev" title="seisnn.io.write_tfrecord" href="io/seisnn.io.write_tfrecord.html" />
+    <link rel="prev" title="seisnn.io._write_picked_stream" href="io/seisnn.io._write_picked_stream.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -68,7 +68,6 @@
 <li class="toctree-l1"><a class="reference internal" href="example_proto.html">Example Protocol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">Input / Output</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">Plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="qc.html">Quality control</a></li>
@@ -87,7 +86,10 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Logger</a></li>
+<li><a class="reference internal" href="#">Logger</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -97,7 +99,7 @@
               
                 
   <li>
-    <a href="io/seisnn.io.write_tfrecord.html" title="Previous Chapter: seisnn.io.write_tfrecord"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.io.wri...</span>
+    <a href="io/seisnn.io._write_picked_stream.html" title="Previous Chapter: seisnn.io._write_picked_stream"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.io._wr...</span>
     </a>
   </li>
   <li>
@@ -135,15 +137,17 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <span class="target" id="module-seisnn.logger"></span><div class="section" id="logger">
-<h1>Logger<a class="headerlink" href="#logger" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-seisnn.logger">
+<span id="logger"></span><h1>Logger<a class="headerlink" href="#module-seisnn.logger" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="logger/seisnn.logger.save_loss.html#seisnn.logger.save_loss" title="seisnn.logger.save_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_loss</span></code></a>(loss_buffer, title, save_dir)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="logger/seisnn.logger.save_loss.html#seisnn.logger.save_loss" title="seisnn.logger.save_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_loss</span></code></a></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param loss_buffer</dt>
 <dd class="field-odd"><p></p></dd>
@@ -152,6 +156,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 
 

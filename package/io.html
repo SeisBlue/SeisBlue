@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="seisnn.io.database_to_tfrecord" href="io/seisnn.io.database_to_tfrecord.html" />
-    <link rel="prev" title="seisnn.example_proto.stream_to_feature" href="example_proto/seisnn.example_proto.stream_to_feature.html" />
+    <link rel="prev" title="seisnn.example_proto._int64_feature" href="example_proto/seisnn.example_proto._int64_feature.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -68,7 +68,6 @@
 <li class="toctree-l1"><a class="reference internal" href="example_proto.html">Example Protocol</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">Plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="qc.html">Quality control</a></li>
@@ -87,7 +86,11 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Input / Output</a></li>
+<li><a class="reference internal" href="#">Input / Output</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#private-functions">Private Functions</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -97,7 +100,7 @@
               
                 
   <li>
-    <a href="example_proto/seisnn.example_proto.stream_to_feature.html" title="Previous Chapter: seisnn.example_proto.stream_to_feature"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.exampl...</span>
+    <a href="example_proto/seisnn.example_proto._int64_feature.html" title="Previous Chapter: seisnn.example_proto._int64_feature"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.exampl...</span>
     </a>
   </li>
   <li>
@@ -135,72 +138,89 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <span class="target" id="module-seisnn.io"></span><div class="section" id="input-output">
-<h1>Input / Output<a class="headerlink" href="#input-output" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-seisnn.io">
+<span id="input-output"></span><h1>Input / Output<a class="headerlink" href="#module-seisnn.io" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.database_to_tfrecord.html#seisnn.io.database_to_tfrecord" title="seisnn.io.database_to_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">database_to_tfrecord</span></code></a>(database, output)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.database_to_tfrecord.html#seisnn.io.database_to_tfrecord" title="seisnn.io.database_to_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">database_to_tfrecord</span></code></a></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param database</dt>
 <dd class="field-odd"><p></p></dd>
 </dl>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.get_event.html#seisnn.io.get_event" title="seisnn.io.get_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code></a>(filename[, debug])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.get_event.html#seisnn.io.get_event" title="seisnn.io.get_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code></a></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param filename</dt>
 <dd class="field-odd"><p></p></dd>
 </dl>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.read_dataset.html#seisnn.io.read_dataset" title="seisnn.io.read_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_dataset</span></code></a>(dataset_dir)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.read_dataset.html#seisnn.io.read_dataset" title="seisnn.io.read_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_dataset</span></code></a></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param dataset_dir</dt>
 <dd class="field-odd"><p></p></dd>
 </dl>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.read_event_list.html#seisnn.io.read_event_list" title="seisnn.io.read_event_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_event_list</span></code></a>(sfile_dir)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.read_event_list.html#seisnn.io.read_event_list" title="seisnn.io.read_event_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_event_list</span></code></a></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param sfile_dir</dt>
 <dd class="field-odd"><p></p></dd>
 </dl>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.read_hyp.html#seisnn.io.read_hyp" title="seisnn.io.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.read_hyp.html#seisnn.io.read_hyp" title="seisnn.io.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a></p></td>
 <td><p>Read STATION0.HYP file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.read_kml_placemark.html#seisnn.io.read_kml_placemark" title="seisnn.io.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.read_kml_placemark.html#seisnn.io.read_kml_placemark" title="seisnn.io.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a></p></td>
 <td><p>Read Google Earth KML file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.read_pkl.html#seisnn.io.read_pkl" title="seisnn.io.read_pkl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_pkl</span></code></a>(pkl)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.read_pkl.html#seisnn.io.read_pkl" title="seisnn.io.read_pkl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_pkl</span></code></a></p></td>
 <td><p>Read python pickle file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.read_sds.html#seisnn.io.read_sds" title="seisnn.io.read_sds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sds</span></code></a>(window)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.read_sds.html#seisnn.io.read_sds" title="seisnn.io.read_sds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sds</span></code></a></p></td>
 <td><p>Read SDS database</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.write_hyp_station.html#seisnn.io.write_hyp_station" title="seisnn.io.write_hyp_station"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code></a>(geom, save_file)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.write_hyp_station.html#seisnn.io.write_hyp_station" title="seisnn.io.write_hyp_station"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code></a></p></td>
 <td><p>Write STATION0.HYP file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.write_pkl.html#seisnn.io.write_pkl" title="seisnn.io.write_pkl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_pkl</span></code></a>(obj, file)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.write_pkl.html#seisnn.io.write_pkl" title="seisnn.io.write_pkl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_pkl</span></code></a></p></td>
 <td><p>Write python pickle file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.write_station_dataset.html#seisnn.io.write_station_dataset" title="seisnn.io.write_station_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_station_dataset</span></code></a>(dataset_output_dir, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io.write_station_dataset.html#seisnn.io.write_station_dataset" title="seisnn.io.write_station_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_station_dataset</span></code></a></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param dataset_output_dir</dt>
 <dd class="field-odd"><p></p></dd>
 </dl>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.write_tfrecord.html#seisnn.io.write_tfrecord" title="seisnn.io.write_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code></a>(example_list, save_file)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="io/seisnn.io.write_tfrecord.html#seisnn.io.write_tfrecord" title="seisnn.io.write_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code></a></p></td>
 <td><p>Write TFRecord file.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="private-functions">
+<h2>Private Functions<a class="headerlink" href="#private-functions" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="io/seisnn.io._write_picked_stream.html#seisnn.io._write_picked_stream" title="seisnn.io._write_picked_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_write_picked_stream</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 
 

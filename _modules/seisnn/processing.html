@@ -66,7 +66,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Protocol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality control</a></li>
@@ -120,22 +119,6 @@
       
   <h1>Source code for seisnn.processing</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Processing</span>
-<span class="sd">=============</span>
-
-<span class="sd">.. autosummary::</span>
-<span class="sd">    :toctree: pick</span>
-
-<span class="sd">    get_pdf</span>
-<span class="sd">    get_picks_from_dataset</span>
-<span class="sd">    get_picks_from_pdf</span>
-<span class="sd">    get_time_residual</span>
-<span class="sd">    get_window</span>
-<span class="sd">    signal_preprocessing</span>
-<span class="sd">    stream_preprocessing</span>
-<span class="sd">    trim_trace</span>
-<span class="sd">    validate_picks_nearby</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -145,7 +128,7 @@
 <span class="kn">import</span> <span class="nn">obspy</span>
 
 
-<div class="viewcode-block" id="get_window"><a class="viewcode-back" href="../../package/pick/seisnn.processing.get_window.html#seisnn.processing.get_window">[docs]</a><span class="k">def</span> <span class="nf">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+<div class="viewcode-block" id="get_window"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_window.html#seisnn.processing.get_window">[docs]</a><span class="k">def</span> <span class="nf">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param pick:</span>
@@ -166,7 +149,7 @@
     <span class="k">return</span> <span class="n">window</span></div>
 
 
-<div class="viewcode-block" id="get_pdf"><a class="viewcode-back" href="../../package/pick/seisnn.processing.get_pdf.html#seisnn.processing.get_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<div class="viewcode-block" id="get_pdf"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_pdf.html#seisnn.processing.get_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param stream:</span>
@@ -199,7 +182,7 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="get_picks_from_pdf"><a class="viewcode-back" href="../../package/pick/seisnn.processing.get_picks_from_pdf.html#seisnn.processing.get_picks_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_pdf</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="viewcode-block" id="get_picks_from_pdf"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_picks_from_pdf.html#seisnn.processing.get_picks_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_pdf</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param feature:</span>
@@ -222,7 +205,7 @@
             <span class="n">feature</span><span class="o">.</span><span class="n">pick_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pick_set</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_picks_from_dataset"><a class="viewcode-back" href="../../package/pick/seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+<div class="viewcode-block" id="get_picks_from_dataset"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param dataset:</span>
@@ -235,7 +218,7 @@
     <span class="k">return</span> <span class="n">pick_list</span></div>
 
 
-<div class="viewcode-block" id="validate_picks_nearby"><a class="viewcode-back" href="../../package/pick/seisnn.processing.validate_picks_nearby.html#seisnn.processing.validate_picks_nearby">[docs]</a><span class="k">def</span> <span class="nf">validate_picks_nearby</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<div class="viewcode-block" id="validate_picks_nearby"><a class="viewcode-back" href="../../package/processing/seisnn.processing.validate_picks_nearby.html#seisnn.processing.validate_picks_nearby">[docs]</a><span class="k">def</span> <span class="nf">validate_picks_nearby</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param val_pick:</span>
@@ -251,7 +234,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="get_time_residual"><a class="viewcode-back" href="../../package/pick/seisnn.processing.get_time_residual.html#seisnn.processing.get_time_residual">[docs]</a><span class="k">def</span> <span class="nf">get_time_residual</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">):</span>
+<div class="viewcode-block" id="get_time_residual"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_time_residual.html#seisnn.processing.get_time_residual">[docs]</a><span class="k">def</span> <span class="nf">get_time_residual</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param val_pick:</span>
@@ -263,7 +246,7 @@
     <span class="k">return</span> <span class="n">residual</span></div>
 
 
-<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/pick/seisnn.processing.stream_preprocessing.html#seisnn.processing.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/processing/seisnn.processing.stream_preprocessing.html#seisnn.processing.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return processed stream with pdf.</span>
 
@@ -290,7 +273,7 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="signal_preprocessing"><a class="viewcode-back" href="../../package/pick/seisnn.processing.signal_preprocessing.html#seisnn.processing.signal_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
+<div class="viewcode-block" id="signal_preprocessing"><a class="viewcode-back" href="../../package/processing/seisnn.processing.signal_preprocessing.html#seisnn.processing.signal_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a signal processed stream.</span>
 
@@ -305,7 +288,7 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="trim_trace"><a class="viewcode-back" href="../../package/pick/seisnn.processing.trim_trace.html#seisnn.processing.trim_trace">[docs]</a><span class="k">def</span> <span class="nf">trim_trace</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">3008</span><span class="p">):</span>
+<div class="viewcode-block" id="trim_trace"><a class="viewcode-back" href="../../package/processing/seisnn.processing.trim_trace.html#seisnn.processing.trim_trace">[docs]</a><span class="k">def</span> <span class="nf">trim_trace</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">3008</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return trimmed stream in a given length.</span>
 
