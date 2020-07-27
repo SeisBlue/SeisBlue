@@ -155,8 +155,18 @@
 
 
 <div class="viewcode-block" id="U_Net"><a class="viewcode-back" href="../../../package/model/seisnn.model.U_Net.html#seisnn.model.U_Net">[docs]</a><span class="k">def</span> <span class="nf">U_Net</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="c1"># Standard U-Net [Ronneberger et.al, 2015]</span>
-    <span class="c1"># Total params: 420,249</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Standard U-Net [Ronneberger et.al, 2015]</span>
+
+<span class="sd">    Total params: 420,249</span>
+
+<span class="sd">    :param img_rows:</span>
+<span class="sd">    :param img_cols:</span>
+<span class="sd">    :param color_type:</span>
+<span class="sd">    :param num_class:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">nb_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
     <span class="c1"># nb_filter = [8, 16, 32, 64, 128]</span>
     <span class="n">pool_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -220,8 +230,17 @@
 
 
 <div class="viewcode-block" id="Nest_Net"><a class="viewcode-back" href="../../../package/model/seisnn.model.Nest_Net.html#seisnn.model.Nest_Net">[docs]</a><span class="k">def</span> <span class="nf">Nest_Net</span><span class="p">(</span><span class="n">img_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="c1"># Standard UNet++ [Zhou et.al, 2018]</span>
-    <span class="c1"># Total params: 496,225</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Standard UNet++ [Zhou et.al, 2018]</span>
+
+<span class="sd">    Total params: 496,225</span>
+
+<span class="sd">    :param img_rows:</span>
+<span class="sd">    :param img_cols:</span>
+<span class="sd">    :param color_type:</span>
+<span class="sd">    :param num_class:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nb_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">]</span>
     <span class="n">pool_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">kernel_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>

@@ -264,7 +264,13 @@
 
 
 <div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/pick/seisnn.processing.stream_preprocessing.html#seisnn.processing.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return processed stream with pdf.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return processed stream with pdf.</span>
+
+<span class="sd">    :param stream:</span>
+<span class="sd">    :param database:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">sql</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
