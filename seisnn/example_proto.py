@@ -41,8 +41,6 @@ def stream_to_feature(stream):
     """
     Turn Stream object into feature dictionary
 
-    Parameters
-    ----------
     :param stream: Preprocessed stream object from
         seisnn.processing.stream_preprocessing
     :rtype: dict
