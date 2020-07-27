@@ -1,0 +1,6 @@
+seisnn.io.database\_to\_tfrecord
+================================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: database_to_tfrecord

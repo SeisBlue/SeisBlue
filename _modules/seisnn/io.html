@@ -63,12 +63,12 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Proto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Protocol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Pick</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/sql.html">SQL Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../package/utils.html">Utilities</a></li>
@@ -126,6 +126,7 @@
 <span class="sd">.. autosummary::</span>
 <span class="sd">    :toctree: io</span>
 
+<span class="sd">    database_to_tfrecord</span>
 <span class="sd">    get_event</span>
 <span class="sd">    read_dataset</span>
 <span class="sd">    read_event_list</span>
@@ -137,7 +138,6 @@
 <span class="sd">    write_pkl</span>
 <span class="sd">    write_station_dataset</span>
 <span class="sd">    write_tfrecord</span>
-<span class="sd">    write_training_dataset</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -242,7 +242,7 @@
     <span class="k">return</span> <span class="n">stream_dict</span></div>
 
 
-<span class="k">def</span> <span class="nf">database_to_tfrecord</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+<div class="viewcode-block" id="database_to_tfrecord"><a class="viewcode-back" href="../../package/io/seisnn.io.database_to_tfrecord.html#seisnn.io.database_to_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">database_to_tfrecord</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">itertools</span>
     <span class="kn">import</span> <span class="nn">operator</span>
     <span class="kn">from</span> <span class="nn">seisnn.sql</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Pick</span>
@@ -263,7 +263,7 @@
         <span class="n">example_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">station_picks</span><span class="p">)</span>
         <span class="n">save_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
         <span class="n">write_tfrecord</span><span class="p">(</span><span class="n">example_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> done&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> done&#39;</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_write_picked_stream</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
