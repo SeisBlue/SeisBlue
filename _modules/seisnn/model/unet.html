@@ -122,8 +122,8 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Unet model structure.</span>
 
-<span class="sd">U-net, Nest-Net model from:</span>
-<span class="sd">https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py</span>
+<span class="sd">unet, nest_net model modified from:</span>
+<span class="sd">https://github.com/MrGiovanni/UNetPlusPlus/blob/master/helper_functions.py</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">concatenate</span><span class="p">,</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">Conv2DTranspose</span><span class="p">,</span> \
@@ -134,6 +134,16 @@
 <div class="viewcode-block" id="_standard_unit"><a class="viewcode-back" href="../../../package/model/seisnn.model.unet._standard_unit.html#seisnn.model.unet._standard_unit">[docs]</a><span class="k">def</span> <span class="nf">_standard_unit</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">nb_filter</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2D standard unit.</span>
+
+<span class="sd">    :type input_tensor: tensor</span>
+<span class="sd">    :param input_tensor:</span>
+<span class="sd">    :type stage: str</span>
+<span class="sd">    :param stage: Stage name.</span>
+<span class="sd">    :type nb_filter: int</span>
+<span class="sd">    :param nb_filter: Filter number.</span>
+<span class="sd">    :type kernel_size: int or (int, int)</span>
+<span class="sd">    :param kernel_size: Kernel size.</span>
+<span class="sd">    :return: tensor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dropout_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
     <span class="n">act</span> <span class="o">=</span> <span class="s2">&quot;relu&quot;</span>
@@ -160,11 +170,15 @@
 
 <span class="sd">    Total params: 420,249</span>
 
-<span class="sd">    :param img_rows:</span>
-<span class="sd">    :param img_cols:</span>
-<span class="sd">    :param color_type:</span>
-<span class="sd">    :param num_class:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type img_rows: int</span>
+<span class="sd">    :param img_rows: Height of the data.</span>
+<span class="sd">    :type img_cols: int</span>
+<span class="sd">    :param img_cols: Width of the data.</span>
+<span class="sd">    :type color_type: int</span>
+<span class="sd">    :param color_type: Channel number of the data.</span>
+<span class="sd">    :type num_class: int</span>
+<span class="sd">    :param num_class: Output class number.</span>
+<span class="sd">    :return: UNet model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">nb_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
@@ -235,11 +249,15 @@
 
 <span class="sd">    Total params: 496,225</span>
 
-<span class="sd">    :param img_rows:</span>
-<span class="sd">    :param img_cols:</span>
-<span class="sd">    :param color_type:</span>
-<span class="sd">    :param num_class:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type img_rows: int</span>
+<span class="sd">    :param img_rows: Height of the data.</span>
+<span class="sd">    :type img_cols: int</span>
+<span class="sd">    :param img_cols: Width of the data.</span>
+<span class="sd">    :type color_type: int</span>
+<span class="sd">    :param color_type: Channel number of the data.</span>
+<span class="sd">    :type num_class: int</span>
+<span class="sd">    :param num_class: Output class number.</span>
+<span class="sd">    :return: Nest net model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nb_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">]</span>
     <span class="n">pool_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>

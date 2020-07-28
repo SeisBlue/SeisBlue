@@ -144,14 +144,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>train_trace</strong> – </p></li>
-<li><p><strong>train_pdf</strong> – </p></li>
-<li><p><strong>val_trace</strong> – </p></li>
-<li><p><strong>val_pdf</strong> – </p></li>
+<li><p><strong>train_trace</strong> (<em>tf.Tensor</em>) – Training trace data.</p></li>
+<li><p><strong>train_pdf</strong> (<em>tf.Tensor</em>) – Training trace label.</p></li>
+<li><p><strong>val_trace</strong> (<em>tf.Tensor</em>) – Validation trace data.</p></li>
+<li><p><strong>val_pdf</strong> (<em>tf.Tensor</em>) – Validation trace label.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(predict loss, validation loss)</p>
 </dd>
 </dl>
 </dd></dl>
