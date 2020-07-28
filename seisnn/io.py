@@ -177,7 +177,7 @@ def database_to_tfrecord(database, output):
     par = functools.partial(_write_picked_stream, database=database)
     for station_picks in picks_groupby_station:
         station = station_picks[0].station
-        file_name = '{}.tfrecord'.format(station)
+        file_name = f'{station}.tfrecord'
 
         example_list = utils.parallel(par, station_picks)
         save_file = os.path.join(dataset_dir, file_name)
@@ -249,7 +249,7 @@ def write_station_dataset(dataset_output_dir, sds_root,
                 trace.picks = []
                 time_stamp = trace.stats.starttime.isoformat()
                 trace.write(
-                    dataset_output_dir + '/' + time_stamp + trace.get_id() + ".pkl",
+                    f'{dataset_output_dir}/{time_stamp}{trace.get_id()}.pkl',
                     format="PICKLE")
                 counter += 1
 

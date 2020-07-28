@@ -12,6 +12,7 @@ class Feature:
     """
     Main class for data transfer.
     """
+
     def __init__(self, example):
         self.id = None
         self.station = None

@@ -40,7 +40,6 @@ def stream_to_feature(stream):
         seisnn.processing.stream_preprocessing
     :rtype: dict
     :return: feature dict
-
     """
     trace = stream[0]
 

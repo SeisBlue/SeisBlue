@@ -20,7 +20,7 @@ def _standard_unit(input_tensor, stage, nb_filter, kernel_size):
     :param stage: Stage name.
     :type nb_filter: int
     :param nb_filter: Filter number.
-    :type kernel_size: int
+    :type kernel_size: int or (int, int)
     :param kernel_size: Kernel size.
     :return: tensor
     """

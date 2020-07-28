@@ -207,10 +207,11 @@ def get_table_class(table):
         'pick': Pick,
         'waveform': Waveform,
     }
-    table_class = table_dict.get(table)
-    if table_class:
+    try:
+        table_class = table_dict.get(table)
         return table_class
-    else:
+
+    except KeyError:
         msg = 'Please select table: inventory, event, pick, tfrecord, waveform'
         raise KeyError(msg)
 
@@ -219,6 +220,7 @@ class Client:
     """
     Client for sql database
     """
+
     def __init__(self, database, echo=False):
         config = utils.get_config()
         self.database = database
@@ -478,7 +480,8 @@ class Client:
             no_pick_station = session \
                 .query(Inventory.station) \
                 .order_by(Inventory.station) \
-                .filter(Inventory.station.notin_(session.query(Pick.station))) \
+                .filter(Inventory.station
+                        .notin_(session.query(Pick.station))) \
                 .all()
             if no_pick_station:
                 print(f'{len(no_pick_station)} stations without picks:')
@@ -487,7 +490,8 @@ class Client:
             no_geom_station = session \
                 .query(Pick.station.distinct()) \
                 .order_by(Pick.station) \
-                .filter(Pick.station.notin_(session.query(Inventory.station))) \
+                .filter(Pick.station
+                        .notin_(session.query(Inventory.station))) \
                 .all()
             if no_geom_station:
                 print(f'{len(no_geom_station)} stations without geometry:')
@@ -501,7 +505,6 @@ class Client:
         :param output: Output directory.
         """
         from functools import partial
-        from seisnn import utils
         from seisnn import io
         config = utils.get_config()
         dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
@@ -531,9 +534,11 @@ class Client:
         with self.session_scope() as session:
             attrs = operator.attrgetter(*match_columns)
             table_columns = attrs(table)
-            distinct = session.query(table, sqla.func.min(table.id)) \
+            distinct = session \
+                .query(table, sqla.func.min(table.id)) \
                 .group_by(*table_columns)
-            duplicate = session.query(table) \
+            duplicate = session \
+                .query(table) \
                 .filter(table.id.notin_(distinct.with_entities(table.id))) \
                 .delete(synchronize_session='fetch')
             print(f'Remove {duplicate} duplicate {table.__tablename__}s')
@@ -552,8 +557,10 @@ class Client:
         table = get_table_class(table)
         with self.session_scope() as session:
             col = operator.attrgetter(column)
-            query = session.query(col(table).distinct()).order_by(
-                col(table)).all()
+            query = session \
+                .query(col(table).distinct()) \
+                .order_by(col(table)) \
+                .all()
             query = [q[0] for q in query]
             return query
 
