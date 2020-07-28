@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.processing &#8212; SeisNN  documentation</title>
+    <title>seisnn.processing &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           SeisNN</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -132,10 +132,14 @@
 
 <div class="viewcode-block" id="get_window"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_window.html#seisnn.processing.get_window">[docs]</a><span class="k">def</span> <span class="nf">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns time window from pick.</span>
 
-<span class="sd">    :param pick:</span>
-<span class="sd">    :param trace_length:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type pick: obspy.Pick</span>
+<span class="sd">    :param pick: Pick object.</span>
+<span class="sd">    :type trace_length: int</span>
+<span class="sd">    :param trace_length: (Optional.) Trace length.</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    :return: Time window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scipy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
     <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
@@ -153,10 +157,14 @@
 
 <div class="viewcode-block" id="get_pdf"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_pdf.html#seisnn.processing.get_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns probability density function from stream.</span>
 
-<span class="sd">    :param stream:</span>
-<span class="sd">    :param sigma:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type stream: obspy.Stream</span>
+<span class="sd">    :param stream: Stream object.</span>
+<span class="sd">    :type sigma: float</span>
+<span class="sd">    :param sigma: Width of normalize distribution.</span>
+<span class="sd">    :rtype: obspy.Stream</span>
+<span class="sd">    :return: Stream with pdf.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">trace</span> <span class="o">=</span> <span class="n">stream</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span>
@@ -186,12 +194,18 @@
 
 <div class="viewcode-block" id="get_picks_from_pdf"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_picks_from_pdf.html#seisnn.processing.get_picks_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_pdf</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract pick from probability density function.</span>
 
-<span class="sd">    :param feature:</span>
-<span class="sd">    :param phase:</span>
-<span class="sd">    :param pick_set:</span>
-<span class="sd">    :param height:</span>
-<span class="sd">    :param distance:</span>
+<span class="sd">    :type feature: seisnn.core.Feature</span>
+<span class="sd">    :param feature: Feature object.</span>
+<span class="sd">    :type phase: str</span>
+<span class="sd">    :param phase: Phase name.</span>
+<span class="sd">    :type pick_set: str</span>
+<span class="sd">    :param pick_set: Pick set name.</span>
+<span class="sd">    :type height: float</span>
+<span class="sd">    :param height: Height threshold, from 0 to 1.</span>
+<span class="sd">    :type distance: int</span>
+<span class="sd">    :param distance: Distance threshold.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
     <span class="n">peaks</span><span class="p">,</span> <span class="n">properties</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">pdf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
@@ -209,9 +223,11 @@
 
 <div class="viewcode-block" id="get_picks_from_dataset"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns pick list from TFRecord Dataset.</span>
 
-<span class="sd">    :param dataset:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param dataset: TFRecord Dataset.</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    :return: List of picks.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pick_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">trace</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">headonly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -222,11 +238,13 @@
 
 <div class="viewcode-block" id="validate_picks_nearby"><a class="viewcode-back" href="../../package/processing/seisnn.processing.validate_picks_nearby.html#seisnn.processing.validate_picks_nearby">[docs]</a><span class="k">def</span> <span class="nf">validate_picks_nearby</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds nearby picks within a given range.</span>
 
-<span class="sd">    :param val_pick:</span>
-<span class="sd">    :param pred_pick:</span>
-<span class="sd">    :param delta:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param val_pick: Validate pick.</span>
+<span class="sd">    :param pred_pick: Predict pick.</span>
+<span class="sd">    :param delta: Range.</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    :return: If any validate pick is nearby predict pick.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pred_pick</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">delta</span>
     <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pred_pick</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="n">delta</span>
@@ -238,10 +256,12 @@
 
 <div class="viewcode-block" id="get_time_residual"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_time_residual.html#seisnn.processing.get_time_residual">[docs]</a><span class="k">def</span> <span class="nf">get_time_residual</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns time difference from validate pick to predict pick.</span>
 
-<span class="sd">    :param val_pick:</span>
-<span class="sd">    :param pred_pick:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param val_pick: Validation pick.</span>
+<span class="sd">    :param pred_pick: Predict pick.</span>
+<span class="sd">    :rtype: float</span>
+<span class="sd">    :return: Residual time.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">residual</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">val_pick</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">])</span> \
                <span class="o">-</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pred_pick</span><span class="p">[</span><span class="s1">&#39;pick_time&#39;</span><span class="p">])</span>
@@ -252,9 +272,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return processed stream with pdf.</span>
 
-<span class="sd">    :param stream:</span>
-<span class="sd">    :param database:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type stream: obspy.Stream</span>
+<span class="sd">    :param stream: Stream object.</span>
+<span class="sd">    :type database: str</span>
+<span class="sd">    :param database: SQL database root.</span>
+<span class="sd">    :rtype: obspy.Stream</span>
+<span class="sd">    :return: Processed Stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">sql</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
@@ -279,8 +302,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a signal processed stream.</span>
 
-<span class="sd">    :param stream:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type stream: obspy.Stream</span>
+<span class="sd">    :param stream: Stream object.</span>
+<span class="sd">    :rtype: obspy.Stream</span>
+<span class="sd">    :return: Processed stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">detrend</span><span class="p">(</span><span class="s1">&#39;demean&#39;</span><span class="p">)</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">detrend</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
@@ -294,9 +319,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return trimmed stream in a given length.</span>
 
-<span class="sd">    :param stream:</span>
-<span class="sd">    :param points:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type stream: obspy.Stream</span>
+<span class="sd">    :param stream: Stream object.</span>
+<span class="sd">    :type points: int</span>
+<span class="sd">    :param points: Trace data points.</span>
+<span class="sd">    :rtype: obspy.Stream</span>
+<span class="sd">    :return: Trimmed stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">trace</span> <span class="o">=</span> <span class="n">stream</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span>

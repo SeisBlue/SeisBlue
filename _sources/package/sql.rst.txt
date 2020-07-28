@@ -1,14 +1,12 @@
 SQL Database
 ===================
 .. currentmodule:: seisnn.sql
-.. automodule:: seisnn.sql
 
 Class
 -------------------
 .. autosummary::
     :toctree: sql
     :nosignatures:
-    :recursive:
 
     Client
     Event

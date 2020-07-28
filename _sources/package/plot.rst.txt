@@ -1,14 +1,12 @@
 Plot
 ===================
 .. currentmodule:: seisnn.plot
-.. automodule:: seisnn.plot
 
 Class
 -------------------
 .. autosummary::
     :toctree: plot
     :nosignatures:
-    :recursive:
 
     ProjectionConverter
 

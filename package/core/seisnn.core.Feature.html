@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.core.Feature &#8212; SeisNN  documentation</title>
+    <title>seisnn.core.Feature &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           SeisNN</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -140,7 +140,8 @@
 <dl class="py class">
 <dt id="seisnn.core.Feature">
 <em class="property">class </em><code class="sig-prename descclassname">seisnn.core.</code><code class="sig-name descname">Feature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">example</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/core.html#Feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.core.Feature" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>Main class for data transfer.</p>
+<dl class="py method">
 <dt id="seisnn.core.Feature.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">example</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/core.html#Feature.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.core.Feature.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
@@ -157,53 +158,25 @@
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_example</span></code>(example)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param example</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Initialized from example protocol.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_feature</span></code>(feature)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param feature</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Initialized from feature dict.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks</span></code>(phase, pick_set)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param phase</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Extract picks from pdf.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code>(**kwargs)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param kwargs</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Plot dataset.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_example</span></code>()</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">return</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Returns example protocol.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_feature</span></code>()</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">return</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Returns feature dict.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_tfrecord</span></code>(file_path)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param file_path</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Write TFRecord to file path.</p></td>
 </tr>
 </tbody>
 </table>

@@ -1,7 +1,6 @@
 Utilities
 ===================
 .. currentmodule:: seisnn.utils
-.. automodule:: seisnn.utils
 
 Functions
 -------------------

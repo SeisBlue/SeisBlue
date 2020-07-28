@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.sql &#8212; SeisNN  documentation</title>
+    <title>seisnn.sql &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           SeisNN</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -164,8 +164,10 @@
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add data into session.</span>
 
-<span class="sd">        :param session:</span>
+<span class="sd">        :type session: sqlalchemy.orm.session.Session</span>
+<span class="sd">        :param session: SQL session.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -198,8 +200,10 @@
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add data into session.</span>
 
-<span class="sd">        :param session:</span>
+<span class="sd">        :type session: sqlalchemy.orm.session.Session</span>
+<span class="sd">        :param session: SQL session.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -236,8 +240,10 @@
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add data into session.</span>
 
-<span class="sd">        :param session:</span>
+<span class="sd">        :type session: sqlalchemy.orm.session.Session</span>
+<span class="sd">        :param session: SQL session.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -265,8 +271,10 @@
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add data into session.</span>
 
-<span class="sd">        :param session:</span>
+<span class="sd">        :type session: sqlalchemy.orm.session.Session</span>
+<span class="sd">        :param session: SQL session.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -294,17 +302,22 @@
 
     <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add data into session.</span>
 
-<span class="sd">        :param session:</span>
+<span class="sd">        :type session: sqlalchemy.orm.session.Session</span>
+<span class="sd">        :param session: SQL session.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_table_class"><a class="viewcode-back" href="../../package/sql/seisnn.sql.get_table_class.html#seisnn.sql.get_table_class">[docs]</a><span class="k">def</span> <span class="nf">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns related class from class dict.</span>
 
-<span class="sd">    :param table:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type table: str</span>
+<span class="sd">    :param table: One of the keywords:</span>
+<span class="sd">        inventory, event, pick, tfrecord, waveform.</span>
+<span class="sd">    :return: Table class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">table_dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;inventory&#39;</span><span class="p">:</span> <span class="n">Inventory</span><span class="p">,</span>
@@ -336,10 +349,14 @@
 
     <span class="k">def</span> <span class="nf">read_hyp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyp</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        seisnn.io.read_hyp wrap up</span>
+<span class="sd">        Add geometry data from .HYP file.</span>
 
-<span class="sd">        :param hyp:</span>
-<span class="sd">        :param network:</span>
+<span class="sd">        seisnn.io.read_hyp wrap up.</span>
+
+<span class="sd">        :type hyp: str</span>
+<span class="sd">        :param hyp: STATION0.HYP file.</span>
+<span class="sd">        :type network: str</span>
+<span class="sd">        :param network: Output network name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_hyp</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">read_hyp</span><span class="p">(</span><span class="n">hyp</span><span class="p">)</span>
@@ -347,10 +364,14 @@
 
     <span class="k">def</span> <span class="nf">read_kml_placemark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kml</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        seisnn.io.read_kml_placemark wrap up</span>
+<span class="sd">        Add geometry data from .KML file.</span>
 
-<span class="sd">        :param kml:</span>
-<span class="sd">        :param network:</span>
+<span class="sd">        seisnn.io.read_kml_placemark wrap up.</span>
+
+<span class="sd">        :type kml: str</span>
+<span class="sd">        :param kml: Google Earth .KML file.</span>
+<span class="sd">        :type network: str</span>
+<span class="sd">        :param network: Output network name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_kml_placemark</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">read_kml_placemark</span><span class="p">(</span><span class="n">kml</span><span class="p">)</span>
@@ -358,9 +379,12 @@
 
     <span class="k">def</span> <span class="nf">add_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add geometry data from geometry dict.</span>
 
-<span class="sd">        :param geom:</span>
-<span class="sd">        :param network:</span>
+<span class="sd">        :type geom: dict</span>
+<span class="sd">        :param geom: Geometry dict.</span>
+<span class="sd">        :type network: str</span>
+<span class="sd">        :param network: Output network name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -372,10 +396,14 @@
 
     <span class="k">def</span> <span class="nf">get_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns query from geometry table.</span>
 
-<span class="sd">        :param station:</span>
-<span class="sd">        :param network:</span>
-<span class="sd">        :return:</span>
+<span class="sd">        :type station: str</span>
+<span class="sd">        :param station: Station name.</span>
+<span class="sd">        :type network: str</span>
+<span class="sd">        :param network: Network name.</span>
+<span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
+<span class="sd">        :return: A Query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="p">)</span>
@@ -390,6 +418,7 @@
 
     <span class="k">def</span> <span class="nf">geom_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints summery from geometry table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">station</span> <span class="o">=</span> <span class="n">session</span> \
@@ -416,6 +445,7 @@
 
     <span class="k">def</span> <span class="nf">plot_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots station and event map.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">seisnn.plot</span> <span class="kn">import</span> <span class="n">plot_map</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
@@ -433,10 +463,14 @@
 
     <span class="k">def</span> <span class="nf">add_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add event data form catalog.</span>
 
-<span class="sd">        :param catalog:</span>
-<span class="sd">        :param tag:</span>
-<span class="sd">        :param remove_duplicates:</span>
+<span class="sd">        :type catalog: obspy.Catalog</span>
+<span class="sd">        :param catalog: Catalog.</span>
+<span class="sd">        :type tag: str</span>
+<span class="sd">        :param tag: Catalog tag.</span>
+<span class="sd">        :type remove_duplicates: bool</span>
+<span class="sd">        :param remove_duplicates: Removes duplicates in event table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_event_list</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">read_event_list</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
@@ -463,13 +497,20 @@
     <span class="k">def</span> <span class="nf">get_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">starttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns query from pick table.</span>
 
-<span class="sd">        :param starttime:</span>
-<span class="sd">        :param endtime:</span>
-<span class="sd">        :param station:</span>
-<span class="sd">        :param phase:</span>
-<span class="sd">        :param tag:</span>
-<span class="sd">        :return:</span>
+<span class="sd">        :type starttime: str</span>
+<span class="sd">        :param starttime: Start time.</span>
+<span class="sd">        :type endtime: str</span>
+<span class="sd">        :param endtime: End time.</span>
+<span class="sd">        :type station: str</span>
+<span class="sd">        :param station: Station name.</span>
+<span class="sd">        :type phase: str</span>
+<span class="sd">        :param phase: Phase name.</span>
+<span class="sd">        :type tag: str</span>
+<span class="sd">        :param tag: Catalog tag.</span>
+<span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
+<span class="sd">        :return: A Query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="p">)</span>
@@ -489,6 +530,7 @@
 
     <span class="k">def</span> <span class="nf">event_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints summery from event table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
@@ -517,6 +559,7 @@
 
     <span class="k">def</span> <span class="nf">pick_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints summery from pick table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
@@ -570,8 +613,10 @@
 
     <span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate TFrecords from database.</span>
 
-<span class="sd">        :param output:</span>
+<span class="sd">        :type output: str</span>
+<span class="sd">        :param output: Output directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
         <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
@@ -592,9 +637,13 @@
 
     <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">match_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes duplicates data in given table.</span>
 
-<span class="sd">        :param table:</span>
-<span class="sd">        :param match_columns:</span>
+<span class="sd">        :type table: str</span>
+<span class="sd">        :param table: Target table.</span>
+<span class="sd">        :type match_columns: list</span>
+<span class="sd">        :param match_columns: List of column names. If all columns matches,</span>
+<span class="sd">            then marks it as a duplicate data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
@@ -609,10 +658,14 @@
 
     <span class="k">def</span> <span class="nf">list_distinct_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a query of unique items.</span>
 
-<span class="sd">        :param table:</span>
-<span class="sd">        :param column:</span>
-<span class="sd">        :return:</span>
+<span class="sd">        :type table: str</span>
+<span class="sd">        :param table: Target table.</span>
+<span class="sd">        :type column: str</span>
+<span class="sd">        :param column: Target column.</span>
+<span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
+<span class="sd">        :return: A Query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
@@ -640,9 +693,12 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">replace_sql_wildcard</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replaces posix wildcard characters to SQL wildcard characters.</span>
 
-<span class="sd">        :param string:</span>
-<span class="sd">        :return:</span>
+<span class="sd">        :type string: str</span>
+<span class="sd">        :param string: Target string.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :return: Replaced string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;%&#39;</span><span class="p">)</span>

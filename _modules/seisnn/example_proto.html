@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.example_proto &#8212; SeisNN  documentation</title>
+    <title>seisnn.example_proto &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           SeisNN</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -195,9 +195,11 @@
 
 <div class="viewcode-block" id="feature_to_example"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.feature_to_example.html#seisnn.example_proto.feature_to_example">[docs]</a><span class="k">def</span> <span class="nf">feature_to_example</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns example from stream feature dict.</span>
 
-<span class="sd">    :param stream_feature:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type stream_feature: dict</span>
+<span class="sd">    :param stream_feature: Feature dict extract from stream.</span>
+<span class="sd">    :return: Serialized example.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
@@ -238,9 +240,10 @@
 
 <div class="viewcode-block" id="sequence_example_parser"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.sequence_example_parser.html#seisnn.example_proto.sequence_example_parser">[docs]</a><span class="k">def</span> <span class="nf">sequence_example_parser</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns parsed example from sequence example.</span>
 
-<span class="sd">    :param record:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param record: TFRecord.</span>
+<span class="sd">    :return: Parsed example.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
@@ -290,9 +293,10 @@
 
 <div class="viewcode-block" id="eval_eager_tensor"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.eval_eager_tensor.html#seisnn.example_proto.eval_eager_tensor">[docs]</a><span class="k">def</span> <span class="nf">eval_eager_tensor</span><span class="p">(</span><span class="n">parsed_example</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns feature dict from parsed example.</span>
 
-<span class="sd">    :param parsed_example:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param parsed_example: Parsed example.</span>
+<span class="sd">    :return: Feature dict.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">parsed_example</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
@@ -323,8 +327,9 @@
 
 <div class="viewcode-block" id="batch_iterator"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.batch_iterator.html#seisnn.example_proto.batch_iterator">[docs]</a><span class="k">def</span> <span class="nf">batch_iterator</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Yield parsed example from list.</span>
 
-<span class="sd">    :param batch:</span>
+<span class="sd">    :param batch: list of parsed example.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
         <span class="n">parsed_example</span> <span class="o">=</span> <span class="p">{</span>

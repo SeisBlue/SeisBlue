@@ -1,23 +1,24 @@
 Model
 ===============
 .. currentmodule:: seisnn.model
-.. automodule:: seisnn.model
 
 Model Settings
 ---------------
+.. currentmodule:: seisnn.model.settings
 .. autosummary::
     :toctree: model
     :nosignatures:
 
-    settings.train_step
+    train_step
 
 
 Unet
 ---------------
+.. currentmodule:: seisnn.model.unet
 .. autosummary::
     :toctree: model
     :nosignatures:
 
-    unet.unet
-    unet.nest_net
-    unet._standard_unit
+    unet
+    nest_net
+    _standard_unit

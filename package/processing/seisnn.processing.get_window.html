@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.processing.get_window &#8212; SeisNN  documentation</title>
+    <title>seisnn.processing.get_window &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           SeisNN</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -140,15 +140,19 @@
 <dl class="py function">
 <dt id="seisnn.processing.get_window">
 <code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">get_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pick</span></em>, <em class="sig-param"><span class="n">trace_length</span><span class="o">=</span><span class="default_value">30</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/seisnn/processing.html#get_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.get_window" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Returns time window from pick.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pick</strong> – </p></li>
-<li><p><strong>trace_length</strong> – </p></li>
+<li><p><strong>pick</strong> (<em>obspy.Pick</em>) – Pick object.</p></li>
+<li><p><strong>trace_length</strong> (<em>int</em>) – (Optional.) Trace length.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Time window.</p>
 </dd>
 </dl>
 </dd></dl>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.core &#8212; SeisNN  documentation</title>
+    <title>seisnn.core &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           SeisNN</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -131,6 +131,7 @@
 
 <div class="viewcode-block" id="Feature"><a class="viewcode-back" href="../../package/core/seisnn.core.Feature.html#seisnn.core.Feature">[docs]</a><span class="k">class</span> <span class="nc">Feature</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for data transfer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Feature.__init__"><a class="viewcode-back" href="../../package/core/seisnn.core.Feature.html#seisnn.core.Feature.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="kc">None</span>
@@ -151,8 +152,10 @@
 
     <span class="k">def</span> <span class="nf">from_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialized from feature dict.</span>
 
-<span class="sd">        :param feature:</span>
+<span class="sd">        :type feature: dict</span>
+<span class="sd">        :param feature: Feature dict.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;station&#39;</span><span class="p">]</span>
@@ -170,8 +173,10 @@
 
     <span class="k">def</span> <span class="nf">to_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns feature dict.</span>
 
-<span class="sd">        :return:</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :return: Feature dict.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
@@ -192,16 +197,18 @@
 
     <span class="k">def</span> <span class="nf">from_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialized from example protocol.</span>
 
-<span class="sd">        :param example:</span>
+<span class="sd">        :param example: Example protocol.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">eval_eager_tensor</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">from_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">to_example</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns example protocol.</span>
 
-<span class="sd">        :return:</span>
+<span class="sd">        :return: Example protocol.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
         <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
@@ -209,8 +216,10 @@
 
     <span class="k">def</span> <span class="nf">to_tfrecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write TFRecord to file path.</span>
 
-<span class="sd">        :param file_path:</span>
+<span class="sd">        :type file_path: str</span>
+<span class="sd">        :param file_path: Output path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
         <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
@@ -218,16 +227,20 @@
 
     <span class="k">def</span> <span class="nf">get_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract picks from pdf.</span>
 
-<span class="sd">        :param phase:</span>
-<span class="sd">        :param pick_set:</span>
+<span class="sd">        :type phase: str</span>
+<span class="sd">        :param phase: Phase name.</span>
+<span class="sd">        :type pick_set: str</span>
+<span class="sd">        :param pick_set: Pick set name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">processing</span><span class="o">.</span><span class="n">get_picks_from_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot dataset.</span>
 
-<span class="sd">        :param kwargs:</span>
+<span class="sd">        :param kwargs: Keywords pass into plot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -247,6 +260,10 @@
 
 <div class="viewcode-block" id="_to_tfrecord"><a class="viewcode-back" href="../../package/core/seisnn.core._to_tfrecord.html#seisnn.core._to_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">_to_tfrecord</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns example list from batched example.</span>
+
+<span class="sd">    :type batch: list</span>
+<span class="sd">    :param batch: Batch list of example.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processing &#8212; SeisNN  documentation</title>
+    <title>Processing &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           SeisNN</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -138,9 +138,8 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="module-seisnn.processing">
-<span id="processing"></span><h1>Processing<a class="headerlink" href="#module-seisnn.processing" title="Permalink to this headline">¶</a></h1>
-<p>Processing</p>
+  <div class="section" id="processing">
+<h1>Processing<a class="headerlink" href="#processing" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
@@ -150,39 +149,19 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="processing/seisnn.processing.get_pdf.html#seisnn.processing.get_pdf" title="seisnn.processing.get_pdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pdf</span></code></a></p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param stream</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Returns probability density function from stream.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="processing/seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset" title="seisnn.processing.get_picks_from_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_dataset</span></code></a></p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param dataset</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Returns pick list from TFRecord Dataset.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="processing/seisnn.processing.get_picks_from_pdf.html#seisnn.processing.get_picks_from_pdf" title="seisnn.processing.get_picks_from_pdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_pdf</span></code></a></p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param feature</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Extract pick from probability density function.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="processing/seisnn.processing.get_time_residual.html#seisnn.processing.get_time_residual" title="seisnn.processing.get_time_residual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_residual</span></code></a></p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param val_pick</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Returns time difference from validate pick to predict pick.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="processing/seisnn.processing.get_window.html#seisnn.processing.get_window" title="seisnn.processing.get_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_window</span></code></a></p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param pick</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Returns time window from pick.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="processing/seisnn.processing.signal_preprocessing.html#seisnn.processing.signal_preprocessing" title="seisnn.processing.signal_preprocessing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signal_preprocessing</span></code></a></p></td>
 <td><p>Return a signal processed stream.</p></td>
@@ -194,11 +173,7 @@
 <td><p>Return trimmed stream in a given length.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="processing/seisnn.processing.validate_picks_nearby.html#seisnn.processing.validate_picks_nearby" title="seisnn.processing.validate_picks_nearby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_picks_nearby</span></code></a></p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param val_pick</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
-</p></td>
+<td><p>Finds nearby picks within a given range.</p></td>
 </tr>
 </tbody>
 </table>

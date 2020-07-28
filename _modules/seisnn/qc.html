@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.qc &#8212; SeisNN  documentation</title>
+    <title>seisnn.qc &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           SeisNN</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -130,10 +130,14 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates precision, recall and f1 score.</span>
 
-<span class="sd">    :param true_positive:</span>
-<span class="sd">    :param pred_count:</span>
-<span class="sd">    :param val_count:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type true_positive: int</span>
+<span class="sd">    :param true_positive: True positive count.</span>
+<span class="sd">    :type pred_count: int</span>
+<span class="sd">    :param pred_count: Predict count.</span>
+<span class="sd">    :type val_count: int</span>
+<span class="sd">    :param val_count: Validation count.</span>
+<span class="sd">    :rtype: float</span>
+<span class="sd">    :return: (precision, recall, f1)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">precision</span> <span class="o">=</span> <span class="n">true_positive</span> <span class="o">/</span> <span class="n">pred_count</span>
     <span class="n">recall</span> <span class="o">=</span> <span class="n">true_positive</span> <span class="o">/</span> <span class="n">val_count</span>
@@ -145,9 +149,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates power ratio from signal and noise.</span>
 
-<span class="sd">    :param signal:</span>
-<span class="sd">    :param noise:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type signal: numpy.array</span>
+<span class="sd">    :param signal: Signal trace data.</span>
+<span class="sd">    :type noise: numpy.array</span>
+<span class="sd">    :param noise: Noise trace data.</span>
+<span class="sd">    :rtype: float</span>
+<span class="sd">    :return: Signal to noise ratio.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">signal_power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">signal</span><span class="p">))</span>
     <span class="n">noise_power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">noise</span><span class="p">))</span>
