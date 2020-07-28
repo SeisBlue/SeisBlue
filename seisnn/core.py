@@ -10,6 +10,7 @@ from seisnn import processing
 
 class Feature:
     """
+    Main class for data transfer.
     """
     def __init__(self, example):
         self.id = None
@@ -30,8 +31,10 @@ class Feature:
 
     def from_feature(self, feature):
         """
+        Initialized from feature dict.
 
-        :param feature:
+        :type feature: dict
+        :param feature: Feature dict.
         """
         self.id = feature['id']
         self.station = feature['station']
@@ -49,8 +52,10 @@ class Feature:
 
     def to_feature(self):
         """
+        Returns feature dict.
 
-        :return:
+        :rtype: dict
+        :return: Feature dict.
         """
         feature = {
             'id': self.id,
@@ -71,16 +76,18 @@ class Feature:
 
     def from_example(self, example):
         """
+        Initialized from example protocol.
 
-        :param example:
+        :param example: Example protocol.
         """
         feature = example_proto.eval_eager_tensor(example)
         self.from_feature(feature)
 
     def to_example(self):
         """
+        Returns example protocol.
 
-        :return:
+        :return: Example protocol.
         """
         feature = self.to_feature()
         example = example_proto.feature_to_example(feature)
@@ -88,8 +95,10 @@ class Feature:
 
     def to_tfrecord(self, file_path):
         """
+        Write TFRecord to file path.
 
-        :param file_path:
+        :type file_path: str
+        :param file_path: Output path.
         """
         feature = self.to_feature()
         example = example_proto.feature_to_example(feature)
@@ -97,16 +106,20 @@ class Feature:
 
     def get_picks(self, phase, pick_set):
         """
+        Extract picks from pdf.
 
-        :param phase:
-        :param pick_set:
+        :type phase: str
+        :param phase: Phase name.
+        :type pick_set: str
+        :param pick_set: Pick set name.
         """
         processing.get_picks_from_pdf(self, phase, pick_set)
 
     def plot(self, **kwargs):
         """
+        Plot dataset.
 
-        :param kwargs:
+        :param kwargs: Keywords pass into plot.
         """
         feature = self.to_feature()
         plot.plot_dataset(feature, **kwargs)
@@ -126,6 +139,10 @@ def parallel_to_tfrecord(batch_list):
 
 def _to_tfrecord(batch):
     """
+    Returns example list from batched example.
+
+    :type batch: list
+    :param batch: Batch list of example.
     """
     example_list = []
     for example in batch:

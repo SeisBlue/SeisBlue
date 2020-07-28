@@ -39,9 +39,12 @@ def color_palette(color=1, shade=1):
 
 def get_time_array(feature):
     """
+    Returns time step array from feature dict.
 
-    :param feature:
-    :return:
+    :type feature: dict
+    :param feature: Feature dict.
+    :rtype: numpy.array
+    :return: Time array.
     """
     time_array = np.arange(feature['npts'])
     time_array = time_array * feature['delta']
@@ -51,6 +54,7 @@ def get_time_array(feature):
 def plot_dataset(feature, snr=False, enlarge=False, xlim=None, title=None,
                  save_dir=None):
     """
+    Plot trace and pdf.
 
     :param feature:
     :param snr:
@@ -145,6 +149,7 @@ def plot_dataset(feature, snr=False, enlarge=False, xlim=None, title=None,
 
 def plot_loss(log_file, save_dir=None):
     """
+    Plot loss history.
 
     :param log_file:
     :param save_dir:
@@ -178,6 +183,7 @@ def plot_loss(log_file, save_dir=None):
 
 def plot_error_distribution(time_residuals, save_dir=None):
     """
+    Plot error distribution.
 
     :param time_residuals:
     :param save_dir:
@@ -199,6 +205,7 @@ def plot_error_distribution(time_residuals, save_dir=None):
 
 def plot_snr_distribution(pick_snr, save_dir=None):
     """
+    Plot signal to noise ratio distribution.
 
     :param pick_snr:
     :param save_dir:
@@ -221,6 +228,7 @@ def plot_snr_distribution(pick_snr, save_dir=None):
 
 def plot_confusion_matrix(true_positive, pred_count, val_count):
     """
+    Plot confusion matrix.
 
     :param true_positive:
     :param pred_count:
@@ -250,6 +258,7 @@ def plot_confusion_matrix(true_positive, pred_count, val_count):
 
 def plot_map(geometry, events):
     """
+    Plot map.
 
     :param geometry:
     :param events:
@@ -317,10 +326,14 @@ class ProjectionConverter:
 
     def convert(self, x, y):
         """
+        Returns converted project location.
 
-        :param x:
-        :param y:
-        :return:
+        :type x: float
+        :param x: X location.
+        :type y: float
+        :param y: Y location.
+        :rtype: float
+        :return: (x, y)
         """
         self.x = x
         self.y = y

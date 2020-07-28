@@ -12,9 +12,10 @@ import yaml
 
 def get_config():
     """
-    Return path dict in config.yaml.
+    Returns path dict in config.yaml.
 
-    :return: config dict
+    :rtype: dict
+    :return: Dictionary contains predefined workspace paths.
     """
     config_file = os.path.abspath(
         os.path.join(os.path.expanduser("~"), 'config.yaml'))
@@ -27,7 +28,8 @@ def make_dirs(path):
     """
     Create dir if path does not exist.
 
-    :param path:
+    :type path: str
+    :param path: Directory path.
     """
     if not os.path.isdir(path):
         os.makedirs(path, mode=0o777)
@@ -35,10 +37,12 @@ def make_dirs(path):
 
 def batch(iterable, n=1):
     """
-    Return a batch generator from an iterable and batch size.
+    Yield a batch from a list.
 
-    :param iterable:
-    :param n:
+    :type iterable: list
+    :param iterable: Data list.
+    :type n: int
+    :param n: Batch size.
     """
     iter_len = len(iterable)
     for ndx in range(0, iter_len, n):
@@ -49,9 +53,12 @@ def parallel(par, file_list):
     """
     Parallelize a partial function and return results in a list.
 
-    :param par:
-    :param file_list:
-    :return:
+    :type par: object
+    :param par: Partial function.
+    :type file_list: list
+    :param file_list: Process list for partial function.
+    :rtype: list
+    :return: List of results.
     """
     print(f'Parallel in {mp.cpu_count()} threads:')
     batch_size = int(np.ceil(len(file_list) / mp.cpu_count()))
@@ -70,10 +77,14 @@ def parallel(par, file_list):
 
 def parallel_iter(par, iterator):
     """
+    Parallelize a partial function and return results in a list.
 
-    :param par:
-    :param iterator:
-    :return:
+    :type par: any
+    :param par: Partial function.
+    :type iterator: any
+    :param iterator: Iterable object.
+    :rtype: list
+    :return: List of results.
     """
     pool = mp.Pool(processes=mp.cpu_count(), maxtasksperchild=1)
     output = []
@@ -88,11 +99,14 @@ def parallel_iter(par, iterator):
 
 def get_dir_list(file_dir, suffix=""):
     """
-    Return directory list from the given path.
+    Returns directory list from the given path.
 
-    :param file_dir:
-    :param suffix:
-    :return:
+    :type file_dir: str
+    :param file_dir: Target directory.
+    :type suffix: str
+    :param suffix: (Optional.) File extension.
+    :rtype: list
+    :return: List of file name.
     """
     file_list = []
     for file_name in os.listdir(file_dir):

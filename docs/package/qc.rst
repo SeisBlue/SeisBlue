@@ -1,7 +1,6 @@
 Quality Control
 ===================
 .. currentmodule:: seisnn.qc
-.. automodule:: seisnn.qc
 
 Functions
 -------------------

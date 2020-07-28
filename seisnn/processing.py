@@ -11,10 +11,14 @@ import obspy
 
 def get_window(pick, trace_length=30):
     """
+    Returns time window from pick.
 
-    :param pick:
-    :param trace_length:
-    :return:
+    :type pick: obspy.Pick
+    :param pick: Pick object.
+    :type trace_length: int
+    :param trace_length: (Optional.) Trace length.
+    :rtype: dict
+    :return: Time window.
     """
     scipy.random.seed()
     pick_time = obspy.UTCDateTime(pick.time)
@@ -32,10 +36,14 @@ def get_window(pick, trace_length=30):
 
 def get_pdf(stream, sigma=0.1):
     """
+    Returns probability density function from stream.
 
-    :param stream:
-    :param sigma:
-    :return:
+    :type stream: obspy.Stream
+    :param stream: Stream object.
+    :type sigma: float
+    :param sigma: Width of normalize distribution.
+    :rtype: obspy.Stream
+    :return: Stream with pdf.
     """
     trace = stream[0]
     start_time = trace.stats.starttime
@@ -65,12 +73,18 @@ def get_pdf(stream, sigma=0.1):
 
 def get_picks_from_pdf(feature, phase, pick_set, height=0.5, distance=100):
     """
+    Extract pick from probability density function.
 
-    :param feature:
-    :param phase:
-    :param pick_set:
-    :param height:
-    :param distance:
+    :type feature: seisnn.core.Feature
+    :param feature: Feature object.
+    :type phase: str
+    :param phase: Phase name.
+    :type pick_set: str
+    :param pick_set: Pick set name.
+    :type height: float
+    :param height: Height threshold, from 0 to 1.
+    :type distance: int
+    :param distance: Distance threshold.
     """
     i = feature.phase.index(phase)
     peaks, properties = signal.find_peaks(feature.pdf[-1, :, i],
@@ -88,9 +102,11 @@ def get_picks_from_pdf(feature, phase, pick_set, height=0.5, distance=100):
 
 def get_picks_from_dataset(dataset):
     """
+    Returns pick list from TFRecord Dataset.
 
-    :param dataset:
-    :return:
+    :param dataset: TFRecord Dataset.
+    :rtype: list
+    :return: List of picks.
     """
     pick_list = []
     trace = obspy.read(dataset, headonly=True).traces[0]
@@ -101,11 +117,13 @@ def get_picks_from_dataset(dataset):
 
 def validate_picks_nearby(val_pick, pred_pick, delta=0.1):
     """
+    Finds nearby picks within a given range.
 
-    :param val_pick:
-    :param pred_pick:
-    :param delta:
-    :return:
+    :param val_pick: Validate pick.
+    :param pred_pick: Predict pick.
+    :param delta: Range.
+    :rtype: bool
+    :return: If any validate pick is nearby predict pick.
     """
     upper_bound = obspy.UTCDateTime(pred_pick['pick_time']) + delta
     lower_bound = obspy.UTCDateTime(pred_pick['pick_time']) - delta
@@ -117,10 +135,12 @@ def validate_picks_nearby(val_pick, pred_pick, delta=0.1):
 
 def get_time_residual(val_pick, pred_pick):
     """
+    Returns time difference from validate pick to predict pick.
 
-    :param val_pick:
-    :param pred_pick:
-    :return:
+    :param val_pick: Validation pick.
+    :param pred_pick: Predict pick.
+    :rtype: float
+    :return: Residual time.
     """
     residual = obspy.UTCDateTime(val_pick['pick_time']) \
                - obspy.UTCDateTime(pred_pick['pick_time'])
@@ -131,9 +151,12 @@ def stream_preprocessing(stream, database):
     """
     Return processed stream with pdf.
 
-    :param stream:
-    :param database:
-    :return:
+    :type stream: obspy.Stream
+    :param stream: Stream object.
+    :type database: str
+    :param database: SQL database root.
+    :rtype: obspy.Stream
+    :return: Processed Stream.
     """
     from seisnn import sql
     db = sql.Client(database)
@@ -158,8 +181,10 @@ def signal_preprocessing(stream):
     """
     Return a signal processed stream.
 
-    :param stream:
-    :return:
+    :type stream: obspy.Stream
+    :param stream: Stream object.
+    :rtype: obspy.Stream
+    :return: Processed stream.
     """
     stream.detrend('demean')
     stream.detrend('linear')
@@ -173,9 +198,12 @@ def trim_trace(stream, points=3008):
     """
     Return trimmed stream in a given length.
 
-    :param stream:
-    :param points:
-    :return:
+    :type stream: obspy.Stream
+    :param stream: Stream object.
+    :type points: int
+    :param points: Trace data points.
+    :rtype: obspy.Stream
+    :return: Trimmed stream.
     """
     trace = stream[0]
     start_time = trace.stats.starttime

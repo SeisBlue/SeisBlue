@@ -1,14 +1,12 @@
 Core
 ===================
 .. currentmodule:: seisnn.core
-.. automodule:: seisnn.core
 
 Class
 -------------------
 .. autosummary::
     :toctree: core
     :nosignatures:
-    :recursive:
 
     Feature
 

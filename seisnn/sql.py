@@ -43,8 +43,10 @@ class Inventory(Base):
 
     def add_db(self, session):
         """
+        Add data into session.
 
-        :param session:
+        :type session: sqlalchemy.orm.session.Session
+        :param session: SQL session.
         """
         session.add(self)
 
@@ -77,8 +79,10 @@ class Event(Base):
 
     def add_db(self, session):
         """
+        Add data into session.
 
-        :param session:
+        :type session: sqlalchemy.orm.session.Session
+        :param session: SQL session.
         """
         session.add(self)
 
@@ -115,8 +119,10 @@ class Pick(Base):
 
     def add_db(self, session):
         """
+        Add data into session.
 
-        :param session:
+        :type session: sqlalchemy.orm.session.Session
+        :param session: SQL session.
         """
         session.add(self)
 
@@ -144,8 +150,10 @@ class TFRecord(Base):
 
     def add_db(self, session):
         """
+        Add data into session.
 
-        :param session:
+        :type session: sqlalchemy.orm.session.Session
+        :param session: SQL session.
         """
         session.add(self)
 
@@ -173,17 +181,22 @@ class Waveform(Base):
 
     def add_db(self, session):
         """
+        Add data into session.
 
-        :param session:
+        :type session: sqlalchemy.orm.session.Session
+        :param session: SQL session.
         """
         session.add(self)
 
 
 def get_table_class(table):
     """
+    Returns related class from class dict.
 
-    :param table:
-    :return:
+    :type table: str
+    :param table: One of the keywords:
+        inventory, event, pick, tfrecord, waveform.
+    :return: Table class.
     """
     table_dict = {
         'inventory': Inventory,
@@ -215,10 +228,14 @@ class Client:
 
     def read_hyp(self, hyp, network):
         """
-        seisnn.io.read_hyp wrap up
+        Add geometry data from .HYP file.
 
-        :param hyp:
-        :param network:
+        seisnn.io.read_hyp wrap up.
+
+        :type hyp: str
+        :param hyp: STATION0.HYP file.
+        :type network: str
+        :param network: Output network name.
         """
         from seisnn.io import read_hyp
         geom = read_hyp(hyp)
@@ -226,10 +243,14 @@ class Client:
 
     def read_kml_placemark(self, kml, network):
         """
-        seisnn.io.read_kml_placemark wrap up
+        Add geometry data from .KML file.
 
-        :param kml:
-        :param network:
+        seisnn.io.read_kml_placemark wrap up.
+
+        :type kml: str
+        :param kml: Google Earth .KML file.
+        :type network: str
+        :param network: Output network name.
         """
         from seisnn.io import read_kml_placemark
         geom = read_kml_placemark(kml)
@@ -237,9 +258,12 @@ class Client:
 
     def add_geom(self, geom, network):
         """
+        Add geometry data from geometry dict.
 
-        :param geom:
-        :param network:
+        :type geom: dict
+        :param geom: Geometry dict.
+        :type network: str
+        :param network: Output network name.
         """
         with self.session_scope() as session:
             counter = 0
@@ -251,10 +275,14 @@ class Client:
 
     def get_geom(self, station=None, network=None):
         """
+        Returns query from geometry table.
 
-        :param station:
-        :param network:
-        :return:
+        :type station: str
+        :param station: Station name.
+        :type network: str
+        :param network: Network name.
+        :rtype: sqlalchemy.orm.query.Query
+        :return: A Query.
         """
         with self.session_scope() as session:
             query = session.query(Inventory)
@@ -269,6 +297,7 @@ class Client:
 
     def geom_summery(self):
         """
+        Prints summery from geometry table.
         """
         with self.session_scope() as session:
             station = session \
@@ -295,6 +324,7 @@ class Client:
 
     def plot_map(self):
         """
+        Plots station and event map.
         """
         from seisnn.plot import plot_map
         with self.session_scope() as session:
@@ -312,10 +342,14 @@ class Client:
 
     def add_events(self, catalog, tag, remove_duplicates=True):
         """
+        Add event data form catalog.
 
-        :param catalog:
-        :param tag:
-        :param remove_duplicates:
+        :type catalog: obspy.Catalog
+        :param catalog: Catalog.
+        :type tag: str
+        :param tag: Catalog tag.
+        :type remove_duplicates: bool
+        :param remove_duplicates: Removes duplicates in event table.
         """
         from seisnn.io import read_event_list
         events = read_event_list(catalog)
@@ -342,13 +376,20 @@ class Client:
     def get_picks(self, starttime=None, endtime=None,
                   station=None, phase=None, tag=None):
         """
+        Returns query from pick table.
 
-        :param starttime:
-        :param endtime:
-        :param station:
-        :param phase:
-        :param tag:
-        :return:
+        :type starttime: str
+        :param starttime: Start time.
+        :type endtime: str
+        :param endtime: End time.
+        :type station: str
+        :param station: Station name.
+        :type phase: str
+        :param phase: Phase name.
+        :type tag: str
+        :param tag: Catalog tag.
+        :rtype: sqlalchemy.orm.query.Query
+        :return: A Query.
         """
         with self.session_scope() as session:
             query = session.query(Pick)
@@ -368,6 +409,7 @@ class Client:
 
     def event_summery(self):
         """
+        Prints summery from event table.
         """
         with self.session_scope() as session:
             time = session \
@@ -396,6 +438,7 @@ class Client:
 
     def pick_summery(self):
         """
+        Prints summery from pick table.
         """
         with self.session_scope() as session:
             time = session \
@@ -449,8 +492,10 @@ class Client:
 
     def generate_training_data(self, output):
         """
+        Generate TFrecords from database.
 
-        :param output:
+        :type output: str
+        :param output: Output directory.
         """
         from functools import partial
         from seisnn import utils
@@ -471,9 +516,13 @@ class Client:
 
     def remove_duplicates(self, table, match_columns: list):
         """
+        Removes duplicates data in given table.
 
-        :param table:
-        :param match_columns:
+        :type table: str
+        :param table: Target table.
+        :type match_columns: list
+        :param match_columns: List of column names. If all columns matches,
+            then marks it as a duplicate data.
         """
         table = get_table_class(table)
         with self.session_scope() as session:
@@ -488,10 +537,14 @@ class Client:
 
     def list_distinct_items(self, table, column):
         """
+        Returns a query of unique items.
 
-        :param table:
-        :param column:
-        :return:
+        :type table: str
+        :param table: Target table.
+        :type column: str
+        :param column: Target column.
+        :rtype: sqlalchemy.orm.query.Query
+        :return: A Query.
         """
         table = get_table_class(table)
         with self.session_scope() as session:
@@ -519,9 +572,12 @@ class Client:
     @staticmethod
     def replace_sql_wildcard(string):
         """
+        Replaces posix wildcard characters to SQL wildcard characters.
 
-        :param string:
-        :return:
+        :type string: str
+        :param string: Target string.
+        :rtype: str
+        :return: Replaced string.
         """
         string = string.replace('?', '_')
         string = string.replace('*', '%')

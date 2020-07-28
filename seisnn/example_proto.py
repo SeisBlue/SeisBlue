@@ -74,9 +74,11 @@ def stream_to_feature(stream):
 
 def feature_to_example(stream_feature):
     """
+    Returns example from stream feature dict.
 
-    :param stream_feature:
-    :return:
+    :type stream_feature: dict
+    :param stream_feature: Feature dict extract from stream.
+    :return: Serialized example.
     """
     for key in ['trace', 'pdf']:
         if isinstance(stream_feature[key], tf.Tensor):
@@ -117,9 +119,10 @@ def feature_to_example(stream_feature):
 
 def sequence_example_parser(record):
     """
+    Returns parsed example from sequence example.
 
-    :param record:
-    :return:
+    :param record: TFRecord.
+    :return: Parsed example.
     """
     context = {
         "id": tf.io.FixedLenFeature((), tf.string, default_value=""),
@@ -169,9 +172,10 @@ def sequence_example_parser(record):
 
 def eval_eager_tensor(parsed_example):
     """
+    Returns feature dict from parsed example.
 
-    :param parsed_example:
-    :return:
+    :param parsed_example: Parsed example.
+    :return: Feature dict.
     """
     feature = {
         'id': parsed_example['id'].numpy().decode('utf-8'),
@@ -202,8 +206,9 @@ def eval_eager_tensor(parsed_example):
 
 def batch_iterator(batch):
     """
+    Yield parsed example from list.
 
-    :param batch:
+    :param batch: list of parsed example.
     """
     for index in range(batch['id'].shape[0]):
         parsed_example = {

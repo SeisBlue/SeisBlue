@@ -22,6 +22,16 @@ project = 'SeisNN'
 copyright = '2020, Jimmy'
 author = 'Jimmy'
 
+# The version info for the project you're documenting, acts as replacement for
+# |version| and |release|, also used in various other places throughout the
+# built documents.
+#
+# The short X.Y version.
+version = '0.3.0'
+# The full version, including alpha/beta/rc tags.
+release = '0.3.0dev'
+
+
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -59,3 +69,4 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 html_static_path = ['_static']
 
 master_doc = 'index'
+numpydoc_show_class_members = False

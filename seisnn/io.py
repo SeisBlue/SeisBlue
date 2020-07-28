@@ -23,9 +23,12 @@ from seisnn import utils
 
 def read_dataset(dataset_dir):
     """
+    Returns TFRecord Dataset from TFRecord directory.
 
-    :param dataset_dir:
-    :return:
+    :type dataset_dir: str
+    :param dataset_dir: Directory contains TFRecords.
+    :rtype: tf.data.Dataset
+    :return: A Dataset.
     """
     file_list = utils.get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
@@ -36,10 +39,11 @@ def read_dataset(dataset_dir):
 
 def read_pkl(pkl):
     """
-    Read python pickle file.
+    Returns python object form pickle file.
 
-    :param pkl:
-    :return:
+    :param pkl: Python pickle file.
+    :rtype: object
+    :return: Python object.
     """
     with open(pkl, "rb") as f:
         obj = pickle.load(f)
@@ -48,10 +52,10 @@ def read_pkl(pkl):
 
 def write_pkl(obj, file):
     """
-    Write python pickle file.
+    Write python object to pickle file.
 
-    :param obj:
-    :param file:
+    :param obj: Serializable python object.
+    :param file: Output file path.
     """
     with open(file, "wb") as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
@@ -59,10 +63,11 @@ def write_pkl(obj, file):
 
 def write_tfrecord(example_list, save_file):
     """
-    Write TFRecord file.
+    Writes TFRecord from example protocol.
 
-    :param example_list:
-    :param save_file:
+    :type example_list: list
+    :param example_list: List of example protocol.
+    :param save_file: Output file path.
     """
     with tf.io.TFRecordWriter(save_file) as writer:
         for example in example_list:
@@ -71,9 +76,12 @@ def write_tfrecord(example_list, save_file):
 
 def read_event_list(sfile_dir):
     """
+    Returns event list from sfile directory.
 
-    :param sfile_dir:
-    :return:
+    :type sfile_dir: str
+    :param sfile_dir: Directory contains SEISAN sfile.
+    :rtype: list
+    :return: list of event.
     """
     config = utils.get_config()
     sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
@@ -88,10 +96,14 @@ def read_event_list(sfile_dir):
 
 def get_event(filename, debug=False):
     """
+    Returns obspy.event list from sfile.
 
-    :param filename:
-    :param debug:
-    :return:
+    :type filename: str
+    :param filename: Sfile file path.
+    :type debug: bool
+    :param debug: If False, warning from reader will be ignore.
+    :rtype: list
+    :return: List of events.
     """
     import warnings
     with warnings.catch_warnings():
@@ -112,10 +124,12 @@ def get_event(filename, debug=False):
 
 def read_sds(window):
     """
-    Read SDS database
+    Read SDS database.
 
-    :param window:
-    :return:
+    :type window: dict
+    :param window: Time window.
+    :rtype: dict
+    :return: Dict contains all traces within the time window.
     """
     config = utils.get_config()
     station = window['station']
@@ -141,9 +155,12 @@ def read_sds(window):
 
 def database_to_tfrecord(database, output):
     """
+    Write Tfrecord from SDS database.
 
-    :param database:
-    :param output:
+    :type database: str
+    :param database: SDS root path
+    :type output: str
+    :param output: TFRecord output directory.
     """
     import itertools
     import operator
@@ -193,15 +210,16 @@ def write_station_dataset(dataset_output_dir, sds_root,
                           trace_length=30, sample_rate=100,
                           remove_dir=False):
     """
+    Write pickled trace to output directory.
 
-    :param dataset_output_dir:
-    :param sds_root:
-    :param nslc:
-    :param start_time:
-    :param end_time:
-    :param trace_length:
-    :param sample_rate:
-    :param remove_dir:
+    :param dataset_output_dir: Output directory.
+    :param sds_root: SDS database root directory.
+    :param nslc: Network, Station, Location, Channel.
+    :param start_time: Start time.
+    :param end_time: End time.
+    :param trace_length: Trace length.
+    :param sample_rate: Sample rate.
+    :param remove_dir: If True then remove exist directory.
     """
     if remove_dir:
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
@@ -240,10 +258,12 @@ def write_station_dataset(dataset_output_dir, sds_root,
 
 def read_hyp(hyp):
     """
-    Read STATION0.HYP file.
+    Returns geometry from STATION0.HYP file.
 
-    :param hyp:
-    :return:
+    :type hyp: str
+    :param hyp: STATION0.HYP name without directory.
+    :rtype: dict
+    :return: Geometry dict.
     """
     config = utils.get_config()
     hyp_file = os.path.join(config['GEOM_ROOT'], hyp)
@@ -290,10 +310,12 @@ def read_hyp(hyp):
 
 def write_hyp_station(geom, save_file):
     """
-    Write STATION0.HYP file.
+    Write STATION0.HYP file from geometry.
 
-    :param geom:
-    :param save_file:
+    :type geom: dict
+    :param geom: Geometry dict.
+    :type save_file: str
+    :param save_file: Name of .HYP file.
     """
     config = utils.get_config()
     hyp = []
@@ -325,10 +347,12 @@ def write_hyp_station(geom, save_file):
 
 def read_kml_placemark(kml):
     """
-    Read Google Earth KML file.
+    Returns geometry from Google Earth KML file.
 
-    :param kml:
-    :return:
+    :type kml: str
+    :param kml: KML file name without directory.
+    :rtype: dict
+    :return: Geometry dict.
     """
     config = utils.get_config()
     kml_file = os.path.join(config['GEOM_ROOT'], kml)
