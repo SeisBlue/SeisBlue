@@ -159,6 +159,9 @@ class TFRecord(Base):
 
 
 class Waveform(Base):
+    """
+    Waveform table for sql database.
+    """
     __tablename__ = 'waveform'
     id = sqla.Column("id",
                      sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),

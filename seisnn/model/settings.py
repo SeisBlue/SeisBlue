@@ -16,11 +16,16 @@ def train_step(train_trace, train_pdf, val_trace, val_pdf):
     """
     Main training loop.
 
-    :param train_trace:
-    :param train_pdf:
-    :param val_trace:
-    :param val_pdf:
-    :return:
+    :type train_trace: tf.Tensor
+    :param train_trace: Training trace data.
+    :type train_pdf: tf.Tensor
+    :param train_pdf: Training trace label.
+    :type val_trace: tf.Tensor
+    :param val_trace: Validation trace data.
+    :type val_pdf: tf.Tensor
+    :param val_pdf: Validation trace label.
+    :rtype: float
+    :return: (predict loss, validation loss)
     """
     with tf.GradientTape(persistent=True) as tape:
         pred_pdf = model(train_trace, training=True)

@@ -1,8 +1,8 @@
 """
 Unet model structure.
 
-U-net, Nest-Net model from:
-https://github.com/MrGiovanni/Nested-UNet/blob/master/model_logic.py
+unet, nest_net model modified from:
+https://github.com/MrGiovanni/UNetPlusPlus/blob/master/helper_functions.py
 """
 import tensorflow as tf
 from tensorflow.keras.layers import concatenate, Conv2D, Conv2DTranspose, \
@@ -13,6 +13,16 @@ from tensorflow.keras.regularizers import l2
 def _standard_unit(input_tensor, stage, nb_filter, kernel_size):
     """
     2D standard unit.
+
+    :type input_tensor: tensor
+    :param input_tensor:
+    :type stage: str
+    :param stage: Stage name.
+    :type nb_filter: int
+    :param nb_filter: Filter number.
+    :type kernel_size: int
+    :param kernel_size: Kernel size.
+    :return: tensor
     """
     dropout_rate = 0.1
     act = "relu"
@@ -39,11 +49,15 @@ def unet(img_rows, img_cols, color_type=1, num_class=1):
 
     Total params: 420,249
 
-    :param img_rows:
-    :param img_cols:
-    :param color_type:
-    :param num_class:
-    :return:
+    :type img_rows: int
+    :param img_rows: Height of the data.
+    :type img_cols: int
+    :param img_cols: Width of the data.
+    :type color_type: int
+    :param color_type: Channel number of the data.
+    :type num_class: int
+    :param num_class: Output class number.
+    :return: UNet model.
     """
 
     nb_filter = [8, 11, 16, 22, 32]
@@ -114,11 +128,15 @@ def nest_net(img_rows=None, img_cols=None, color_type=1, num_class=1):
 
     Total params: 496,225
 
-    :param img_rows:
-    :param img_cols:
-    :param color_type:
-    :param num_class:
-    :return:
+    :type img_rows: int
+    :param img_rows: Height of the data.
+    :type img_cols: int
+    :param img_cols: Width of the data.
+    :type color_type: int
+    :param color_type: Channel number of the data.
+    :type num_class: int
+    :param num_class: Output class number.
+    :return: Nest net model.
     """
     nb_filter = [8, 16, 32, 64, 128]
     pool_size = (1, 2)
