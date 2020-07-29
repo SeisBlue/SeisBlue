@@ -155,12 +155,12 @@
 
 <div class="viewcode-block" id="stream_to_feature"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.stream_to_feature.html#seisnn.example_proto.stream_to_feature">[docs]</a><span class="k">def</span> <span class="nf">stream_to_feature</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Turn Stream object into feature dictionary</span>
+<span class="sd">    Returns feature dict from obspy.Stream.</span>
 
 <span class="sd">    :param obspy.Stream stream: Preprocessed stream object from</span>
 <span class="sd">        seisnn.processing.stream_preprocessing</span>
 <span class="sd">    :rtype: dict</span>
-<span class="sd">    :return: feature dict</span>
+<span class="sd">    :return: feature dict.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">trace</span> <span class="o">=</span> <span class="n">stream</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -192,47 +192,57 @@
     <span class="k">return</span> <span class="n">feature</span></div>
 
 
-<div class="viewcode-block" id="feature_to_example"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.feature_to_example.html#seisnn.example_proto.feature_to_example">[docs]</a><span class="k">def</span> <span class="nf">feature_to_example</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">):</span>
+<div class="viewcode-block" id="feature_to_example"><a class="viewcode-back" href="../../package/example_proto/seisnn.example_proto.feature_to_example.html#seisnn.example_proto.feature_to_example">[docs]</a><span class="k">def</span> <span class="nf">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns example from stream feature dict.</span>
+<span class="sd">    Returns tf.SequenceExample serialize string from feature dict.</span>
 
-<span class="sd">    :param dict stream_feature: Feature dict extract from stream.</span>
+<span class="sd">    :param dict feature: Feature dict extract from stream.</span>
 <span class="sd">    :return: Serialized example.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Packing tf.SequenceExample:</span>
+    <span class="c1"># 1. numpy.array -&gt; numpy bytes string</span>
+    <span class="c1"># 2. Bytes, int64, float -&gt; Feature -&gt; Features</span>
+    <span class="c1"># 3. List of Bytes, int64, float -&gt; list of Feature -&gt; list of FeatureList</span>
+    <span class="c1">#     -&gt; FeatureLists</span>
+    <span class="c1"># 4. Features + FeatureLists -&gt; SequenceExample</span>
+
+    <span class="c1"># Convert array data into numpy bytes string.</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
-            <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="n">feature</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 
+    <span class="c1"># Convert single data into tf.train.Features.</span>
     <span class="n">context_data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]),</span>
-        <span class="s1">&#39;starttime&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">]),</span>
-        <span class="s1">&#39;endtime&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;endtime&#39;</span><span class="p">]),</span>
-        <span class="s1">&#39;station&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;station&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;starttime&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;endtime&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;endtime&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;station&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;station&#39;</span><span class="p">]),</span>
 
-        <span class="s1">&#39;npts&#39;</span><span class="p">:</span> <span class="n">_int64_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">]),</span>
-        <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="n">_float_feature</span><span class="p">(</span><span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;npts&#39;</span><span class="p">:</span> <span class="n">_int64_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;npts&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="n">_float_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;delta&#39;</span><span class="p">]),</span>
 
         <span class="s1">&#39;trace&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span>
-            <span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tostring</span><span class="p">()),</span>
+            <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tostring</span><span class="p">()),</span>
         <span class="s1">&#39;pdf&#39;</span><span class="p">:</span> <span class="n">_bytes_feature</span><span class="p">(</span>
-            <span class="n">stream_feature</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tostring</span><span class="p">()),</span>
+            <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tostring</span><span class="p">()),</span>
     <span class="p">}</span>
     <span class="n">context</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Features</span><span class="p">(</span><span class="n">feature</span><span class="o">=</span><span class="n">context_data</span><span class="p">)</span>
 
+    <span class="c1"># Convert list of tf.train.Feature into tf.train.FeatureLists.</span>
     <span class="n">sequence_data</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">]:</span>
         <span class="n">pick_features</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
-            <span class="k">for</span> <span class="n">context_data</span> <span class="ow">in</span> <span class="n">stream_feature</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">context_data</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
                 <span class="n">pick_feature</span> <span class="o">=</span> <span class="n">_bytes_feature</span><span class="p">(</span><span class="n">context_data</span><span class="p">)</span>
                 <span class="n">pick_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pick_feature</span><span class="p">)</span>
 
         <span class="n">sequence_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FeatureList</span><span class="p">(</span><span class="n">feature</span><span class="o">=</span><span class="n">pick_features</span><span class="p">)</span>
 
-    <span class="n">feature_list</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FeatureLists</span><span class="p">(</span><span class="n">feature_list</span><span class="o">=</span><span class="n">sequence_data</span><span class="p">)</span>
+    <span class="n">feature_lists</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FeatureLists</span><span class="p">(</span><span class="n">feature_list</span><span class="o">=</span><span class="n">sequence_data</span><span class="p">)</span>
 
     <span class="n">example</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">SequenceExample</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
-                                       <span class="n">feature_lists</span><span class="o">=</span><span class="n">feature_list</span><span class="p">)</span>
+                                       <span class="n">feature_lists</span><span class="o">=</span><span class="n">feature_lists</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">example</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span></div>
 
 

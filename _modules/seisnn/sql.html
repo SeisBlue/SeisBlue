@@ -614,12 +614,12 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;TFRECORD_ROOT&#39;</span><span class="p">],</span> <span class="n">output</span><span class="p">)</span>
         <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
-        <span class="n">par</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">_write_picked_stream</span><span class="p">,</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">_get_example_list</span><span class="p">,</span>
                                 <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
 
-        <span class="n">station_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_distinct_items</span><span class="p">(</span><span class="n">Pick</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">)</span>
+        <span class="n">station_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_distinct_items</span><span class="p">(</span><span class="s1">&#39;pick&#39;</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">station_list</span><span class="p">:</span>
-            <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.tfrecord&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">station</span><span class="si">}</span><span class="s1">.tfrecord&#39;</span>
             <span class="n">picks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="n">station</span><span class="o">=</span><span class="n">station</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="n">example_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">picks</span><span class="p">)</span>
             <span class="n">save_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
@@ -651,10 +651,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a query of unique items.</span>
 
-<span class="sd">        :param table: Target table.</span>
-<span class="sd">        :param str column: Target column.</span>
-<span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
-<span class="sd">        :return: A Query.</span>
+<span class="sd">        :param str table: Target table name.</span>
+<span class="sd">        :param str column: Target column name.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        :return: A list of query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
