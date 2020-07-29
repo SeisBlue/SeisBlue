@@ -5,7 +5,7 @@ from seisnn.io import read_dataset
 from seisnn.core import Feature
 from seisnn.example_proto import batch_iterator
 
-dataset = 'test'
+dataset = 'HL2017'
 
 config = get_config()
 dataset_dir = os.path.join(config['TFRECORD_ROOT'], dataset)

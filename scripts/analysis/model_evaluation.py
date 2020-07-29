@@ -9,7 +9,7 @@ from seisnn.plot import plot_error_distribution, plot_confusion_matrix
 from seisnn.core import Feature
 from seisnn.utils import get_config
 from seisnn.io import read_dataset
-from seisnn.pick import validate_picks_nearby, get_time_residual
+from seisnn.processing import validate_picks_nearby, get_time_residual
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-d', '--dataset', required=False, help='dataset', type=str)

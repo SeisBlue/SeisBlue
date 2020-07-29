@@ -493,12 +493,12 @@ class Client:
         config = utils.get_config()
         dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
         utils.make_dirs(dataset_dir)
-        par = functools.partial(io._write_picked_stream,
+        par = functools.partial(io._get_example_list,
                                 database=self.database)
 
-        station_list = self.list_distinct_items(Pick, 'station')
+        station_list = self.list_distinct_items('pick', 'station')
         for station in station_list:
-            file_name = '{}.tfrecord'.format(station)
+            file_name = f'{station}.tfrecord'
             picks = self.get_picks(station=station).all()
             example_list = utils.parallel(par, picks)
             save_file = os.path.join(dataset_dir, file_name)
@@ -530,10 +530,10 @@ class Client:
         """
         Returns a query of unique items.
 
-        :param table: Target table.
-        :param str column: Target column.
-        :rtype: sqlalchemy.orm.query.Query
-        :return: A Query.
+        :param str table: Target table name.
+        :param str column: Target column name.
+        :rtype: list
+        :return: A list of query.
         """
         table = get_table_class(table)
         with self.session_scope() as session:

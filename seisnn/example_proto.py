@@ -34,12 +34,12 @@ def _int64_feature(value):
 
 def stream_to_feature(stream):
     """
-    Turn Stream object into feature dictionary
+    Returns feature dict from obspy.Stream.
 
     :param obspy.Stream stream: Preprocessed stream object from
         seisnn.processing.stream_preprocessing
     :rtype: dict
-    :return: feature dict
+    :return: feature dict.
     """
     trace = stream[0]
 
@@ -71,47 +71,57 @@ def stream_to_feature(stream):
     return feature
 
 
-def feature_to_example(stream_feature):
+def feature_to_example(feature):
     """
-    Returns example from stream feature dict.
+    Returns tf.SequenceExample serialize string from feature dict.
 
-    :param dict stream_feature: Feature dict extract from stream.
+    :param dict feature: Feature dict extract from stream.
     :return: Serialized example.
     """
+    # Packing tf.SequenceExample:
+    # 1. numpy.array -> numpy bytes string
+    # 2. Bytes, int64, float -> Feature -> Features
+    # 3. List of Bytes, int64, float -> list of Feature -> list of FeatureList
+    #     -> FeatureLists
+    # 4. Features + FeatureLists -> SequenceExample
+
+    # Convert array data into numpy bytes string.
     for key in ['trace', 'pdf']:
-        if isinstance(stream_feature[key], tf.Tensor):
-            stream_feature[key] = stream_feature[key].numpy()
+        if isinstance(feature[key], tf.Tensor):
+            feature[key] = feature[key].numpy()
 
+    # Convert single data into tf.train.Features.
     context_data = {
-        'id': _bytes_feature(stream_feature['id']),
-        'starttime': _bytes_feature(stream_feature['starttime']),
-        'endtime': _bytes_feature(stream_feature['endtime']),
-        'station': _bytes_feature(stream_feature['station']),
+        'id': _bytes_feature(feature['id']),
+        'starttime': _bytes_feature(feature['starttime']),
+        'endtime': _bytes_feature(feature['endtime']),
+        'station': _bytes_feature(feature['station']),
 
-        'npts': _int64_feature(stream_feature['npts']),
-        'delta': _float_feature(stream_feature['delta']),
+        'npts': _int64_feature(feature['npts']),
+        'delta': _float_feature(feature['delta']),
 
         'trace': _bytes_feature(
-            stream_feature['trace'].astype(dtype=np.float32).tostring()),
+            feature['trace'].astype(dtype=np.float32).tostring()),
         'pdf': _bytes_feature(
-            stream_feature['pdf'].astype(dtype=np.float32).tostring()),
+            feature['pdf'].astype(dtype=np.float32).tostring()),
     }
     context = tf.train.Features(feature=context_data)
 
+    # Convert list of tf.train.Feature into tf.train.FeatureLists.
     sequence_data = {}
     for key in ['channel', 'phase']:
         pick_features = []
-        if stream_feature[key]:
-            for context_data in stream_feature[key]:
+        if feature[key]:
+            for context_data in feature[key]:
                 pick_feature = _bytes_feature(context_data)
                 pick_features.append(pick_feature)
 
         sequence_data[key] = tf.train.FeatureList(feature=pick_features)
 
-    feature_list = tf.train.FeatureLists(feature_list=sequence_data)
+    feature_lists = tf.train.FeatureLists(feature_list=sequence_data)
 
     example = tf.train.SequenceExample(context=context,
-                                       feature_lists=feature_list)
+                                       feature_lists=feature_lists)
     return example.SerializeToString()
 
 

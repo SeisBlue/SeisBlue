@@ -22,8 +22,8 @@ def color_palette(color=1, shade=1):
     """
     Return a color palette form a selected color and shade level.
 
-    :param int color: 0=Blue, 1=Deep Orange, 2=Green, default is 1.
-    :param int shade: 0=light, 1=regular, 2=dark, default is 1.
+    :param int color: (Optional.) 0=Blue, 1=Deep Orange, 2=Green, default is 1.
+    :param int shade: (Optional.) 0=light, 1=regular, 2=dark, default is 1.
     :rtype: str
     :return: Hex color code.
     """
@@ -320,7 +320,7 @@ def plot_map(geometry, events):
 
 class ProjectionConverter:
     """
-    Cartopy projection convert.
+    Cartopy projection converter.
     """
     def __init__(self, source_proj, target_proj):
         self.x = None

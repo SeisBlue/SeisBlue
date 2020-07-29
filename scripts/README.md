@@ -4,7 +4,7 @@ In the [scripts](scripts) folder:
 
 Preprocessing:
 
-- [stream_to_tfrecord.py](preprocessing/stream_to_tfrecord.py)
+- [stream_to_tfrecord.py](02_stream_to_tfrecord.py)
   - Make S-Files into training .tfrecord.
 - [scanning.py](prototypes/scanning.py)
   - Scan through all stations available in the given time window, transfer into .pkl dataset.

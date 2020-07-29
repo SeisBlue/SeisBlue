@@ -167,7 +167,7 @@ def database_to_tfrecord(database, output):
     picks_groupby_station = [list(g) for k, g in itertools.groupby(
         query, operator.attrgetter('station'))]
 
-    par = functools.partial(_write_picked_stream, database=database)
+    par = functools.partial(_get_example_list, database=database)
     for station_picks in picks_groupby_station:
         station = station_picks[0].station
         file_name = f'{station}.tfrecord'
@@ -178,14 +178,15 @@ def database_to_tfrecord(database, output):
         print(f'{file_name} done')
 
 
-def _write_picked_stream(batch_picks, database):
+def _get_example_list(batch_picks, database):
     """
+    Returns example list form query picks and SQL database.
     """
     example_list = []
     for pick in batch_picks:
         if pick.phase not in ['P']:
             continue
-        window = pick.get_window(pick)
+        window = processing.get_window(pick)
         streams = read_sds(window)
 
         for _, stream in streams.items():
