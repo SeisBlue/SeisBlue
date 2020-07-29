@@ -146,8 +146,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns TFRecord Dataset from TFRecord directory.</span>
 
-<span class="sd">    :type dataset_dir: str</span>
-<span class="sd">    :param dataset_dir: Directory contains TFRecords.</span>
+<span class="sd">    :param str dataset_dir: Directory contains TFRecords.</span>
 <span class="sd">    :rtype: tf.data.Dataset</span>
 <span class="sd">    :return: A Dataset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -186,8 +185,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes TFRecord from example protocol.</span>
 
-<span class="sd">    :type example_list: list</span>
-<span class="sd">    :param example_list: List of example protocol.</span>
+<span class="sd">    :param list example_list: List of example protocol.</span>
 <span class="sd">    :param save_file: Output file path.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">TFRecordWriter</span><span class="p">(</span><span class="n">save_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
@@ -199,8 +197,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns event list from sfile directory.</span>
 
-<span class="sd">    :type sfile_dir: str</span>
-<span class="sd">    :param sfile_dir: Directory contains SEISAN sfile.</span>
+<span class="sd">    :param str sfile_dir: Directory contains SEISAN sfile.</span>
 <span class="sd">    :rtype: list</span>
 <span class="sd">    :return: list of event.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -219,10 +216,9 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns obspy.event list from sfile.</span>
 
-<span class="sd">    :type filename: str</span>
-<span class="sd">    :param filename: Sfile file path.</span>
-<span class="sd">    :type debug: bool</span>
-<span class="sd">    :param debug: If False, warning from reader will be ignore.</span>
+<span class="sd">    :param str filename: Sfile file path.</span>
+<span class="sd">    :param bool debug: If False, warning from reader will be ignore,</span>
+<span class="sd">        default to False.</span>
 <span class="sd">    :rtype: list</span>
 <span class="sd">    :return: List of events.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -247,8 +243,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read SDS database.</span>
 
-<span class="sd">    :type window: dict</span>
-<span class="sd">    :param window: Time window.</span>
+<span class="sd">    :param dict window: Time window.</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Dict contains all traces within the time window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -278,10 +273,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write Tfrecord from SDS database.</span>
 
-<span class="sd">    :type database: str</span>
-<span class="sd">    :param database: SDS root path</span>
-<span class="sd">    :type output: str</span>
-<span class="sd">    :param output: TFRecord output directory.</span>
+<span class="sd">    :param str database: SDS root path</span>
+<span class="sd">    :param str output: TFRecord output directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">itertools</span>
     <span class="kn">import</span> <span class="nn">operator</span>
@@ -381,8 +374,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns geometry from STATION0.HYP file.</span>
 
-<span class="sd">    :type hyp: str</span>
-<span class="sd">    :param hyp: STATION0.HYP name without directory.</span>
+<span class="sd">    :param str hyp: STATION0.HYP name without directory.</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Geometry dict.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -433,10 +425,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write STATION0.HYP file from geometry.</span>
 
-<span class="sd">    :type geom: dict</span>
-<span class="sd">    :param geom: Geometry dict.</span>
-<span class="sd">    :type save_file: str</span>
-<span class="sd">    :param save_file: Name of .HYP file.</span>
+<span class="sd">    :param dict geom: Geometry dict.</span>
+<span class="sd">    :param str save_file: Name of .HYP file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
     <span class="n">hyp</span> <span class="o">=</span> <span class="p">[]</span>
@@ -470,8 +460,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns geometry from Google Earth KML file.</span>
 
-<span class="sd">    :type kml: str</span>
-<span class="sd">    :param kml: KML file name without directory.</span>
+<span class="sd">    :param str kml: KML file name without directory.</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Geometry dict.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

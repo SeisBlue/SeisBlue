@@ -134,10 +134,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns time window from pick.</span>
 
-<span class="sd">    :type pick: obspy.Pick</span>
 <span class="sd">    :param pick: Pick object.</span>
-<span class="sd">    :type trace_length: int</span>
-<span class="sd">    :param trace_length: (Optional.) Trace length.</span>
+<span class="sd">    :param int trace_length: (Optional.) Trace length, default is 30.</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Time window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -159,10 +157,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns probability density function from stream.</span>
 
-<span class="sd">    :type stream: obspy.Stream</span>
-<span class="sd">    :param stream: Stream object.</span>
-<span class="sd">    :type sigma: float</span>
-<span class="sd">    :param sigma: Width of normalize distribution.</span>
+<span class="sd">    :param obspy.Stream stream: Stream object.</span>
+<span class="sd">    :param float sigma: Width of normalize distribution.</span>
 <span class="sd">    :rtype: obspy.Stream</span>
 <span class="sd">    :return: Stream with pdf.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -196,16 +192,11 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract pick from probability density function.</span>
 
-<span class="sd">    :type feature: seisnn.core.Feature</span>
 <span class="sd">    :param feature: Feature object.</span>
-<span class="sd">    :type phase: str</span>
-<span class="sd">    :param phase: Phase name.</span>
-<span class="sd">    :type pick_set: str</span>
-<span class="sd">    :param pick_set: Pick set name.</span>
-<span class="sd">    :type height: float</span>
-<span class="sd">    :param height: Height threshold, from 0 to 1.</span>
-<span class="sd">    :type distance: int</span>
-<span class="sd">    :param distance: Distance threshold.</span>
+<span class="sd">    :param str phase: Phase name.</span>
+<span class="sd">    :param str pick_set: Pick set name.</span>
+<span class="sd">    :param float height: Height threshold, from 0 to 1.</span>
+<span class="sd">    :param int distance: Distance threshold.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
     <span class="n">peaks</span><span class="p">,</span> <span class="n">properties</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">pdf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
@@ -272,10 +263,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return processed stream with pdf.</span>
 
-<span class="sd">    :type stream: obspy.Stream</span>
-<span class="sd">    :param stream: Stream object.</span>
-<span class="sd">    :type database: str</span>
-<span class="sd">    :param database: SQL database root.</span>
+<span class="sd">    :param obspy.Stream stream: Stream object.</span>
+<span class="sd">    :param str database: SQL database root.</span>
 <span class="sd">    :rtype: obspy.Stream</span>
 <span class="sd">    :return: Processed Stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -302,8 +291,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a signal processed stream.</span>
 
-<span class="sd">    :type stream: obspy.Stream</span>
-<span class="sd">    :param stream: Stream object.</span>
+<span class="sd">    :param obspy.Stream stream: Stream object.</span>
 <span class="sd">    :rtype: obspy.Stream</span>
 <span class="sd">    :return: Processed stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -319,10 +307,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return trimmed stream in a given length.</span>
 
-<span class="sd">    :type stream: obspy.Stream</span>
-<span class="sd">    :param stream: Stream object.</span>
-<span class="sd">    :type points: int</span>
-<span class="sd">    :param points: Trace data points.</span>
+<span class="sd">    :param obspy.Stream stream: Stream object.</span>
+<span class="sd">    :param int points: Trace data points.</span>
 <span class="sd">    :rtype: obspy.Stream</span>
 <span class="sd">    :return: Trimmed stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

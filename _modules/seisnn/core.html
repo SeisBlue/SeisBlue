@@ -219,8 +219,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write TFRecord to file path.</span>
 
-<span class="sd">        :type file_path: str</span>
-<span class="sd">        :param file_path: Output path.</span>
+<span class="sd">        :param str file_path: Output path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
         <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
@@ -230,10 +229,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract picks from pdf.</span>
 
-<span class="sd">        :type phase: str</span>
-<span class="sd">        :param phase: Phase name.</span>
-<span class="sd">        :type pick_set: str</span>
-<span class="sd">        :param pick_set: Pick set name.</span>
+<span class="sd">        :param str phase: Phase name.</span>
+<span class="sd">        :param str pick_set: Pick set name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">processing</span><span class="o">.</span><span class="n">get_picks_from_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">)</span>
 
@@ -249,9 +246,10 @@
 
 <div class="viewcode-block" id="parallel_to_tfrecord"><a class="viewcode-back" href="../../package/core/seisnn.core.parallel_to_tfrecord.html#seisnn.core.parallel_to_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">parallel_to_tfrecord</span><span class="p">(</span><span class="n">batch_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writed TFRecord to directory.</span>
 
 <span class="sd">    :param batch_list:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :return: List of results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">seisnn.utils</span> <span class="kn">import</span> <span class="n">parallel</span>
 
@@ -263,7 +261,6 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns example list from batched example.</span>
 
-<span class="sd">    :type batch: list</span>
 <span class="sd">    :param batch: Batch list of example.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>

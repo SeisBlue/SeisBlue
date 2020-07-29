@@ -134,12 +134,9 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write history loss into a log file.</span>
 
-<span class="sd">    :type loss_buffer: list</span>
 <span class="sd">    :param loss_buffer: Loss history.</span>
-<span class="sd">    :type title: str</span>
-<span class="sd">    :param title: Log file name.</span>
-<span class="sd">    :type save_dir: str</span>
-<span class="sd">    :param save_dir: Output directory.</span>
+<span class="sd">    :param str title: Log file name.</span>
+<span class="sd">    :param str save_dir: Output directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span>
     <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">.log&#39;</span><span class="p">)</span>

@@ -130,12 +130,9 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates precision, recall and f1 score.</span>
 
-<span class="sd">    :type true_positive: int</span>
-<span class="sd">    :param true_positive: True positive count.</span>
-<span class="sd">    :type pred_count: int</span>
-<span class="sd">    :param pred_count: Predict count.</span>
-<span class="sd">    :type val_count: int</span>
-<span class="sd">    :param val_count: Validation count.</span>
+<span class="sd">    :param int true_positive: True positive count.</span>
+<span class="sd">    :param int pred_count: Predict count.</span>
+<span class="sd">    :param int val_count: Validation count.</span>
 <span class="sd">    :rtype: float</span>
 <span class="sd">    :return: (precision, recall, f1)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -149,10 +146,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates power ratio from signal and noise.</span>
 
-<span class="sd">    :type signal: numpy.array</span>
-<span class="sd">    :param signal: Signal trace data.</span>
-<span class="sd">    :type noise: numpy.array</span>
-<span class="sd">    :param noise: Noise trace data.</span>
+<span class="sd">    :param numpy.array signal: Signal trace data.</span>
+<span class="sd">    :param numpy.array noise: Noise trace data.</span>
 <span class="sd">    :rtype: float</span>
 <span class="sd">    :return: Signal to noise ratio.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

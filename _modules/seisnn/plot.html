@@ -143,9 +143,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a color palette form a selected color and shade level.</span>
 
-<span class="sd">    :param color:</span>
-<span class="sd">    :param shade:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param int color: 0=Blue, 1=Deep Orange, 2=Green, default is 1.</span>
+<span class="sd">    :param int shade: 0=light, 1=regular, 2=dark, default is 1.</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    :return: Hex color code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># color palette source:</span>
     <span class="c1"># http://www.webfreelancer.com.br/color/colors.html</span>
@@ -439,6 +440,9 @@
 
 
 <div class="viewcode-block" id="ProjectionConverter"><a class="viewcode-back" href="../../package/plot/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter">[docs]</a><span class="k">class</span> <span class="nc">ProjectionConverter</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cartopy projection convert.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ProjectionConverter.__init__"><a class="viewcode-back" href="../../package/plot/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_proj</span><span class="p">,</span> <span class="n">target_proj</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
@@ -449,10 +453,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns converted project location.</span>
 
-<span class="sd">        :type x: float</span>
-<span class="sd">        :param x: X location.</span>
-<span class="sd">        :type y: float</span>
-<span class="sd">        :param y: Y location.</span>
+<span class="sd">        :param float x: X location.</span>
+<span class="sd">        :param float y: Y location.</span>
 <span class="sd">        :rtype: float</span>
 <span class="sd">        :return: (x, y)</span>
 <span class="sd">        &quot;&quot;&quot;</span>

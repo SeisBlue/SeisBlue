@@ -125,12 +125,15 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">operator</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">functools</span>
 
-<span class="kn">import</span> <span class="nn">sqlalchemy</span> <span class="k">as</span> <span class="nn">sqla</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">import</span> <span class="nn">sqlalchemy</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">orm</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
 
+<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">plot</span>
 <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
 
 <span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
@@ -141,11 +144,11 @@
 <span class="sd">    Inventory table for sql database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;inventory&#39;</span>
-    <span class="n">network</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">station</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">latitude</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">longitude</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">elevation</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">station</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">latitude</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">longitude</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">elevation</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">net</span>
@@ -166,7 +169,6 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add data into session.</span>
 
-<span class="sd">        :type session: sqlalchemy.orm.session.Session</span>
 <span class="sd">        :param session: SQL session.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
@@ -177,13 +179,13 @@
 <span class="sd">    Event table for sql database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;event&#39;</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
-                     <span class="n">sqla</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span><span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
-                     <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">time</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">latitude</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">longitude</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">depth</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span>
+                           <span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
+                           <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">latitude</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">longitude</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">depth</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">origins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">datetime</span>
@@ -213,16 +215,16 @@
 <span class="sd">    Pick table for sql database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;pick&#39;</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
-                     <span class="n">sqla</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span><span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
-                     <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">time</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">station</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
-                          <span class="n">sqla</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">),</span>
-                          <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">phase</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">tag</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">snr</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span>
+                           <span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
+                           <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">station</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+                                <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">),</span>
+                                <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">snr</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pick</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">datetime</span>
@@ -253,12 +255,13 @@
 <span class="sd">    TFRecord table for sql database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;tfrecord&#39;</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
-                     <span class="n">sqla</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span><span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
-                     <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">file</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">tag</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">station</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">sqla</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">))</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span>
+                           <span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
+                           <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">station</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+                                <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tfrecord</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -284,14 +287,15 @@
 <span class="sd">    Waveform table for sql database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;waveform&#39;</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
-                     <span class="n">sqla</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span><span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
-                     <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">starttime</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">endtime</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">station</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">sqla</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">))</span>
-    <span class="n">tfrecord</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">record_position</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span>
+                           <span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
+                           <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">endtime</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">station</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+                                <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">))</span>
+    <span class="n">tfrecord</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">record_position</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waveform</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -317,9 +321,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns related class from class dict.</span>
 
-<span class="sd">    :type table: str</span>
-<span class="sd">    :param table: One of the keywords:</span>
-<span class="sd">        inventory, event, pick, tfrecord, waveform.</span>
+<span class="sd">    :param str table: One of the keywords: inventory, event, pick,</span>
+<span class="sd">        tfrecord, waveform.</span>
 <span class="sd">    :return: Table class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">table_dict</span> <span class="o">=</span> <span class="p">{</span>
@@ -346,7 +349,7 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
         <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATABASE_ROOT&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">sqla</span><span class="o">.</span><span class="n">create_engine</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">create_engine</span><span class="p">(</span>
             <span class="sa">f</span><span class="s1">&#39;sqlite:///</span><span class="si">{</span><span class="n">db_path</span><span class="si">}</span><span class="s1">?check_same_thread=False&#39;</span><span class="p">,</span>
             <span class="n">echo</span><span class="o">=</span><span class="n">echo</span><span class="p">)</span>
         <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
@@ -358,13 +361,11 @@
 
 <span class="sd">        seisnn.io.read_hyp wrap up.</span>
 
-<span class="sd">        :type hyp: str</span>
-<span class="sd">        :param hyp: STATION0.HYP file.</span>
-<span class="sd">        :type network: str</span>
-<span class="sd">        :param network: Output network name.</span>
+<span class="sd">        :param str hyp: STATION0.HYP file.</span>
+<span class="sd">        :param str network: Output network name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_hyp</span>
-        <span class="n">geom</span> <span class="o">=</span> <span class="n">read_hyp</span><span class="p">(</span><span class="n">hyp</span><span class="p">)</span>
+
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_hyp</span><span class="p">(</span><span class="n">hyp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">read_kml_placemark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kml</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
@@ -373,23 +374,19 @@
 
 <span class="sd">        seisnn.io.read_kml_placemark wrap up.</span>
 
-<span class="sd">        :type kml: str</span>
-<span class="sd">        :param kml: Google Earth .KML file.</span>
-<span class="sd">        :type network: str</span>
-<span class="sd">        :param network: Output network name.</span>
+<span class="sd">        :param str kml: Google Earth .KML file.</span>
+<span class="sd">        :param str network: Output network name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_kml_placemark</span>
-        <span class="n">geom</span> <span class="o">=</span> <span class="n">read_kml_placemark</span><span class="p">(</span><span class="n">kml</span><span class="p">)</span>
+
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_kml_placemark</span><span class="p">(</span><span class="n">kml</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add geometry data from geometry dict.</span>
 
-<span class="sd">        :type geom: dict</span>
-<span class="sd">        :param geom: Geometry dict.</span>
-<span class="sd">        :type network: str</span>
-<span class="sd">        :param network: Output network name.</span>
+<span class="sd">        :param dict geom: Geometry dict.</span>
+<span class="sd">        :param str network: Output network name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -403,10 +400,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns query from geometry table.</span>
 
-<span class="sd">        :type station: str</span>
-<span class="sd">        :param station: Station name.</span>
-<span class="sd">        :type network: str</span>
-<span class="sd">        :param network: Network name.</span>
+<span class="sd">        :param str station: Station name.</span>
+<span class="sd">        :param str network: Network name.</span>
 <span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
 <span class="sd">        :return: A Query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -437,10 +432,10 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">station_count</span><span class="si">}</span><span class="s1"> stations</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="n">boundary</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
-                       <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
-                       <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">),</span>
-                       <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Station boundary:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;West: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -452,7 +447,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots station and event map.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">seisnn.plot</span> <span class="kn">import</span> <span class="n">plot_map</span>
+
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">geometry</span> <span class="o">=</span> <span class="n">session</span> \
                 <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
@@ -464,21 +459,18 @@
                        <span class="n">Event</span><span class="o">.</span><span class="n">longitude</span><span class="p">)</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-        <span class="n">plot_map</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
+        <span class="n">plot</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add event data form catalog.</span>
 
-<span class="sd">        :type catalog: obspy.Catalog</span>
-<span class="sd">        :param catalog: Catalog.</span>
-<span class="sd">        :type tag: str</span>
-<span class="sd">        :param tag: Catalog tag.</span>
-<span class="sd">        :type remove_duplicates: bool</span>
-<span class="sd">        :param remove_duplicates: Removes duplicates in event table.</span>
+<span class="sd">        :param str catalog: Catalog name.</span>
+<span class="sd">        :param str tag: Pick tag.</span>
+<span class="sd">        :param bool remove_duplicates: Removes duplicates in event table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">seisnn.io</span> <span class="kn">import</span> <span class="n">read_event_list</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="n">read_event_list</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_event_list</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">event_count</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">pick_count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -504,16 +496,11 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns query from pick table.</span>
 
-<span class="sd">        :type starttime: str</span>
-<span class="sd">        :param starttime: Start time.</span>
-<span class="sd">        :type endtime: str</span>
-<span class="sd">        :param endtime: End time.</span>
-<span class="sd">        :type station: str</span>
-<span class="sd">        :param station: Station name.</span>
-<span class="sd">        :type phase: str</span>
-<span class="sd">        :param phase: Phase name.</span>
-<span class="sd">        :type tag: str</span>
-<span class="sd">        :param tag: Catalog tag.</span>
+<span class="sd">        :param str starttime: Start time.</span>
+<span class="sd">        :param str endtime: End time.</span>
+<span class="sd">        :param str station: Station name.</span>
+<span class="sd">        :param str phase: Phase name.</span>
+<span class="sd">        :param str tag: Catalog tag.</span>
 <span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
 <span class="sd">        :return: A Query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -539,8 +526,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
-                       <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event time duration:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -550,17 +537,16 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">event_count</span><span class="si">}</span><span class="s1"> events</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="n">boundary</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
-                       <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
-                       <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">),</span>
-                       <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event boundary:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;West: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;East: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;South: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;North: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pick_summery</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">pick_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -568,8 +554,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
-                       <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Pick time duration:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -577,7 +563,7 @@
 
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Phase count:&#39;</span><span class="p">)</span>
             <span class="n">phase_group_count</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="n">ps_picks</span> <span class="o">=</span> <span class="mi">0</span>
@@ -622,15 +608,14 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate TFrecords from database.</span>
 
-<span class="sd">        :type output: str</span>
-<span class="sd">        :param output: Output directory.</span>
+<span class="sd">        :param str output: Output directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-        <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">io</span>
+
         <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;TFRECORD_ROOT&#39;</span><span class="p">],</span> <span class="n">output</span><span class="p">)</span>
         <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
-        <span class="n">par</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">_write_picked_stream</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">_write_picked_stream</span><span class="p">,</span>
+                                <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
 
         <span class="n">station_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_distinct_items</span><span class="p">(</span><span class="n">Pick</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">station_list</span><span class="p">:</span>
@@ -645,18 +630,16 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes duplicates data in given table.</span>
 
-<span class="sd">        :type table: str</span>
-<span class="sd">        :param table: Target table.</span>
-<span class="sd">        :type match_columns: list</span>
-<span class="sd">        :param match_columns: List of column names. If all columns matches,</span>
-<span class="sd">            then marks it as a duplicate data.</span>
+<span class="sd">        :param str table: Target table.</span>
+<span class="sd">        :param list match_columns: List of column names.</span>
+<span class="sd">            If all columns matches, then marks it as a duplicate data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">attrs</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="o">*</span><span class="n">match_columns</span><span class="p">)</span>
             <span class="n">table_columns</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
             <span class="n">distinct</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">sqla</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">id</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">id</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="o">*</span><span class="n">table_columns</span><span class="p">)</span>
             <span class="n">duplicate</span> <span class="o">=</span> <span class="n">session</span> \
                 <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> \
@@ -668,10 +651,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a query of unique items.</span>
 
-<span class="sd">        :type table: str</span>
 <span class="sd">        :param table: Target table.</span>
-<span class="sd">        :type column: str</span>
-<span class="sd">        :param column: Target column.</span>
+<span class="sd">        :param str column: Target column.</span>
 <span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
 <span class="sd">        :return: A Query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -685,7 +666,7 @@
             <span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">query</span>
 
-    <span class="nd">@contextmanager</span>
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">session_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Provide a transactional scope around a series of operations.</span>
@@ -705,8 +686,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Replaces posix wildcard characters to SQL wildcard characters.</span>
 
-<span class="sd">        :type string: str</span>
-<span class="sd">        :param string: Target string.</span>
+<span class="sd">        :param str string: Target string.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        :return: Replaced string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
