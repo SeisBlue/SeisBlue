@@ -98,8 +98,7 @@ class Feature:
         """
         Write TFRecord to file path.
 
-        :type file_path: str
-        :param file_path: Output path.
+        :param str file_path: Output path.
         """
         feature = self.to_feature()
         example = example_proto.feature_to_example(feature)
@@ -109,10 +108,8 @@ class Feature:
         """
         Extract picks from pdf.
 
-        :type phase: str
-        :param phase: Phase name.
-        :type pick_set: str
-        :param pick_set: Pick set name.
+        :param str phase: Phase name.
+        :param str pick_set: Pick set name.
         """
         processing.get_picks_from_pdf(self, phase, pick_set)
 
@@ -128,9 +125,10 @@ class Feature:
 
 def parallel_to_tfrecord(batch_list):
     """
+    Writed TFRecord to directory.
 
     :param batch_list:
-    :return:
+    :return: List of results.
     """
     from seisnn.utils import parallel
 
@@ -142,7 +140,6 @@ def _to_tfrecord(batch):
     """
     Returns example list from batched example.
 
-    :type batch: list
     :param batch: Batch list of example.
     """
     example_list = []

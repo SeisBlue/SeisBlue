@@ -13,12 +13,9 @@ def save_loss(loss_buffer, title, save_dir):
     """
     Write history loss into a log file.
 
-    :type loss_buffer: list
     :param loss_buffer: Loss history.
-    :type title: str
-    :param title: Log file name.
-    :type save_dir: str
-    :param save_dir: Output directory.
+    :param str title: Log file name.
+    :param str save_dir: Output directory.
     """
     utils.make_dirs(save_dir)
     file_path = os.path.join(save_dir, f'{title}.log')

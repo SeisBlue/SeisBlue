@@ -4,12 +4,15 @@ SQL Database
 
 import os
 import operator
-from contextlib import contextmanager
+import contextlib
+import functools
 
-import sqlalchemy as sqla
-from sqlalchemy.ext.declarative import declarative_base
+import sqlalchemy
 from sqlalchemy import orm
+from sqlalchemy.ext.declarative import declarative_base
 
+from seisnn import io
+from seisnn import plot
 from seisnn import utils
 
 Base = declarative_base()
@@ -20,11 +23,11 @@ class Inventory(Base):
     Inventory table for sql database.
     """
     __tablename__ = 'inventory'
-    network = sqla.Column(sqla.String, nullable=False)
-    station = sqla.Column(sqla.String, primary_key=True)
-    latitude = sqla.Column(sqla.Float, nullable=False)
-    longitude = sqla.Column(sqla.Float, nullable=False)
-    elevation = sqla.Column(sqla.Float, nullable=False)
+    network = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    station = sqlalchemy.Column(sqlalchemy.String, primary_key=True)
+    latitude = sqlalchemy.Column(sqlalchemy.Float, nullable=False)
+    longitude = sqlalchemy.Column(sqlalchemy.Float, nullable=False)
+    elevation = sqlalchemy.Column(sqlalchemy.Float, nullable=False)
 
     def __init__(self, net, sta, loc):
         self.network = net
@@ -45,7 +48,6 @@ class Inventory(Base):
         """
         Add data into session.
 
-        :type session: sqlalchemy.orm.session.Session
         :param session: SQL session.
         """
         session.add(self)
@@ -56,13 +58,13 @@ class Event(Base):
     Event table for sql database.
     """
     __tablename__ = 'event'
-    id = sqla.Column("id",
-                     sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
-                     primary_key=True)
-    time = sqla.Column(sqla.DateTime, nullable=False)
-    latitude = sqla.Column(sqla.Float, nullable=False)
-    longitude = sqla.Column(sqla.Float, nullable=False)
-    depth = sqla.Column(sqla.Float, nullable=False)
+    id = sqlalchemy.Column(sqlalchemy.BigInteger()
+                           .with_variant(sqlalchemy.Integer, "sqlite"),
+                           primary_key=True)
+    time = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
+    latitude = sqlalchemy.Column(sqlalchemy.Float, nullable=False)
+    longitude = sqlalchemy.Column(sqlalchemy.Float, nullable=False)
+    depth = sqlalchemy.Column(sqlalchemy.Float, nullable=False)
 
     def __init__(self, event):
         self.time = event.origins[0].time.datetime
@@ -92,16 +94,16 @@ class Pick(Base):
     Pick table for sql database.
     """
     __tablename__ = 'pick'
-    id = sqla.Column("id",
-                     sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
-                     primary_key=True)
-    time = sqla.Column(sqla.DateTime, nullable=False)
-    station = sqla.Column(sqla.String,
-                          sqla.ForeignKey('inventory.station'),
-                          nullable=False)
-    phase = sqla.Column(sqla.String, nullable=False)
-    tag = sqla.Column(sqla.String, nullable=False)
-    snr = sqla.Column(sqla.Float)
+    id = sqlalchemy.Column(sqlalchemy.BigInteger()
+                           .with_variant(sqlalchemy.Integer, "sqlite"),
+                           primary_key=True)
+    time = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
+    station = sqlalchemy.Column(sqlalchemy.String,
+                                sqlalchemy.ForeignKey('inventory.station'),
+                                nullable=False)
+    phase = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    tag = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    snr = sqlalchemy.Column(sqlalchemy.Float)
 
     def __init__(self, pick, tag):
         self.time = pick.time.datetime
@@ -132,12 +134,13 @@ class TFRecord(Base):
     TFRecord table for sql database.
     """
     __tablename__ = 'tfrecord'
-    id = sqla.Column("id",
-                     sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
-                     primary_key=True)
-    file = sqla.Column(sqla.String)
-    tag = sqla.Column(sqla.String)
-    station = sqla.Column(sqla.String, sqla.ForeignKey('inventory.station'))
+    id = sqlalchemy.Column(sqlalchemy.BigInteger()
+                           .with_variant(sqlalchemy.Integer, "sqlite"),
+                           primary_key=True)
+    file = sqlalchemy.Column(sqlalchemy.String)
+    tag = sqlalchemy.Column(sqlalchemy.String)
+    station = sqlalchemy.Column(sqlalchemy.String,
+                                sqlalchemy.ForeignKey('inventory.station'))
 
     def __init__(self, tfrecord):
         pass
@@ -163,14 +166,15 @@ class Waveform(Base):
     Waveform table for sql database.
     """
     __tablename__ = 'waveform'
-    id = sqla.Column("id",
-                     sqla.BigInteger().with_variant(sqla.Integer, "sqlite"),
-                     primary_key=True)
-    starttime = sqla.Column(sqla.DateTime, nullable=False)
-    endtime = sqla.Column(sqla.DateTime, nullable=False)
-    station = sqla.Column(sqla.String, sqla.ForeignKey('inventory.station'))
-    tfrecord = sqla.Column(sqla.String)
-    record_position = sqla.Column(sqla.Integer)
+    id = sqlalchemy.Column(sqlalchemy.BigInteger()
+                           .with_variant(sqlalchemy.Integer, "sqlite"),
+                           primary_key=True)
+    starttime = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
+    endtime = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
+    station = sqlalchemy.Column(sqlalchemy.String,
+                                sqlalchemy.ForeignKey('inventory.station'))
+    tfrecord = sqlalchemy.Column(sqlalchemy.String)
+    record_position = sqlalchemy.Column(sqlalchemy.Integer)
 
     def __init__(self, waveform):
         pass
@@ -196,9 +200,8 @@ def get_table_class(table):
     """
     Returns related class from class dict.
 
-    :type table: str
-    :param table: One of the keywords:
-        inventory, event, pick, tfrecord, waveform.
+    :param str table: One of the keywords: inventory, event, pick,
+        tfrecord, waveform.
     :return: Table class.
     """
     table_dict = {
@@ -225,7 +228,7 @@ class Client:
         config = utils.get_config()
         self.database = database
         db_path = os.path.join(config['DATABASE_ROOT'], self.database)
-        self.engine = sqla.create_engine(
+        self.engine = sqlalchemy.create_engine(
             f'sqlite:///{db_path}?check_same_thread=False',
             echo=echo)
         Base.metadata.create_all(bind=self.engine)
@@ -237,13 +240,11 @@ class Client:
 
         seisnn.io.read_hyp wrap up.
 
-        :type hyp: str
-        :param hyp: STATION0.HYP file.
-        :type network: str
-        :param network: Output network name.
+        :param str hyp: STATION0.HYP file.
+        :param str network: Output network name.
         """
-        from seisnn.io import read_hyp
-        geom = read_hyp(hyp)
+
+        geom = io.read_hyp(hyp)
         self.add_geom(geom, network)
 
     def read_kml_placemark(self, kml, network):
@@ -252,23 +253,19 @@ class Client:
 
         seisnn.io.read_kml_placemark wrap up.
 
-        :type kml: str
-        :param kml: Google Earth .KML file.
-        :type network: str
-        :param network: Output network name.
+        :param str kml: Google Earth .KML file.
+        :param str network: Output network name.
         """
-        from seisnn.io import read_kml_placemark
-        geom = read_kml_placemark(kml)
+
+        geom = io.read_kml_placemark(kml)
         self.add_geom(geom, network)
 
     def add_geom(self, geom, network):
         """
         Add geometry data from geometry dict.
 
-        :type geom: dict
-        :param geom: Geometry dict.
-        :type network: str
-        :param network: Output network name.
+        :param dict geom: Geometry dict.
+        :param str network: Output network name.
         """
         with self.session_scope() as session:
             counter = 0
@@ -282,10 +279,8 @@ class Client:
         """
         Returns query from geometry table.
 
-        :type station: str
-        :param station: Station name.
-        :type network: str
-        :param network: Network name.
+        :param str station: Station name.
+        :param str network: Network name.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
@@ -316,10 +311,10 @@ class Client:
             print(f'Total {station_count} stations\n')
 
             boundary = session \
-                .query(sqla.func.min(Inventory.longitude),
-                       sqla.func.max(Inventory.longitude),
-                       sqla.func.min(Inventory.latitude),
-                       sqla.func.max(Inventory.latitude)) \
+                .query(sqlalchemy.func.min(Inventory.longitude),
+                       sqlalchemy.func.max(Inventory.longitude),
+                       sqlalchemy.func.min(Inventory.latitude),
+                       sqlalchemy.func.max(Inventory.latitude)) \
                 .all()
             print('Station boundary:')
             print(f'West: {boundary[0][0]:>8.4f}')
@@ -331,7 +326,7 @@ class Client:
         """
         Plots station and event map.
         """
-        from seisnn.plot import plot_map
+
         with self.session_scope() as session:
             geometry = session \
                 .query(Inventory.latitude,
@@ -343,21 +338,18 @@ class Client:
                        Event.longitude) \
                 .all()
 
-        plot_map(geometry, events)
+        plot.plot_map(geometry, events)
 
     def add_events(self, catalog, tag, remove_duplicates=True):
         """
         Add event data form catalog.
 
-        :type catalog: obspy.Catalog
-        :param catalog: Catalog.
-        :type tag: str
-        :param tag: Catalog tag.
-        :type remove_duplicates: bool
-        :param remove_duplicates: Removes duplicates in event table.
+        :param str catalog: Catalog name.
+        :param str tag: Pick tag.
+        :param bool remove_duplicates: Removes duplicates in event table.
         """
-        from seisnn.io import read_event_list
-        events = read_event_list(catalog)
+
+        events = io.read_event_list(catalog)
         with self.session_scope() as session:
             event_count = 0
             pick_count = 0
@@ -383,16 +375,11 @@ class Client:
         """
         Returns query from pick table.
 
-        :type starttime: str
-        :param starttime: Start time.
-        :type endtime: str
-        :param endtime: End time.
-        :type station: str
-        :param station: Station name.
-        :type phase: str
-        :param phase: Phase name.
-        :type tag: str
-        :param tag: Catalog tag.
+        :param str starttime: Start time.
+        :param str endtime: End time.
+        :param str station: Station name.
+        :param str phase: Phase name.
+        :param str tag: Catalog tag.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
@@ -418,8 +405,8 @@ class Client:
         """
         with self.session_scope() as session:
             time = session \
-                .query(sqla.func.min(Event.time),
-                       sqla.func.max(Event.time)) \
+                .query(sqlalchemy.func.min(Event.time),
+                       sqlalchemy.func.max(Event.time)) \
                 .all()
             print('Event time duration:')
             print(f'From: {time[0][0].isoformat()}')
@@ -429,17 +416,16 @@ class Client:
             print(f'Total {event_count} events\n')
 
             boundary = session \
-                .query(sqla.func.min(Event.longitude),
-                       sqla.func.max(Event.longitude),
-                       sqla.func.min(Event.latitude),
-                       sqla.func.max(Event.latitude)) \
+                .query(sqlalchemy.func.min(Event.longitude),
+                       sqlalchemy.func.max(Event.longitude),
+                       sqlalchemy.func.min(Event.latitude),
+                       sqlalchemy.func.max(Event.latitude)) \
                 .all()
             print('Event boundary:')
             print(f'West: {boundary[0][0]:>8.4f}')
             print(f'East: {boundary[0][1]:>8.4f}')
             print(f'South: {boundary[0][2]:>7.4f}')
             print(f'North: {boundary[0][3]:>7.4f}\n')
-            self.pick_summery()
 
     def pick_summery(self):
         """
@@ -447,8 +433,8 @@ class Client:
         """
         with self.session_scope() as session:
             time = session \
-                .query(sqla.func.min(Pick.time),
-                       sqla.func.max(Pick.time)) \
+                .query(sqlalchemy.func.min(Pick.time),
+                       sqlalchemy.func.max(Pick.time)) \
                 .all()
             print('Pick time duration:')
             print(f'From: {time[0][0].isoformat()}')
@@ -456,7 +442,7 @@ class Client:
 
             print('Phase count:')
             phase_group_count = session \
-                .query(Pick.phase, sqla.func.count(Pick.phase)) \
+                .query(Pick.phase, sqlalchemy.func.count(Pick.phase)) \
                 .group_by(Pick.phase) \
                 .all()
             ps_picks = 0
@@ -501,15 +487,14 @@ class Client:
         """
         Generate TFrecords from database.
 
-        :type output: str
-        :param output: Output directory.
+        :param str output: Output directory.
         """
-        from functools import partial
-        from seisnn import io
+
         config = utils.get_config()
         dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
         utils.make_dirs(dataset_dir)
-        par = partial(io._write_picked_stream, database=self.database)
+        par = functools.partial(io._write_picked_stream,
+                                database=self.database)
 
         station_list = self.list_distinct_items(Pick, 'station')
         for station in station_list:
@@ -524,18 +509,16 @@ class Client:
         """
         Removes duplicates data in given table.
 
-        :type table: str
-        :param table: Target table.
-        :type match_columns: list
-        :param match_columns: List of column names. If all columns matches,
-            then marks it as a duplicate data.
+        :param str table: Target table.
+        :param list match_columns: List of column names.
+            If all columns matches, then marks it as a duplicate data.
         """
         table = get_table_class(table)
         with self.session_scope() as session:
             attrs = operator.attrgetter(*match_columns)
             table_columns = attrs(table)
             distinct = session \
-                .query(table, sqla.func.min(table.id)) \
+                .query(table, sqlalchemy.func.min(table.id)) \
                 .group_by(*table_columns)
             duplicate = session \
                 .query(table) \
@@ -547,10 +530,8 @@ class Client:
         """
         Returns a query of unique items.
 
-        :type table: str
         :param table: Target table.
-        :type column: str
-        :param column: Target column.
+        :param str column: Target column.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
@@ -564,7 +545,7 @@ class Client:
             query = [q[0] for q in query]
             return query
 
-    @contextmanager
+    @contextlib.contextmanager
     def session_scope(self):
         """
         Provide a transactional scope around a series of operations.
@@ -584,8 +565,7 @@ class Client:
         """
         Replaces posix wildcard characters to SQL wildcard characters.
 
-        :type string: str
-        :param string: Target string.
+        :param str string: Target string.
         :rtype: str
         :return: Replaced string.
         """

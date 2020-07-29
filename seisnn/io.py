@@ -25,8 +25,7 @@ def read_dataset(dataset_dir):
     """
     Returns TFRecord Dataset from TFRecord directory.
 
-    :type dataset_dir: str
-    :param dataset_dir: Directory contains TFRecords.
+    :param str dataset_dir: Directory contains TFRecords.
     :rtype: tf.data.Dataset
     :return: A Dataset.
     """
@@ -65,8 +64,7 @@ def write_tfrecord(example_list, save_file):
     """
     Writes TFRecord from example protocol.
 
-    :type example_list: list
-    :param example_list: List of example protocol.
+    :param list example_list: List of example protocol.
     :param save_file: Output file path.
     """
     with tf.io.TFRecordWriter(save_file) as writer:
@@ -78,8 +76,7 @@ def read_event_list(sfile_dir):
     """
     Returns event list from sfile directory.
 
-    :type sfile_dir: str
-    :param sfile_dir: Directory contains SEISAN sfile.
+    :param str sfile_dir: Directory contains SEISAN sfile.
     :rtype: list
     :return: list of event.
     """
@@ -98,10 +95,9 @@ def get_event(filename, debug=False):
     """
     Returns obspy.event list from sfile.
 
-    :type filename: str
-    :param filename: Sfile file path.
-    :type debug: bool
-    :param debug: If False, warning from reader will be ignore.
+    :param str filename: Sfile file path.
+    :param bool debug: If False, warning from reader will be ignore,
+        default to False.
     :rtype: list
     :return: List of events.
     """
@@ -126,8 +122,7 @@ def read_sds(window):
     """
     Read SDS database.
 
-    :type window: dict
-    :param window: Time window.
+    :param dict window: Time window.
     :rtype: dict
     :return: Dict contains all traces within the time window.
     """
@@ -157,10 +152,8 @@ def database_to_tfrecord(database, output):
     """
     Write Tfrecord from SDS database.
 
-    :type database: str
-    :param database: SDS root path
-    :type output: str
-    :param output: TFRecord output directory.
+    :param str database: SDS root path
+    :param str output: TFRecord output directory.
     """
     import itertools
     import operator
@@ -260,8 +253,7 @@ def read_hyp(hyp):
     """
     Returns geometry from STATION0.HYP file.
 
-    :type hyp: str
-    :param hyp: STATION0.HYP name without directory.
+    :param str hyp: STATION0.HYP name without directory.
     :rtype: dict
     :return: Geometry dict.
     """
@@ -312,10 +304,8 @@ def write_hyp_station(geom, save_file):
     """
     Write STATION0.HYP file from geometry.
 
-    :type geom: dict
-    :param geom: Geometry dict.
-    :type save_file: str
-    :param save_file: Name of .HYP file.
+    :param dict geom: Geometry dict.
+    :param str save_file: Name of .HYP file.
     """
     config = utils.get_config()
     hyp = []
@@ -349,8 +339,7 @@ def read_kml_placemark(kml):
     """
     Returns geometry from Google Earth KML file.
 
-    :type kml: str
-    :param kml: KML file name without directory.
+    :param str kml: KML file name without directory.
     :rtype: dict
     :return: Geometry dict.
     """

@@ -9,12 +9,9 @@ def precision_recall_f1_score(true_positive, pred_count, val_count):
     """
     Calculates precision, recall and f1 score.
 
-    :type true_positive: int
-    :param true_positive: True positive count.
-    :type pred_count: int
-    :param pred_count: Predict count.
-    :type val_count: int
-    :param val_count: Validation count.
+    :param int true_positive: True positive count.
+    :param int pred_count: Predict count.
+    :param int val_count: Validation count.
     :rtype: float
     :return: (precision, recall, f1)
     """
@@ -28,10 +25,8 @@ def signal_to_noise_ratio(signal, noise):
     """
     Calculates power ratio from signal and noise.
 
-    :type signal: numpy.array
-    :param signal: Signal trace data.
-    :type noise: numpy.array
-    :param noise: Noise trace data.
+    :param numpy.array signal: Signal trace data.
+    :param numpy.array noise: Noise trace data.
     :rtype: float
     :return: Signal to noise ratio.
     """

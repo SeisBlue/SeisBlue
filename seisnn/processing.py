@@ -13,10 +13,8 @@ def get_window(pick, trace_length=30):
     """
     Returns time window from pick.
 
-    :type pick: obspy.Pick
     :param pick: Pick object.
-    :type trace_length: int
-    :param trace_length: (Optional.) Trace length.
+    :param int trace_length: (Optional.) Trace length, default is 30.
     :rtype: dict
     :return: Time window.
     """
@@ -38,10 +36,8 @@ def get_pdf(stream, sigma=0.1):
     """
     Returns probability density function from stream.
 
-    :type stream: obspy.Stream
-    :param stream: Stream object.
-    :type sigma: float
-    :param sigma: Width of normalize distribution.
+    :param obspy.Stream stream: Stream object.
+    :param float sigma: Width of normalize distribution.
     :rtype: obspy.Stream
     :return: Stream with pdf.
     """
@@ -75,16 +71,11 @@ def get_picks_from_pdf(feature, phase, pick_set, height=0.5, distance=100):
     """
     Extract pick from probability density function.
 
-    :type feature: seisnn.core.Feature
     :param feature: Feature object.
-    :type phase: str
-    :param phase: Phase name.
-    :type pick_set: str
-    :param pick_set: Pick set name.
-    :type height: float
-    :param height: Height threshold, from 0 to 1.
-    :type distance: int
-    :param distance: Distance threshold.
+    :param str phase: Phase name.
+    :param str pick_set: Pick set name.
+    :param float height: Height threshold, from 0 to 1.
+    :param int distance: Distance threshold.
     """
     i = feature.phase.index(phase)
     peaks, properties = signal.find_peaks(feature.pdf[-1, :, i],
@@ -151,10 +142,8 @@ def stream_preprocessing(stream, database):
     """
     Return processed stream with pdf.
 
-    :type stream: obspy.Stream
-    :param stream: Stream object.
-    :type database: str
-    :param database: SQL database root.
+    :param obspy.Stream stream: Stream object.
+    :param str database: SQL database root.
     :rtype: obspy.Stream
     :return: Processed Stream.
     """
@@ -181,8 +170,7 @@ def signal_preprocessing(stream):
     """
     Return a signal processed stream.
 
-    :type stream: obspy.Stream
-    :param stream: Stream object.
+    :param obspy.Stream stream: Stream object.
     :rtype: obspy.Stream
     :return: Processed stream.
     """
@@ -198,10 +186,8 @@ def trim_trace(stream, points=3008):
     """
     Return trimmed stream in a given length.
 
-    :type stream: obspy.Stream
-    :param stream: Stream object.
-    :type points: int
-    :param points: Trace data points.
+    :param obspy.Stream stream: Stream object.
+    :param int points: Trace data points.
     :rtype: obspy.Stream
     :return: Trimmed stream.
     """

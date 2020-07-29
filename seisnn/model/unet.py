@@ -14,14 +14,10 @@ def _standard_unit(input_tensor, stage, nb_filter, kernel_size):
     """
     2D standard unit.
 
-    :type input_tensor: tensor
     :param input_tensor:
-    :type stage: str
-    :param stage: Stage name.
-    :type nb_filter: int
-    :param nb_filter: Filter number.
-    :type kernel_size: int or (int, int)
-    :param kernel_size: Kernel size.
+    :param str stage: Stage name.
+    :param int nb_filter: Filter number.
+    :param tuple kernel_size: Kernel size.
     :return: tensor
     """
     dropout_rate = 0.1
@@ -49,14 +45,10 @@ def unet(img_rows, img_cols, color_type=1, num_class=1):
 
     Total params: 420,249
 
-    :type img_rows: int
-    :param img_rows: Height of the data.
-    :type img_cols: int
-    :param img_cols: Width of the data.
-    :type color_type: int
-    :param color_type: Channel number of the data.
-    :type num_class: int
-    :param num_class: Output class number.
+    :param int img_rows: Height of the data.
+    :param int img_cols: Width of the data.
+    :param int color_type: Channel number of the data.
+    :param int num_class: Output class number.
     :return: UNet model.
     """
 
@@ -128,14 +120,10 @@ def nest_net(img_rows=None, img_cols=None, color_type=1, num_class=1):
 
     Total params: 496,225
 
-    :type img_rows: int
-    :param img_rows: Height of the data.
-    :type img_cols: int
-    :param img_cols: Width of the data.
-    :type color_type: int
-    :param color_type: Channel number of the data.
-    :type num_class: int
-    :param num_class: Output class number.
+    :param int img_rows: Height of the data.
+    :param int img_cols: Width of the data.
+    :param int color_type: Channel number of the data.
+    :param int num_class: Output class number.
     :return: Nest net model.
     """
     nb_filter = [8, 16, 32, 64, 128]

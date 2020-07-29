@@ -22,9 +22,10 @@ def color_palette(color=1, shade=1):
     """
     Return a color palette form a selected color and shade level.
 
-    :param color:
-    :param shade:
-    :return:
+    :param int color: 0=Blue, 1=Deep Orange, 2=Green, default is 1.
+    :param int shade: 0=light, 1=regular, 2=dark, default is 1.
+    :rtype: str
+    :return: Hex color code.
     """
     # color palette source:
     # http://www.webfreelancer.com.br/color/colors.html
@@ -318,6 +319,9 @@ def plot_map(geometry, events):
 
 
 class ProjectionConverter:
+    """
+    Cartopy projection convert.
+    """
     def __init__(self, source_proj, target_proj):
         self.x = None
         self.y = None
@@ -328,10 +332,8 @@ class ProjectionConverter:
         """
         Returns converted project location.
 
-        :type x: float
-        :param x: X location.
-        :type y: float
-        :param y: Y location.
+        :param float x: X location.
+        :param float y: Y location.
         :rtype: float
         :return: (x, y)
         """

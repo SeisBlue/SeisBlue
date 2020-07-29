@@ -36,7 +36,7 @@ def stream_to_feature(stream):
     """
     Turn Stream object into feature dictionary
 
-    :param stream: Preprocessed stream object from
+    :param obspy.Stream stream: Preprocessed stream object from
         seisnn.processing.stream_preprocessing
     :rtype: dict
     :return: feature dict
@@ -75,8 +75,7 @@ def feature_to_example(stream_feature):
     """
     Returns example from stream feature dict.
 
-    :type stream_feature: dict
-    :param stream_feature: Feature dict extract from stream.
+    :param dict stream_feature: Feature dict extract from stream.
     :return: Serialized example.
     """
     for key in ['trace', 'pdf']:

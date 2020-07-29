@@ -28,8 +28,7 @@ def make_dirs(path):
     """
     Create dir if path does not exist.
 
-    :type path: str
-    :param path: Directory path.
+    :param str path: Directory path.
     """
     if not os.path.isdir(path):
         os.makedirs(path, mode=0o777)
@@ -39,10 +38,8 @@ def batch(iterable, n=1):
     """
     Yield a batch from a list.
 
-    :type iterable: list
     :param iterable: Data list.
-    :type n: int
-    :param n: Batch size.
+    :param int n: Batch size.
     """
     iter_len = len(iterable)
     for ndx in range(0, iter_len, n):
@@ -53,10 +50,8 @@ def parallel(par, file_list):
     """
     Parallelize a partial function and return results in a list.
 
-    :type par: object
     :param par: Partial function.
-    :type file_list: list
-    :param file_list: Process list for partial function.
+    :param list file_list: Process list for partial function.
     :rtype: list
     :return: List of results.
     """
@@ -79,9 +74,7 @@ def parallel_iter(par, iterator):
     """
     Parallelize a partial function and return results in a list.
 
-    :type par: any
     :param par: Partial function.
-    :type iterator: any
     :param iterator: Iterable object.
     :rtype: list
     :return: List of results.
@@ -101,10 +94,8 @@ def get_dir_list(file_dir, suffix=""):
     """
     Returns directory list from the given path.
 
-    :type file_dir: str
-    :param file_dir: Target directory.
-    :type suffix: str
-    :param suffix: (Optional.) File extension.
+    :param str file_dir: Target directory.
+    :param str suffix: (Optional.) File extension.
     :rtype: list
     :return: List of file name.
     """
@@ -121,10 +112,10 @@ def unet_padding_size(trace, pool_size=2, layers=4):
     """
     Return left and right padding size for a given trace.
 
-    :param trace:
-    :param pool_size:
-    :param layers:
-    :return:
+    :param np.array trace: Trace array.
+    :param int pool_size:(Optional.) Unet pool size, default is 2.
+    :param int layers:(Optional.) Unet stages, default is 4.
+    :return: (left padding size, right padding size)
     """
     length = len(trace)
     output = length
