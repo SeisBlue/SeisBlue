@@ -15,7 +15,7 @@ SDS_ROOT = os.path.join(WORKSPACE, 'SDS_ROOT')
 SFILE_ROOT = os.path.join(WORKSPACE, 'SFILE_ROOT')
 
 DATASET_ROOT = os.path.join(WORKSPACE, 'dataset')
-SQL_ROOT = os.path.join(WORKSPACE, 'sql')
+SQL_ROOT = os.path.join(WORKSPACE, 'sql_database')
 
 CATALOG_ROOT = os.path.join(WORKSPACE, 'catalog')
 GEOM_ROOT = os.path.join(WORKSPACE, 'geom')

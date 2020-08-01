@@ -30,7 +30,7 @@ def read_dataset(dataset):
     :return: A Dataset.
     """
     config = utils.get_config()
-    dataset_dir = os.path.join(config['DATABASE_ROOT'], dataset)
+    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
     file_list = utils.get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
     dataset = dataset.map(example_proto.sequence_example_parser,
@@ -137,7 +137,7 @@ def database_to_tfrecord(database, output):
     import operator
     from seisnn.data.sql import Client, Pick
     config = utils.get_config()
-    dataset_dir = os.path.join(config['DATABASE_ROOT'], output)
+    dataset_dir = os.path.join(config['DATASET_ROOT'], output)
     utils.make_dirs(dataset_dir)
 
     db = Client(database)
