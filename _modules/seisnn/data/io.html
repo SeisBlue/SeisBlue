@@ -134,7 +134,7 @@
 <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
 
 
-<div class="viewcode-block" id="read_dataset"><a class="viewcode-back" href="../../../package/seisnn.data.io.read_dataset.html#seisnn.data.io.read_dataset">[docs]</a><span class="k">def</span> <span class="nf">read_dataset</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="read_dataset"><a class="viewcode-back" href="../../../package/seisnn.data.io.read_dataset.html#seisnn.data.io.read_dataset">[docs]</a><span class="k">def</span> <span class="nf">read_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns TFRecord Dataset from TFRecord directory.</span>
 
@@ -142,35 +142,13 @@
 <span class="sd">    :rtype: tf.data.Dataset</span>
 <span class="sd">    :return: A Dataset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+    <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;TFRECORD_ROOT&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="p">)</span>
     <span class="n">file_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_dir_list</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TFRecordDataset</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">example_proto</span><span class="o">.</span><span class="n">sequence_example_parser</span><span class="p">,</span>
                           <span class="n">num_parallel_calls</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">dataset</span></div>
-
-
-<div class="viewcode-block" id="read_pkl"><a class="viewcode-back" href="../../../package/seisnn.data.io.read_pkl.html#seisnn.data.io.read_pkl">[docs]</a><span class="k">def</span> <span class="nf">read_pkl</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns python object form pickle file.</span>
-
-<span class="sd">    :param file: Python pickle file.</span>
-<span class="sd">    :rtype: object</span>
-<span class="sd">    :return: Python object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obj</span></div>
-
-
-<div class="viewcode-block" id="write_pkl"><a class="viewcode-back" href="../../../package/seisnn.data.io.write_pkl.html#seisnn.data.io.write_pkl">[docs]</a><span class="k">def</span> <span class="nf">write_pkl</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Write python object to pickle file.</span>
-
-<span class="sd">    :param obj: Serializable python object.</span>
-<span class="sd">    :param file: Output file path.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="write_tfrecord"><a class="viewcode-back" href="../../../package/seisnn.data.io.write_tfrecord.html#seisnn.data.io.write_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">write_tfrecord</span><span class="p">(</span><span class="n">example_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">):</span>
@@ -301,7 +279,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">batch_picks</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pick</span><span class="o">.</span><span class="n">phase</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">pick</span><span class="o">.</span><span class="n">phase</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">,</span><span class="s1">&#39;S&#39;</span><span class="p">]:</span>
             <span class="k">continue</span>
         <span class="n">window</span> <span class="o">=</span> <span class="n">processing</span><span class="o">.</span><span class="n">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">)</span>
         <span class="n">streams</span> <span class="o">=</span> <span class="n">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
@@ -325,7 +303,6 @@
 
 <span class="sd">    :param dataset_output_dir: Output directory.</span>
 <span class="sd">    :param sds_root: SDS database root directory.</span>
-<span class="sd">    :param nslc: Network, Station, Location, Channel.</span>
 <span class="sd">    :param nslc: Network, Station, Location, Channel.</span>
 <span class="sd">    :param start_time: Start time.</span>
 <span class="sd">    :param end_time: End time.</span>

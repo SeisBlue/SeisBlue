@@ -242,38 +242,6 @@
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="TFRecord"><a class="viewcode-back" href="../../../package/seisnn.data.sql.TFRecord.html#seisnn.data.sql.TFRecord">[docs]</a><span class="k">class</span> <span class="nc">TFRecord</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TFRecord table for sql database.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;tfrecord&#39;</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">BigInteger</span><span class="p">()</span>
-                           <span class="o">.</span><span class="n">with_variant</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
-                           <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">file</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">tag</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">station</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
-                                <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tfrecord</span><span class="p">):</span>
-        <span class="k">pass</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;TFRecord(&quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;File=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;Tag=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;Station=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">station</span><span class="si">}</span><span class="s2">)&quot;</span>
-
-<div class="viewcode-block" id="TFRecord.add_db"><a class="viewcode-back" href="../../../package/seisnn.data.sql.TFRecord.html#seisnn.data.sql.TFRecord.add_db">[docs]</a>    <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add data into session.</span>
-
-<span class="sd">        :type session: sqlalchemy.orm.session.Session</span>
-<span class="sd">        :param session: SQL session.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
-
-
 <div class="viewcode-block" id="Waveform"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Waveform.html#seisnn.data.sql.Waveform">[docs]</a><span class="k">class</span> <span class="nc">Waveform</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Waveform table for sql database.</span>
@@ -286,8 +254,8 @@
     <span class="n">endtime</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">station</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
                                 <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">))</span>
-    <span class="n">tfrecord</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">record_position</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">sequence_number</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waveform</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -297,7 +265,7 @@
                <span class="sa">f</span><span class="s2">&quot;Start Time=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">starttime</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;End Time=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endtime</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;Station=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">station</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;TFRecord=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tfrecord</span><span class="si">}</span><span class="s2">)&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;File=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="si">}</span><span class="s2">)&quot;</span>
 
 <div class="viewcode-block" id="Waveform.add_db"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Waveform.html#seisnn.data.sql.Waveform.add_db">[docs]</a>    <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

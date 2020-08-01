@@ -1,6 +1,0 @@
-seisnn.data.io.write\_pkl
-=========================
-
-.. currentmodule:: seisnn.data.io
-
-.. autofunction:: write_pkl

@@ -29,7 +29,6 @@ seisnn.data.sql
       Event
       Inventory
       Pick
-      TFRecord
       Waveform
    
    

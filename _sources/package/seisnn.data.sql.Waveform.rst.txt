@@ -28,11 +28,11 @@ seisnn.data.sql.Waveform
    .. autosummary::
    
       ~Waveform.endtime
+      ~Waveform.file
       ~Waveform.id
       ~Waveform.metadata
-      ~Waveform.record_position
+      ~Waveform.sequence_number
       ~Waveform.starttime
       ~Waveform.station
-      ~Waveform.tfrecord
    
    
