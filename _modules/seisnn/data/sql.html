@@ -123,8 +123,9 @@
 <span class="kn">import</span> <span class="nn">sqlalchemy</span>
 <span class="kn">import</span> <span class="nn">sqlalchemy.orm</span>
 <span class="kn">import</span> <span class="nn">sqlalchemy.ext.declarative</span>
+<span class="kn">from</span> <span class="nn">obspy</span> <span class="kn">import</span> <span class="n">UTCDateTime</span>
 
-<span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">io</span>
 <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">plot</span>
 <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
 
@@ -253,19 +254,25 @@
     <span class="n">starttime</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">endtime</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">station</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
-                                <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">))</span>
-    <span class="n">file</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">sequence_number</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                                <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;inventory.station&#39;</span><span class="p">),</span>
+                                <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">data_index</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waveform</span><span class="p">):</span>
-        <span class="k">pass</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">data_index</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">starttime</span> <span class="o">=</span> <span class="n">UTCDateTime</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span><span class="o">.</span><span class="n">datetime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endtime</span> <span class="o">=</span> <span class="n">UTCDateTime</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">endtime</span><span class="p">)</span><span class="o">.</span><span class="n">datetime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">station</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_index</span> <span class="o">=</span> <span class="n">data_index</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Waveform(&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;Start Time=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">starttime</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;End Time=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endtime</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;Station=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">station</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;File=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="si">}</span><span class="s2">)&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;Dataset=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;Index=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_index</span><span class="si">}</span><span class="s2">)&quot;</span>
 
 <div class="viewcode-block" id="Waveform.add_db"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Waveform.html#seisnn.data.sql.Waveform.add_db">[docs]</a>    <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -277,29 +284,6 @@
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="get_table_class"><a class="viewcode-back" href="../../../package/seisnn.data.sql.get_table_class.html#seisnn.data.sql.get_table_class">[docs]</a><span class="k">def</span> <span class="nf">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns related class from class dict.</span>
-
-<span class="sd">    :param str table: One of the keywords: inventory, event, pick,</span>
-<span class="sd">        tfrecord, waveform.</span>
-<span class="sd">    :return: Table class.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">table_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;inventory&#39;</span><span class="p">:</span> <span class="n">Inventory</span><span class="p">,</span>
-        <span class="s1">&#39;event&#39;</span><span class="p">:</span> <span class="n">Event</span><span class="p">,</span>
-        <span class="s1">&#39;pick&#39;</span><span class="p">:</span> <span class="n">Pick</span><span class="p">,</span>
-        <span class="s1">&#39;waveform&#39;</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">table_class</span> <span class="o">=</span> <span class="n">table_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">table_class</span>
-
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please select table: inventory, event, pick, tfrecord, waveform&#39;</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Client for sql database</span>
@@ -308,12 +292,37 @@
 <div class="viewcode-block" id="Client.__init__"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
-        <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATABASE_ROOT&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
+        <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SQL_ROOT&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">create_engine</span><span class="p">(</span>
             <span class="sa">f</span><span class="s1">&#39;sqlite:///</span><span class="si">{</span><span class="n">db_path</span><span class="si">}</span><span class="s1">?check_same_thread=False&#39;</span><span class="p">,</span>
             <span class="n">echo</span><span class="o">=</span><span class="n">echo</span><span class="p">)</span>
         <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">orm</span><span class="o">.</span><span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;SQL Database(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+<div class="viewcode-block" id="Client.get_table_class"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.get_table_class">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns related class from dict.</span>
+
+<span class="sd">        :param str table: Keywords: inventory, event, pick, waveform.</span>
+<span class="sd">        :return: SQL table class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">table_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;inventory&#39;</span><span class="p">:</span> <span class="n">Inventory</span><span class="p">,</span>
+            <span class="s1">&#39;event&#39;</span><span class="p">:</span> <span class="n">Event</span><span class="p">,</span>
+            <span class="s1">&#39;pick&#39;</span><span class="p">:</span> <span class="n">Pick</span><span class="p">,</span>
+            <span class="s1">&#39;waveform&#39;</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">table_class</span> <span class="o">=</span> <span class="n">table_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">table_class</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please select table: inventory, event, pick, waveform&#39;</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.read_hyp"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.read_hyp">[docs]</a>    <span class="k">def</span> <span class="nf">read_hyp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyp</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -564,15 +573,15 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">no_geom_station</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations without geometry:&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">no_geom_station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.generate_training_data"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.generate_training_data">[docs]</a>    <span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.generate_training_data"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.generate_training_data">[docs]</a>    <span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate TFrecords from database.</span>
 
-<span class="sd">        :param str output: Output directory.</span>
+<span class="sd">        :param str dataset: Output directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-        <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;TFRECORD_ROOT&#39;</span><span class="p">],</span> <span class="n">output</span><span class="p">)</span>
+        <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATASET_ROOT&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="p">)</span>
         <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
         <span class="n">par</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">_get_example_list</span><span class="p">,</span>
                                 <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
@@ -586,7 +595,74 @@
             <span class="n">io</span><span class="o">.</span><span class="n">write_tfrecord</span><span class="p">(</span><span class="n">example_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> done&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.remove_duplicates"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.remove_duplicates">[docs]</a>    <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">match_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.sync_dataset_header"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.sync_dataset_header">[docs]</a>    <span class="k">def</span> <span class="nf">sync_dataset_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sync header into SQL database from tfrecord dataset.</span>
+
+<span class="sd">        :param str dataset: Dataset name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+                <span class="n">instance</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">Waveform</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">add_db</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+                    <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1"> waveforms.&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_waveform"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.get_waveform">[docs]</a>    <span class="k">def</span> <span class="nf">get_waveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns query from waveform table.</span>
+
+<span class="sd">        :param str time: Time.</span>
+<span class="sd">        :param str station: Station name.</span>
+<span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
+<span class="sd">        :return: A Query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">time</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="n">Waveform</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">Waveform</span><span class="o">.</span><span class="n">endtime</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">station</span><span class="p">:</span>
+                <span class="n">station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace_sql_wildcard</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">station</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">query</span></div>
+
+<div class="viewcode-block" id="Client.waveform_summery"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.waveform_summery">[docs]</a>    <span class="k">def</span> <span class="nf">waveform_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints summery from waveform table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">starttime</span><span class="p">),</span>
+                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">endtime</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event time duration:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">event_count</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">event_count</span><span class="si">}</span><span class="s1"> events</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">station_count</span> <span class="o">=</span> <span class="n">session</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">distinct</span><span class="p">())</span> \
+                <span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Picks cover </span><span class="si">{</span><span class="n">station_count</span><span class="si">}</span><span class="s1"> stations:&#39;</span><span class="p">)</span>
+
+            <span class="n">station</span> <span class="o">=</span> <span class="n">session</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">distinct</span><span class="p">())</span> \
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.remove_duplicates"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.remove_duplicates">[docs]</a>    <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">match_columns</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes duplicates data in given table.</span>
 
@@ -594,7 +670,7 @@
 <span class="sd">        :param list match_columns: List of column names.</span>
 <span class="sd">            If all columns matches, then marks it as a duplicate data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">table</span> <span class="o">=</span> <span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">attrs</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="o">*</span><span class="n">match_columns</span><span class="p">)</span>
             <span class="n">table_columns</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
@@ -616,7 +692,7 @@
 <span class="sd">        :rtype: list</span>
 <span class="sd">        :return: A list of query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">table</span> <span class="o">=</span> <span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">col</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">session</span> \

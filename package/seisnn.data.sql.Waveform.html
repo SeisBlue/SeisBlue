@@ -131,12 +131,12 @@
 <h1>seisnn.data.sql.Waveform<a class="headerlink" href="#seisnn-data-sql-waveform" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="seisnn.data.sql.Waveform">
-<em class="property">class </em><code class="sig-prename descclassname">seisnn.data.sql.</code><code class="sig-name descname">Waveform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">waveform</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Waveform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Waveform" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">seisnn.data.sql.</code><code class="sig-name descname">Waveform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">instance</span></em>, <em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">data_index</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Waveform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Waveform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
 <p>Waveform table for sql database.</p>
 <dl class="py method">
 <dt id="seisnn.data.sql.Waveform.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">waveform</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.data.sql.Waveform.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">instance</span></em>, <em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">data_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.data.sql.Waveform.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple constructor that allows initialization from kwargs.</p>
 <p>Sets attributes on the constructed instance using the names and
 values in <code class="docutils literal notranslate"><span class="pre">kwargs</span></code>.</p>
@@ -152,7 +152,7 @@ for example, any mapped columns or relationships.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Waveform.__init__" title="seisnn.data.sql.Waveform.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(waveform)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Waveform.__init__" title="seisnn.data.sql.Waveform.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(instance, dataset, data_index)</p></td>
 <td><p>A simple constructor that allows initialization from kwargs.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Waveform.add_db" title="seisnn.data.sql.Waveform.add_db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_db</span></code></a>(session)</p></td>
@@ -167,19 +167,19 @@ for example, any mapped columns or relationships.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_index</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dataset</span></code></p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">endtime</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">file</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sequence_number</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">starttime</span></code></p></td>

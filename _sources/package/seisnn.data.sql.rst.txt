@@ -9,13 +9,6 @@ seisnn.data.sql
 
    
    
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-   
-      get_table_class
-   
    
 
    

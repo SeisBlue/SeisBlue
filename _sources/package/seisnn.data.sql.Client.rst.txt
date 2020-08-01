@@ -24,6 +24,8 @@ seisnn.data.sql.Client
       ~Client.geom_summery
       ~Client.get_geom
       ~Client.get_picks
+      ~Client.get_table_class
+      ~Client.get_waveform
       ~Client.list_distinct_items
       ~Client.pick_summery
       ~Client.plot_map
@@ -32,6 +34,8 @@ seisnn.data.sql.Client
       ~Client.remove_duplicates
       ~Client.replace_sql_wildcard
       ~Client.session_scope
+      ~Client.sync_dataset_header
+      ~Client.waveform_summery
    
    
 

@@ -29,4 +29,19 @@ seisnn.data.core.Instance
 
    
    
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Instance.channel
+      ~Instance.delta
+      ~Instance.endtime
+      ~Instance.id
+      ~Instance.npts
+      ~Instance.pdf
+      ~Instance.phase
+      ~Instance.starttime
+      ~Instance.station
+      ~Instance.trace
+   
    

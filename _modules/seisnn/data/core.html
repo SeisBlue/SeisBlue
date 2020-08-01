@@ -124,23 +124,28 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main class for data transfer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">station</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">starttime</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">endtime</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">npts</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">trace</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">phase</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Instance.__init__"><a class="viewcode-back" href="../../../package/seisnn.data.core.Instance.html#seisnn.data.core.Instance.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">starttime</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">endtime</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">npts</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pdf</span> <span class="o">=</span> <span class="kc">None</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">example</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Instance(&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;ID=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;Start Time=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">starttime</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;Phase=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="si">}</span><span class="s2">)&quot;</span>
 
 <div class="viewcode-block" id="Instance.from_feature"><a class="viewcode-back" href="../../../package/seisnn.data.core.Instance.html#seisnn.data.core.Instance.from_feature">[docs]</a>    <span class="k">def</span> <span class="nf">from_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -256,9 +261,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
-        <span class="n">feature</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
-        <span class="n">feature</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;predict&#39;</span><span class="p">)</span>
-        <span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;predict&#39;</span><span class="p">)</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
         <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">example_list</span>
 
