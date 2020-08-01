@@ -105,6 +105,8 @@ def get_dir_list(file_dir, suffix=""):
         if file_name.endswith(suffix):
             file_list.append(f)
 
+    file_list = sorted(file_list)
+
     return file_list
 
 
