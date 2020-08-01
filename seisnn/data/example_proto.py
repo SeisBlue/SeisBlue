@@ -138,11 +138,10 @@ def sequence_example_parser(record):
         "endtime": tf.io.FixedLenFeature((), tf.string, default_value=""),
         "station": tf.io.FixedLenFeature((), tf.string, default_value=""),
 
-        "npts": tf.io.FixedLenFeature((), tf.int64, default_value=tf.zeros([],
-                                                                           dtype=tf.int64)),
-        "delta": tf.io.FixedLenFeature((), tf.float32,
-                                       default_value=tf.zeros([],
-                                                              dtype=tf.float32)),
+        "npts": tf.io.FixedLenFeature(
+            (), tf.int64, default_value=tf.zeros([], dtype=tf.int64)),
+        "delta": tf.io.FixedLenFeature(
+            (), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
 
         "trace": tf.io.FixedLenFeature((), tf.string, default_value=""),
         "pdf": tf.io.FixedLenFeature((), tf.string, default_value=""),
@@ -172,8 +171,8 @@ def sequence_example_parser(record):
 
     for trace in ['trace', 'pdf']:
         trace_data = tf.io.decode_raw(parsed_context[trace], tf.float32)
-        parsed_example[trace] = tf.reshape(trace_data,
-                                           [1, parsed_example['npts'], -1])
+        parsed_example[trace] = tf.reshape(
+            trace_data, [1, parsed_example['npts'], -1])
 
     return parsed_example
 

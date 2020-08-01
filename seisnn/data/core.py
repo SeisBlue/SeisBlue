@@ -2,13 +2,12 @@
 Core
 """
 
-from seisnn import example_proto
-from seisnn import io
+from seisnn import data
 from seisnn import plot
 from seisnn import processing
 
 
-class Feature:
+class Instance:
     """
     Main class for data transfer.
     """
@@ -81,7 +80,7 @@ class Feature:
 
         :param example: Example protocol.
         """
-        feature = example_proto.eval_eager_tensor(example)
+        feature = data.example_proto.eval_eager_tensor(example)
         self.from_feature(feature)
 
     def to_example(self):
@@ -91,7 +90,7 @@ class Feature:
         :return: Example protocol.
         """
         feature = self.to_feature()
-        example = example_proto.feature_to_example(feature)
+        example = data.example_proto.feature_to_example(feature)
         return example
 
     def to_tfrecord(self, file_path):
@@ -101,8 +100,8 @@ class Feature:
         :param str file_path: Output path.
         """
         feature = self.to_feature()
-        example = example_proto.feature_to_example(feature)
-        io.write_tfrecord([example], file_path)
+        example = data.example_proto.feature_to_example(feature)
+        data.io.write_tfrecord([example], file_path)
 
     def get_picks(self, phase, pick_set):
         """
@@ -144,10 +143,10 @@ def _to_tfrecord(batch):
     """
     example_list = []
     for example in batch:
-        feature = Feature(example)
+        feature = Instance(example)
         feature.get_picks('p', 'predict')
         feature = feature.to_feature()
-        example_list.append(example_proto.feature_to_example(feature))
+        example_list.append(data.example_proto.feature_to_example(feature))
     return example_list
 
 

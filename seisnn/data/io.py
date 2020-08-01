@@ -11,12 +11,12 @@ import shutil
 
 from lxml import etree
 from obspy import Stream
-from obspy.clients.filesystem import sds
 from obspy.core import inventory
-from obspy.io.nordic.core import read_nordic
+import obspy.clients.filesystem
+import obspy.io.nordic.core
 import tensorflow as tf
 
-from seisnn import example_proto
+from seisnn.data import example_proto
 from seisnn import processing
 from seisnn import utils
 
@@ -36,15 +36,15 @@ def read_dataset(dataset_dir):
     return dataset
 
 
-def read_pkl(pkl):
+def read_pkl(file):
     """
     Returns python object form pickle file.
 
-    :param pkl: Python pickle file.
+    :param file: Python pickle file.
     :rtype: object
     :return: Python object.
     """
-    with open(pkl, "rb") as f:
+    with open(file, "rb") as f:
         obj = pickle.load(f)
         return obj
 
@@ -108,7 +108,7 @@ def get_event(filename, debug=False):
         events = []
         for file in filename:
             try:
-                catalog = read_nordic(file)
+                catalog = obspy.io.nordic.core.read_nordic(file)
             except Exception as err:
                 if debug:
                     print(err)
@@ -131,7 +131,7 @@ def read_sds(window):
     starttime = window['starttime']
     endtime = window['endtime'] + 0.1
 
-    client = sds.Client(sds_root=config['SDS_ROOT'])
+    client = obspy.clients.filesystem.sds.Client(sds_root=config['SDS_ROOT'])
     stream = client.get_waveforms(network="*",
                                   station=station,
                                   location="*",
@@ -157,7 +157,7 @@ def database_to_tfrecord(database, output):
     """
     import itertools
     import operator
-    from seisnn.sql import Client, Pick
+    from seisnn.data.sql import Client, Pick
     config = utils.get_config()
     dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
     utils.make_dirs(dataset_dir)
@@ -180,7 +180,11 @@ def database_to_tfrecord(database, output):
 
 def _get_example_list(batch_picks, database):
     """
-    Returns example list form query picks and SQL database.
+    Returns example list form list of picks and SQL database.
+
+    :param list batch_picks: List of picks.
+    :param str database: SQL database root.
+    :return:
     """
     example_list = []
     for pick in batch_picks:
@@ -209,6 +213,7 @@ def write_station_dataset(dataset_output_dir, sds_root,
     :param dataset_output_dir: Output directory.
     :param sds_root: SDS database root directory.
     :param nslc: Network, Station, Location, Channel.
+    :param nslc: Network, Station, Location, Channel.
     :param start_time: Start time.
     :param end_time: End time.
     :param trace_length: Trace length.
@@ -219,7 +224,7 @@ def write_station_dataset(dataset_output_dir, sds_root,
         shutil.rmtree(dataset_output_dir, ignore_errors=True)
     os.makedirs(dataset_output_dir, exist_ok=True)
 
-    client = sds.Client(sds_root=sds_root)
+    client = obspy.clients.filesystem.sds.Client(sds_root=sds_root)
     net, sta, loc, chan = nslc
     t = start_time
     counter = 0

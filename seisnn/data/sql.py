@@ -8,14 +8,14 @@ import contextlib
 import functools
 
 import sqlalchemy
-from sqlalchemy import orm
-from sqlalchemy.ext.declarative import declarative_base
+import sqlalchemy.orm
+import sqlalchemy.ext.declarative
 
-from seisnn import io
+from seisnn.data import io
 from seisnn import plot
 from seisnn import utils
 
-Base = declarative_base()
+Base = sqlalchemy.ext.declarative.declarative_base()
 
 
 class Inventory(Base):
@@ -232,7 +232,7 @@ class Client:
             f'sqlite:///{db_path}?check_same_thread=False',
             echo=echo)
         Base.metadata.create_all(bind=self.engine)
-        self.session = orm.sessionmaker(bind=self.engine)
+        self.session = sqlalchemy.orm.sessionmaker(bind=self.engine)
 
     def read_hyp(self, hyp, network):
         """

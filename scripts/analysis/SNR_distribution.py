@@ -3,9 +3,9 @@ import argparse
 import pandas as pd
 from obspy import UTCDateTime
 
-from seisnn.core import Feature
+from seisnn.data.core import Instance
 from seisnn.utils import get_config
-from seisnn.io import read_dataset
+from seisnn.data.io import read_dataset
 from seisnn.qc import signal_to_noise_ratio
 from seisnn.plot import plot_snr_distribution
 
@@ -20,7 +20,7 @@ dataset = read_dataset(dataset_dir).shuffle(100000).prefetch(10)
 pick_snr = []
 n = 0
 for example in dataset:
-    feature = Feature(example)
+    feature = Instance(example)
     picks = pd.DataFrame.from_dict({'pick_time': feature.pick_time,
                                     'pick_phase': feature.pick_phase,
                                     'pick_set': feature.pick_set})

@@ -6,9 +6,9 @@ import argparse
 import tensorflow as tf
 
 from seisnn.utils import get_config, make_dirs
-from seisnn.io import read_dataset, write_tfrecord
-from seisnn.core import parallel_to_tfrecord
-from seisnn.example_proto import batch_iterator
+from seisnn.data.io import read_dataset, write_tfrecord
+from seisnn.data.core import parallel_to_tfrecord
+from seisnn.data.example_proto import batch_iterator
 from seisnn.model.settings import model, optimizer
 
 ap = argparse.ArgumentParser()

@@ -33,23 +33,15 @@ Notebooks
 
 Library Reference
 -----------------
-.. toctree::
-    :maxdepth: 1
+.. autosummary::
+   :toctree: package
+   :recursive:
 
-    package/core
-    package/example_proto
-    package/io
-    package/logger
-    package/model
-    package/plot
-    package/processing
-    package/qc
-    package/sql
-    package/utils
-
+   seisnn
 
 Indices and tables
 ------------------
 
 * :ref:`genindex`
+* :ref:`modindex`
 * :ref:`search`

@@ -1,6 +1,6 @@
 from obspy import read
 
-from seisnn.io import write_pkl
+from seisnn.data.io import write_pkl
 from seisnn.utils import get_dir_list
 from seisnn.plot import plot_dataset
 

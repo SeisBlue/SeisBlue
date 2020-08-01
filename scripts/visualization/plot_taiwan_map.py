@@ -7,7 +7,7 @@ import cartopy.crs as ccrs
 import cartopy.io.img_tiles as cimgt
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
-from seisnn.io import read_hyp, read_event_list
+from seisnn.data.io import read_hyp, read_event_list
 from seisnn.utils import get_config
 
 W, E, S, N = 119, 123, 21.5, 25.7

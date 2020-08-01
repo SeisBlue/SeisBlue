@@ -113,8 +113,8 @@ def unet_padding_size(trace, pool_size=2, layers=4):
     Return left and right padding size for a given trace.
 
     :param np.array trace: Trace array.
-    :param int pool_size:(Optional.) Unet pool size, default is 2.
-    :param int layers:(Optional.) Unet stages, default is 4.
+    :param int pool_size: (Optional.) Unet pool size, default is 2.
+    :param int layers: (Optional.) Unet stages, default is 4.
     :return: (left padding size, right padding size)
     """
     length = len(trace)

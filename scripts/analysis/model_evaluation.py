@@ -6,9 +6,9 @@ import pandas as pd
 
 from seisnn.qc import precision_recall_f1_score
 from seisnn.plot import plot_error_distribution, plot_confusion_matrix
-from seisnn.core import Feature
+from seisnn.data.core import Instance
 from seisnn.utils import get_config
-from seisnn.io import read_dataset
+from seisnn.data.io import read_dataset
 from seisnn.processing import validate_picks_nearby, get_time_residual
 
 ap = argparse.ArgumentParser()
@@ -27,7 +27,7 @@ time_residuals = []
 pick_df = pd.DataFrame()
 
 for example in dataset:
-    feature = Feature(example)
+    feature = Instance(example)
     picks = pd.DataFrame.from_dict({'pick_time': feature.pick_time,
                                     'pick_phase': feature.pick_phase,
                                     'pick_set': feature.pick_set})

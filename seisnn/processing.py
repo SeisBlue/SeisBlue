@@ -3,10 +3,9 @@ Processing
 """
 
 import numpy as np
-import scipy
-import scipy.stats as ss
-from scipy import signal
 import obspy
+import scipy.signal
+import scipy.stats
 
 
 def get_window(pick, trace_length=30):
@@ -18,10 +17,10 @@ def get_window(pick, trace_length=30):
     :rtype: dict
     :return: Time window.
     """
-    scipy.random.seed()
+    rng = np.random.default_rng()
     pick_time = obspy.UTCDateTime(pick.time)
 
-    starttime = pick_time - trace_length + np.random.random_sample() * trace_length
+    starttime = pick_time - trace_length + rng.random() * trace_length
     endtime = starttime + trace_length
 
     window = {
@@ -58,7 +57,7 @@ def get_pdf(stream, sigma=0.1):
         phase_pdf = np.zeros((len(x_time),))
         for pick in stream.picks[phase]:
             pick_time = obspy.UTCDateTime(pick.time) - start_time
-            pick_pdf = ss.norm.pdf(x_time, pick_time, sigma)
+            pick_pdf = scipy.stats.norm.pdf(x_time, pick_time, sigma)
 
             if pick_pdf.max():
                 phase_pdf += pick_pdf / pick_pdf.max()
@@ -78,9 +77,9 @@ def get_picks_from_pdf(feature, phase, pick_set, height=0.5, distance=100):
     :param int distance: Distance threshold.
     """
     i = feature.phase.index(phase)
-    peaks, properties = signal.find_peaks(feature.pdf[-1, :, i],
-                                          height=height,
-                                          distance=distance)
+    peaks, properties = scipy.signal.find_peaks(feature.pdf[-1, :, i],
+                                                height=height,
+                                                distance=distance)
 
     for p in peaks:
         if p:
@@ -147,7 +146,7 @@ def stream_preprocessing(stream, database):
     :rtype: obspy.Stream
     :return: Processed Stream.
     """
-    from seisnn import sql
+    from seisnn.data import sql
     db = sql.Client(database)
     stream = signal_preprocessing(stream)
 

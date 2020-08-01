@@ -1,6 +1,6 @@
-from seisnn import sql
+import seisnn.data
 
-db = sql.Client("test.db")
+db = seisnn.data.sql.Client("test.db")
 
 db.read_hyp("HL2017.HYP", network="HL2017")
 db.geom_summery()
