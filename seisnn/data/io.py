@@ -21,7 +21,7 @@ from seisnn import processing
 from seisnn import utils
 
 
-def read_dataset(dataset_dir):
+def read_dataset(dataset):
     """
     Returns TFRecord Dataset from TFRecord directory.
 
@@ -29,35 +29,13 @@ def read_dataset(dataset_dir):
     :rtype: tf.data.Dataset
     :return: A Dataset.
     """
+    config = utils.get_config()
+    dataset_dir = os.path.join(config['TFRECORD_ROOT'], dataset)
     file_list = utils.get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
     dataset = dataset.map(example_proto.sequence_example_parser,
                           num_parallel_calls=mp.cpu_count())
     return dataset
-
-
-def read_pkl(file):
-    """
-    Returns python object form pickle file.
-
-    :param file: Python pickle file.
-    :rtype: object
-    :return: Python object.
-    """
-    with open(file, "rb") as f:
-        obj = pickle.load(f)
-        return obj
-
-
-def write_pkl(obj, file):
-    """
-    Write python object to pickle file.
-
-    :param obj: Serializable python object.
-    :param file: Output file path.
-    """
-    with open(file, "wb") as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
 def write_tfrecord(example_list, save_file):
@@ -188,7 +166,7 @@ def _get_example_list(batch_picks, database):
     """
     example_list = []
     for pick in batch_picks:
-        if pick.phase not in ['P']:
+        if pick.phase not in ['P','S']:
             continue
         window = processing.get_window(pick)
         streams = read_sds(window)
@@ -212,7 +190,6 @@ def write_station_dataset(dataset_output_dir, sds_root,
 
     :param dataset_output_dir: Output directory.
     :param sds_root: SDS database root directory.
-    :param nslc: Network, Station, Location, Channel.
     :param nslc: Network, Station, Location, Channel.
     :param start_time: Start time.
     :param end_time: End time.
