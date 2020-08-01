@@ -1,5 +1,3 @@
-# Docker
-
 # Docker 
 Nvidia-docker currently only works on Linux.
 
