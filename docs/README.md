@@ -14,6 +14,10 @@ Use [Sphinx](https://www.sphinx-doc.org/en/master/) to build your docs automatic
 
 [Sphinx Themes](https://sphinx-themes.org/)
 
+Install theme
+
+    pip install sphinx-bootstrap-theme
+
 Change in [conf.py](conf.py)
 
     html_theme = 'bootstrap' 
@@ -25,3 +29,5 @@ Check out the [link](https://stackoverflow.com/a/62613202) to generate autodoc r
 ## Deploy to Github Pages
 
 [Deploying documentation to GitHub Pages with continuous integration](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
+
+Check out [.circleci/config.yml](/.circleci/config.yml) for example
