@@ -12,7 +12,7 @@ import shutil
 from lxml import etree
 from obspy import Stream
 from obspy.core import inventory
-import obspy.clients.filesystem
+from obspy.clients.filesystem import sds
 import obspy.io.nordic.core
 import tensorflow as tf
 
@@ -30,7 +30,7 @@ def read_dataset(dataset):
     :return: A Dataset.
     """
     config = utils.get_config()
-    dataset_dir = os.path.join(config['TFRECORD_ROOT'], dataset)
+    dataset_dir = os.path.join(config['DATABASE_ROOT'], dataset)
     file_list = utils.get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
     dataset = dataset.map(example_proto.sequence_example_parser,
@@ -109,7 +109,7 @@ def read_sds(window):
     starttime = window['starttime']
     endtime = window['endtime'] + 0.1
 
-    client = obspy.clients.filesystem.sds.Client(sds_root=config['SDS_ROOT'])
+    client = sds.Client(sds_root=config['SDS_ROOT'])
     stream = client.get_waveforms(network="*",
                                   station=station,
                                   location="*",
@@ -137,7 +137,7 @@ def database_to_tfrecord(database, output):
     import operator
     from seisnn.data.sql import Client, Pick
     config = utils.get_config()
-    dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
+    dataset_dir = os.path.join(config['DATABASE_ROOT'], output)
     utils.make_dirs(dataset_dir)
 
     db = Client(database)

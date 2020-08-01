@@ -10,8 +10,9 @@ import functools
 import sqlalchemy
 import sqlalchemy.orm
 import sqlalchemy.ext.declarative
+from obspy import UTCDateTime
 
-from seisnn.data import io
+from seisnn.data import core, io
 from seisnn import plot
 from seisnn import utils
 
@@ -140,19 +141,25 @@ class Waveform(Base):
     starttime = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
     endtime = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
     station = sqlalchemy.Column(sqlalchemy.String,
-                                sqlalchemy.ForeignKey('inventory.station'))
-    file = sqlalchemy.Column(sqlalchemy.String)
-    sequence_number = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+                                sqlalchemy.ForeignKey('inventory.station'),
+                                nullable=False)
+    dataset = sqlalchemy.Column(sqlalchemy.String)
+    data_index = sqlalchemy.Column(sqlalchemy.Integer)
 
-    def __init__(self, waveform):
-        pass
+    def __init__(self, instance, dataset, data_index):
+        self.starttime = UTCDateTime(instance.starttime).datetime
+        self.endtime = UTCDateTime(instance.endtime).datetime
+        self.station = instance.station
+        self.dataset = dataset
+        self.data_index = data_index
 
     def __repr__(self):
         return f"Waveform(" \
                f"Start Time={self.starttime}, " \
                f"End Time={self.endtime}, " \
                f"Station={self.station}, " \
-               f"File={self.file})"
+               f"Dataset={self.dataset}, " \
+               f"Index={self.data_index})"
 
     def add_db(self, session):
         """
@@ -164,29 +171,6 @@ class Waveform(Base):
         session.add(self)
 
 
-def get_table_class(table):
-    """
-    Returns related class from class dict.
-
-    :param str table: One of the keywords: inventory, event, pick,
-        tfrecord, waveform.
-    :return: Table class.
-    """
-    table_dict = {
-        'inventory': Inventory,
-        'event': Event,
-        'pick': Pick,
-        'waveform': Waveform,
-    }
-    try:
-        table_class = table_dict.get(table)
-        return table_class
-
-    except KeyError:
-        msg = 'Please select table: inventory, event, pick, tfrecord, waveform'
-        raise KeyError(msg)
-
-
 class Client:
     """
     Client for sql database
@@ -195,12 +179,37 @@ class Client:
     def __init__(self, database, echo=False):
         config = utils.get_config()
         self.database = database
-        db_path = os.path.join(config['DATABASE_ROOT'], self.database)
+        db_path = os.path.join(config['SQL_ROOT'], self.database)
         self.engine = sqlalchemy.create_engine(
             f'sqlite:///{db_path}?check_same_thread=False',
             echo=echo)
         Base.metadata.create_all(bind=self.engine)
         self.session = sqlalchemy.orm.sessionmaker(bind=self.engine)
+
+    def __repr__(self):
+        return f'SQL Database({self.database})'
+
+    @staticmethod
+    def get_table_class(table):
+        """
+        Returns related class from dict.
+
+        :param str table: Keywords: inventory, event, pick, waveform.
+        :return: SQL table class.
+        """
+        table_dict = {
+            'inventory': Inventory,
+            'event': Event,
+            'pick': Pick,
+            'waveform': Waveform,
+        }
+        try:
+            table_class = table_dict.get(table)
+            return table_class
+
+        except KeyError:
+            msg = 'Please select table: inventory, event, pick, waveform'
+            raise KeyError(msg)
 
     def read_hyp(self, hyp, network):
         """
@@ -451,15 +460,15 @@ class Client:
                 print(f'{len(no_geom_station)} stations without geometry:')
                 print([stat[0] for stat in no_geom_station], '\n')
 
-    def generate_training_data(self, output):
+    def generate_training_data(self, dataset):
         """
         Generate TFrecords from database.
 
-        :param str output: Output directory.
+        :param str dataset: Output directory.
         """
 
         config = utils.get_config()
-        dataset_dir = os.path.join(config['TFRECORD_ROOT'], output)
+        dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
         utils.make_dirs(dataset_dir)
         par = functools.partial(io._get_example_list,
                                 database=self.database)
@@ -473,7 +482,74 @@ class Client:
             io.write_tfrecord(example_list, save_file)
             print(f'{file_name} done')
 
-    def remove_duplicates(self, table, match_columns: list):
+    def sync_dataset_header(self, dataset):
+        """
+        Sync header into SQL database from tfrecord dataset.
+
+        :param str dataset: Dataset name.
+        """
+        ds = io.read_dataset(dataset)
+        index = 0
+        with self.session_scope() as session:
+            session.query(Waveform).delete()
+            for example in ds:
+                instance = core.Instance(example)
+                try:
+                    Waveform(instance, dataset, index).add_db(session)
+                    index += 1
+                except Exception as e:
+                    print(e)
+            session.commit()
+        print(f'Input {index} waveforms.')
+
+    def get_waveform(self, time=None, station=None):
+        """
+        Returns query from waveform table.
+
+        :param str time: Time.
+        :param str station: Station name.
+        :rtype: sqlalchemy.orm.query.Query
+        :return: A Query.
+        """
+        with self.session_scope() as session:
+            query = session.query(Waveform)
+            if time:
+                query = query.filter(time >= Waveform.starttime)
+                query = query.filter(time <= Waveform.endtime)
+            if station:
+                station = self.replace_sql_wildcard(station)
+                query = query.filter(Waveform.station.like(station))
+
+        return query
+
+    def waveform_summery(self):
+        """
+        Prints summery from waveform table.
+        """
+        with self.session_scope() as session:
+            time = session \
+                .query(sqlalchemy.func.min(Waveform.starttime),
+                       sqlalchemy.func.max(Waveform.endtime)) \
+                .all()
+            print('Event time duration:')
+            print(f'From: {time[0][0].isoformat()}')
+            print(f'To:   {time[0][1].isoformat()}\n')
+
+            event_count = session.query(Waveform).count()
+            print(f'Total {event_count} events\n')
+
+            station_count = session \
+                .query(Waveform.station.distinct()) \
+                .count()
+            print(f'Picks cover {station_count} stations:')
+
+            station = session \
+                .query(Waveform.station.distinct()) \
+                .order_by(Waveform.station) \
+                .all()
+            print([stat[0] for stat in station], '\n')
+
+    def remove_duplicates(self, table, match_columns):
         """
         Removes duplicates data in given table.
 
@@ -481,7 +557,7 @@ class Client:
         :param list match_columns: List of column names.
             If all columns matches, then marks it as a duplicate data.
         """
-        table = get_table_class(table)
+        table = self.get_table_class(table)
         with self.session_scope() as session:
             attrs = operator.attrgetter(*match_columns)
             table_columns = attrs(table)
@@ -503,7 +579,7 @@ class Client:
         :rtype: list
         :return: A list of query.
         """
-        table = get_table_class(table)
+        table = self.get_table_class(table)
         with self.session_scope() as session:
             col = operator.attrgetter(column)
             query = session \

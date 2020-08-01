@@ -14,8 +14,8 @@ WORKSPACE = os.path.expanduser('~')
 SDS_ROOT = os.path.join(WORKSPACE, 'SDS_ROOT')
 SFILE_ROOT = os.path.join(WORKSPACE, 'SFILE_ROOT')
 
-TFRECORD_ROOT = os.path.join(WORKSPACE, 'tfrecord')
-DATABASE_ROOT = os.path.join(WORKSPACE, 'database')
+DATASET_ROOT = os.path.join(WORKSPACE, 'dataset')
+SQL_ROOT = os.path.join(WORKSPACE, 'sql')
 
 CATALOG_ROOT = os.path.join(WORKSPACE, 'catalog')
 GEOM_ROOT = os.path.join(WORKSPACE, 'geom')
@@ -26,8 +26,8 @@ config = {
     'SDS_ROOT': SDS_ROOT,
     'SFILE_ROOT': SFILE_ROOT,
 
-    'TFRECORD_ROOT': TFRECORD_ROOT,
-    'DATABASE_ROOT': DATABASE_ROOT,
+    'DATASET_ROOT': DATASET_ROOT,
+    'SQL_ROOT': SQL_ROOT,
 
     'CATALOG_ROOT': CATALOG_ROOT,
     'GEOM_ROOT': GEOM_ROOT,
@@ -37,8 +37,9 @@ config = {
 
 if __name__ == '__main__':
     path_list = [
-        TFRECORD_ROOT,
-        DATABASE_ROOT,
+        DATASET_ROOT,
+        SQL_ROOT,
+
         CATALOG_ROOT,
         MODELS_ROOT,
         GEOM_ROOT,
