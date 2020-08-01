@@ -11,6 +11,19 @@ class Instance:
     """
     Main class for data transfer.
     """
+    id = None
+    station = None
+
+    starttime = None
+    endtime = None
+    npts = None
+    delta = None
+
+    trace = None
+    channel = None
+
+    phase = None
+    pdf = None
 
     def __init__(self, example):
         self.id = None
@@ -28,6 +41,12 @@ class Instance:
         self.pdf = None
 
         self.from_example(example)
+
+    def __repr__(self):
+        return f"Instance(" \
+               f"ID={self.id}, " \
+               f"Start Time={self.starttime}, " \
+               f"Phase={self.phase})"
 
     def from_feature(self, feature):
         """
@@ -143,9 +162,9 @@ def _to_tfrecord(batch):
     """
     example_list = []
     for example in batch:
-        feature = Instance(example)
-        feature.get_picks('p', 'predict')
-        feature = feature.to_feature()
+        instance = Instance(example)
+        instance.get_picks('p', 'predict')
+        feature = instance.to_feature()
         example_list.append(data.example_proto.feature_to_example(feature))
     return example_list
 
