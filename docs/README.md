@@ -4,7 +4,7 @@ Use [Sphinx](https://www.sphinx-doc.org/en/master/) to build your docs automatic
 
 ## Install sphinx
 
-    pip install Sphinx 
+    pip install Sphinx recommonmark
 
 ## Run sphinx-quickstart
 

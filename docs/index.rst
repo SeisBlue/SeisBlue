@@ -12,6 +12,7 @@ Getting started
     :maxdepth: 1
 
     install
+    docker
     tutorial
 
 
