@@ -5,15 +5,23 @@ Use [Sphinx](https://www.sphinx-doc.org/en/master/) to build your docs automatic
 ## Install sphinx
 
     pip install Sphinx 
-    
+
 ## Run sphinx-quickstart
 
-Follow the link:
+[Sphinx Quickstart](https://sphinx-rtd-tutorial.readthedocs.io/en/latest/sphinx-quickstart.html)
 
-https://sphinx-rtd-tutorial.readthedocs.io/en/latest/sphinx-quickstart.html
+## Pick a theme
+
+[Sphinx Themes](https://sphinx-themes.org/)
+
+Change in [conf.py](conf.py)
+
+    html_theme = 'bootstrap' 
 
 ## Autosummary templates 
 
-Use this template in the link to generate autodoc recursively. 
+Check out the [link](https://stackoverflow.com/a/62613202) to generate autodoc recursively. 
 
-https://stackoverflow.com/a/62613202
+## Deploy to Github Pages
+
+[Deploying documentation to GitHub Pages with continuous integration](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
