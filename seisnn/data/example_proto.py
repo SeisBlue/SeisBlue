@@ -78,13 +78,6 @@ def feature_to_example(feature):
     :param dict feature: Feature dict extract from stream.
     :return: Serialized example.
     """
-    # Packing tf.SequenceExample:
-    # 1. numpy.array -> numpy bytes string
-    # 2. Bytes, int64, float -> Feature -> Features
-    # 3. List of Bytes, int64, float -> list of Feature -> list of FeatureList
-    #     -> FeatureLists
-    # 4. Features + FeatureLists -> SequenceExample
-
     # Convert array data into numpy bytes string.
     for key in ['trace', 'pdf']:
         if isinstance(feature[key], tf.Tensor):
@@ -192,7 +185,7 @@ def eval_eager_tensor(parsed_example):
         'delta': parsed_example['delta'].numpy(),
         'npts': parsed_example['npts'].numpy(),
 
-        'station': parsed_example['station'].numpy(),
+        'station': parsed_example['station'].numpy().decode('utf-8'),
 
         "trace": parsed_example['trace'],
         "channel": parsed_example['channel'],
@@ -200,13 +193,12 @@ def eval_eager_tensor(parsed_example):
         "phase": parsed_example['phase'],
     }
 
-    for i in ['channel', 'phase']:
-        feature_list = feature[i]
+    for key in ['channel', 'phase']:
         data_list = []
-        for f in feature_list:
-            f = f[0].numpy().decode('utf-8')
-            data_list.append(f)
-        feature[i] = data_list
+        for bytes_string in feature[key]:
+            item = bytes_string[0].numpy().decode('utf-8')
+            data_list.append(item)
+        feature[key] = data_list
 
     return feature
 
