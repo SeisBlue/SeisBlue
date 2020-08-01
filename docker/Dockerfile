@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.3.0rc2-gpu-jupyter
+FROM tensorflow/tensorflow:2.3.0-gpu-jupyter
 
 # nodejs source
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
