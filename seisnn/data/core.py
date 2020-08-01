@@ -26,20 +26,6 @@ class Instance:
     pdf = None
 
     def __init__(self, example):
-        self.id = None
-        self.station = None
-
-        self.starttime = None
-        self.endtime = None
-        self.npts = None
-        self.delta = None
-
-        self.trace = None
-        self.channel = None
-
-        self.phase = None
-        self.pdf = None
-
         self.from_example(example)
 
     def __repr__(self):
