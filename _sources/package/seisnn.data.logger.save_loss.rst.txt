@@ -1,0 +1,6 @@
+seisnn.data.logger.save\_loss
+=============================
+
+.. currentmodule:: seisnn.data.logger
+
+.. autofunction:: save_loss

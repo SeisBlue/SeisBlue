@@ -1,0 +1,6 @@
+seisnn.data.example\_proto.eval\_eager\_tensor
+==============================================
+
+.. currentmodule:: seisnn.data.example_proto
+
+.. autofunction:: eval_eager_tensor

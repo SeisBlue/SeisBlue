@@ -1,0 +1,6 @@
+seisnn.data.example\_proto.feature\_to\_example
+===============================================
+
+.. currentmodule:: seisnn.data.example_proto
+
+.. autofunction:: feature_to_example

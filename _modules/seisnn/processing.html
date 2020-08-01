@@ -62,16 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality Control</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/sql.html">SQL Database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/seisnn.html">seisnn</a></li>
 </ul>
 </ul>
 </li>
@@ -124,13 +115,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy</span>
-<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">ss</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
 <span class="kn">import</span> <span class="nn">obspy</span>
+<span class="kn">import</span> <span class="nn">scipy.signal</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span>
 
 
-<div class="viewcode-block" id="get_window"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_window.html#seisnn.processing.get_window">[docs]</a><span class="k">def</span> <span class="nf">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+<div class="viewcode-block" id="get_window"><a class="viewcode-back" href="../../package/seisnn.processing.get_window.html#seisnn.processing.get_window">[docs]</a><span class="k">def</span> <span class="nf">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns time window from pick.</span>
 
@@ -139,10 +129,10 @@
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Time window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">scipy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
     <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
 
-    <span class="n">starttime</span> <span class="o">=</span> <span class="n">pick_time</span> <span class="o">-</span> <span class="n">trace_length</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">()</span> <span class="o">*</span> <span class="n">trace_length</span>
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">pick_time</span> <span class="o">-</span> <span class="n">trace_length</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">trace_length</span>
     <span class="n">endtime</span> <span class="o">=</span> <span class="n">starttime</span> <span class="o">+</span> <span class="n">trace_length</span>
 
     <span class="n">window</span> <span class="o">=</span> <span class="p">{</span>
@@ -153,7 +143,7 @@
     <span class="k">return</span> <span class="n">window</span></div>
 
 
-<div class="viewcode-block" id="get_pdf"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_pdf.html#seisnn.processing.get_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<div class="viewcode-block" id="get_pdf"><a class="viewcode-back" href="../../package/seisnn.processing.get_pdf.html#seisnn.processing.get_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns probability density function from stream.</span>
 
@@ -179,7 +169,7 @@
         <span class="n">phase_pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x_time</span><span class="p">),))</span>
         <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">stream</span><span class="o">.</span><span class="n">picks</span><span class="p">[</span><span class="n">phase</span><span class="p">]:</span>
             <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">-</span> <span class="n">start_time</span>
-            <span class="n">pick_pdf</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_time</span><span class="p">,</span> <span class="n">pick_time</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+            <span class="n">pick_pdf</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_time</span><span class="p">,</span> <span class="n">pick_time</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">pick_pdf</span><span class="o">.</span><span class="n">max</span><span class="p">():</span>
                 <span class="n">phase_pdf</span> <span class="o">+=</span> <span class="n">pick_pdf</span> <span class="o">/</span> <span class="n">pick_pdf</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
@@ -188,7 +178,7 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="get_picks_from_pdf"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_picks_from_pdf.html#seisnn.processing.get_picks_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_pdf</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="viewcode-block" id="get_picks_from_pdf"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_pdf.html#seisnn.processing.get_picks_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_pdf</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract pick from probability density function.</span>
 
@@ -199,9 +189,9 @@
 <span class="sd">    :param int distance: Distance threshold.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
-    <span class="n">peaks</span><span class="p">,</span> <span class="n">properties</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">pdf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
-                                          <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-                                          <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
+    <span class="n">peaks</span><span class="p">,</span> <span class="n">properties</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">pdf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
+                                                <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                                                <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">p</span><span class="p">:</span>
@@ -212,7 +202,7 @@
             <span class="n">feature</span><span class="o">.</span><span class="n">pick_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pick_set</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_picks_from_dataset"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+<div class="viewcode-block" id="get_picks_from_dataset"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns pick list from TFRecord Dataset.</span>
 
@@ -227,7 +217,7 @@
     <span class="k">return</span> <span class="n">pick_list</span></div>
 
 
-<div class="viewcode-block" id="validate_picks_nearby"><a class="viewcode-back" href="../../package/processing/seisnn.processing.validate_picks_nearby.html#seisnn.processing.validate_picks_nearby">[docs]</a><span class="k">def</span> <span class="nf">validate_picks_nearby</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<div class="viewcode-block" id="validate_picks_nearby"><a class="viewcode-back" href="../../package/seisnn.processing.validate_picks_nearby.html#seisnn.processing.validate_picks_nearby">[docs]</a><span class="k">def</span> <span class="nf">validate_picks_nearby</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds nearby picks within a given range.</span>
 
@@ -245,7 +235,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="get_time_residual"><a class="viewcode-back" href="../../package/processing/seisnn.processing.get_time_residual.html#seisnn.processing.get_time_residual">[docs]</a><span class="k">def</span> <span class="nf">get_time_residual</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">):</span>
+<div class="viewcode-block" id="get_time_residual"><a class="viewcode-back" href="../../package/seisnn.processing.get_time_residual.html#seisnn.processing.get_time_residual">[docs]</a><span class="k">def</span> <span class="nf">get_time_residual</span><span class="p">(</span><span class="n">val_pick</span><span class="p">,</span> <span class="n">pred_pick</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns time difference from validate pick to predict pick.</span>
 
@@ -259,7 +249,7 @@
     <span class="k">return</span> <span class="n">residual</span></div>
 
 
-<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/processing/seisnn.processing.stream_preprocessing.html#seisnn.processing.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/seisnn.processing.stream_preprocessing.html#seisnn.processing.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return processed stream with pdf.</span>
 
@@ -268,7 +258,7 @@
 <span class="sd">    :rtype: obspy.Stream</span>
 <span class="sd">    :return: Processed Stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">sql</span>
+    <span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">sql</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
 
@@ -287,7 +277,7 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="signal_preprocessing"><a class="viewcode-back" href="../../package/processing/seisnn.processing.signal_preprocessing.html#seisnn.processing.signal_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
+<div class="viewcode-block" id="signal_preprocessing"><a class="viewcode-back" href="../../package/seisnn.processing.signal_preprocessing.html#seisnn.processing.signal_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a signal processed stream.</span>
 
@@ -303,7 +293,7 @@
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
-<div class="viewcode-block" id="trim_trace"><a class="viewcode-back" href="../../package/processing/seisnn.processing.trim_trace.html#seisnn.processing.trim_trace">[docs]</a><span class="k">def</span> <span class="nf">trim_trace</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">3008</span><span class="p">):</span>
+<div class="viewcode-block" id="trim_trace"><a class="viewcode-back" href="../../package/seisnn.processing.trim_trace.html#seisnn.processing.trim_trace">[docs]</a><span class="k">def</span> <span class="nf">trim_trace</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">3008</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return trimmed stream in a given length.</span>
 

@@ -1,0 +1,30 @@
+seisnn.data.logger
+==================
+
+.. automodule:: seisnn.data.logger
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      save_loss
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+seisnn.data.sql.get\_table\_class
+=================================
+
+.. currentmodule:: seisnn.data.sql
+
+.. autofunction:: get_table_class

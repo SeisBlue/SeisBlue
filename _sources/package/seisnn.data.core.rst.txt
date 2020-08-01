@@ -1,0 +1,37 @@
+seisnn.data.core
+================
+
+.. automodule:: seisnn.data.core
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      parallel_to_tfrecord
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+   
+      Instance
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,31 @@
+seisnn.model.unet
+=================
+
+.. automodule:: seisnn.model.unet
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      nest_net
+      unet
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

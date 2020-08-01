@@ -62,16 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/example_proto.html">Example Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/io.html">Input / Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/model.html">Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/plot.html">Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/processing.html">Processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/qc.html">Quality Control</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/sql.html">SQL Database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../package/utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../package/seisnn.html">seisnn</a></li>
 </ul>
 </ul>
 </li>
@@ -139,7 +130,7 @@
 <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">qc</span>
 
 
-<div class="viewcode-block" id="color_palette"><a class="viewcode-back" href="../../package/plot/seisnn.plot.color_palette.html#seisnn.plot.color_palette">[docs]</a><span class="k">def</span> <span class="nf">color_palette</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="color_palette"><a class="viewcode-back" href="../../package/seisnn.plot.color_palette.html#seisnn.plot.color_palette">[docs]</a><span class="k">def</span> <span class="nf">color_palette</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a color palette form a selected color and shade level.</span>
 
@@ -159,7 +150,7 @@
     <span class="k">return</span> <span class="n">palette</span><span class="p">[</span><span class="n">color</span><span class="p">][</span><span class="n">shade</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="get_time_array"><a class="viewcode-back" href="../../package/plot/seisnn.plot.get_time_array.html#seisnn.plot.get_time_array">[docs]</a><span class="k">def</span> <span class="nf">get_time_array</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+<div class="viewcode-block" id="get_time_array"><a class="viewcode-back" href="../../package/seisnn.plot.get_time_array.html#seisnn.plot.get_time_array">[docs]</a><span class="k">def</span> <span class="nf">get_time_array</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns time step array from feature dict.</span>
 
@@ -173,7 +164,7 @@
     <span class="k">return</span> <span class="n">time_array</span></div>
 
 
-<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_dataset.html#seisnn.plot.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">snr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enlarge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../package/seisnn.plot.plot_dataset.html#seisnn.plot.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">snr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enlarge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot trace and pdf.</span>
@@ -269,7 +260,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_loss"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_loss.html#seisnn.plot.plot_loss">[docs]</a><span class="k">def</span> <span class="nf">plot_loss</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_loss"><a class="viewcode-back" href="../../package/seisnn.plot.plot_loss.html#seisnn.plot.plot_loss">[docs]</a><span class="k">def</span> <span class="nf">plot_loss</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot loss history.</span>
 
@@ -303,7 +294,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_error_distribution"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_error_distribution.html#seisnn.plot.plot_error_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_error_distribution</span><span class="p">(</span><span class="n">time_residuals</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_error_distribution"><a class="viewcode-back" href="../../package/seisnn.plot.plot_error_distribution.html#seisnn.plot.plot_error_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_error_distribution</span><span class="p">(</span><span class="n">time_residuals</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot error distribution.</span>
 
@@ -325,7 +316,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_snr_distribution"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_snr_distribution.html#seisnn.plot.plot_snr_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_snr_distribution</span><span class="p">(</span><span class="n">pick_snr</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_snr_distribution"><a class="viewcode-back" href="../../package/seisnn.plot.plot_snr_distribution.html#seisnn.plot.plot_snr_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_snr_distribution</span><span class="p">(</span><span class="n">pick_snr</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot signal to noise ratio distribution.</span>
 
@@ -348,7 +339,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_confusion_matrix"><a class="viewcode-back" href="../../package/plot/seisnn.plot.plot_confusion_matrix.html#seisnn.plot.plot_confusion_matrix">[docs]</a><span class="k">def</span> <span class="nf">plot_confusion_matrix</span><span class="p">(</span><span class="n">true_positive</span><span class="p">,</span> <span class="n">pred_count</span><span class="p">,</span> <span class="n">val_count</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_confusion_matrix"><a class="viewcode-back" href="../../package/seisnn.plot.plot_confusion_matrix.html#seisnn.plot.plot_confusion_matrix">[docs]</a><span class="k">def</span> <span class="nf">plot_confusion_matrix</span><span class="p">(</span><span class="n">true_positive</span><span class="p">,</span> <span class="n">pred_count</span><span class="p">,</span> <span class="n">val_count</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot confusion matrix.</span>
 
@@ -378,7 +369,7 @@
     <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">plot_map</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">events</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_map"><a class="viewcode-back" href="../../package/seisnn.plot.plot_map.html#seisnn.plot.plot_map">[docs]</a><span class="k">def</span> <span class="nf">plot_map</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">events</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot map.</span>
 
@@ -436,20 +427,20 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">LatitudeFormatter</span><span class="p">())</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="ProjectionConverter"><a class="viewcode-back" href="../../package/plot/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter">[docs]</a><span class="k">class</span> <span class="nc">ProjectionConverter</span><span class="p">:</span>
+<div class="viewcode-block" id="ProjectionConverter"><a class="viewcode-back" href="../../package/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter">[docs]</a><span class="k">class</span> <span class="nc">ProjectionConverter</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Cartopy projection converter.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ProjectionConverter.__init__"><a class="viewcode-back" href="../../package/plot/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_proj</span><span class="p">,</span> <span class="n">target_proj</span><span class="p">):</span>
+<div class="viewcode-block" id="ProjectionConverter.__init__"><a class="viewcode-back" href="../../package/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_proj</span><span class="p">,</span> <span class="n">target_proj</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">source_proj</span> <span class="o">=</span> <span class="n">source_proj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_proj</span> <span class="o">=</span> <span class="n">target_proj</span></div>
 
-    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="ProjectionConverter.convert"><a class="viewcode-back" href="../../package/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns converted project location.</span>
 
@@ -461,7 +452,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_proj</span><span class="o">.</span><span class="n">_project_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_proj</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">y</span></div>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">y</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

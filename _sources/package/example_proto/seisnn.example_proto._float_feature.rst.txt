@@ -1,6 +1,0 @@
-seisnn.example\_proto.\_float\_feature
-======================================
-
-.. currentmodule:: seisnn.example_proto
-
-.. autofunction:: _float_feature

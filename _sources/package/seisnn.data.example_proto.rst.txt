@@ -1,0 +1,34 @@
+seisnn.data.example\_proto
+==========================
+
+.. automodule:: seisnn.data.example_proto
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      batch_iterator
+      eval_eager_tensor
+      feature_to_example
+      sequence_example_parser
+      stream_to_feature
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

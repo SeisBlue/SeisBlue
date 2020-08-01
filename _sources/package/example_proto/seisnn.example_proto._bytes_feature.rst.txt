@@ -1,6 +1,0 @@
-seisnn.example\_proto.\_bytes\_feature
-======================================
-
-.. currentmodule:: seisnn.example_proto
-
-.. autofunction:: _bytes_feature

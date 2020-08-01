@@ -1,0 +1,6 @@
+seisnn.data.io.read\_pkl
+========================
+
+.. currentmodule:: seisnn.data.io
+
+.. autofunction:: read_pkl

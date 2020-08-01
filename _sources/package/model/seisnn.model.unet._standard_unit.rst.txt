@@ -1,6 +1,0 @@
-seisnn.model.unet.\_standard\_unit
-==================================
-
-.. currentmodule:: seisnn.model.unet
-
-.. autofunction:: _standard_unit

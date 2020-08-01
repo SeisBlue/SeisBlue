@@ -1,0 +1,32 @@
+seisnn.model
+============
+
+.. automodule:: seisnn.model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   seisnn.model.settings
+   seisnn.model.unet
+

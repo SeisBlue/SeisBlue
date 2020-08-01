@@ -1,6 +1,0 @@
-seisnn.example\_proto.\_int64\_feature
-======================================
-
-.. currentmodule:: seisnn.example_proto
-
-.. autofunction:: _int64_feature

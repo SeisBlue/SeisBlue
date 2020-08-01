@@ -1,0 +1,30 @@
+seisnn.model.settings
+=====================
+
+.. automodule:: seisnn.model.settings
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      train_step
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

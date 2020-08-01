@@ -62,16 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../notebooks.html">Notebooks</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/example_proto.html">Example Protocol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/io.html">Input / Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/logger.html">Logger</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/model.html">Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/plot.html">Plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/processing.html">Processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/qc.html">Quality Control</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/sql.html">SQL Database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../package/utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/seisnn.html">seisnn</a></li>
 </ul>
 </ul>
 </li>
@@ -132,7 +123,7 @@
 <span class="n">bce</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">BinaryCrossentropy</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="train_step"><a class="viewcode-back" href="../../../package/model/seisnn.model.settings.train_step.html#seisnn.model.settings.train_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
+<div class="viewcode-block" id="train_step"><a class="viewcode-back" href="../../../package/seisnn.model.settings.train_step.html#seisnn.model.settings.train_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="n">train_trace</span><span class="p">,</span> <span class="n">train_pdf</span><span class="p">,</span> <span class="n">val_trace</span><span class="p">,</span> <span class="n">val_pdf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main training loop.</span>
