@@ -129,38 +129,6 @@ class Pick(Base):
         session.add(self)
 
 
-class TFRecord(Base):
-    """
-    TFRecord table for sql database.
-    """
-    __tablename__ = 'tfrecord'
-    id = sqlalchemy.Column(sqlalchemy.BigInteger()
-                           .with_variant(sqlalchemy.Integer, "sqlite"),
-                           primary_key=True)
-    file = sqlalchemy.Column(sqlalchemy.String)
-    tag = sqlalchemy.Column(sqlalchemy.String)
-    station = sqlalchemy.Column(sqlalchemy.String,
-                                sqlalchemy.ForeignKey('inventory.station'))
-
-    def __init__(self, tfrecord):
-        pass
-
-    def __repr__(self):
-        return f"TFRecord(" \
-               f"File={self.file}, " \
-               f"Tag={self.tag}, " \
-               f"Station={self.station})"
-
-    def add_db(self, session):
-        """
-        Add data into session.
-
-        :type session: sqlalchemy.orm.session.Session
-        :param session: SQL session.
-        """
-        session.add(self)
-
-
 class Waveform(Base):
     """
     Waveform table for sql database.
@@ -173,8 +141,8 @@ class Waveform(Base):
     endtime = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
     station = sqlalchemy.Column(sqlalchemy.String,
                                 sqlalchemy.ForeignKey('inventory.station'))
-    tfrecord = sqlalchemy.Column(sqlalchemy.String)
-    record_position = sqlalchemy.Column(sqlalchemy.Integer)
+    file = sqlalchemy.Column(sqlalchemy.String)
+    sequence_number = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
     def __init__(self, waveform):
         pass
@@ -184,7 +152,7 @@ class Waveform(Base):
                f"Start Time={self.starttime}, " \
                f"End Time={self.endtime}, " \
                f"Station={self.station}, " \
-               f"TFRecord={self.tfrecord})"
+               f"File={self.file})"
 
     def add_db(self, session):
         """
