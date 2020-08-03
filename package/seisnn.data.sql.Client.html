@@ -156,41 +156,47 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.add_geom" title="seisnn.data.sql.Client.add_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_geom</span></code></a>(geom, network)</p></td>
 <td><p>Add geometry data from geometry dict.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.event_summery" title="seisnn.data.sql.Client.event_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">event_summery</span></code></a>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_table</span></code>(table)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.event_summery" title="seisnn.data.sql.Client.event_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">event_summery</span></code></a>()</p></td>
 <td><p>Prints summery from event table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.generate_training_data" title="seisnn.data.sql.Client.generate_training_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_training_data</span></code></a>(dataset)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.generate_training_data" title="seisnn.data.sql.Client.generate_training_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_training_data</span></code></a>(dataset)</p></td>
 <td><p>Generate TFrecords from database.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.geom_summery" title="seisnn.data.sql.Client.geom_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geom_summery</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.geom_summery" title="seisnn.data.sql.Client.geom_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geom_summery</span></code></a>()</p></td>
 <td><p>Prints summery from geometry table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_geom" title="seisnn.data.sql.Client.get_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_geom</span></code></a>([station, network])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_geom" title="seisnn.data.sql.Client.get_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_geom</span></code></a>([station, network])</p></td>
 <td><p>Returns query from geometry table.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_picks" title="seisnn.data.sql.Client.get_picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks</span></code></a>([starttime, endtime, station, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_picks" title="seisnn.data.sql.Client.get_picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks</span></code></a>([from_time, to_time, station, …])</p></td>
 <td><p>Returns query from pick table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_table_class" title="seisnn.data.sql.Client.get_table_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_table_class</span></code></a>(table)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_table_class" title="seisnn.data.sql.Client.get_table_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_table_class</span></code></a>(table)</p></td>
 <td><p>Returns related class from dict.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_waveform" title="seisnn.data.sql.Client.get_waveform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_waveform</span></code></a>([time, station])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_waveform" title="seisnn.data.sql.Client.get_waveform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_waveform</span></code></a>([from_time, to_time, station])</p></td>
 <td><p>Returns query from waveform table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.list_distinct_items" title="seisnn.data.sql.Client.list_distinct_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_distinct_items</span></code></a>(table, column)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.list_distinct_items" title="seisnn.data.sql.Client.list_distinct_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_distinct_items</span></code></a>(table, column)</p></td>
 <td><p>Returns a query of unique items.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.pick_summery" title="seisnn.data.sql.Client.pick_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_summery</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.pick_summery" title="seisnn.data.sql.Client.pick_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_summery</span></code></a>()</p></td>
 <td><p>Prints summery from pick table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.plot_map" title="seisnn.data.sql.Client.plot_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_map</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.plot_map" title="seisnn.data.sql.Client.plot_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_map</span></code></a>()</p></td>
 <td><p>Plots station and event map.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_hyp" title="seisnn.data.sql.Client.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp, network)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_hyp" title="seisnn.data.sql.Client.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp, network)</p></td>
 <td><p>Add geometry data from .HYP file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_kml_placemark" title="seisnn.data.sql.Client.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml, network)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_kml_placemark" title="seisnn.data.sql.Client.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml, network)</p></td>
 <td><p>Add geometry data from .KML file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_tfrecord_header" title="seisnn.data.sql.Client.read_tfrecord_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_tfrecord_header</span></code></a>(dataset)</p></td>
+<td><p>Sync header into SQL database from tfrecord dataset.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.remove_duplicates" title="seisnn.data.sql.Client.remove_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicates</span></code></a>(table, match_columns)</p></td>
 <td><p>Removes duplicates data in given table.</p></td>
@@ -201,10 +207,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.session_scope" title="seisnn.data.sql.Client.session_scope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">session_scope</span></code></a>()</p></td>
 <td><p>Provide a transactional scope around a series of operations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.sync_dataset_header" title="seisnn.data.sql.Client.sync_dataset_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sync_dataset_header</span></code></a>(dataset)</p></td>
-<td><p>Sync header into SQL database from tfrecord dataset.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.waveform_summery" title="seisnn.data.sql.Client.waveform_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waveform_summery</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.waveform_summery" title="seisnn.data.sql.Client.waveform_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waveform_summery</span></code></a>()</p></td>
 <td><p>Prints summery from waveform table.</p></td>
 </tr>
 </tbody>
@@ -283,13 +286,13 @@
 
 <dl class="py method">
 <dt id="seisnn.data.sql.Client.get_picks">
-<code class="sig-name descname">get_picks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">starttime</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">endtime</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">station</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">phase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tag</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_picks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_picks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_picks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">from_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">to_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">station</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">phase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tag</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_picks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_picks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns query from pick table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>starttime</strong> (<em>str</em>) – Start time.</p></li>
-<li><p><strong>endtime</strong> (<em>str</em>) – End time.</p></li>
+<li><p><strong>from_time</strong> (<em>str</em>) – From time.</p></li>
+<li><p><strong>to_time</strong> (<em>str</em>) – To time.</p></li>
 <li><p><strong>station</strong> (<em>str</em>) – Station name.</p></li>
 <li><p><strong>phase</strong> (<em>str</em>) – Phase name.</p></li>
 <li><p><strong>tag</strong> (<em>str</em>) – Catalog tag.</p></li>
@@ -320,12 +323,18 @@
 
 <dl class="py method">
 <dt id="seisnn.data.sql.Client.get_waveform">
-<code class="sig-name descname">get_waveform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">station</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_waveform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_waveform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_waveform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">from_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">to_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">station</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_waveform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_waveform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns query from waveform table.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If from_time or to_time is within the waveform, the waveform
+will be select.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>time</strong> (<em>str</em>) – Time.</p></li>
+<li><p><strong>from_time</strong> (<em>str</em>) – Get which waveform endtime after from_time.</p></li>
+<li><p><strong>to_time</strong> (<em>str</em>) – Get which waveform starttime after to_time.</p></li>
 <li><p><strong>station</strong> (<em>str</em>) – Station name.</p></li>
 </ul>
 </dd>
@@ -401,6 +410,17 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="seisnn.data.sql.Client.read_tfrecord_header">
+<code class="sig-name descname">read_tfrecord_header</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.read_tfrecord_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.read_tfrecord_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sync header into SQL database from tfrecord dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataset</strong> (<em>str</em>) – Dataset name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="seisnn.data.sql.Client.remove_duplicates">
 <code class="sig-name descname">remove_duplicates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span></em>, <em class="sig-param"><span class="n">match_columns</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.remove_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.remove_duplicates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes duplicates data in given table.</p>
@@ -436,17 +456,6 @@ If all columns matches, then marks it as a duplicate data.</p></li>
 <dt id="seisnn.data.sql.Client.session_scope">
 <code class="sig-name descname">session_scope</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.session_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.session_scope" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide a transactional scope around a series of operations.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="seisnn.data.sql.Client.sync_dataset_header">
-<code class="sig-name descname">sync_dataset_header</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.sync_dataset_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.sync_dataset_header" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sync header into SQL database from tfrecord dataset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dataset</strong> (<em>str</em>) – Dataset name.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">

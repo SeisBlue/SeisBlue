@@ -19,6 +19,7 @@ seisnn.data.sql.Client
       ~Client.__init__
       ~Client.add_events
       ~Client.add_geom
+      ~Client.clear_table
       ~Client.event_summery
       ~Client.generate_training_data
       ~Client.geom_summery
@@ -31,10 +32,10 @@ seisnn.data.sql.Client
       ~Client.plot_map
       ~Client.read_hyp
       ~Client.read_kml_placemark
+      ~Client.read_tfrecord_header
       ~Client.remove_duplicates
       ~Client.replace_sql_wildcard
       ~Client.session_scope
-      ~Client.sync_dataset_header
       ~Client.waveform_summery
    
    

@@ -139,7 +139,15 @@
     <span class="n">pdf</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Instance.__init__"><a class="viewcode-back" href="../../../package/seisnn.data.core.Instance.html#seisnn.data.core.Instance.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">example</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Waveform</span><span class="p">):</span>
+                <span class="n">dataset</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">example</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">example</span><span class="o">.</span><span class="n">data_index</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">example</span> <span class="o">=</span> <span class="n">item</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Instance(&quot;</span> \
