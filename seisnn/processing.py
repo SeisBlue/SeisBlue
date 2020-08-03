@@ -156,7 +156,7 @@ def stream_preprocessing(stream, database):
 
     stream.picks = {}
     for phase in ["P", "S"]:
-        picks = db.get_picks(starttime=starttime, endtime=endtime,
+        picks = db.get_picks(from_time=starttime, to_time=endtime,
                              station=station, phase=phase)
         if picks:
             stream.picks[phase] = picks

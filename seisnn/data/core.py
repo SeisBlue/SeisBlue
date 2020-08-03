@@ -26,7 +26,15 @@ class Instance:
     pdf = None
 
     def __init__(self, example):
-        self.from_example(example)
+        try:
+            if isinstance(example, data.sql.Waveform):
+                dataset = data.io.read_dataset(example.dataset)
+                for item in dataset.skip(example.data_index).take(1):
+                    example = item
+
+            self.from_example(example)
+        except Exception as e:
+            print(e)
 
     def __repr__(self):
         return f"Instance(" \

@@ -347,13 +347,13 @@ class Client:
                 'pick',
                 ['time', 'phase', 'station', 'tag'])
 
-    def get_picks(self, starttime=None, endtime=None,
+    def get_picks(self, from_time=None, to_time=None,
                   station=None, phase=None, tag=None):
         """
         Returns query from pick table.
 
-        :param str starttime: Start time.
-        :param str endtime: End time.
+        :param str from_time: From time.
+        :param str to_time: To time.
         :param str station: Station name.
         :param str phase: Phase name.
         :param str tag: Catalog tag.
@@ -362,10 +362,10 @@ class Client:
         """
         with self.session_scope() as session:
             query = session.query(Pick)
-            if starttime:
-                query = query.filter(Pick.time >= starttime)
-            if endtime:
-                query = query.filter(Pick.time <= endtime)
+            if from_time:
+                query = query.filter(Pick.time >= from_time)
+            if to_time:
+                query = query.filter(Pick.time <= to_time)
             if station:
                 station = self.replace_sql_wildcard(station)
                 query = query.filter(Pick.station.like(station))
@@ -466,7 +466,6 @@ class Client:
 
         :param str dataset: Output directory.
         """
-
         config = utils.get_config()
         dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
         utils.make_dirs(dataset_dir)
@@ -482,7 +481,7 @@ class Client:
             io.write_tfrecord(example_list, save_file)
             print(f'{file_name} done')
 
-    def sync_dataset_header(self, dataset):
+    def read_tfrecord_header(self, dataset):
         """
         Sync header into SQL database from tfrecord dataset.
 
@@ -491,7 +490,6 @@ class Client:
         ds = io.read_dataset(dataset)
         index = 0
         with self.session_scope() as session:
-            session.query(Waveform).delete()
             for example in ds:
                 instance = core.Instance(example)
                 try:
@@ -502,20 +500,26 @@ class Client:
             session.commit()
         print(f'Input {index} waveforms.')
 
-    def get_waveform(self, time=None, station=None):
+    def get_waveform(self, from_time=None, to_time=None, station=None):
         """
         Returns query from waveform table.
 
-        :param str time: Time.
+        .. note::
+            If from_time or to_time is within the waveform, the waveform
+            will be select.
+
+        :param str from_time: Get which waveform endtime after from_time.
+        :param str to_time: Get which waveform starttime after to_time.
         :param str station: Station name.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
         with self.session_scope() as session:
             query = session.query(Waveform)
-            if time:
-                query = query.filter(time >= Waveform.starttime)
-                query = query.filter(time <= Waveform.endtime)
+            if from_time:
+                query = query.filter(from_time <= Waveform.endtime)
+            if to_time:
+                query = query.filter(Waveform.starttime <= to_time)
             if station:
                 station = self.replace_sql_wildcard(station)
                 query = query.filter(Waveform.station.like(station))
@@ -588,6 +592,11 @@ class Client:
                 .all()
             query = [q[0] for q in query]
             return query
+
+    def clear_table(self, table):
+        table = self.get_table_class(table)
+        with self.session_scope() as session:
+            session.query(table).delete()
 
     @contextlib.contextmanager
     def session_scope(self):
