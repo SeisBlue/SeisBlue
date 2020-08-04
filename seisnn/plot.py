@@ -27,13 +27,11 @@ def color_palette(color=1, shade=1):
     :rtype: str
     :return: Hex color code.
     """
-    # color palette source:
-    # http://www.webfreelancer.com.br/color/colors.html
-
-    # shade:     #200       #500       #800
-    palette = [['#90CAF9', '#2196F3', '#1565C0'],  # Blue
-               ['#FFAB91', '#FF5722', '#D84315'],  # Deep Orange
-               ['#A5D6A7', '#4CAF50', '#2E7D32']]  # Green
+    palette = [
+        ['#90CAF9', '#2196F3', '#1565C0'],  # Blue
+        ['#FFAB91', '#FF5722', '#D84315'],  # Deep Orange
+        ['#A5D6A7', '#4CAF50', '#2E7D32'],  # Green
+    ]
 
     return palette[color][shade]
 
@@ -52,80 +50,39 @@ def get_time_array(feature):
     return time_array
 
 
-def plot_dataset(feature, snr=False, enlarge=False, xlim=None, title=None,
-                 save_dir=None):
+def plot_dataset(feature, title=None, save_dir=None):
     """
     Plot trace and pdf.
 
     :param feature:
-    :param snr:
-    :param enlarge:
-    :param xlim:
     :param title:
     :param save_dir:
     """
     if title is None:
         title = f'{feature["starttime"]}_{feature["id"][:-3]}'
-    # if feature['pick_time']:
-    #     first_pick_time = UTCDateTime(feature['pick_time'][-1]) - UTCDateTime(feature['starttime'])
-    # else:
-    #     first_pick_time = 1
 
+    # plot trace
     subplot = len(feature['channel']) + 1
     fig = plt.figure(figsize=(8, subplot * 2))
     for i, chan in enumerate(feature['channel']):
         ax = fig.add_subplot(subplot, 1, i + 1)
         plt.title(title + chan)
 
-        # if xlim:
-        #     plt.xlim(xlim)
-        # if enlarge:
-        #     plt.xlim((first_pick_time - 1, first_pick_time + 2))
         trace = feature['trace'][-1, :, i]
-        ax.plot(get_time_array(feature), trace, "k-", label=chan)
-        y_min, y_max = ax.get_ylim()
 
-        # if feature['pick_time']:
-        #     label_set = set()
-        #     pick_type = ['manual', 'predict']
-        #
-        #     for i in range(len(feature['pick_time'])):
-        #         pick_set = feature['pick_set'][i]
-        #         pick_phase = feature['pick_phase'][i]
-        #         phase_color = feature['phase'].index(pick_phase)
-        #         type_color = pick_type.index(pick_set)
-        #
-        #         color = color_palette(type_color, 1)
-        #         label = pick_set + " " + pick_phase
-        #
-        #         pick_time = UTCDateTime(feature['pick_time'][i]) - UTCDateTime(feature['starttime'])
-        #         if not label in label_set:
-        #             ax.vlines(pick_time, y_min, y_max, color=color, lw=1,
-        #                       label=label)
-        #             label_set.add(label)
-        #         else:
-        #             ax.vlines(pick_time, y_min, y_max, color=color, lw=1)
-        #
-        #         if snr and pick_set == 'manual':
-        #             try:
-        #                 index = int(pick_time / feature['delta'])
-        #                 noise = trace[index - 100:index]
-        #                 signal = trace[index: index + 100]
-        #                 snr = signal_to_noise_ratio(signal, noise)
-        #                 if not snr == float("inf"):
-        #                     ax.text(pick_time, y_max-0.1, f'SNR: {snr:.2f}')
-        #             except IndexError:
-        #                 pass
+        ax.plot(get_time_array(feature), trace, "k-", label=chan)
         ax.legend(loc=1)
 
+    # plot label
     ax = fig.add_subplot(subplot, 1, subplot)
     ax.set_ylim([-0.05, 1.05])
 
     for i in range(feature['pdf'].shape[2]):
-        if feature['phase'][i]:
-            color = color_palette(i, 1)
+        phase = feature['phase'][i % 2]
+        if phase:
+            color = color_palette(i % 2, int(i / 2))
             ax.plot(get_time_array(feature), feature['pdf'][-1, :, i],
-                    color=color, label=feature['phase'][i])
+                    color=color, label=phase)
             ax.legend()
 
         else:
@@ -134,11 +91,6 @@ def plot_dataset(feature, snr=False, enlarge=False, xlim=None, title=None,
 
     threshold = 0.5
     ax.hlines(threshold, 0, 30, lw=1, linestyles='--')
-
-    # if xlim:
-    #     plt.xlim(xlim)
-    # if enlarge:
-    #     plt.xlim((first_pick_time - 1, first_pick_time + 2))
 
     if save_dir:
         utils.make_dirs(save_dir)
@@ -322,6 +274,7 @@ class ProjectionConverter:
     """
     Cartopy projection converter.
     """
+
     def __init__(self, source_proj, target_proj):
         self.x = None
         self.y = None
