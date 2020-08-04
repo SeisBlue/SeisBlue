@@ -7,6 +7,8 @@ import obspy
 import scipy.signal
 import scipy.stats
 
+from seisnn.data import sql
+
 
 def get_window(pick, trace_length=30):
     """
@@ -66,28 +68,30 @@ def get_pdf(stream, sigma=0.1):
     return stream
 
 
-def get_picks_from_pdf(feature, phase, pick_set, height=0.5, distance=100):
+def get_picks_from_pdf(instance, phase, pick_set, height=0.5, distance=100):
     """
     Extract pick from probability density function.
 
-    :param feature: Feature object.
+    :param instance: Data instance.
     :param str phase: Phase name.
     :param str pick_set: Pick set name.
     :param float height: Height threshold, from 0 to 1.
     :param int distance: Distance threshold.
     """
-    i = feature.phase.index(phase)
-    peaks, properties = scipy.signal.find_peaks(feature.pdf[-1, :, i],
+    i = instance.phase.index(phase)
+    peaks, properties = scipy.signal.find_peaks(instance.pdf[-1, :, i],
                                                 height=height,
                                                 distance=distance)
-
+    db = sql.Client('test.db')
     for p in peaks:
         if p:
             pick_time = obspy.UTCDateTime(
-                feature.starttime) + p * feature.delta
-            feature.pick_time.append(pick_time.isoformat())
-            feature.pick_phase.append(feature.phase[i])
-            feature.pick_set.append(pick_set)
+                instance.starttime) + p * instance.delta
+
+            db.add_pick(time=pick_time.datetime,
+                        station=instance.station,
+                        phase=instance.phase[i],
+                        tag=pick_set)
 
 
 def get_picks_from_dataset(dataset):

@@ -106,10 +106,10 @@ class Pick(Base):
     tag = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     snr = sqlalchemy.Column(sqlalchemy.Float)
 
-    def __init__(self, pick, tag):
-        self.time = pick.time.datetime
-        self.station = pick.waveform_id.station_code
-        self.phase = pick.phase_hint
+    def __init__(self, time, station, phase, tag):
+        self.time = time
+        self.station = station
+        self.phase = phase
         self.tag = tag
 
     def __repr__(self):
@@ -249,7 +249,7 @@ class Client:
             for sta, loc in geom.items():
                 Inventory(network, sta, loc).add_db(session)
                 counter += 1
-            session.commit()
+
             print(f'Input {counter} stations')
 
     def get_geom(self, station=None, network=None):
@@ -334,7 +334,11 @@ class Client:
                 Event(event).add_db(session)
                 event_count += 1
                 for pick in event.picks:
-                    Pick(pick, tag).add_db(session)
+                    time = pick.time.datetime
+                    station = pick.waveform_id.station_code
+                    phase = pick.phase_hint
+
+                    Pick(time, station, phase, tag).add_db(session)
                     pick_count += 1
 
             print(f'Input {event_count} events, {pick_count} picks')
@@ -346,6 +350,11 @@ class Client:
             self.remove_duplicates(
                 'pick',
                 ['time', 'phase', 'station', 'tag'])
+
+    def add_pick(self, time, station, phase, tag):
+        with self.session_scope() as session:
+            Pick(time, station, phase, tag).add_db(session)
+
 
     def get_picks(self, from_time=None, to_time=None,
                   station=None, phase=None, tag=None):
@@ -497,7 +506,7 @@ class Client:
                     index += 1
                 except Exception as e:
                     print(e)
-            session.commit()
+
         print(f'Input {index} waveforms.')
 
     def get_waveform(self, from_time=None, to_time=None, station=None):
