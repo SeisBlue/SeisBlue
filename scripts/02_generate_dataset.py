@@ -1,8 +1,9 @@
 import seisnn
 
 dataset = 'HL2017'
-db = seisnn.data.sql.Client('test.db')
+db = seisnn.data.sql.Client('HL2017.db')
 db.pick_summery()
+db.get_picks()
 
 db.generate_training_data(dataset)
 

@@ -1,6 +1,6 @@
 import seisnn
 
-db = seisnn.data.sql.Client('test.db')
+db = seisnn.data.sql.Client('HL2017.db')
 
 picks = db.get_picks().all()
 print(picks[0])
