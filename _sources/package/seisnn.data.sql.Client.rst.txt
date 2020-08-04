@@ -19,6 +19,7 @@ seisnn.data.sql.Client
       ~Client.__init__
       ~Client.add_events
       ~Client.add_geom
+      ~Client.add_pick
       ~Client.clear_table
       ~Client.event_summery
       ~Client.generate_training_data

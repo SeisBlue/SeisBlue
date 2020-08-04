@@ -156,58 +156,61 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.add_geom" title="seisnn.data.sql.Client.add_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_geom</span></code></a>(geom, network)</p></td>
 <td><p>Add geometry data from geometry dict.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_table</span></code>(table)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_pick</span></code>(time, station, phase, tag)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.event_summery" title="seisnn.data.sql.Client.event_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">event_summery</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_table</span></code>(table)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.event_summery" title="seisnn.data.sql.Client.event_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">event_summery</span></code></a>()</p></td>
 <td><p>Prints summery from event table.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.generate_training_data" title="seisnn.data.sql.Client.generate_training_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_training_data</span></code></a>(dataset)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.generate_training_data" title="seisnn.data.sql.Client.generate_training_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_training_data</span></code></a>(dataset)</p></td>
 <td><p>Generate TFrecords from database.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.geom_summery" title="seisnn.data.sql.Client.geom_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geom_summery</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.geom_summery" title="seisnn.data.sql.Client.geom_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geom_summery</span></code></a>()</p></td>
 <td><p>Prints summery from geometry table.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_geom" title="seisnn.data.sql.Client.get_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_geom</span></code></a>([station, network])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_geom" title="seisnn.data.sql.Client.get_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_geom</span></code></a>([station, network])</p></td>
 <td><p>Returns query from geometry table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_picks" title="seisnn.data.sql.Client.get_picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks</span></code></a>([from_time, to_time, station, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_picks" title="seisnn.data.sql.Client.get_picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks</span></code></a>([from_time, to_time, station, …])</p></td>
 <td><p>Returns query from pick table.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_table_class" title="seisnn.data.sql.Client.get_table_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_table_class</span></code></a>(table)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_table_class" title="seisnn.data.sql.Client.get_table_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_table_class</span></code></a>(table)</p></td>
 <td><p>Returns related class from dict.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_waveform" title="seisnn.data.sql.Client.get_waveform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_waveform</span></code></a>([from_time, to_time, station])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_waveform" title="seisnn.data.sql.Client.get_waveform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_waveform</span></code></a>([from_time, to_time, station])</p></td>
 <td><p>Returns query from waveform table.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.list_distinct_items" title="seisnn.data.sql.Client.list_distinct_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_distinct_items</span></code></a>(table, column)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.list_distinct_items" title="seisnn.data.sql.Client.list_distinct_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_distinct_items</span></code></a>(table, column)</p></td>
 <td><p>Returns a query of unique items.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.pick_summery" title="seisnn.data.sql.Client.pick_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_summery</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.pick_summery" title="seisnn.data.sql.Client.pick_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_summery</span></code></a>()</p></td>
 <td><p>Prints summery from pick table.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.plot_map" title="seisnn.data.sql.Client.plot_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_map</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.plot_map" title="seisnn.data.sql.Client.plot_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_map</span></code></a>()</p></td>
 <td><p>Plots station and event map.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_hyp" title="seisnn.data.sql.Client.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp, network)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_hyp" title="seisnn.data.sql.Client.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp, network)</p></td>
 <td><p>Add geometry data from .HYP file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_kml_placemark" title="seisnn.data.sql.Client.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml, network)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_kml_placemark" title="seisnn.data.sql.Client.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml, network)</p></td>
 <td><p>Add geometry data from .KML file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_tfrecord_header" title="seisnn.data.sql.Client.read_tfrecord_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_tfrecord_header</span></code></a>(dataset)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.read_tfrecord_header" title="seisnn.data.sql.Client.read_tfrecord_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_tfrecord_header</span></code></a>(dataset)</p></td>
 <td><p>Sync header into SQL database from tfrecord dataset.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.remove_duplicates" title="seisnn.data.sql.Client.remove_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicates</span></code></a>(table, match_columns)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.remove_duplicates" title="seisnn.data.sql.Client.remove_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicates</span></code></a>(table, match_columns)</p></td>
 <td><p>Removes duplicates data in given table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.replace_sql_wildcard" title="seisnn.data.sql.Client.replace_sql_wildcard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_sql_wildcard</span></code></a>(string)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.replace_sql_wildcard" title="seisnn.data.sql.Client.replace_sql_wildcard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_sql_wildcard</span></code></a>(string)</p></td>
 <td><p>Replaces posix wildcard characters to SQL wildcard characters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.session_scope" title="seisnn.data.sql.Client.session_scope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">session_scope</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.session_scope" title="seisnn.data.sql.Client.session_scope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">session_scope</span></code></a>()</p></td>
 <td><p>Provide a transactional scope around a series of operations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.waveform_summery" title="seisnn.data.sql.Client.waveform_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waveform_summery</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.waveform_summery" title="seisnn.data.sql.Client.waveform_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waveform_summery</span></code></a>()</p></td>
 <td><p>Prints summery from waveform table.</p></td>
 </tr>
 </tbody>
