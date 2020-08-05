@@ -1,9 +1,9 @@
 # Custom SQL Query
 
-SeisNN sql database is based on [sqlalchemy](https://www.sqlalchemy.org/) object relational mapper(orm),
+SeisNN SQL database is based on [sqlalchemy](https://www.sqlalchemy.org/) object relational mapper(orm),
 check out [Querying](https://docs.sqlalchemy.org/en/13/orm/tutorial.html#querying) for further information. 
 
-This [script](../scripts/examples/custom_query.py) demonstrates how to write a custom query from SeisNN.
+This script demonstrates how to write a custom query from SeisNN.
 ```python
 import datetime
 
@@ -33,7 +33,7 @@ for row in query.all():
 
 Output:
 
-```
+```text
 Pick(Time=2017-01-23 13:02:07.430000, Station=H093, Phase=P, Tag=manual, SNR=None)
 Pick(Time=2017-01-23 13:02:07.130000, Station=H098, Phase=P, Tag=manual, SNR=None)
 Pick(Time=2017-01-23 13:02:07.500000, Station=H092, Phase=P, Tag=manual, SNR=None)

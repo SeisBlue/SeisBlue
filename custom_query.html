@@ -121,9 +121,9 @@
       
   <div class="section" id="custom-sql-query">
 <h1>Custom SQL Query<a class="headerlink" href="#custom-sql-query" title="Permalink to this headline">¶</a></h1>
-<p>SeisNN sql database is based on <a class="reference external" href="https://www.sqlalchemy.org/">sqlalchemy</a> object relational mapper(orm),
+<p>SeisNN SQL database is based on <a class="reference external" href="https://www.sqlalchemy.org/">sqlalchemy</a> object relational mapper(orm),
 check out <a class="reference external" href="https://docs.sqlalchemy.org/en/13/orm/tutorial.html#querying">Querying</a> for further information.</p>
-<p>This <a class="reference external" href="../scripts/examples/custom_query.py">script</a> demonstrates how to write a custom query from SeisNN.</p>
+<p>This script demonstrates how to write a custom query from SeisNN.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
 
 <span class="kn">import</span> <span class="nn">seisnn</span>
@@ -151,10 +151,10 @@ check out <a class="reference external" href="https://docs.sqlalchemy.org/en/13/
 </pre></div>
 </div>
 <p>Output:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Pick</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">23</span> <span class="mi">13</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">07.430000</span><span class="p">,</span> <span class="n">Station</span><span class="o">=</span><span class="n">H093</span><span class="p">,</span> <span class="n">Phase</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">Tag</span><span class="o">=</span><span class="n">manual</span><span class="p">,</span> <span class="n">SNR</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">Pick</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">23</span> <span class="mi">13</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">07.130000</span><span class="p">,</span> <span class="n">Station</span><span class="o">=</span><span class="n">H098</span><span class="p">,</span> <span class="n">Phase</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">Tag</span><span class="o">=</span><span class="n">manual</span><span class="p">,</span> <span class="n">SNR</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">Pick</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">23</span> <span class="mi">13</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">07.500000</span><span class="p">,</span> <span class="n">Station</span><span class="o">=</span><span class="n">H092</span><span class="p">,</span> <span class="n">Phase</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">Tag</span><span class="o">=</span><span class="n">manual</span><span class="p">,</span> <span class="n">SNR</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">Pick</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">23</span> <span class="mi">13</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">07.930000</span><span class="p">,</span> <span class="n">Station</span><span class="o">=</span><span class="n">H084</span><span class="p">,</span> <span class="n">Phase</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">Tag</span><span class="o">=</span><span class="n">manual</span><span class="p">,</span> <span class="n">SNR</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Pick(Time=2017-01-23 13:02:07.430000, Station=H093, Phase=P, Tag=manual, SNR=None)
+Pick(Time=2017-01-23 13:02:07.130000, Station=H098, Phase=P, Tag=manual, SNR=None)
+Pick(Time=2017-01-23 13:02:07.500000, Station=H092, Phase=P, Tag=manual, SNR=None)
+Pick(Time=2017-01-23 13:02:07.930000, Station=H084, Phase=P, Tag=manual, SNR=None)
 </pre></div>
 </div>
 </div>
