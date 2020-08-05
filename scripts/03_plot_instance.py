@@ -2,7 +2,7 @@ import seisnn
 
 db = seisnn.data.sql.Client('HL2017.db')
 
-picks = db.get_picks().all()
+picks = db.get_picks(phase='S').all()
 print(picks[0])
 
 waveform = db.get_waveform(from_time=picks[0].time, to_time=picks[0].time,
