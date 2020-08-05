@@ -1,0 +1,6 @@
+seisnn.data.io.get\_example\_list
+=================================
+
+.. currentmodule:: seisnn.data.io
+
+.. autofunction:: get_example_list

@@ -16,6 +16,7 @@ seisnn.data.io
    
       database_to_tfrecord
       get_event
+      get_example_list
       read_dataset
       read_event_list
       read_hyp
