@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom SQL Query &#8212; SeisNN 0.3.0dev documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          SeisNN</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Docker</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="package/seisnn.html">seisnn</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Custom SQL Query</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/custom_query.md.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="custom-sql-query">
+<h1>Custom SQL Query<a class="headerlink" href="#custom-sql-query" title="Permalink to this headline">¶</a></h1>
+<p>SeisNN sql database is based on <a class="reference external" href="https://www.sqlalchemy.org/">sqlalchemy</a> object relational mapper(orm),
+check out <a class="reference external" href="https://docs.sqlalchemy.org/en/13/orm/tutorial.html#querying">Querying</a> for further information.</p>
+<p>This <a class="reference external" href="../scripts/examples/custom_query.py">script</a> demonstrates how to write a custom query from SeisNN.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">import</span> <span class="nn">seisnn</span>
+
+<span class="c1"># connect to sql database</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="s1">&#39;HL2017.db&#39;</span><span class="p">)</span>
+
+<span class="c1"># open sql session, it will terminate the session when exit `with` statement</span>
+<span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+
+    <span class="c1"># get related table class from name</span>
+    <span class="n">Pick</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_table_class</span><span class="p">(</span><span class="s1">&#39;pick&#39;</span><span class="p">)</span>
+
+    <span class="c1"># query the full Pick table</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="p">)</span>
+
+    <span class="c1"># filter wanted criteria</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">))</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="c1"># use .all() to make query into a list and print each row</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Pick</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">23</span> <span class="mi">13</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">07.430000</span><span class="p">,</span> <span class="n">Station</span><span class="o">=</span><span class="n">H093</span><span class="p">,</span> <span class="n">Phase</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">Tag</span><span class="o">=</span><span class="n">manual</span><span class="p">,</span> <span class="n">SNR</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">Pick</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">23</span> <span class="mi">13</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">07.130000</span><span class="p">,</span> <span class="n">Station</span><span class="o">=</span><span class="n">H098</span><span class="p">,</span> <span class="n">Phase</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">Tag</span><span class="o">=</span><span class="n">manual</span><span class="p">,</span> <span class="n">SNR</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">Pick</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">23</span> <span class="mi">13</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">07.500000</span><span class="p">,</span> <span class="n">Station</span><span class="o">=</span><span class="n">H092</span><span class="p">,</span> <span class="n">Phase</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">Tag</span><span class="o">=</span><span class="n">manual</span><span class="p">,</span> <span class="n">SNR</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">Pick</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">23</span> <span class="mi">13</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mf">07.930000</span><span class="p">,</span> <span class="n">Station</span><span class="o">=</span><span class="n">H084</span><span class="p">,</span> <span class="n">Phase</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">Tag</span><span class="o">=</span><span class="n">manual</span><span class="p">,</span> <span class="n">SNR</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Jimmy.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

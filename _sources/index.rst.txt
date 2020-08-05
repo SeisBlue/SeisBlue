@@ -13,16 +13,13 @@ Getting started
 
     install
     docker
-    tutorial
 
-
-Scripts
+Tutorial
 ---------------
 .. toctree::
     :maxdepth: 1
 
-    scripts
-
+    tutorial
 
 Notebooks
 ---------------
@@ -31,6 +28,12 @@ Notebooks
 
     notebooks
 
+Scripts
+---------------
+.. toctree::
+    :maxdepth: 1
+
+    scripts
 
 Library Reference
 -----------------
