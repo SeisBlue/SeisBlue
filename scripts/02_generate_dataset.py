@@ -1,11 +1,11 @@
 import seisnn
 
-dataset = 'HL2017'
+dataset = 'HL2017_S'
 db = seisnn.data.sql.Client('HL2017.db')
 db.pick_summery()
-db.get_picks()
+pick_list = db.get_picks(phase='S').all()
 
-db.generate_training_data(dataset)
+db.generate_training_data(pick_list, dataset)
 
 db.clear_table('waveform')
 db.read_tfrecord_header(dataset)

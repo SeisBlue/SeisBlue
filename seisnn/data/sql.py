@@ -355,7 +355,6 @@ class Client:
         with self.session_scope() as session:
             Pick(time, station, phase, tag).add_db(session)
 
-
     def get_picks(self, from_time=None, to_time=None,
                   station=None, phase=None, tag=None):
         """
@@ -469,26 +468,27 @@ class Client:
                 print(f'{len(no_geom_station)} stations without geometry:')
                 print([stat[0] for stat in no_geom_station], '\n')
 
-    def generate_training_data(self, dataset):
+    def generate_training_data(self, pick_list, dataset):
         """
         Generate TFrecords from database.
 
+        :param pick_list:
         :param str dataset: Output directory.
         """
         config = utils.get_config()
         dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
         utils.make_dirs(dataset_dir)
-        par = functools.partial(io._get_example_list,
+        par = functools.partial(io.get_example_list,
                                 database=self.database)
-
-        station_list = self.list_distinct_items('pick', 'station')
-        for station in station_list:
-            file_name = f'{station}.tfrecord'
-            picks = self.get_picks(station=station).all()
+        batch_size = 128
+        total = len(pick_list)/batch_size
+        for index, picks in enumerate(utils.batch(pick_list, n=batch_size)):
             example_list = utils.parallel(par, picks)
+
+            file_name = f'{index:0>5}.tfrecord'
             save_file = os.path.join(dataset_dir, file_name)
             io.write_tfrecord(example_list, save_file)
-            print(f'{file_name} done')
+            print(f'output {file_name} / {total}')
 
     def read_tfrecord_header(self, dataset):
         """

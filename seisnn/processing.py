@@ -65,6 +65,7 @@ def get_pdf(stream, sigma=0.1):
                 phase_pdf += pick_pdf / pick_pdf.max()
 
         stream.pdf[:, i] = phase_pdf
+
     return stream
 
 
