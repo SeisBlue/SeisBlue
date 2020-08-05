@@ -134,13 +134,13 @@ check out <a class="reference external" href="https://docs.sqlalchemy.org/en/13/
 <span class="c1"># open sql session, it will terminate the session when exit `with` statement</span>
 <span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
 
-    <span class="c1"># get related table class from name</span>
+    <span class="c1"># get Pick table class from name</span>
     <span class="n">Pick</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_table_class</span><span class="p">(</span><span class="s1">&#39;pick&#39;</span><span class="p">)</span>
 
-    <span class="c1"># query the full Pick table</span>
+    <span class="c1"># query all columns form Pick table</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="p">)</span>
 
-    <span class="c1"># filter wanted criteria</span>
+    <span class="c1"># filter data with criteria</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">))</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>

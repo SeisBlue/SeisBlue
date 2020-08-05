@@ -1,3 +1,4 @@
 # Tutorial
 
-[custom sql query](custom_query.md)
+## SQL
+- [custom sql query](custom_query.md)

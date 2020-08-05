@@ -15,13 +15,13 @@ db = seisnn.data.sql.Client('HL2017.db')
 # open sql session, it will terminate the session when exit `with` statement
 with db.session_scope() as session:
 
-    # get related table class from name
+    # get Pick table class from name
     Pick = db.get_table_class('pick')
 
-    # query the full Pick table
+    # query all columns form Pick table
     query = session.query(Pick)
 
-    # filter wanted criteria
+    # filter data with criteria
     query = query.filter(Pick.phase.like('P'))
     query = query.filter(Pick.time >= datetime.datetime(2017, 1, 23, 13, 2, 7))
     query = query.filter(Pick.time <= datetime.datetime(2017, 1, 23, 13, 2, 8))
