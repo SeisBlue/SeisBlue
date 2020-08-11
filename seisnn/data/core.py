@@ -1,6 +1,8 @@
 """
 Core
 """
+import numpy as np
+import obspy
 
 from seisnn import data
 from seisnn import plot
@@ -23,24 +25,63 @@ class Instance:
     channel = None
 
     phase = None
-    pdf = None
+    label = None
+    predict = None
 
-    def __init__(self, example):
+    def __init__(self, input_data=None):
+        if input_data is None:
+            pass
         try:
-            if isinstance(example, data.sql.Waveform):
-                dataset = data.io.read_dataset(example.dataset)
-                for item in dataset.skip(example.data_index).take(1):
-                    example = item
+            if isinstance(input_data, data.sql.Waveform):
+                dataset = data.io.read_dataset(input_data.dataset)
+                for item in dataset.skip(input_data.data_index).take(1):
+                    input_data = item
 
-            self.from_example(example)
-        except Exception as e:
-            print(e)
+            self.from_example(input_data)
+        except TypeError:
+            pass
+
+        except Exception as error:
+            print(f'{type(error).__name__}: {error}')
 
     def __repr__(self):
         return f"Instance(" \
                f"ID={self.id}, " \
                f"Start Time={self.starttime}, " \
                f"Phase={self.phase})"
+
+    def from_stream(self, stream):
+        """
+
+        :param obspy.Trace stream:
+        :return:
+        """
+        trace = stream.traces[0]
+
+        self.id = trace.id
+        self.station = trace.stats.station
+
+        self.starttime = trace.stats.starttime
+        self.endtime = trace.stats.endtime
+        self.npts = trace.stats.npts
+        self.delta = trace.stats.delta
+
+        channel = []
+        trace = np.zeros([3008, 1])
+        for i, comp in enumerate(['Z']):
+            try:
+                st = stream.select(component=comp)
+                trace[:, i] = st.traces[0].data
+                channel.append(st.traces[0].stats.channel)
+            except IndexError:
+                pass
+
+            except Exception as error:
+                print(f'{type(error).__name__}: {error}')
+
+        self.trace = trace
+        self.channel = channel
+        return self
 
     def from_feature(self, feature):
         """
@@ -52,16 +93,17 @@ class Instance:
         self.id = feature['id']
         self.station = feature['station']
 
-        self.starttime = feature['starttime']
-        self.endtime = feature['endtime']
+        self.starttime = obspy.UTCDateTime(feature['starttime'])
+        self.endtime = obspy.UTCDateTime(feature['endtime'])
         self.npts = feature['npts']
         self.delta = feature['delta']
 
         self.trace = feature['trace']
         self.channel = feature['channel']
 
-        self.pdf = feature['pdf']
         self.phase = feature['phase']
+        self.label = feature['label']
+        self.predict = feature['predict']
 
     def to_feature(self):
         """
@@ -73,8 +115,8 @@ class Instance:
         feature = {
             'id': self.id,
             'station': self.station,
-            'starttime': self.starttime,
-            'endtime': self.endtime,
+            'starttime': self.starttime.isoformat(),
+            'endtime': self.endtime.isoformat(),
 
             'npts': self.npts,
             'delta': self.delta,
@@ -83,7 +125,8 @@ class Instance:
             'channel': self.channel,
 
             'phase': self.phase,
-            'pdf': self.pdf,
+            'label': self.label,
+            'predict': self.predict,
         }
         return feature
 
@@ -116,14 +159,19 @@ class Instance:
         example = data.example_proto.feature_to_example(feature)
         data.io.write_tfrecord([example], file_path)
 
+    def get_label(self, database, **kwargs):
+        self.phase = ['Noise', 'P', 'S']
+        self.label = processing.get_label(self, database, **kwargs)
+
+
     def get_picks(self, phase, pick_set):
         """
-        Extract picks from pdf.
+        Extract picks from predict.
 
         :param str phase: Phase name.
         :param str pick_set: Pick set name.
         """
-        processing.get_picks_from_pdf(self, phase, pick_set)
+        processing.get_picks_from_predict(self, phase, pick_set)
 
     def plot(self, **kwargs):
         """
@@ -131,36 +179,7 @@ class Instance:
 
         :param kwargs: Keywords pass into plot.
         """
-        feature = self.to_feature()
-        plot.plot_dataset(feature, **kwargs)
-
-
-def parallel_to_tfrecord(batch_list):
-    """
-    Writed TFRecord to directory.
-
-    :param batch_list:
-    :return: List of results.
-    """
-    from seisnn.utils import parallel
-
-    example_list = parallel(par=_to_tfrecord, file_list=batch_list)
-    return example_list
-
-
-def _to_tfrecord(batch):
-    """
-    Returns example list from batched example.
-
-    :param batch: Batch list of example.
-    """
-    example_list = []
-    for example in batch:
-        instance = Instance(example)
-        instance.get_picks('p', 'predict')
-        feature = instance.to_feature()
-        example_list.append(data.example_proto.feature_to_example(feature))
-    return example_list
+        plot.plot_dataset(self, **kwargs)
 
 
 if __name__ == "__main__":

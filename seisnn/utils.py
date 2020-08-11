@@ -34,16 +34,16 @@ def make_dirs(path):
         os.makedirs(path, mode=0o777)
 
 
-def batch(iterable, n=1):
+def batch(iterable, size=1):
     """
     Yield a batch from a list.
 
     :param iterable: Data list.
-    :param int n: Batch size.
+    :param int size: Batch size.
     """
     iter_len = len(iterable)
-    for ndx in range(0, iter_len, n):
-        yield iterable[ndx:min(ndx + n, iter_len)]
+    for ndx in range(0, iter_len, size):
+        yield iterable[ndx:min(ndx + size, iter_len)]
 
 
 def parallel(par, file_list):

@@ -12,6 +12,7 @@ import sqlalchemy.orm
 import sqlalchemy.ext.declarative
 from obspy import UTCDateTime
 
+import seisnn.processing
 from seisnn.data import core, io
 from seisnn import plot
 from seisnn import utils
@@ -155,8 +156,8 @@ class Waveform(Base):
 
     def __repr__(self):
         return f"Waveform(" \
-               f"Start Time={self.starttime}, " \
-               f"End Time={self.endtime}, " \
+               f"Start={self.starttime}, " \
+               f"End={self.endtime}, " \
                f"Station={self.station}, " \
                f"Dataset={self.dataset}, " \
                f"Index={self.data_index})"
@@ -468,27 +469,29 @@ class Client:
                 print(f'{len(no_geom_station)} stations without geometry:')
                 print([stat[0] for stat in no_geom_station], '\n')
 
-    def generate_training_data(self, pick_list, dataset):
+    def generate_training_data(self, pick_list, dataset, chunk_size=64):
         """
         Generate TFrecords from database.
 
-        :param pick_list:
-        :param str dataset: Output directory.
+        :param pick_list: List of picks from Pick SQL query.
+        :param str dataset: Output directory name.
+        :param int chunk_size: Number of data stores in TFRecord.
         """
         config = utils.get_config()
         dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
         utils.make_dirs(dataset_dir)
-        par = functools.partial(io.get_example_list,
-                                database=self.database)
-        batch_size = 128
-        total = len(pick_list)/batch_size
-        for index, picks in enumerate(utils.batch(pick_list, n=batch_size)):
+
+        par = functools.partial(seisnn.processing.get_example_list, database=self.database)
+
+        total_batch = int(len(pick_list) / chunk_size)
+        batch_picks = utils.batch(pick_list, size=chunk_size)
+        for index, picks in enumerate(batch_picks):
             example_list = utils.parallel(par, picks)
 
             file_name = f'{index:0>5}.tfrecord'
             save_file = os.path.join(dataset_dir, file_name)
             io.write_tfrecord(example_list, save_file)
-            print(f'output {file_name} / {total}')
+            print(f'output {file_name} / {total_batch}')
 
     def read_tfrecord_header(self, dataset):
         """
@@ -504,8 +507,8 @@ class Client:
                 try:
                     Waveform(instance, dataset, index).add_db(session)
                     index += 1
-                except Exception as e:
-                    print(e)
+                except Exception as error:
+                    print(f'{type(error).__name__}: {error}')
 
         print(f'Input {index} waveforms.')
 

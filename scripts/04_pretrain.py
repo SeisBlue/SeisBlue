@@ -3,9 +3,7 @@ import shutil
 
 import tensorflow as tf
 
-from seisnn.data import example_proto
-from seisnn.data import io
-from seisnn.data import logger
+from seisnn.data import example_proto, io, logger
 from seisnn.data.core import Instance
 from seisnn.model.settings import model, optimizer, train_step
 from seisnn.plot import plot_loss
@@ -26,30 +24,30 @@ dataset = io.read_dataset(dataset).shuffle(100000)
 
 val = next(iter(dataset.batch(1)))
 val_trace = val['trace']
-val_pdf = val['pdf']
+val_label = val['label']
 
 ckpt = tf.train.Checkpoint(model=model, optimizer=optimizer)
 ckpt_manager = tf.train.CheckpointManager(ckpt, SAVE_MODEL_PATH,
                                           max_to_keep=100)
 
-EPOCHS = 1
+EPOCHS = 10
 for epoch in range(EPOCHS):
     n = 0
     loss_buffer = []
     for train in dataset.prefetch(100).batch(1):
         train_trace = train['trace']
-        train_pdf = train['pdf']
+        train_label = train['label']
 
-        train_loss, val_loss = train_step(train_trace, train_pdf, val_trace,
-                                          val_pdf)
+        train_loss, val_loss = train_step(train_trace, train_label,
+                                          val_trace, val_label)
         loss_buffer.append([train_loss, val_loss])
 
         if n % 100 == 0:
-            print(
-                f'epoch {epoch + 1}, step {n}, loss= {train_loss.numpy():f}, val= {val_loss.numpy():f}')
+            print(f'epoch {epoch + 1}, step {n}, '
+                  f'loss= {train_loss.numpy():f},'
+                  f' val= {val_loss.numpy():f}')
 
-            pdf = model.predict(val_trace)
-            val['pdf'] = tf.concat([val_pdf, pdf], axis=3)
+            val['predict'] = model.predict(val_trace)
 
             phase = val['phase'].to_list()
 
@@ -62,8 +60,7 @@ for epoch in range(EPOCHS):
 
             example = next(example_proto.batch_iterator(val))
             instance = Instance(example)
-            # instance.get_picks('P', 'pre_train')
-            # instance.get_picks('S', 'pre_train')
+
             instance.to_tfrecord(
                 os.path.join(SAVE_HISTORY_PATH, f'{title}.tfrecord'))
 
@@ -72,9 +69,7 @@ for epoch in range(EPOCHS):
             instance.plot()
         n += 1
 
-
 ckpt_save_path = ckpt_manager.save()
 print(f'Saving pre-train checkpoint to {ckpt_save_path}')
-
 
 plot_loss(os.path.join(SAVE_MODEL_PATH, f'{model_instance}.log'))

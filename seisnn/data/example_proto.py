@@ -1,7 +1,6 @@
 """
 Example Protocol
 """
-
 import numpy as np
 import tensorflow as tf
 
@@ -32,45 +31,6 @@ def _int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 
 
-def stream_to_feature(stream):
-    """
-    Returns feature dict from obspy.Stream.
-
-    :param obspy.Stream stream: Preprocessed stream object from
-        seisnn.processing.stream_preprocessing
-    :rtype: dict
-    :return: feature dict.
-    """
-    trace = stream[0]
-
-    feature = {
-        'id': trace.id,
-        'starttime': trace.stats.starttime.isoformat(),
-        'endtime': trace.stats.endtime.isoformat(),
-        'station': trace.stats.station,
-        'npts': trace.stats.npts,
-        'delta': trace.stats.delta,
-    }
-
-    channel = []
-    trace = np.zeros([3008, 1])
-    for i, comp in enumerate(['Z']):
-        try:
-            st = stream.select(component=comp)
-            trace[:, i] = st.traces[0].data
-            channel.append(st.traces[0].stats.channel)
-        except IndexError:
-            pass
-
-    feature['trace'] = trace
-    feature['channel'] = channel
-
-    feature['phase'] = stream.phase
-    feature['pdf'] = np.asarray(stream.pdf)
-
-    return feature
-
-
 def feature_to_example(feature):
     """
     Returns tf.SequenceExample serialize string from feature dict.
@@ -79,7 +39,7 @@ def feature_to_example(feature):
     :return: Serialized example.
     """
     # Convert array data into numpy bytes string.
-    for key in ['trace', 'pdf']:
+    for key in ['trace', 'label', 'predict']:
         if isinstance(feature[key], tf.Tensor):
             feature[key] = feature[key].numpy()
 
@@ -95,8 +55,10 @@ def feature_to_example(feature):
 
         'trace': _bytes_feature(
             feature['trace'].astype(dtype=np.float32).tostring()),
-        'pdf': _bytes_feature(
-            feature['pdf'].astype(dtype=np.float32).tostring()),
+        'label': _bytes_feature(
+            feature['label'].astype(dtype=np.float32).tostring()),
+        'predict': _bytes_feature(
+            feature['predict'].astype(dtype=np.float32).tostring()),
     }
     context = tf.train.Features(feature=context_data)
 
@@ -137,7 +99,8 @@ def sequence_example_parser(record):
             (), tf.float32, default_value=tf.zeros([], dtype=tf.float32)),
 
         "trace": tf.io.FixedLenFeature((), tf.string, default_value=""),
-        "pdf": tf.io.FixedLenFeature((), tf.string, default_value=""),
+        "label": tf.io.FixedLenFeature((), tf.string, default_value=""),
+        "predict": tf.io.FixedLenFeature((), tf.string, default_value=""),
     }
     sequence = {
         "channel": tf.io.VarLenFeature(tf.string),
@@ -162,7 +125,7 @@ def sequence_example_parser(record):
         "phase": tf.RaggedTensor.from_sparse(parsed_sequence['phase']),
     }
 
-    for trace in ['trace', 'pdf']:
+    for trace in ['trace', 'label', 'predict']:
         trace_data = tf.io.decode_raw(parsed_context[trace], tf.float32)
         parsed_example[trace] = tf.reshape(
             trace_data, [1, parsed_example['npts'], -1])
@@ -189,8 +152,10 @@ def eval_eager_tensor(parsed_example):
 
         "trace": parsed_example['trace'],
         "channel": parsed_example['channel'],
-        "pdf": parsed_example['pdf'],
+
         "phase": parsed_example['phase'],
+        "label": parsed_example['label'],
+        "predict": parsed_example['predict'],
     }
 
     for key in ['channel', 'phase']:
@@ -222,8 +187,10 @@ def batch_iterator(batch):
 
             "trace": batch['trace'][index, :],
             "channel": batch['channel'][index, :],
-            "pdf": batch['pdf'][index, :],
+
             "phase": batch['phase'][index, :],
+            "label": batch['label'][index, :],
+            "predict": batch['predict'][index, :],
         }
         yield parsed_example
 

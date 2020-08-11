@@ -7,8 +7,6 @@ import os
 import cartopy.crs as ccrs
 from cartopy.io import img_tiles
 from cartopy.mpl import ticker
-from matplotlib import lines
-from obspy import UTCDateTime
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -36,58 +34,52 @@ def color_palette(color=1, shade=1):
     return palette[color][shade]
 
 
-def get_time_array(feature):
+def get_time_array(instance):
     """
     Returns time step array from feature dict.
 
-    :type feature: dict
-    :param feature: Feature dict.
+    :param instance: Data instance.
     :rtype: numpy.array
     :return: Time array.
     """
-    time_array = np.arange(feature['npts'])
-    time_array = time_array * feature['delta']
+    time_array = np.arange(instance.npts)
+    time_array = time_array * instance.delta
     return time_array
 
 
-def plot_dataset(feature, title=None, save_dir=None):
+def plot_dataset(instance, title=None, save_dir=None):
     """
-    Plot trace and pdf.
+    Plot trace and label.
 
-    :param feature:
+    :param instance:
     :param title:
     :param save_dir:
     """
     if title is None:
-        title = f'{feature["starttime"]}_{feature["id"][:-3]}'
+        title = f'{instance.starttime}_{instance.id[:-3]}'
 
     # plot trace
-    subplot = len(feature['channel']) + 1
+    subplot = len(instance.channel) + 1
     fig = plt.figure(figsize=(8, subplot * 2))
-    for i, chan in enumerate(feature['channel']):
+    for i, chan in enumerate(instance.channel):
         ax = fig.add_subplot(subplot, 1, i + 1)
         plt.title(title + chan)
 
-        trace = feature['trace'][-1, :, i]
+        trace = instance.trace[-1, :, i]
 
-        ax.plot(get_time_array(feature), trace, "k-", label=chan)
+        ax.plot(get_time_array(instance), trace, "k-", label=chan)
         ax.legend(loc=1)
 
     # plot label
     ax = fig.add_subplot(subplot, 1, subplot)
     ax.set_ylim([-0.05, 1.05])
-
-    for i in range(feature['pdf'].shape[2]):
-        phase = feature['phase'][i % 2]
-        if phase:
-            color = color_palette(i % 2, int(i / 2))
-            ax.plot(get_time_array(feature), feature['pdf'][-1, :, i],
-                    color=color, label=phase)
+    for i, label in enumerate(['label', 'predict']):
+        for j, phase in enumerate(instance.phase):
+            color = color_palette(j, i)
+            ax.plot(get_time_array(instance),
+                    getattr(instance, label)[-1, :, j],
+                    color=color, label=f'{phase} {label}')
             ax.legend()
-
-        else:
-            label_only = [lines.Line2D([0], [0], color="#AAAAAA", lw=2)]
-            ax.legend(label_only, ['No phase data'])
 
     threshold = 0.5
     ax.hlines(threshold, 0, 30, lw=1, linestyles='--')

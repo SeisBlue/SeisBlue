@@ -3,11 +3,9 @@ Input / Output
 """
 
 import collections
-import functools
 import multiprocessing as mp
 import os
-import pickle
-import shutil
+import warnings
 
 from lxml import etree
 from obspy import Stream
@@ -17,7 +15,6 @@ import obspy.io.nordic.core
 import tensorflow as tf
 
 from seisnn.data import example_proto
-from seisnn import processing
 from seisnn import utils
 
 
@@ -79,10 +76,10 @@ def get_event(filename, debug=False):
     :rtype: list
     :return: List of events.
     """
-    import warnings
     with warnings.catch_warnings():
         if not debug:
             warnings.simplefilter("ignore")
+
         events = []
         for file in filename:
             try:
@@ -91,8 +88,10 @@ def get_event(filename, debug=False):
                 if debug:
                     print(err)
                 continue
+
             for event in catalog.events:
                 events.append(event)
+
         return events
 
 
@@ -124,110 +123,6 @@ def read_sds(window):
         stream_dict[geophone_type].append(trace)
 
     return stream_dict
-
-
-def database_to_tfrecord(database, output):
-    """
-    Write Tfrecord from SDS database.
-
-    :param str database: SDS root path
-    :param str output: TFRecord output directory.
-    """
-    import itertools
-    import operator
-    from seisnn.data.sql import Client, Pick
-    config = utils.get_config()
-    dataset_dir = os.path.join(config['DATASET_ROOT'], output)
-    utils.make_dirs(dataset_dir)
-
-    db = Client(database)
-    query = db.get_picks().order_by(Pick.station)
-    picks_groupby_station = [list(g) for k, g in itertools.groupby(
-        query, operator.attrgetter('station'))]
-
-    par = functools.partial(get_example_list, database=database)
-    for station_picks in picks_groupby_station:
-        station = station_picks[0].station
-        file_name = f'{station}.tfrecord'
-
-        example_list = utils.parallel(par, station_picks)
-        save_file = os.path.join(dataset_dir, file_name)
-        write_tfrecord(example_list, save_file)
-        print(f'{file_name} done')
-
-
-def get_example_list(batch_picks, database):
-    """
-    Returns example list form list of picks and SQL database.
-
-    :param list batch_picks: List of picks.
-    :param str database: SQL database root.
-    :return:
-    """
-    example_list = []
-    for pick in batch_picks:
-        window = processing.get_window(pick)
-        streams = read_sds(window)
-
-        for _, stream in streams.items():
-            stream.station = pick.station
-            stream = processing.stream_preprocessing(stream, database)
-            feature = example_proto.stream_to_feature(stream)
-            example = example_proto.feature_to_example(feature)
-            example_list.append(example)
-    return example_list
-
-
-def write_station_dataset(dataset_output_dir, sds_root,
-                          nslc,
-                          start_time, end_time,
-                          trace_length=30, sample_rate=100,
-                          remove_dir=False):
-    """
-    Write pickled trace to output directory.
-
-    :param dataset_output_dir: Output directory.
-    :param sds_root: SDS database root directory.
-    :param nslc: Network, Station, Location, Channel.
-    :param start_time: Start time.
-    :param end_time: End time.
-    :param trace_length: Trace length.
-    :param sample_rate: Sample rate.
-    :param remove_dir: If True then remove exist directory.
-    """
-    if remove_dir:
-        shutil.rmtree(dataset_output_dir, ignore_errors=True)
-    os.makedirs(dataset_output_dir, exist_ok=True)
-
-    client = obspy.clients.filesystem.sds.Client(sds_root=sds_root)
-    net, sta, loc, chan = nslc
-    t = start_time
-    counter = 0
-
-    while t < end_time:
-        stream = client.get_waveforms(net, sta, loc, chan, t,
-                                      t + trace_length + 1)
-        stream = processing.signal_preprocessing(stream)
-        points = trace_length * sample_rate + 1
-
-        for trace in stream:
-            try:
-                processing.trim_trace(trace, points)
-
-            except IndexError as err:
-                print(err)
-                stream.remove(trace)
-                continue
-
-            finally:
-                trace.picks = []
-                time_stamp = trace.stats.starttime.isoformat()
-                trace.write(
-                    f'{dataset_output_dir}/{time_stamp}{trace.get_id()}.pkl',
-                    format="PICKLE")
-                counter += 1
-
-    t += trace_length
 
 
 def read_hyp(hyp):

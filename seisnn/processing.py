@@ -7,92 +7,99 @@ import obspy
 import scipy.signal
 import scipy.stats
 
-from seisnn.data import sql
+from seisnn.data import core, example_proto, sql
+from seisnn.data.io import read_sds
 
 
-def get_window(pick, trace_length=30):
+def get_time_window(anchor_time, station, trace_length=30, shift=0):
     """
-    Returns time window from pick.
+    Returns time window from anchor time.
 
-    :param pick: Pick object.
+    :param anchor_time: Anchor of the time window.
+    :param str station: Station name.
     :param int trace_length: (Optional.) Trace length, default is 30.
+    :param shift: (Optional.) Shift in sec,
+        if 'random' will shift randomly within the trace length.
     :rtype: dict
     :return: Time window.
     """
-    rng = np.random.default_rng()
-    pick_time = obspy.UTCDateTime(pick.time)
+    if shift == 'random':
+        rng = np.random.default_rng()
+        shift = rng.random() * trace_length
 
-    starttime = pick_time - trace_length + rng.random() * trace_length
+    starttime = obspy.UTCDateTime(anchor_time) - shift
     endtime = starttime + trace_length
 
     window = {
         'starttime': starttime,
         'endtime': endtime,
-        'station': pick.station,
+        'station': station,
     }
     return window
 
 
-def get_pdf(stream, sigma=0.1):
+def get_label(instance, database, width=0.1):
     """
-    Returns probability density function from stream.
+    Add generated label to stream.
 
-    :param obspy.Stream stream: Stream object.
-    :param float sigma: Width of normalize distribution.
-    :rtype: obspy.Stream
-    :return: Stream with pdf.
+    :param instance: Data instance object.
+    :param str database: SQL database.
+    :param float width: Width (sigma) of the Gaussian distribution.
+    :rtype: np.array
+    :return: Label.
     """
-    trace = stream[0]
-    start_time = trace.stats.starttime
-    x_time = trace.times(reftime=start_time)
+    db = sql.Client(database)
 
-    stream.pdf = np.zeros([3008, 2])
-    stream.phase = []
+    x_time = np.arange(instance.npts) * instance.delta
+    label = np.ones([instance.npts, 3])
 
     for i, phase in enumerate(['P', 'S']):
-        if stream.picks.get(phase):
-            stream.phase.append(phase)
-        else:
-            stream.phase.append('')
-            continue
+        picks = db.get_picks(from_time=instance.starttime.datetime,
+                             to_time=instance.endtime.datetime,
+                             station=instance.station,
+                             phase=phase).all()
 
-        phase_pdf = np.zeros((len(x_time),))
-        for pick in stream.picks[phase]:
-            pick_time = obspy.UTCDateTime(pick.time) - start_time
-            pick_pdf = scipy.stats.norm.pdf(x_time, pick_time, sigma)
+        phase_label = np.zeros([instance.npts, ])
+        for pick in picks:
+            pick_time = obspy.UTCDateTime(pick.time) - instance.starttime
+            pick_label = scipy.stats.norm.pdf(x_time, pick_time, width)
 
-            if pick_pdf.max():
-                phase_pdf += pick_pdf / pick_pdf.max()
+            if pick_label.max():
+                phase_label += pick_label / pick_label.max()
 
-        stream.pdf[:, i] = phase_pdf
+        label[:, i + 1] = phase_label
 
-    return stream
+    label[:, 0] = label[:, 0] - label[:, 1] - label[:, 2]
+
+    return label
 
 
-def get_picks_from_pdf(instance, phase, pick_set, height=0.5, distance=100):
+def get_picks_from_predict(instance, tag, database,
+                           height=0.5, distance=100):
     """
-    Extract pick from probability density function.
+    Extract pick from predict.
 
     :param instance: Data instance.
-    :param str phase: Phase name.
-    :param str pick_set: Pick set name.
-    :param float height: Height threshold, from 0 to 1.
-    :param int distance: Distance threshold.
+    :param str tag: Output pick tag name.
+    :param str database: SQL database name.
+    :param float height: Height threshold, from 0 to 1, default is 0.5.
+    :param int distance: Distance threshold in data point.
     """
-    i = instance.phase.index(phase)
-    peaks, properties = scipy.signal.find_peaks(instance.pdf[-1, :, i],
-                                                height=height,
-                                                distance=distance)
-    db = sql.Client('test.db')
-    for p in peaks:
-        if p:
-            pick_time = obspy.UTCDateTime(
-                instance.starttime) + p * instance.delta
+    db = sql.Client(database)
+    for i in instance.predict.shape[2]:
+        peaks, _ = scipy.signal.find_peaks(instance.predict[-1, :, i],
+                                           height=height,
+                                           distance=distance)
 
-            db.add_pick(time=pick_time.datetime,
-                        station=instance.station,
-                        phase=instance.phase[i],
-                        tag=pick_set)
+        for peak in peaks:
+            if peak:
+                pick_time = obspy.UTCDateTime(
+                    instance.starttime) + peak * instance.delta
+
+                db.add_pick(time=pick_time.datetime,
+                            station=instance.station,
+                            phase=instance.phase[i],
+                            tag=tag)
 
 
 def get_picks_from_dataset(dataset):
@@ -142,34 +149,6 @@ def get_time_residual(val_pick, pred_pick):
     return residual
 
 
-def stream_preprocessing(stream, database):
-    """
-    Return processed stream with pdf.
-
-    :param obspy.Stream stream: Stream object.
-    :param str database: SQL database root.
-    :rtype: obspy.Stream
-    :return: Processed Stream.
-    """
-    from seisnn.data import sql
-    db = sql.Client(database)
-    stream = signal_preprocessing(stream)
-
-    starttime = stream.traces[0].stats.starttime.datetime
-    endtime = stream.traces[0].stats.endtime.datetime
-    station = stream.traces[0].stats.station
-
-    stream.picks = {}
-    for phase in ["P", "S"]:
-        picks = db.get_picks(from_time=starttime, to_time=endtime,
-                             station=station, phase=phase)
-        if picks:
-            stream.picks[phase] = picks
-
-    stream = get_pdf(stream)
-    return stream
-
-
 def signal_preprocessing(stream):
     """
     Return a signal processed stream.
@@ -199,10 +178,44 @@ def trim_trace(stream, points=3008):
     start_time = trace.stats.starttime
     dt = (trace.stats.endtime - trace.stats.starttime) / (trace.data.size - 1)
     end_time = start_time + dt * (points - 1)
-    stream.trim(start_time, end_time, nearest_sample=True, pad=True,
+    stream.trim(start_time,
+                end_time,
+                nearest_sample=True,
+                pad=True,
                 fill_value=0)
     return stream
 
 
 if __name__ == "__main__":
     pass
+
+
+def get_example_list(batch_picks, database):
+    """
+    Returns example list form list of picks and SQL database.
+
+    :param list batch_picks: List of picks.
+    :param str database: SQL database root.
+    :return:
+    """
+
+    example_list = []
+    for pick in batch_picks:
+
+        window = get_time_window(anchor_time=pick.time,
+                                 station=pick.station,
+                                 shift='random')
+
+        streams = read_sds(window)
+        for _, stream in streams.items():
+            stream = signal_preprocessing(stream)
+
+            instance = core.Instance().from_stream(stream)
+            instance.phase = ['Noise', 'P', 'S']
+            instance.get_label(database)
+            instance.predict = np.zeros(instance.label.shape)
+
+            feature = instance.to_feature()
+            example = example_proto.feature_to_example(feature)
+            example_list.append(example)
+    return example_list

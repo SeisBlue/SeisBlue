@@ -6,7 +6,7 @@ import tensorflow as tf
 
 from seisnn.model.unet import nest_net
 
-model = nest_net(color_type=1, num_class=2)
+model = nest_net(color_type=1, num_class=3)
 optimizer = tf.keras.optimizers.Adam(1e-4)
 bce = tf.keras.losses.BinaryCrossentropy()
 
