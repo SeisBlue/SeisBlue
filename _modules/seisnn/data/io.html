@@ -118,11 +118,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">from</span> <span class="nn">obspy</span> <span class="kn">import</span> <span class="n">Stream</span>
@@ -132,7 +130,6 @@
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
 <span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">example_proto</span>
-<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">processing</span>
 <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
 
 
@@ -194,10 +191,10 @@
 <span class="sd">    :rtype: list</span>
 <span class="sd">    :return: List of events.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">warnings</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">debug</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
         <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -206,8 +203,10 @@
                 <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
                 <span class="k">continue</span>
+
             <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
                 <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">events</span></div>
 
 
@@ -239,110 +238,6 @@
         <span class="n">stream_dict</span><span class="p">[</span><span class="n">geophone_type</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">stream_dict</span></div>
-
-
-<div class="viewcode-block" id="database_to_tfrecord"><a class="viewcode-back" href="../../../package/seisnn.data.io.database_to_tfrecord.html#seisnn.data.io.database_to_tfrecord">[docs]</a><span class="k">def</span> <span class="nf">database_to_tfrecord</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Write Tfrecord from SDS database.</span>
-
-<span class="sd">    :param str database: SDS root path</span>
-<span class="sd">    :param str output: TFRecord output directory.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">itertools</span>
-    <span class="kn">import</span> <span class="nn">operator</span>
-    <span class="kn">from</span> <span class="nn">seisnn.data.sql</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Pick</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-    <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATASET_ROOT&#39;</span><span class="p">],</span> <span class="n">output</span><span class="p">)</span>
-    <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
-
-    <span class="n">db</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_picks</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span><span class="p">)</span>
-    <span class="n">picks_groupby_station</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
-        <span class="n">query</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;station&#39;</span><span class="p">))]</span>
-
-    <span class="n">par</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">get_example_list</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">station_picks</span> <span class="ow">in</span> <span class="n">picks_groupby_station</span><span class="p">:</span>
-        <span class="n">station</span> <span class="o">=</span> <span class="n">station_picks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">station</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">station</span><span class="si">}</span><span class="s1">.tfrecord&#39;</span>
-
-        <span class="n">example_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">station_picks</span><span class="p">)</span>
-        <span class="n">save_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
-        <span class="n">write_tfrecord</span><span class="p">(</span><span class="n">example_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> done&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_example_list"><a class="viewcode-back" href="../../../package/seisnn.data.io.get_example_list.html#seisnn.data.io.get_example_list">[docs]</a><span class="k">def</span> <span class="nf">get_example_list</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns example list form list of picks and SQL database.</span>
-
-<span class="sd">    :param list batch_picks: List of picks.</span>
-<span class="sd">    :param str database: SQL database root.</span>
-<span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">batch_picks</span><span class="p">:</span>
-        <span class="n">window</span> <span class="o">=</span> <span class="n">processing</span><span class="o">.</span><span class="n">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">)</span>
-        <span class="n">streams</span> <span class="o">=</span> <span class="n">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">stream</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">pick</span><span class="o">.</span><span class="n">station</span>
-            <span class="n">stream</span> <span class="o">=</span> <span class="n">processing</span><span class="o">.</span><span class="n">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
-            <span class="n">feature</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">stream_to_feature</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-            <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
-            <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">example_list</span></div>
-
-
-<div class="viewcode-block" id="write_station_dataset"><a class="viewcode-back" href="../../../package/seisnn.data.io.write_station_dataset.html#seisnn.data.io.write_station_dataset">[docs]</a><span class="k">def</span> <span class="nf">write_station_dataset</span><span class="p">(</span><span class="n">dataset_output_dir</span><span class="p">,</span> <span class="n">sds_root</span><span class="p">,</span>
-                          <span class="n">nslc</span><span class="p">,</span>
-                          <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span>
-                          <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                          <span class="n">remove_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Write pickled trace to output directory.</span>
-
-<span class="sd">    :param dataset_output_dir: Output directory.</span>
-<span class="sd">    :param sds_root: SDS database root directory.</span>
-<span class="sd">    :param nslc: Network, Station, Location, Channel.</span>
-<span class="sd">    :param start_time: Start time.</span>
-<span class="sd">    :param end_time: End time.</span>
-<span class="sd">    :param trace_length: Trace length.</span>
-<span class="sd">    :param sample_rate: Sample rate.</span>
-<span class="sd">    :param remove_dir: If True then remove exist directory.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">remove_dir</span><span class="p">:</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dataset_output_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dataset_output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">client</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">sds</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">sds_root</span><span class="o">=</span><span class="n">sds_root</span><span class="p">)</span>
-    <span class="n">net</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">chan</span> <span class="o">=</span> <span class="n">nslc</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">start_time</span>
-    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
-        <span class="n">stream</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_waveforms</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">chan</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span>
-                                      <span class="n">t</span> <span class="o">+</span> <span class="n">trace_length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">stream</span> <span class="o">=</span> <span class="n">processing</span><span class="o">.</span><span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="n">trace_length</span> <span class="o">*</span> <span class="n">sample_rate</span> <span class="o">+</span> <span class="mi">1</span>
-
-        <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">processing</span><span class="o">.</span><span class="n">trim_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
-
-            <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
-                <span class="n">stream</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
-                <span class="k">continue</span>
-
-            <span class="k">finally</span><span class="p">:</span>
-                <span class="n">trace</span><span class="o">.</span><span class="n">picks</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="n">time_stamp</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-                <span class="n">trace</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dataset_output_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">time_stamp</span><span class="si">}{</span><span class="n">trace</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span><span class="si">}</span><span class="s1">.pkl&#39;</span><span class="p">,</span>
-                    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PICKLE&quot;</span><span class="p">)</span>
-                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="n">t</span> <span class="o">+=</span> <span class="n">trace_length</span></div>
 
 
 <div class="viewcode-block" id="read_hyp"><a class="viewcode-back" href="../../../package/seisnn.data.io.read_hyp.html#seisnn.data.io.read_hyp">[docs]</a><span class="k">def</span> <span class="nf">read_hyp</span><span class="p">(</span><span class="n">hyp</span><span class="p">):</span>

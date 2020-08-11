@@ -122,92 +122,99 @@
 <span class="kn">import</span> <span class="nn">scipy.signal</span>
 <span class="kn">import</span> <span class="nn">scipy.stats</span>
 
-<span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">sql</span>
+<span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">example_proto</span><span class="p">,</span> <span class="n">sql</span>
+<span class="kn">from</span> <span class="nn">seisnn.data.io</span> <span class="kn">import</span> <span class="n">read_sds</span>
 
 
-<div class="viewcode-block" id="get_window"><a class="viewcode-back" href="../../package/seisnn.processing.get_window.html#seisnn.processing.get_window">[docs]</a><span class="k">def</span> <span class="nf">get_window</span><span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+<div class="viewcode-block" id="get_time_window"><a class="viewcode-back" href="../../package/seisnn.processing.get_time_window.html#seisnn.processing.get_time_window">[docs]</a><span class="k">def</span> <span class="nf">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns time window from pick.</span>
+<span class="sd">    Returns time window from anchor time.</span>
 
-<span class="sd">    :param pick: Pick object.</span>
+<span class="sd">    :param anchor_time: Anchor of the time window.</span>
+<span class="sd">    :param str station: Station name.</span>
 <span class="sd">    :param int trace_length: (Optional.) Trace length, default is 30.</span>
+<span class="sd">    :param shift: (Optional.) Shift in sec,</span>
+<span class="sd">        if &#39;random&#39; will shift randomly within the trace length.</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Time window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
-    <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">shift</span> <span class="o">==</span> <span class="s1">&#39;random&#39;</span><span class="p">:</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">trace_length</span>
 
-    <span class="n">starttime</span> <span class="o">=</span> <span class="n">pick_time</span> <span class="o">-</span> <span class="n">trace_length</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">trace_length</span>
+    <span class="n">starttime</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">anchor_time</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span>
     <span class="n">endtime</span> <span class="o">=</span> <span class="n">starttime</span> <span class="o">+</span> <span class="n">trace_length</span>
 
     <span class="n">window</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;starttime&#39;</span><span class="p">:</span> <span class="n">starttime</span><span class="p">,</span>
         <span class="s1">&#39;endtime&#39;</span><span class="p">:</span> <span class="n">endtime</span><span class="p">,</span>
-        <span class="s1">&#39;station&#39;</span><span class="p">:</span> <span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+        <span class="s1">&#39;station&#39;</span><span class="p">:</span> <span class="n">station</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">window</span></div>
 
 
-<div class="viewcode-block" id="get_pdf"><a class="viewcode-back" href="../../package/seisnn.processing.get_pdf.html#seisnn.processing.get_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<div class="viewcode-block" id="get_label"><a class="viewcode-back" href="../../package/seisnn.processing.get_label.html#seisnn.processing.get_label">[docs]</a><span class="k">def</span> <span class="nf">get_label</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns probability density function from stream.</span>
+<span class="sd">    Add generated label to stream.</span>
 
-<span class="sd">    :param obspy.Stream stream: Stream object.</span>
-<span class="sd">    :param float sigma: Width of normalize distribution.</span>
-<span class="sd">    :rtype: obspy.Stream</span>
-<span class="sd">    :return: Stream with pdf.</span>
+<span class="sd">    :param instance: Data instance object.</span>
+<span class="sd">    :param str database: SQL database.</span>
+<span class="sd">    :param float width: Width (sigma) of the Gaussian distribution.</span>
+<span class="sd">    :rtype: np.array</span>
+<span class="sd">    :return: Label.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">trace</span> <span class="o">=</span> <span class="n">stream</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span>
-    <span class="n">x_time</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">times</span><span class="p">(</span><span class="n">reftime</span><span class="o">=</span><span class="n">start_time</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
 
-    <span class="n">stream</span><span class="o">.</span><span class="n">pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3008</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-    <span class="n">stream</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">x_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">npts</span><span class="p">)</span> <span class="o">*</span> <span class="n">instance</span><span class="o">.</span><span class="n">delta</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">instance</span><span class="o">.</span><span class="n">npts</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">]):</span>
-        <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">picks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">phase</span><span class="p">):</span>
-            <span class="n">stream</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">stream</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="k">continue</span>
+        <span class="n">picks</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="n">from_time</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">starttime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
+                             <span class="n">to_time</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">endtime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
+                             <span class="n">station</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                             <span class="n">phase</span><span class="o">=</span><span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-        <span class="n">phase_pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x_time</span><span class="p">),))</span>
-        <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">stream</span><span class="o">.</span><span class="n">picks</span><span class="p">[</span><span class="n">phase</span><span class="p">]:</span>
-            <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">-</span> <span class="n">start_time</span>
-            <span class="n">pick_pdf</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_time</span><span class="p">,</span> <span class="n">pick_time</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+        <span class="n">phase_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">instance</span><span class="o">.</span><span class="n">npts</span><span class="p">,</span> <span class="p">])</span>
+        <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">:</span>
+            <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">-</span> <span class="n">instance</span><span class="o">.</span><span class="n">starttime</span>
+            <span class="n">pick_label</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_time</span><span class="p">,</span> <span class="n">pick_time</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">pick_pdf</span><span class="o">.</span><span class="n">max</span><span class="p">():</span>
-                <span class="n">phase_pdf</span> <span class="o">+=</span> <span class="n">pick_pdf</span> <span class="o">/</span> <span class="n">pick_pdf</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">pick_label</span><span class="o">.</span><span class="n">max</span><span class="p">():</span>
+                <span class="n">phase_label</span> <span class="o">+=</span> <span class="n">pick_label</span> <span class="o">/</span> <span class="n">pick_label</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-        <span class="n">stream</span><span class="o">.</span><span class="n">pdf</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_pdf</span>
+        <span class="n">label</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_label</span>
 
-    <span class="k">return</span> <span class="n">stream</span></div>
+    <span class="n">label</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">label</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">label</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">label</span></div>
 
 
-<div class="viewcode-block" id="get_picks_from_pdf"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_pdf.html#seisnn.processing.get_picks_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_pdf</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">pick_set</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="viewcode-block" id="get_picks_from_predict"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_predict.html#seisnn.processing.get_picks_from_predict">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_predict</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span>
+                           <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extract pick from probability density function.</span>
+<span class="sd">    Extract pick from predict.</span>
 
 <span class="sd">    :param instance: Data instance.</span>
-<span class="sd">    :param str phase: Phase name.</span>
-<span class="sd">    :param str pick_set: Pick set name.</span>
-<span class="sd">    :param float height: Height threshold, from 0 to 1.</span>
-<span class="sd">    :param int distance: Distance threshold.</span>
+<span class="sd">    :param str tag: Output pick tag name.</span>
+<span class="sd">    :param str database: SQL database name.</span>
+<span class="sd">    :param float height: Height threshold, from 0 to 1, default is 0.5.</span>
+<span class="sd">    :param int distance: Distance threshold in data point.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
-    <span class="n">peaks</span><span class="p">,</span> <span class="n">properties</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">pdf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
-                                                <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-                                                <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="s1">&#39;test.db&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">p</span><span class="p">:</span>
-            <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span>
-                <span class="n">instance</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="n">instance</span><span class="o">.</span><span class="n">delta</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+        <span class="n">peaks</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">predict</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
+                                           <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                                           <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
 
-            <span class="n">db</span><span class="o">.</span><span class="n">add_pick</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pick_time</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
-                        <span class="n">station</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
-                        <span class="n">phase</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                        <span class="n">tag</span><span class="o">=</span><span class="n">pick_set</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">peak</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">peak</span><span class="p">:</span>
+                <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span>
+                    <span class="n">instance</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> <span class="o">+</span> <span class="n">peak</span> <span class="o">*</span> <span class="n">instance</span><span class="o">.</span><span class="n">delta</span>
+
+                <span class="n">db</span><span class="o">.</span><span class="n">add_pick</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pick_time</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
+                            <span class="n">station</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                            <span class="n">phase</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                            <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_picks_from_dataset"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
@@ -257,34 +264,6 @@
     <span class="k">return</span> <span class="n">residual</span></div>
 
 
-<div class="viewcode-block" id="stream_preprocessing"><a class="viewcode-back" href="../../package/seisnn.processing.stream_preprocessing.html#seisnn.processing.stream_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">stream_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return processed stream with pdf.</span>
-
-<span class="sd">    :param obspy.Stream stream: Stream object.</span>
-<span class="sd">    :param str database: SQL database root.</span>
-<span class="sd">    :rtype: obspy.Stream</span>
-<span class="sd">    :return: Processed Stream.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">sql</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
-    <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-
-    <span class="n">starttime</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span><span class="o">.</span><span class="n">datetime</span>
-    <span class="n">endtime</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">endtime</span><span class="o">.</span><span class="n">datetime</span>
-    <span class="n">station</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">station</span>
-
-    <span class="n">stream</span><span class="o">.</span><span class="n">picks</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">]:</span>
-        <span class="n">picks</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="n">from_time</span><span class="o">=</span><span class="n">starttime</span><span class="p">,</span> <span class="n">to_time</span><span class="o">=</span><span class="n">endtime</span><span class="p">,</span>
-                             <span class="n">station</span><span class="o">=</span><span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">phase</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">picks</span><span class="p">:</span>
-            <span class="n">stream</span><span class="o">.</span><span class="n">picks</span><span class="p">[</span><span class="n">phase</span><span class="p">]</span> <span class="o">=</span> <span class="n">picks</span>
-
-    <span class="n">stream</span> <span class="o">=</span> <span class="n">get_pdf</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stream</span></div>
-
-
 <div class="viewcode-block" id="signal_preprocessing"><a class="viewcode-back" href="../../package/seisnn.processing.signal_preprocessing.html#seisnn.processing.signal_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a signal processed stream.</span>
@@ -314,13 +293,47 @@
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span>
     <span class="n">dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">endtime</span> <span class="o">-</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">points</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">stream</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">nearest_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">stream</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span>
+                <span class="n">end_time</span><span class="p">,</span>
+                <span class="n">nearest_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">pad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">stream</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="get_example_list"><a class="viewcode-back" href="../../package/seisnn.processing.get_example_list.html#seisnn.processing.get_example_list">[docs]</a><span class="k">def</span> <span class="nf">get_example_list</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns example list form list of picks and SQL database.</span>
+
+<span class="sd">    :param list batch_picks: List of picks.</span>
+<span class="sd">    :param str database: SQL database root.</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">batch_picks</span><span class="p">:</span>
+
+        <span class="n">window</span> <span class="o">=</span> <span class="n">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+                                 <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                                 <span class="n">shift</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+
+        <span class="n">streams</span> <span class="o">=</span> <span class="n">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">from_stream</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Noise&#39;</span><span class="p">,</span> <span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">]</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">get_label</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+            <span class="n">feature</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
+            <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+            <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">example_list</span></div>
 </pre></div>
 
     </div>

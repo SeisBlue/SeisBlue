@@ -19,6 +19,8 @@ seisnn.data.core.Instance
       ~Instance.__init__
       ~Instance.from_example
       ~Instance.from_feature
+      ~Instance.from_stream
+      ~Instance.get_label
       ~Instance.get_picks
       ~Instance.plot
       ~Instance.to_example
@@ -37,9 +39,10 @@ seisnn.data.core.Instance
       ~Instance.delta
       ~Instance.endtime
       ~Instance.id
+      ~Instance.label
       ~Instance.npts
-      ~Instance.pdf
       ~Instance.phase
+      ~Instance.predict
       ~Instance.starttime
       ~Instance.station
       ~Instance.trace

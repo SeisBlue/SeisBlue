@@ -14,8 +14,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.data.io.database_to_tfrecord" href="seisnn.data.io.database_to_tfrecord.html" />
-    <link rel="prev" title="seisnn.data.example_proto.stream_to_feature" href="seisnn.data.example_proto.stream_to_feature.html" />
+    <link rel="next" title="seisnn.data.io.get_event" href="seisnn.data.io.get_event.html" />
+    <link rel="prev" title="seisnn.data.example_proto.sequence_example_parser" href="seisnn.data.example_proto.sequence_example_parser.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -91,11 +91,11 @@
               
                 
   <li>
-    <a href="seisnn.data.example_proto.stream_to_feature.html" title="Previous Chapter: seisnn.data.example_proto.stream_to_feature"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.data.e...</span>
+    <a href="seisnn.data.example_proto.sequence_example_parser.html" title="Previous Chapter: seisnn.data.example_proto.sequence_example_parser"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.data.e...</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.data.io.database_to_tfrecord.html" title="Next Chapter: seisnn.data.io.database_to_tfrecord"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.data.i... &raquo;</span>
+    <a href="seisnn.data.io.get_event.html" title="Next Chapter: seisnn.data.io.get_event"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.data.i... &raquo;</span>
     </a>
   </li>
               
@@ -139,14 +139,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.data.io.database_to_tfrecord.html#seisnn.data.io.database_to_tfrecord" title="seisnn.data.io.database_to_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">database_to_tfrecord</span></code></a>(database, output)</p></td>
-<td><p>Write Tfrecord from SDS database.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="seisnn.data.io.get_event.html#seisnn.data.io.get_event" title="seisnn.data.io.get_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code></a>(filename[, debug])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.data.io.get_event.html#seisnn.data.io.get_event" title="seisnn.data.io.get_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code></a>(filename[, debug])</p></td>
 <td><p>Returns obspy.event list from sfile.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.data.io.get_example_list.html#seisnn.data.io.get_example_list" title="seisnn.data.io.get_example_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_example_list</span></code></a>(batch_picks, database)</p></td>
-<td><p>Returns example list form list of picks and SQL database.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="seisnn.data.io.read_dataset.html#seisnn.data.io.read_dataset" title="seisnn.data.io.read_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_dataset</span></code></a>(dataset)</p></td>
 <td><p>Returns TFRecord Dataset from TFRecord directory.</p></td>
@@ -166,10 +160,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="seisnn.data.io.write_hyp_station.html#seisnn.data.io.write_hyp_station" title="seisnn.data.io.write_hyp_station"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code></a>(geom, save_file)</p></td>
 <td><p>Write STATION0.HYP file from geometry.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="seisnn.data.io.write_station_dataset.html#seisnn.data.io.write_station_dataset" title="seisnn.data.io.write_station_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_station_dataset</span></code></a>(dataset_output_dir, …)</p></td>
-<td><p>Write pickled trace to output directory.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.data.io.write_tfrecord.html#seisnn.data.io.write_tfrecord" title="seisnn.data.io.write_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code></a>(example_list, save_file)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="seisnn.data.io.write_tfrecord.html#seisnn.data.io.write_tfrecord" title="seisnn.data.io.write_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code></a>(example_list, save_file)</p></td>
 <td><p>Writes TFRecord from example protocol.</p></td>
 </tr>
 </tbody>

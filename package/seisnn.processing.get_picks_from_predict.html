@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.processing.get_picks_from_pdf &#8212; SeisNN 0.3.0dev documentation</title>
+    <title>seisnn.processing.get_picks_from_predict &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -81,7 +81,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.processing.get_picks_from_pdf</a></li>
+<li><a class="reference internal" href="#">seisnn.processing.get_picks_from_predict</a></li>
 </ul>
 </ul>
 </li>
@@ -105,7 +105,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/package/seisnn.processing.get_picks_from_pdf.rst.txt"
+  <a href="../_sources/package/seisnn.processing.get_picks_from_predict.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -129,20 +129,20 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-processing-get-picks-from-pdf">
-<h1>seisnn.processing.get_picks_from_pdf<a class="headerlink" href="#seisnn-processing-get-picks-from-pdf" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="seisnn-processing-get-picks-from-predict">
+<h1>seisnn.processing.get_picks_from_predict<a class="headerlink" href="#seisnn-processing-get-picks-from-predict" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="seisnn.processing.get_picks_from_pdf">
-<code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">get_picks_from_pdf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">instance</span></em>, <em class="sig-param"><span class="n">phase</span></em>, <em class="sig-param"><span class="n">pick_set</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">distance</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/processing.html#get_picks_from_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.get_picks_from_pdf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract pick from probability density function.</p>
+<dt id="seisnn.processing.get_picks_from_predict">
+<code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">get_picks_from_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">instance</span></em>, <em class="sig-param"><span class="n">tag</span></em>, <em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">height</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">distance</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/processing.html#get_picks_from_predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.get_picks_from_predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract pick from predict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> – Data instance.</p></li>
-<li><p><strong>phase</strong> (<em>str</em>) – Phase name.</p></li>
-<li><p><strong>pick_set</strong> (<em>str</em>) – Pick set name.</p></li>
-<li><p><strong>height</strong> (<em>float</em>) – Height threshold, from 0 to 1.</p></li>
-<li><p><strong>distance</strong> (<em>int</em>) – Distance threshold.</p></li>
+<li><p><strong>tag</strong> (<em>str</em>) – Output pick tag name.</p></li>
+<li><p><strong>database</strong> (<em>str</em>) – SQL database name.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – Height threshold, from 0 to 1, default is 0.5.</p></li>
+<li><p><strong>distance</strong> (<em>int</em>) – Distance threshold in data point.</p></li>
 </ul>
 </dd>
 </dl>

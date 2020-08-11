@@ -14,13 +14,13 @@ seisnn.processing
    .. autosummary::
       :toctree:
    
-      get_pdf
+      get_example_list
+      get_label
       get_picks_from_dataset
-      get_picks_from_pdf
+      get_picks_from_predict
       get_time_residual
-      get_window
+      get_time_window
       signal_preprocessing
-      stream_preprocessing
       trim_trace
       validate_picks_nearby
    

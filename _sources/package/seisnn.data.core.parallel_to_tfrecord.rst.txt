@@ -1,6 +1,0 @@
-seisnn.data.core.parallel\_to\_tfrecord
-=======================================
-
-.. currentmodule:: seisnn.data.core
-
-.. autofunction:: parallel_to_tfrecord

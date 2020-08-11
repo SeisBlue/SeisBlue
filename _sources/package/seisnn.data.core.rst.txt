@@ -9,13 +9,6 @@ seisnn.data.core
 
    
    
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-   
-      parallel_to_tfrecord
-   
    
 
    

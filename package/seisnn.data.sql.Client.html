@@ -167,7 +167,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.event_summery" title="seisnn.data.sql.Client.event_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">event_summery</span></code></a>()</p></td>
 <td><p>Prints summery from event table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.generate_training_data" title="seisnn.data.sql.Client.generate_training_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_training_data</span></code></a>(pick_list, dataset)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.generate_training_data" title="seisnn.data.sql.Client.generate_training_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_training_data</span></code></a>(pick_list, dataset[, …])</p></td>
 <td><p>Generate TFrecords from database.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.geom_summery" title="seisnn.data.sql.Client.geom_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geom_summery</span></code></a>()</p></td>
@@ -254,13 +254,14 @@
 
 <dl class="py method">
 <dt id="seisnn.data.sql.Client.generate_training_data">
-<code class="sig-name descname">generate_training_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pick_list</span></em>, <em class="sig-param"><span class="n">dataset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.generate_training_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.generate_training_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_training_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pick_list</span></em>, <em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">chunk_size</span><span class="o">=</span><span class="default_value">64</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.generate_training_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.generate_training_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate TFrecords from database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pick_list</strong> – </p></li>
-<li><p><strong>dataset</strong> (<em>str</em>) – Output directory.</p></li>
+<li><p><strong>pick_list</strong> – List of picks from Pick SQL query.</p></li>
+<li><p><strong>dataset</strong> (<em>str</em>) – Output directory name.</p></li>
+<li><p><strong>chunk_size</strong> (<em>int</em>) – Number of data stores in TFRecord.</p></li>
 </ul>
 </dd>
 </dl>

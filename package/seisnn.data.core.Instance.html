@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="seisnn.data.example_proto" href="seisnn.data.example_proto.html" />
-    <link rel="prev" title="seisnn.data.core.parallel_to_tfrecord" href="seisnn.data.core.parallel_to_tfrecord.html" />
+    <link rel="prev" title="seisnn.data.core" href="seisnn.data.core.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -91,7 +91,7 @@
               
                 
   <li>
-    <a href="seisnn.data.core.parallel_to_tfrecord.html" title="Previous Chapter: seisnn.data.core.parallel_to_tfrecord"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.data.c...</span>
+    <a href="seisnn.data.core.html" title="Previous Chapter: seisnn.data.core"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.data.core</span>
     </a>
   </li>
   <li>
@@ -133,12 +133,12 @@
 <h1>seisnn.data.core.Instance<a class="headerlink" href="#seisnn-data-core-instance" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="seisnn.data.core.Instance">
-<em class="property">class </em><code class="sig-prename descclassname">seisnn.data.core.</code><code class="sig-name descname">Instance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">example</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/core.html#Instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.core.Instance" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">seisnn.data.core.</code><code class="sig-name descname">Instance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/core.html#Instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.core.Instance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main class for data transfer.</p>
 <dl class="py method">
 <dt id="seisnn.data.core.Instance.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">example</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/core.html#Instance.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.core.Instance.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/core.html#Instance.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.core.Instance.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -149,7 +149,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.core.Instance.__init__" title="seisnn.data.core.Instance.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(example)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.core.Instance.__init__" title="seisnn.data.core.Instance.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([input_data])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.core.Instance.from_example" title="seisnn.data.core.Instance.from_example"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_example</span></code></a>(example)</p></td>
@@ -158,8 +158,18 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.core.Instance.from_feature" title="seisnn.data.core.Instance.from_feature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_feature</span></code></a>(feature)</p></td>
 <td><p>Initialized from feature dict.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.core.Instance.from_stream" title="seisnn.data.core.Instance.from_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_stream</span></code></a>(stream)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param obspy.Trace stream</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label</span></code>(database, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.core.Instance.get_picks" title="seisnn.data.core.Instance.get_picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks</span></code></a>(phase, pick_set)</p></td>
-<td><p>Extract picks from pdf.</p></td>
+<td><p>Extract picks from predict.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.core.Instance.plot" title="seisnn.data.core.Instance.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(**kwargs)</p></td>
 <td><p>Plot dataset.</p></td>
@@ -194,22 +204,25 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">npts</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pdf</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">npts</span></code></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">phase</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">starttime</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">station</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">starttime</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trace</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">station</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trace</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -237,9 +250,22 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="seisnn.data.core.Instance.from_stream">
+<code class="sig-name descname">from_stream</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stream</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/core.html#Instance.from_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.core.Instance.from_stream" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stream</strong> (<em>obspy.Trace</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="seisnn.data.core.Instance.get_picks">
 <code class="sig-name descname">get_picks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">phase</span></em>, <em class="sig-param"><span class="n">pick_set</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/core.html#Instance.get_picks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.core.Instance.get_picks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract picks from pdf.</p>
+<dd><p>Extract picks from predict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

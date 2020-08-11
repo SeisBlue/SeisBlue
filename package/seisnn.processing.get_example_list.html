@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.processing.get_window &#8212; SeisNN 0.3.0dev documentation</title>
+    <title>seisnn.processing.get_example_list &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.processing.signal_preprocessing" href="seisnn.processing.signal_preprocessing.html" />
-    <link rel="prev" title="seisnn.processing.get_time_residual" href="seisnn.processing.get_time_residual.html" />
+    <link rel="next" title="seisnn.processing.get_label" href="seisnn.processing.get_label.html" />
+    <link rel="prev" title="seisnn.processing" href="seisnn.processing.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -81,7 +81,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.processing.get_window</a></li>
+<li><a class="reference internal" href="#">seisnn.processing.get_example_list</a></li>
 </ul>
 </ul>
 </li>
@@ -91,11 +91,11 @@
               
                 
   <li>
-    <a href="seisnn.processing.get_time_residual.html" title="Previous Chapter: seisnn.processing.get_time_residual"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.proces...</span>
+    <a href="seisnn.processing.html" title="Previous Chapter: seisnn.processing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.processing</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.processing.signal_preprocessing.html" title="Next Chapter: seisnn.processing.signal_preprocessing"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.proces... &raquo;</span>
+    <a href="seisnn.processing.get_label.html" title="Next Chapter: seisnn.processing.get_label"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.proces... &raquo;</span>
     </a>
   </li>
               
@@ -105,7 +105,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/package/seisnn.processing.get_window.rst.txt"
+  <a href="../_sources/package/seisnn.processing.get_example_list.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -129,24 +129,21 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-processing-get-window">
-<h1>seisnn.processing.get_window<a class="headerlink" href="#seisnn-processing-get-window" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="seisnn-processing-get-example-list">
+<h1>seisnn.processing.get_example_list<a class="headerlink" href="#seisnn-processing-get-example-list" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="seisnn.processing.get_window">
-<code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">get_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pick</span></em>, <em class="sig-param"><span class="n">trace_length</span><span class="o">=</span><span class="default_value">30</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/processing.html#get_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.get_window" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns time window from pick.</p>
+<dt id="seisnn.processing.get_example_list">
+<code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">get_example_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">batch_picks</span></em>, <em class="sig-param"><span class="n">database</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/processing.html#get_example_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.get_example_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns example list form list of picks and SQL database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pick</strong> – Pick object.</p></li>
-<li><p><strong>trace_length</strong> (<em>int</em>) – (Optional.) Trace length, default is 30.</p></li>
+<li><p><strong>batch_picks</strong> (<em>list</em>) – List of picks.</p></li>
+<li><p><strong>database</strong> (<em>str</em>) – SQL database root.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Time window.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
 </dd>
 </dl>
 </dd></dl>
