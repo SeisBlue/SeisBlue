@@ -1,6 +1,0 @@
-seisnn.processing.get\_pick\_label
-==================================
-
-.. currentmodule:: seisnn.processing
-
-.. autofunction:: get_pick_label
