@@ -1,14 +1,42 @@
 """
 Processing
 """
+import functools
+import os
 
 import numpy as np
 import obspy
 import scipy.signal
 import scipy.stats
 
-from seisnn.data import core, example_proto, sql
-from seisnn.data.io import read_sds
+from seisnn.data import core, example_proto, io, sql
+from seisnn import utils
+
+
+def generate_training_data(pick_list, dataset, database, chunk_size=64):
+    """
+    Generate TFrecords from database.
+
+    :param pick_list: List of picks from Pick SQL query.
+    :param str dataset: Output directory name.
+    :param str database: SQL database.
+    :param int chunk_size: Number of data stores in TFRecord.
+    """
+    config = utils.get_config()
+    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
+    utils.make_dirs(dataset_dir)
+
+    par = functools.partial(get_example_list, database=database)
+
+    total_batch = int(len(pick_list) / chunk_size)
+    batch_picks = utils.batch(pick_list, size=chunk_size)
+    for index, picks in enumerate(batch_picks):
+        example_list = utils.parallel(par, picks)
+
+        file_name = f'{index:0>5}.tfrecord'
+        save_file = os.path.join(dataset_dir, file_name)
+        io.write_tfrecord(example_list, save_file)
+        print(f'output {file_name} / {total_batch}')
 
 
 def get_time_window(anchor_time, station, trace_length=30, shift=0):
@@ -18,7 +46,7 @@ def get_time_window(anchor_time, station, trace_length=30, shift=0):
     :param anchor_time: Anchor of the time window.
     :param str station: Station name.
     :param int trace_length: (Optional.) Trace length, default is 30.
-    :param shift: (Optional.) Shift in sec,
+    :param float or str shift: (Optional.) Shift in sec,
         if 'random' will shift randomly within the trace length.
     :rtype: dict
     :return: Time window.
@@ -38,6 +66,37 @@ def get_time_window(anchor_time, station, trace_length=30, shift=0):
     return window
 
 
+def get_example_list(batch_picks, database):
+    """
+    Returns example list form list of picks and SQL database.
+
+    :param list batch_picks: List of picks.
+    :param str database: SQL database root.
+    :return:
+    """
+
+    example_list = []
+    for pick in batch_picks:
+        window = get_time_window(anchor_time=pick.time,
+                                 station=pick.station,
+                                 shift='random')
+
+        streams = io.read_sds(window)
+        for _, stream in streams.items():
+            stream = signal_preprocessing(stream)
+
+            instance = core.Instance().from_stream(stream)
+            instance.phase = ['EQ', 'P', 'S']
+            instance.get_label(database, shape='triang')
+            instance.predict = np.zeros(instance.label.shape)
+
+            feature = instance.to_feature()
+            example = example_proto.feature_to_example(feature)
+            example_list.append(example)
+
+    return example_list
+
+
 def get_label(instance, database, shape, half_width=10):
     """
     Add generated label to stream.
@@ -47,7 +106,7 @@ def get_label(instance, database, shape, half_width=10):
     :param str shape: Label shape, see scipy.signal.windows.get_window().
     :param int half_width: Label half width in data point.
     :rtype: np.array
-    :return: Label ['EQ', 'P', 'S'].
+    :return: Label.
     """
     db = sql.Client(database)
 
@@ -191,33 +250,3 @@ def trim_trace(stream, points=3008):
 
 if __name__ == "__main__":
     pass
-
-
-def get_example_list(batch_picks, database):
-    """
-    Returns example list form list of picks and SQL database.
-
-    :param list batch_picks: List of picks.
-    :param str database: SQL database root.
-    :return:
-    """
-
-    example_list = []
-    for pick in batch_picks:
-        window = get_time_window(anchor_time=pick.time,
-                                 station=pick.station,
-                                 shift='random')
-
-        streams = read_sds(window)
-        for _, stream in streams.items():
-            stream = signal_preprocessing(stream)
-
-            instance = core.Instance().from_stream(stream)
-            instance.phase = ['EQ', 'P', 'S']
-            instance.get_label(database, shape='triang')
-            instance.predict = np.zeros(instance.label.shape)
-
-            feature = instance.to_feature()
-            example = example_proto.feature_to_example(feature)
-            example_list.append(example)
-    return example_list

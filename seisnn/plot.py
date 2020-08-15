@@ -63,6 +63,7 @@ def plot_dataset(instance, title=None, save_dir=None):
     fig = plt.figure(figsize=(8, subplot * 2))
     for i, chan in enumerate(instance.channel):
         ax = fig.add_subplot(subplot, 1, i + 1)
+        ax.set_ylim([-1.05, 1.05])
         plt.title(title + chan)
 
         trace = instance.trace[-1, :, i]

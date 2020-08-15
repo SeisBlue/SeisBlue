@@ -5,7 +5,6 @@ SQL Database
 import os
 import operator
 import contextlib
-import functools
 
 import sqlalchemy
 import sqlalchemy.orm
@@ -469,7 +468,7 @@ class Client:
                 print(f'{len(no_geom_station)} stations without geometry:')
                 print([stat[0] for stat in no_geom_station], '\n')
 
-    def generate_training_data(self, pick_list, dataset, chunk_size=64):
+    def generate_training_data(self, pick_list, dataset, chunk_size):
         """
         Generate TFrecords from database.
 
@@ -477,21 +476,8 @@ class Client:
         :param str dataset: Output directory name.
         :param int chunk_size: Number of data stores in TFRecord.
         """
-        config = utils.get_config()
-        dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
-        utils.make_dirs(dataset_dir)
-
-        par = functools.partial(seisnn.processing.get_example_list, database=self.database)
-
-        total_batch = int(len(pick_list) / chunk_size)
-        batch_picks = utils.batch(pick_list, size=chunk_size)
-        for index, picks in enumerate(batch_picks):
-            example_list = utils.parallel(par, picks)
-
-            file_name = f'{index:0>5}.tfrecord'
-            save_file = os.path.join(dataset_dir, file_name)
-            io.write_tfrecord(example_list, save_file)
-            print(f'output {file_name} / {total_batch}')
+        seisnn.processing.generate_training_data(
+            pick_list, dataset, self.database, chunk_size)
 
     def read_tfrecord_header(self, dataset):
         """

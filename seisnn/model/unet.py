@@ -230,5 +230,5 @@ if __name__ == '__main__':
     # model = U_Net(1, 3008, 1)
     # model.summary()
 
-    model = nest_net(1, 3008, 1, num_class=2)
+    model = nest_net(1, 3008, 1, num_class=3)
     model.summary()
