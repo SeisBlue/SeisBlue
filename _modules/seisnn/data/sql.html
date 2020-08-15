@@ -120,7 +120,6 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">operator</span>
 <span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">functools</span>
 
 <span class="kn">import</span> <span class="nn">sqlalchemy</span>
 <span class="kn">import</span> <span class="nn">sqlalchemy.orm</span>
@@ -584,7 +583,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">no_geom_station</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations without geometry:&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">no_geom_station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.generate_training_data"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.generate_training_data">[docs]</a>    <span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.generate_training_data"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.generate_training_data">[docs]</a>    <span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate TFrecords from database.</span>
 
@@ -592,21 +591,8 @@
 <span class="sd">        :param str dataset: Output directory name.</span>
 <span class="sd">        :param int chunk_size: Number of data stores in TFRecord.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-        <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATASET_ROOT&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="p">)</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
-
-        <span class="n">par</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">seisnn</span><span class="o">.</span><span class="n">processing</span><span class="o">.</span><span class="n">get_example_list</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
-
-        <span class="n">total_batch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pick_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">chunk_size</span><span class="p">)</span>
-        <span class="n">batch_picks</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">pick_list</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">picks</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">):</span>
-            <span class="n">example_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">picks</span><span class="p">)</span>
-
-            <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">index</span><span class="si">:</span><span class="s1">0&gt;5</span><span class="si">}</span><span class="s1">.tfrecord&#39;</span>
-            <span class="n">save_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
-            <span class="n">io</span><span class="o">.</span><span class="n">write_tfrecord</span><span class="p">(</span><span class="n">example_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">total_batch</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="n">seisnn</span><span class="o">.</span><span class="n">processing</span><span class="o">.</span><span class="n">generate_training_data</span><span class="p">(</span>
+            <span class="n">pick_list</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.read_tfrecord_header"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.read_tfrecord_header">[docs]</a>    <span class="k">def</span> <span class="nf">read_tfrecord_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

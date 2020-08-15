@@ -14,6 +14,7 @@ seisnn.processing
    .. autosummary::
       :toctree:
    
+      generate_training_data
       get_example_list
       get_label
       get_picks_from_dataset

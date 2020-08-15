@@ -116,14 +116,42 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Processing</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">obspy</span>
 <span class="kn">import</span> <span class="nn">scipy.signal</span>
 <span class="kn">import</span> <span class="nn">scipy.stats</span>
 
-<span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">example_proto</span><span class="p">,</span> <span class="n">sql</span>
-<span class="kn">from</span> <span class="nn">seisnn.data.io</span> <span class="kn">import</span> <span class="n">read_sds</span>
+<span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">example_proto</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">sql</span>
+<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
+
+
+<div class="viewcode-block" id="generate_training_data"><a class="viewcode-back" href="../../package/seisnn.processing.generate_training_data.html#seisnn.processing.generate_training_data">[docs]</a><span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="n">pick_list</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate TFrecords from database.</span>
+
+<span class="sd">    :param pick_list: List of picks from Pick SQL query.</span>
+<span class="sd">    :param str dataset: Output directory name.</span>
+<span class="sd">    :param str database: SQL database.</span>
+<span class="sd">    :param int chunk_size: Number of data stores in TFRecord.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+    <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATASET_ROOT&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
+
+    <span class="n">par</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">get_example_list</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">)</span>
+
+    <span class="n">total_batch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pick_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">chunk_size</span><span class="p">)</span>
+    <span class="n">batch_picks</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">pick_list</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">picks</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">):</span>
+        <span class="n">example_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">picks</span><span class="p">)</span>
+
+        <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">index</span><span class="si">:</span><span class="s1">0&gt;5</span><span class="si">}</span><span class="s1">.tfrecord&#39;</span>
+        <span class="n">save_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">write_tfrecord</span><span class="p">(</span><span class="n">example_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">total_batch</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_time_window"><a class="viewcode-back" href="../../package/seisnn.processing.get_time_window.html#seisnn.processing.get_time_window">[docs]</a><span class="k">def</span> <span class="nf">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">trace_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -133,7 +161,7 @@
 <span class="sd">    :param anchor_time: Anchor of the time window.</span>
 <span class="sd">    :param str station: Station name.</span>
 <span class="sd">    :param int trace_length: (Optional.) Trace length, default is 30.</span>
-<span class="sd">    :param shift: (Optional.) Shift in sec,</span>
+<span class="sd">    :param float or str shift: (Optional.) Shift in sec,</span>
 <span class="sd">        if &#39;random&#39; will shift randomly within the trace length.</span>
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Time window.</span>
@@ -153,6 +181,37 @@
     <span class="k">return</span> <span class="n">window</span></div>
 
 
+<div class="viewcode-block" id="get_example_list"><a class="viewcode-back" href="../../package/seisnn.processing.get_example_list.html#seisnn.processing.get_example_list">[docs]</a><span class="k">def</span> <span class="nf">get_example_list</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns example list form list of picks and SQL database.</span>
+
+<span class="sd">    :param list batch_picks: List of picks.</span>
+<span class="sd">    :param str database: SQL database root.</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">batch_picks</span><span class="p">:</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="n">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+                                 <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                                 <span class="n">shift</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+
+        <span class="n">streams</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">from_stream</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;EQ&#39;</span><span class="p">,</span> <span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">]</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">get_label</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;triang&#39;</span><span class="p">)</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+            <span class="n">feature</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
+            <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+            <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">example_list</span></div>
+
+
 <div class="viewcode-block" id="get_label"><a class="viewcode-back" href="../../package/seisnn.processing.get_label.html#seisnn.processing.get_label">[docs]</a><span class="k">def</span> <span class="nf">get_label</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">half_width</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add generated label to stream.</span>
@@ -162,7 +221,7 @@
 <span class="sd">    :param str shape: Label shape, see scipy.signal.windows.get_window().</span>
 <span class="sd">    :param int half_width: Label half width in data point.</span>
 <span class="sd">    :rtype: np.array</span>
-<span class="sd">    :return: Label [&#39;EQ&#39;, &#39;P&#39;, &#39;S&#39;].</span>
+<span class="sd">    :return: Label.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
 
@@ -306,36 +365,6 @@
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">pass</span>
-
-
-<div class="viewcode-block" id="get_example_list"><a class="viewcode-back" href="../../package/seisnn.processing.get_example_list.html#seisnn.processing.get_example_list">[docs]</a><span class="k">def</span> <span class="nf">get_example_list</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns example list form list of picks and SQL database.</span>
-
-<span class="sd">    :param list batch_picks: List of picks.</span>
-<span class="sd">    :param str database: SQL database root.</span>
-<span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">batch_picks</span><span class="p">:</span>
-        <span class="n">window</span> <span class="o">=</span> <span class="n">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
-                                 <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
-                                 <span class="n">shift</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
-
-        <span class="n">streams</span> <span class="o">=</span> <span class="n">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-
-            <span class="n">instance</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">from_stream</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
-            <span class="n">instance</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;EQ&#39;</span><span class="p">,</span> <span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">]</span>
-            <span class="n">instance</span><span class="o">.</span><span class="n">get_label</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;triang&#39;</span><span class="p">)</span>
-            <span class="n">instance</span><span class="o">.</span><span class="n">predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
-            <span class="n">feature</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
-            <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
-            <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">example_list</span></div>
 </pre></div>
 
     </div>

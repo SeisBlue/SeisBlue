@@ -127,23 +127,23 @@
 
 
 <div class="viewcode-block" id="train_step"><a class="viewcode-back" href="../../../package/seisnn.model.settings.train_step.html#seisnn.model.settings.train_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
-<span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="n">train_trace</span><span class="p">,</span> <span class="n">train_pdf</span><span class="p">,</span> <span class="n">val_trace</span><span class="p">,</span> <span class="n">val_pdf</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="n">train_trace</span><span class="p">,</span> <span class="n">train_label</span><span class="p">,</span> <span class="n">val_trace</span><span class="p">,</span> <span class="n">val_label</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main training loop.</span>
 
 <span class="sd">    :param train_trace: Training trace data.</span>
-<span class="sd">    :param train_pdf: Training trace label.</span>
+<span class="sd">    :param train_label: Training trace label.</span>
 <span class="sd">    :param val_trace: Validation trace data.</span>
-<span class="sd">    :param val_pdf: Validation trace label.</span>
+<span class="sd">    :param val_label: Validation trace label.</span>
 <span class="sd">    :rtype: float</span>
 <span class="sd">    :return: (predict loss, validation loss)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">(</span><span class="n">persistent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
-        <span class="n">pred_pdf</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">train_trace</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">pred_loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">train_pdf</span><span class="p">,</span> <span class="n">pred_pdf</span><span class="p">)</span>
+        <span class="n">pred_label</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">train_trace</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pred_loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">train_label</span><span class="p">,</span> <span class="n">pred_label</span><span class="p">)</span>
 
-        <span class="n">pred_val_pdf</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">val_trace</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">val_loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">val_pdf</span><span class="p">,</span> <span class="n">pred_val_pdf</span><span class="p">)</span>
+        <span class="n">pred_val_label</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">val_trace</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">val_loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">val_label</span><span class="p">,</span> <span class="n">pred_val_label</span><span class="p">)</span>
 
         <span class="n">gradients</span> <span class="o">=</span> <span class="n">tape</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">pred_loss</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">)</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">gradients</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">))</span>
