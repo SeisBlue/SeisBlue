@@ -160,9 +160,7 @@ class Instance:
         data.io.write_tfrecord([example], file_path)
 
     def get_label(self, database, **kwargs):
-        self.phase = ['Noise', 'P', 'S']
         self.label = processing.get_label(self, database, **kwargs)
-
 
     def get_picks(self, phase, pick_set):
         """

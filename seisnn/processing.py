@@ -38,20 +38,22 @@ def get_time_window(anchor_time, station, trace_length=30, shift=0):
     return window
 
 
-def get_label(instance, database, width=0.1):
+def get_label(instance, database, shape, half_width=10):
     """
     Add generated label to stream.
 
     :param instance: Data instance object.
     :param str database: SQL database.
-    :param float width: Width (sigma) of the Gaussian distribution.
+    :param str shape: Label shape, see scipy.signal.windows.get_window().
+    :param float half_width: Width of the label.
     :rtype: np.array
-    :return: Label.
+    :return: Label ['EQ', 'P', 'S'].
     """
     db = sql.Client(database)
 
     x_time = np.arange(instance.npts) * instance.delta
-    label = np.ones([instance.npts, 3])
+
+    label = np.zeros([instance.npts, 3])
 
     for i, phase in enumerate(['P', 'S']):
         picks = db.get_picks(from_time=instance.starttime.datetime,
@@ -62,16 +64,41 @@ def get_label(instance, database, width=0.1):
         phase_label = np.zeros([instance.npts, ])
         for pick in picks:
             pick_time = obspy.UTCDateTime(pick.time) - instance.starttime
-            pick_label = scipy.stats.norm.pdf(x_time, pick_time, width)
 
-            if pick_label.max():
-                phase_label += pick_label / pick_label.max()
+            pick_label = get_pick_label(shape,
+                                        x_time,
+                                        pick_time,
+                                        instance.delta,
+                                        half_width)
+
+            phase_label += pick_label
 
         label[:, i + 1] = phase_label
 
-    label[:, 0] = label[:, 0] - label[:, 1] - label[:, 2]
-
     return label
+
+
+def get_pick_label(shape, time_array, pick_time, delta, half_width):
+    """
+    Generate pick label form pick.
+
+    :param shape: Label shape, see scipy.signal.windows.get_window().
+    :param np.array time_array: Array of increment time steps in second.
+    :param float pick_time: Relative time from the time window in second.
+    :param float delta: Time sample interval in second.
+    :param float half_width: Label half width in second.
+    :return: Label array.
+    """
+    half_width = int(half_width / delta)
+    label_wavelet = scipy.signal.windows.get_window(shape, 2 * half_width)
+    pick_time_index = int(pick_time / delta)
+
+    pick_spike = np.zeros(len(time_array))
+    pick_spike[pick_time_index] = 1
+
+    pick_label = scipy.signal.convolve(pick_spike, label_wavelet, mode='same')
+
+    return pick_label
 
 
 def get_picks_from_predict(instance, tag, database,
@@ -201,7 +228,6 @@ def get_example_list(batch_picks, database):
 
     example_list = []
     for pick in batch_picks:
-
         window = get_time_window(anchor_time=pick.time,
                                  station=pick.station,
                                  shift='random')
@@ -211,8 +237,8 @@ def get_example_list(batch_picks, database):
             stream = signal_preprocessing(stream)
 
             instance = core.Instance().from_stream(stream)
-            instance.phase = ['Noise', 'P', 'S']
-            instance.get_label(database)
+            instance.phase = ['EQ', 'P', 'S']
+            instance.get_label(database, shape=('exponential', None, 20.))
             instance.predict = np.zeros(instance.label.shape)
 
             feature = instance.to_feature()
