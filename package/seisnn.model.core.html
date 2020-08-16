@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.model.settings.train_step &#8212; SeisNN 0.3.0dev documentation</title>
+    <title>seisnn.model.core &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.model.unet" href="seisnn.model.unet.html" />
-    <link rel="prev" title="seisnn.model.settings" href="seisnn.model.settings.html" />
+    <link rel="next" title="seisnn.model.core.Trainer" href="seisnn.model.core.Trainer.html" />
+    <link rel="prev" title="seisnn.model" href="seisnn.model.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -81,7 +81,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.model.settings.train_step</a></li>
+<li><a class="reference internal" href="#">seisnn.model.core</a></li>
 </ul>
 </ul>
 </li>
@@ -91,11 +91,11 @@
               
                 
   <li>
-    <a href="seisnn.model.settings.html" title="Previous Chapter: seisnn.model.settings"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model.settings</span>
+    <a href="seisnn.model.html" title="Previous Chapter: seisnn.model"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.model.unet.html" title="Next Chapter: seisnn.model.unet"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.unet &raquo;</span>
+    <a href="seisnn.model.core.Trainer.html" title="Next Chapter: seisnn.model.core.Trainer"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.... &raquo;</span>
     </a>
   </li>
               
@@ -105,7 +105,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/package/seisnn.model.settings.train_step.rst.txt"
+  <a href="../_sources/package/seisnn.model.core.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -129,30 +129,21 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-model-settings-train-step">
-<h1>seisnn.model.settings.train_step<a class="headerlink" href="#seisnn-model-settings-train-step" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt id="seisnn.model.settings.train_step">
-<code class="sig-prename descclassname">seisnn.model.settings.</code><code class="sig-name descname">train_step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">train_trace</span></em>, <em class="sig-param"><span class="n">train_label</span></em>, <em class="sig-param"><span class="n">val_trace</span></em>, <em class="sig-param"><span class="n">val_label</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/settings.html#train_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.settings.train_step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main training loop.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>train_trace</strong> – Training trace data.</p></li>
-<li><p><strong>train_label</strong> – Training trace label.</p></li>
-<li><p><strong>val_trace</strong> – Validation trace data.</p></li>
-<li><p><strong>val_label</strong> – Validation trace label.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>(predict loss, validation loss)</p>
-</dd>
-</dl>
-</dd></dl>
-
+  <div class="section" id="module-seisnn.model.core">
+<span id="seisnn-model-core"></span><h1>seisnn.model.core<a class="headerlink" href="#module-seisnn.model.core" title="Permalink to this headline">¶</a></h1>
+<p>Training step settings.</p>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.model.core.Trainer.html#seisnn.model.core.Trainer" title="seisnn.model.core.Trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trainer</span></code></a>([model, optimizer, loss])</p></td>
+<td><p>Trainer class.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
