@@ -2,5 +2,5 @@
 Model
 """
 
-from . import settings
+from . import core
 from . import unet
