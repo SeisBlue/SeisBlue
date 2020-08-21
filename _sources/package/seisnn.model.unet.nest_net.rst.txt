@@ -1,6 +1,0 @@
-seisnn.model.unet.nest\_net
-===========================
-
-.. currentmodule:: seisnn.model.unet
-
-.. autofunction:: nest_net

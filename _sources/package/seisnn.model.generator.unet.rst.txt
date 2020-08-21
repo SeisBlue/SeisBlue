@@ -1,0 +1,6 @@
+seisnn.model.generator.unet
+===========================
+
+.. currentmodule:: seisnn.model.generator
+
+.. autofunction:: unet

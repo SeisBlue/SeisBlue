@@ -152,7 +152,9 @@
 </li>
         <li><a href="package/seisnn.data.sql.Waveform.html#seisnn.data.sql.Waveform.__init__">(seisnn.data.sql.Waveform method)</a>
 </li>
-        <li><a href="package/seisnn.model.core.Trainer.html#seisnn.model.core.Trainer.__init__">(seisnn.model.core.Trainer method)</a>
+        <li><a href="package/seisnn.model.trainer.BaseTrainer.html#seisnn.model.trainer.BaseTrainer.__init__">(seisnn.model.trainer.BaseTrainer method)</a>
+</li>
+        <li><a href="package/seisnn.model.trainer.GeneratorTrainer.html#seisnn.model.trainer.GeneratorTrainer.__init__">(seisnn.model.trainer.GeneratorTrainer method)</a>
 </li>
         <li><a href="package/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter.__init__">(seisnn.plot.ProjectionConverter method)</a>
 </li>
@@ -185,10 +187,12 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="package/seisnn.utils.batch.html#seisnn.utils.batch">batch() (in module seisnn.utils)</a>
+      <li><a href="package/seisnn.model.trainer.BaseTrainer.html#seisnn.model.trainer.BaseTrainer">BaseTrainer (class in seisnn.model.trainer)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="package/seisnn.utils.batch.html#seisnn.utils.batch">batch() (in module seisnn.utils)</a>
+</li>
       <li><a href="package/seisnn.data.example_proto.batch_iterator.html#seisnn.data.example_proto.batch_iterator">batch_iterator() (in module seisnn.data.example_proto)</a>
 </li>
   </ul></td>
@@ -247,6 +251,8 @@
         <li><a href="package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.generate_training_data">(seisnn.data.sql.Client method)</a>
 </li>
       </ul></li>
+      <li><a href="package/seisnn.model.trainer.GeneratorTrainer.html#seisnn.model.trainer.GeneratorTrainer">GeneratorTrainer (class in seisnn.model.trainer)</a>
+</li>
       <li><a href="package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.geom_summery">geom_summery() (seisnn.data.sql.Client method)</a>
 </li>
       <li><a href="package/seisnn.utils.get_config.html#seisnn.utils.get_config">get_config() (in module seisnn.utils)</a>
@@ -259,10 +265,10 @@
 </li>
       <li><a href="package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.get_geom">get_geom() (seisnn.data.sql.Client method)</a>
 </li>
-      <li><a href="package/seisnn.processing.get_label.html#seisnn.processing.get_label">get_label() (in module seisnn.processing)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="package/seisnn.processing.get_label.html#seisnn.processing.get_label">get_label() (in module seisnn.processing)</a>
+</li>
       <li><a href="package/seisnn.data.core.Instance.html#seisnn.data.core.Instance.get_picks">get_picks() (seisnn.data.core.Instance method)</a>
 
       <ul>
@@ -331,9 +337,9 @@
 </li>
         <li><a href="package/seisnn.model.html#module-seisnn.model">seisnn.model</a>
 </li>
-        <li><a href="package/seisnn.model.core.html#module-seisnn.model.core">seisnn.model.core</a>
+        <li><a href="package/seisnn.model.generator.html#module-seisnn.model.generator">seisnn.model.generator</a>
 </li>
-        <li><a href="package/seisnn.model.unet.html#module-seisnn.model.unet">seisnn.model.unet</a>
+        <li><a href="package/seisnn.model.trainer.html#module-seisnn.model.trainer">seisnn.model.trainer</a>
 </li>
         <li><a href="package/seisnn.plot.html#module-seisnn.plot">seisnn.plot</a>
 </li>
@@ -350,7 +356,7 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="package/seisnn.model.unet.nest_net.html#seisnn.model.unet.nest_net">nest_net() (in module seisnn.model.unet)</a>
+      <li><a href="package/seisnn.model.generator.nest_net.html#seisnn.model.generator.nest_net">nest_net() (in module seisnn.model.generator)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -489,17 +495,17 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    seisnn.model.core
+    seisnn.model.generator
 
       <ul>
-        <li><a href="package/seisnn.model.core.html#module-seisnn.model.core">module</a>
+        <li><a href="package/seisnn.model.generator.html#module-seisnn.model.generator">module</a>
 </li>
       </ul></li>
       <li>
-    seisnn.model.unet
+    seisnn.model.trainer
 
       <ul>
-        <li><a href="package/seisnn.model.unet.html#module-seisnn.model.unet">module</a>
+        <li><a href="package/seisnn.model.trainer.html#module-seisnn.model.trainer">module</a>
 </li>
       </ul></li>
       <li>
@@ -552,11 +558,9 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="package/seisnn.model.core.Trainer.html#seisnn.model.core.Trainer.train_loop">train_loop() (seisnn.model.core.Trainer method)</a>
+      <li><a href="package/seisnn.model.trainer.GeneratorTrainer.html#seisnn.model.trainer.GeneratorTrainer.train_loop">train_loop() (seisnn.model.trainer.GeneratorTrainer method)</a>
 </li>
-      <li><a href="package/seisnn.model.core.Trainer.html#seisnn.model.core.Trainer.train_step">train_step() (seisnn.model.core.Trainer method)</a>
-</li>
-      <li><a href="package/seisnn.model.core.Trainer.html#seisnn.model.core.Trainer">Trainer (class in seisnn.model.core)</a>
+      <li><a href="package/seisnn.model.trainer.GeneratorTrainer.html#seisnn.model.trainer.GeneratorTrainer.train_step">train_step() (seisnn.model.trainer.GeneratorTrainer method)</a>
 </li>
       <li><a href="package/seisnn.processing.trim_trace.html#seisnn.processing.trim_trace">trim_trace() (in module seisnn.processing)</a>
 </li>
@@ -566,7 +570,7 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="package/seisnn.model.unet.unet.html#seisnn.model.unet.unet">unet() (in module seisnn.model.unet)</a>
+      <li><a href="package/seisnn.model.generator.unet.html#seisnn.model.generator.unet">unet() (in module seisnn.model.generator)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>

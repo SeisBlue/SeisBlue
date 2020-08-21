@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.model.unet &#8212; SeisNN 0.3.0dev documentation</title>
+    <title>seisnn.model.generator.nest_net &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.model.unet.nest_net" href="seisnn.model.unet.nest_net.html" />
-    <link rel="prev" title="seisnn.model.core.Trainer" href="seisnn.model.core.Trainer.html" />
+    <link rel="next" title="seisnn.model.generator.unet" href="seisnn.model.generator.unet.html" />
+    <link rel="prev" title="seisnn.model.generator" href="seisnn.model.generator.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -81,7 +81,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.model.unet</a></li>
+<li><a class="reference internal" href="#">seisnn.model.generator.nest_net</a></li>
 </ul>
 </ul>
 </li>
@@ -91,11 +91,11 @@
               
                 
   <li>
-    <a href="seisnn.model.core.Trainer.html" title="Previous Chapter: seisnn.model.core.Trainer"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model....</span>
+    <a href="seisnn.model.generator.html" title="Previous Chapter: seisnn.model.generator"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model....</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.model.unet.nest_net.html" title="Next Chapter: seisnn.model.unet.nest_net"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.... &raquo;</span>
+    <a href="seisnn.model.generator.unet.html" title="Next Chapter: seisnn.model.generator.unet"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.... &raquo;</span>
     </a>
   </li>
               
@@ -105,7 +105,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/package/seisnn.model.unet.rst.txt"
+  <a href="../_sources/package/seisnn.model.generator.nest_net.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -129,26 +129,28 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="module-seisnn.model.unet">
-<span id="seisnn-model-unet"></span><h1>seisnn.model.unet<a class="headerlink" href="#module-seisnn.model.unet" title="Permalink to this headline">¶</a></h1>
-<p>Unet model structure.</p>
-<p>unet, nest_net model modified from:
-<a class="reference external" href="https://github.com/MrGiovanni/UNetPlusPlus/blob/master/helper_functions.py">https://github.com/MrGiovanni/UNetPlusPlus/blob/master/helper_functions.py</a></p>
-<p class="rubric">Functions</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.model.unet.nest_net.html#seisnn.model.unet.nest_net" title="seisnn.model.unet.nest_net"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nest_net</span></code></a>([img_rows, img_cols, color_type, …])</p></td>
-<td><p>Standard UNet++ [Zhou et.al, 2018]</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="seisnn.model.unet.unet.html#seisnn.model.unet.unet" title="seisnn.model.unet.unet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unet</span></code></a>(img_rows, img_cols[, color_type, num_class])</p></td>
-<td><p>Standard U-Net [Ronneberger et.al, 2015]</p></td>
-</tr>
-</tbody>
-</table>
+  <div class="section" id="seisnn-model-generator-nest-net">
+<h1>seisnn.model.generator.nest_net<a class="headerlink" href="#seisnn-model-generator-nest-net" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="seisnn.model.generator.nest_net">
+<code class="sig-prename descclassname">seisnn.model.generator.</code><code class="sig-name descname">nest_net</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img_rows</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">img_cols</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color_type</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">num_class</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/generator.html#nest_net"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.generator.nest_net" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard UNet++ [Zhou et.al, 2018]</p>
+<p>Total params: 496,225</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img_rows</strong> (<em>int</em>) – Height of the data.</p></li>
+<li><p><strong>img_cols</strong> (<em>int</em>) – Width of the data.</p></li>
+<li><p><strong>color_type</strong> (<em>int</em>) – Channel number of the data.</p></li>
+<li><p><strong>num_class</strong> (<em>int</em>) – Output class number.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Nest net model.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 

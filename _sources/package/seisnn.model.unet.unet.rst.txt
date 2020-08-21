@@ -1,6 +1,0 @@
-seisnn.model.unet.unet
-======================
-
-.. currentmodule:: seisnn.model.unet
-
-.. autofunction:: unet

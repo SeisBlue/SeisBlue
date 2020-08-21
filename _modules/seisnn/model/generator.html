@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.model.unet &#8212; SeisNN 0.3.0dev documentation</title>
+    <title>seisnn.model.generator &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -112,9 +112,9 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for seisnn.model.unet</h1><div class="highlight"><pre>
+  <h1>Source code for seisnn.model.generator</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Unet model structure.</span>
+<span class="sd">Generator models.</span>
 
 <span class="sd">unet, nest_net model modified from:</span>
 <span class="sd">https://github.com/MrGiovanni/UNetPlusPlus/blob/master/helper_functions.py</span>
@@ -154,7 +154,7 @@
     <span class="k">return</span> <span class="n">x</span>
 
 
-<div class="viewcode-block" id="unet"><a class="viewcode-back" href="../../../package/seisnn.model.unet.unet.html#seisnn.model.unet.unet">[docs]</a><span class="k">def</span> <span class="nf">unet</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="unet"><a class="viewcode-back" href="../../../package/seisnn.model.generator.unet.html#seisnn.model.generator.unet">[docs]</a><span class="k">def</span> <span class="nf">unet</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Standard U-Net [Ronneberger et.al, 2015]</span>
 
@@ -229,7 +229,7 @@
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="nest_net"><a class="viewcode-back" href="../../../package/seisnn.model.unet.nest_net.html#seisnn.model.unet.nest_net">[docs]</a><span class="k">def</span> <span class="nf">nest_net</span><span class="p">(</span><span class="n">img_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="nest_net"><a class="viewcode-back" href="../../../package/seisnn.model.generator.nest_net.html#seisnn.model.generator.nest_net">[docs]</a><span class="k">def</span> <span class="nf">nest_net</span><span class="p">(</span><span class="n">img_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Standard UNet++ [Zhou et.al, 2018]</span>
 
@@ -342,11 +342,7 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="c1"># model = U_Net(1, 3008, 1)</span>
-    <span class="c1"># model.summary()</span>
-
-    <span class="n">model</span> <span class="o">=</span> <span class="n">nest_net</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3008</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="k">pass</span>
 </pre></div>
 
     </div>

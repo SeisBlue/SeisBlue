@@ -1,7 +1,7 @@
-seisnn.model.unet
-=================
+seisnn.model.generator
+======================
 
-.. automodule:: seisnn.model.unet
+.. automodule:: seisnn.model.generator
 
    
    

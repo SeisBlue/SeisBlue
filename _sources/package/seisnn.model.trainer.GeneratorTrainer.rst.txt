@@ -1,0 +1,29 @@
+seisnn.model.trainer.GeneratorTrainer
+=====================================
+
+.. currentmodule:: seisnn.model.trainer
+
+.. autoclass:: GeneratorTrainer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GeneratorTrainer.__init__
+      ~GeneratorTrainer.create_model_folder
+      ~GeneratorTrainer.get_dataset_length
+      ~GeneratorTrainer.train_loop
+      ~GeneratorTrainer.train_step
+   
+   
+
+   
+   
+   

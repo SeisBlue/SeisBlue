@@ -1,7 +1,7 @@
-seisnn.model.core
-=================
+seisnn.model.trainer
+====================
 
-.. automodule:: seisnn.model.core
+.. automodule:: seisnn.model.trainer
 
    
    
@@ -18,7 +18,8 @@ seisnn.model.core
    .. autosummary::
       :toctree:
    
-      Trainer
+      BaseTrainer
+      GeneratorTrainer
    
    
 

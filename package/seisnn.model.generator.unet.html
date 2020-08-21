@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seisnn.processing.generate_training_data &#8212; SeisNN 0.3.0dev documentation</title>
+    <title>seisnn.model.generator.unet &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.processing.get_example_list" href="seisnn.processing.get_example_list.html" />
-    <link rel="prev" title="seisnn.processing" href="seisnn.processing.html" />
+    <link rel="next" title="seisnn.model.trainer" href="seisnn.model.trainer.html" />
+    <link rel="prev" title="seisnn.model.generator.nest_net" href="seisnn.model.generator.nest_net.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -81,7 +81,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.processing.generate_training_data</a></li>
+<li><a class="reference internal" href="#">seisnn.model.generator.unet</a></li>
 </ul>
 </ul>
 </li>
@@ -91,11 +91,11 @@
               
                 
   <li>
-    <a href="seisnn.processing.html" title="Previous Chapter: seisnn.processing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.processing</span>
+    <a href="seisnn.model.generator.nest_net.html" title="Previous Chapter: seisnn.model.generator.nest_net"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model....</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.processing.get_example_list.html" title="Next Chapter: seisnn.processing.get_example_list"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.proces... &raquo;</span>
+    <a href="seisnn.model.trainer.html" title="Next Chapter: seisnn.model.trainer"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.trainer &raquo;</span>
     </a>
   </li>
               
@@ -105,7 +105,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/package/seisnn.processing.generate_training_data.rst.txt"
+  <a href="../_sources/package/seisnn.model.generator.unet.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -129,20 +129,24 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-processing-generate-training-data">
-<h1>seisnn.processing.generate_training_data<a class="headerlink" href="#seisnn-processing-generate-training-data" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="seisnn-model-generator-unet">
+<h1>seisnn.model.generator.unet<a class="headerlink" href="#seisnn-model-generator-unet" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="seisnn.processing.generate_training_data">
-<code class="sig-prename descclassname">seisnn.processing.</code><code class="sig-name descname">generate_training_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pick_list</span></em>, <em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">chunk_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/processing.html#generate_training_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.processing.generate_training_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate TFrecords from database.</p>
+<dt id="seisnn.model.generator.unet">
+<code class="sig-prename descclassname">seisnn.model.generator.</code><code class="sig-name descname">unet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img_rows</span></em>, <em class="sig-param"><span class="n">img_cols</span></em>, <em class="sig-param"><span class="n">color_type</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">num_class</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/generator.html#unet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.generator.unet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard U-Net [Ronneberger et.al, 2015]</p>
+<p>Total params: 420,249</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pick_list</strong> – List of picks from Pick SQL query.</p></li>
-<li><p><strong>dataset</strong> (<em>str</em>) – Output directory name.</p></li>
-<li><p><strong>database</strong> (<em>str</em>) – SQL database.</p></li>
-<li><p><strong>chunk_size</strong> (<em>int</em>) – Number of data stores in TFRecord.</p></li>
+<li><p><strong>img_rows</strong> (<em>int</em>) – Height of the data.</p></li>
+<li><p><strong>img_cols</strong> (<em>int</em>) – Width of the data.</p></li>
+<li><p><strong>color_type</strong> (<em>int</em>) – Channel number of the data.</p></li>
+<li><p><strong>num_class</strong> (<em>int</em>) – Output class number.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>UNet model.</p>
 </dd>
 </dl>
 </dd></dl>

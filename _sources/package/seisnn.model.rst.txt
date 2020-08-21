@@ -27,6 +27,6 @@ seisnn.model
    :toctree:
    :recursive:
 
-   seisnn.model.core
-   seisnn.model.unet
+   seisnn.model.generator
+   seisnn.model.trainer
 
