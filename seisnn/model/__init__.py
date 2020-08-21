@@ -2,5 +2,5 @@
 Model
 """
 
-from . import core
-from . import unet
+from . import trainer
+from . import generator

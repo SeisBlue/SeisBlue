@@ -13,7 +13,7 @@ from seisnn.data import core, example_proto, io, sql
 from seisnn import utils
 
 
-def generate_training_data(pick_list, dataset, database, chunk_size=64):
+def generate_training_data(pick_list, dataset, database, chunk_size):
     """
     Generate TFrecords from database.
 

@@ -1,5 +1,5 @@
 """
-Unet model structure.
+Generator models.
 
 unet, nest_net model modified from:
 https://github.com/MrGiovanni/UNetPlusPlus/blob/master/helper_functions.py
@@ -39,7 +39,7 @@ def _standard_unit(input_tensor, stage, nb_filter, kernel_size):
     return x
 
 
-def unet(img_rows, img_cols, color_type=1, num_class=1):
+def unet(img_rows, img_cols, color_type=1, num_class=3):
     """
     Standard U-Net [Ronneberger et.al, 2015]
 
@@ -114,7 +114,7 @@ def unet(img_rows, img_cols, color_type=1, num_class=1):
     return model
 
 
-def nest_net(img_rows=None, img_cols=None, color_type=1, num_class=1):
+def nest_net(img_rows=None, img_cols=None, color_type=1, num_class=3):
     """
     Standard UNet++ [Zhou et.al, 2018]
 
@@ -227,8 +227,4 @@ def nest_net(img_rows=None, img_cols=None, color_type=1, num_class=1):
 
 
 if __name__ == '__main__':
-    # model = U_Net(1, 3008, 1)
-    # model.summary()
-
-    model = nest_net(1, 3008, 1, num_class=3)
-    model.summary()
+    pass

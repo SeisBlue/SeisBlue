@@ -468,7 +468,7 @@ class Client:
                 print(f'{len(no_geom_station)} stations without geometry:')
                 print([stat[0] for stat in no_geom_station], '\n')
 
-    def generate_training_data(self, pick_list, dataset, chunk_size):
+    def generate_training_data(self, pick_list, dataset, chunk_size=64):
         """
         Generate TFrecords from database.
 

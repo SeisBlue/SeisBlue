@@ -1,7 +1,8 @@
-from seisnn.model.core import Trainer
+from seisnn.model.trainer import GeneratorTrainer
 
 dataset = 'HL2017'
 model_instance = 'test_model'
+database = 'HL2017.db'
 
-trainer = Trainer()
-trainer.train_loop(dataset, model_instance)
+trainer = GeneratorTrainer(database)
+trainer.train_loop(dataset, model_instance, plot=True)
