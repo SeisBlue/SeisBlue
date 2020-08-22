@@ -1,12 +1,12 @@
-name: Docker Image
+name: Docker Image Dev
 
 on:
   push:
     paths: 
-      - 'docker/Dockerfile'
-      - '.github/workflows/docker_image.yml'
+      - 'docker/Dockerfile.dev'
+      - '.github/workflows/docker_image_dev.yml'
 env:
-  DOCKER_REPO: seisnn/tf_ssh
+  DOCKER_REPO: seisnn/dev
 
 jobs:
   Build_Docker_Image:
@@ -22,12 +22,6 @@ jobs:
 
     - name: Push image
       run: docker push $DOCKER_REPO
-
-    - name: Push image with version
-      run: |
-        VERSION=$(docker run -v $(pwd):/SeisNN $DOCKER_REPO /bin/bash -c "cd /SeisNN; python -c 'import seisnn; print(seisnn.__version__)'")
-        docker tag $DOCKER_REPO $DOCKER_REPO:v$VERSION
-        docker push $DOCKER_REPO:v$VERSION
 
     - name: Push image with date
       run: |

@@ -11,7 +11,7 @@ Create workspace for home, will mount later into the container:
 
 `mkdir workspace`
 
-Run docker container, change the followings in `run.sh`: 
+Run docker container, change the followings in `run_ssh.sh`: 
 - `49154` for ssh port
 - `</path/to/seisnn>` for this project folder
 - `</path/to/workspace>` for home in the container
@@ -34,15 +34,15 @@ Put your scripts in the workspace folder and you will find them in the container
 
 Update image:
 
-    docker pull seisnn/tf_ssh
+    docker pull seisnn/dev
 
 Remove container:
 
-    docker container rm tf_ssh
+    docker container rm seisnn_ssh
 
 Remove image:
 
-    docker image rm seisnn/tf_ssh
+    docker image rm seisnn/dev
 
 Remove all containers(!):
 

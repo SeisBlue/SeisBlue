@@ -1,4 +1,4 @@
-docker container rm -f tf_ssh
+docker container rm -f seisnn_ssh
 docker run -d \
         --gpus all \
         -p 49154:22 \
@@ -11,4 +11,4 @@ docker run -d \
         -v </path/to/workspace>:/home/${USER} \
         -v </path/to/sfile>:/home/${USER}/SFILE_ROOT \
         -v </path/to/database>:/home/${USER}/SDS_ROOT:ro \
-        --name tf_ssh seisnn/tf_ssh
+        --name seisnn_ssh seisnn/dev
