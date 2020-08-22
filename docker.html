@@ -141,7 +141,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/SeisNN/SeisNN.git</span></code></p>
 <p>Create workspace for home, will mount later into the container:</p>
 <p><code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">workspace</span></code></p>
-<p>Run docker container, change the followings in <code class="docutils literal notranslate"><span class="pre">run.sh</span></code>:</p>
+<p>Run docker container, change the followings in <code class="docutils literal notranslate"><span class="pre">run_ssh.sh</span></code>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">49154</span></code> for ssh port</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;/path/to/seisnn&gt;</span></code> for this project folder</p></li>
@@ -162,15 +162,15 @@
 <div class="section" id="useful-docker-commands">
 <h2>Useful docker commands<a class="headerlink" href="#useful-docker-commands" title="Permalink to this headline">¶</a></h2>
 <p>Update image:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">pull</span> <span class="n">seisnn</span><span class="o">/</span><span class="n">tf_ssh</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">pull</span> <span class="n">seisnn</span><span class="o">/</span><span class="n">dev</span>
 </pre></div>
 </div>
 <p>Remove container:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">container</span> <span class="n">rm</span> <span class="n">tf_ssh</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">container</span> <span class="n">rm</span> <span class="n">seisnn_ssh</span>
 </pre></div>
 </div>
 <p>Remove image:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">image</span> <span class="n">rm</span> <span class="n">seisnn</span><span class="o">/</span><span class="n">tf_ssh</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">image</span> <span class="n">rm</span> <span class="n">seisnn</span><span class="o">/</span><span class="n">dev</span>
 </pre></div>
 </div>
 <p>Remove all containers(!):</p>
