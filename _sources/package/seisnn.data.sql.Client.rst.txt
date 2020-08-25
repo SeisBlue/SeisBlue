@@ -18,17 +18,19 @@ seisnn.data.sql.Client
    
       ~Client.__init__
       ~Client.add_events
-      ~Client.add_geom
+      ~Client.add_inventory
       ~Client.add_pick
       ~Client.clear_table
       ~Client.event_summery
       ~Client.generate_training_data
-      ~Client.geom_summery
-      ~Client.get_geom
+      ~Client.get_distinct_items
+      ~Client.get_events
+      ~Client.get_exclude_items
+      ~Client.get_inventories
       ~Client.get_picks
       ~Client.get_table_class
       ~Client.get_waveform
-      ~Client.list_distinct_items
+      ~Client.inventory_summery
       ~Client.pick_summery
       ~Client.plot_map
       ~Client.read_hyp

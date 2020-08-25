@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>seisnn.data.sql &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -337,7 +337,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">geom</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_hyp</span><span class="p">(</span><span class="n">hyp</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.read_kml_placemark"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.read_kml_placemark">[docs]</a>    <span class="k">def</span> <span class="nf">read_kml_placemark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kml</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -350,9 +350,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">geom</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_kml_placemark</span><span class="p">(</span><span class="n">kml</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_geom</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.add_geom"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.add_geom">[docs]</a>    <span class="k">def</span> <span class="nf">add_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.add_inventory"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.add_inventory">[docs]</a>    <span class="k">def</span> <span class="nf">add_inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add geometry data from geometry dict.</span>
 
@@ -367,9 +367,9 @@
 
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input </span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s1"> stations&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.get_geom"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.get_geom">[docs]</a>    <span class="k">def</span> <span class="nf">get_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.get_inventories"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.get_inventories">[docs]</a>    <span class="k">def</span> <span class="nf">get_inventories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns query from geometry table.</span>
+<span class="sd">        Returns query from inventory table.</span>
 
 <span class="sd">        :param str station: Station name.</span>
 <span class="sd">        :param str network: Network name.</span>
@@ -387,50 +387,33 @@
 
         <span class="k">return</span> <span class="n">query</span></div>
 
-<div class="viewcode-block" id="Client.geom_summery"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.geom_summery">[docs]</a>    <span class="k">def</span> <span class="nf">geom_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.inventory_summery"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.inventory_summery">[docs]</a>    <span class="k">def</span> <span class="nf">inventory_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prints summery from geometry table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="n">station</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span><span class="p">)</span>
-            <span class="n">station_count</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Station name:&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">station_count</span><span class="si">}</span><span class="s1"> stations</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">stations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;inventory&#39;</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">)</span>
 
-            <span class="n">boundary</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Station boundary:&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;West: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;East: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;South: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;North: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Station name:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">([</span><span class="n">station</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stations</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">latitudes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;inventory&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">)</span>
+        <span class="n">longitudes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;inventory&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Station boundary:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;West: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">longitudes</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;East: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">longitudes</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;South: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">latitudes</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;North: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">latitudes</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.plot_map"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.plot_map">[docs]</a>    <span class="k">def</span> <span class="nf">plot_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots station and event map.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inventories</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_inventories</span><span class="p">()</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span>
 
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="n">geometry</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                       <span class="n">Inventory</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
-                       <span class="n">Inventory</span><span class="o">.</span><span class="n">network</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="n">events</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                       <span class="n">Event</span><span class="o">.</span><span class="n">longitude</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-
-        <span class="n">plot</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span></div>
+        <span class="n">plot</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">inventories</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.add_events"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.add_events">[docs]</a>    <span class="k">def</span> <span class="nf">add_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -466,6 +449,49 @@
                 <span class="s1">&#39;pick&#39;</span><span class="p">,</span>
                 <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">,</span> <span class="s1">&#39;tag&#39;</span><span class="p">])</span></div>
 
+<div class="viewcode-block" id="Client.get_events"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.get_events">[docs]</a>    <span class="k">def</span> <span class="nf">get_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                   <span class="n">from_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">west</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">east</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">south</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">from_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns query from event table.</span>
+
+<span class="sd">        :param str from_time: From time.</span>
+<span class="sd">        :param str to_time: To time.</span>
+<span class="sd">        :param west: From West.</span>
+<span class="sd">        :param east: To East.</span>
+<span class="sd">        :param south: From South.</span>
+<span class="sd">        :param north: To North.</span>
+<span class="sd">        :param from_depth: From depth.</span>
+<span class="sd">        :param to_depth: To depth.</span>
+<span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
+<span class="sd">        :return: A Query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Event</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">from_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="n">from_time</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">to_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">to_time</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">west</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">longitude</span> <span class="o">&gt;=</span> <span class="n">west</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">east</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span> <span class="o">&lt;=</span> <span class="n">east</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">south</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span> <span class="o">&gt;=</span> <span class="n">south</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">north</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span> <span class="o">&lt;=</span> <span class="n">north</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">from_depth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">depth</span> <span class="o">&gt;=</span> <span class="n">from_depth</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">to_depth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">depth</span> <span class="o">&lt;=</span> <span class="n">to_depth</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">query</span></div>
+
     <span class="k">def</span> <span class="nf">add_pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">Pick</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span><span class="o">.</span><span class="n">add_db</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
@@ -485,16 +511,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">from_time</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">from_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="n">from_time</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">to_time</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">to_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">to_time</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">station</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">station</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace_sql_wildcard</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">station</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">phase</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">phase</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">tag</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">query</span></div>
@@ -503,85 +529,56 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prints summery from event table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">time</span><span class="p">))</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event time duration:&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;event&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event time duration:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">times</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">times</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="n">event_count</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Event</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">event_count</span><span class="si">}</span><span class="s1"> events</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span><span class="si">}</span><span class="s1"> events</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="n">boundary</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">longitude</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Event</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event boundary:&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;West: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;East: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;South: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;North: </span><span class="si">{</span><span class="n">boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="n">latitudes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;event&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">)</span>
+        <span class="n">longitudes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;event&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Station boundary:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;West: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">longitudes</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;East: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">longitudes</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;8.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;South: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">latitudes</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;North: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">latitudes</span><span class="p">)</span><span class="si">:</span><span class="s1">&gt;7.4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.pick_summery"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.pick_summery">[docs]</a>    <span class="k">def</span> <span class="nf">pick_summery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prints summery from pick table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">time</span><span class="p">))</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Pick time duration:&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;pick&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event time duration:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">times</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">times</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Phase count:&#39;</span><span class="p">)</span>
-            <span class="n">phase_group_count</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">))</span> \
-                <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="n">ps_picks</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">phase</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">phase_group_count</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">phase</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">]:</span>
-                    <span class="n">ps_picks</span> <span class="o">+=</span> <span class="n">count</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1"> &quot;</span><span class="si">{</span><span class="n">phase</span><span class="si">}</span><span class="s1">&quot; picks&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">ps_picks</span><span class="si">}</span><span class="s1"> P + S picks</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Phase count:&#39;</span><span class="p">)</span>
+        <span class="n">phases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;pick&#39;</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">phases</span><span class="p">:</span>
+            <span class="n">picks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="n">phase</span><span class="o">=</span><span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">picks</span><span class="p">)</span><span class="si">}</span><span class="s1"> &quot;</span><span class="si">{</span><span class="n">phase</span><span class="si">}</span><span class="s1">&quot; picks&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
 
-            <span class="n">station_count</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">distinct</span><span class="p">())</span> \
-                <span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Picks cover </span><span class="si">{</span><span class="n">station_count</span><span class="si">}</span><span class="s1"> stations:&#39;</span><span class="p">)</span>
+        <span class="n">pick_stations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;pick&#39;</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Picks cover </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pick_stations</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">([</span><span class="n">station</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">pick_stations</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="n">station</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">distinct</span><span class="p">())</span> \
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">no_pick_station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_exclude_items</span><span class="p">(</span><span class="s1">&#39;inventory&#39;</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">,</span>
+                                                 <span class="n">pick_stations</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">no_pick_station</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">no_pick_station</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations without picks:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">([</span><span class="n">station</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">no_pick_station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="n">no_pick_station</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span>
-                        <span class="o">.</span><span class="n">notin_</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span><span class="p">)))</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">no_pick_station</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">no_pick_station</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations without picks:&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">no_pick_station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">inventory_station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;inventory&#39;</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">)</span>
+        <span class="n">no_inventory_station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_exclude_items</span><span class="p">(</span><span class="s1">&#39;pick&#39;</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">,</span>
+                                                      <span class="n">inventory_station</span><span class="p">)</span>
 
-            <span class="n">no_geom_station</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">distinct</span><span class="p">())</span> \
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">station</span>
-                        <span class="o">.</span><span class="n">notin_</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">station</span><span class="p">)))</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">no_geom_station</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">no_geom_station</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations without geometry:&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">no_geom_station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">no_inventory_station</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">no_inventory_station</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations without geometry:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">([</span><span class="n">station</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">no_inventory_station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.generate_training_data"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.generate_training_data">[docs]</a>    <span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -629,11 +626,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">from_time</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">from_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">from_time</span> <span class="o">&lt;=</span> <span class="n">Waveform</span><span class="o">.</span><span class="n">endtime</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">to_time</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">to_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">starttime</span> <span class="o">&lt;=</span> <span class="n">to_time</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">station</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">station</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace_sql_wildcard</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">station</span><span class="p">))</span>
 
@@ -643,28 +640,18 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prints summery from waveform table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">starttime</span><span class="p">),</span>
-                       <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">endtime</span><span class="p">))</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Event time duration:&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">starttimes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">,</span> <span class="s1">&#39;starttime&#39;</span><span class="p">)</span>
+        <span class="n">endtimes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">,</span> <span class="s1">&#39;endtime&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waveform time duration:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">starttimes</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;To:   </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">endtimes</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="n">event_count</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">event_count</span><span class="si">}</span><span class="s1"> events</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">waveforms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">waveforms</span><span class="p">)</span><span class="si">}</span><span class="s1"> events</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-            <span class="n">station_count</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">distinct</span><span class="p">())</span> \
-                <span class="o">.</span><span class="n">count</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Picks cover </span><span class="si">{</span><span class="n">station_count</span><span class="si">}</span><span class="s1"> stations:&#39;</span><span class="p">)</span>
-
-            <span class="n">station</span> <span class="o">=</span> <span class="n">session</span> \
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">station</span><span class="o">.</span><span class="n">distinct</span><span class="p">())</span> \
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Waveform</span><span class="o">.</span><span class="n">station</span><span class="p">)</span> \
-                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">station</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="n">stations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distinct_items</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">,</span> <span class="s1">&#39;station&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Picks cover </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stations</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">([</span><span class="n">station</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.remove_duplicates"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.remove_duplicates">[docs]</a>    <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">match_columns</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -687,7 +674,7 @@
                 <span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">synchronize_session</span><span class="o">=</span><span class="s1">&#39;fetch&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Remove </span><span class="si">{</span><span class="n">duplicate</span><span class="si">}</span><span class="s1"> duplicate </span><span class="si">{</span><span class="n">table</span><span class="o">.</span><span class="n">__tablename__</span><span class="si">}</span><span class="s1">s&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.list_distinct_items"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.list_distinct_items">[docs]</a>    <span class="k">def</span> <span class="nf">list_distinct_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.get_distinct_items"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.get_distinct_items">[docs]</a>    <span class="k">def</span> <span class="nf">get_distinct_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a query of unique items.</span>
 
@@ -697,14 +684,35 @@
 <span class="sd">        :return: A list of query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="n">col</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">session</span> \
                 <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">())</span> \
                 <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="n">table</span><span class="p">))</span> \
                 <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">query</span></div>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">query</span></div>
+
+<div class="viewcode-block" id="Client.get_exclude_items"><a class="viewcode-back" href="../../../package/seisnn.data.sql.Client.html#seisnn.data.sql.Client.get_exclude_items">[docs]</a>    <span class="k">def</span> <span class="nf">get_exclude_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a query of exclude items.</span>
+
+<span class="sd">        :param str table: Target table name.</span>
+<span class="sd">        :param str column: Target column name.</span>
+<span class="sd">        :param exclude: Exclude list.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        :return: A list of query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">session</span> \
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="n">table</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="n">table</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">notin_</span><span class="p">(</span><span class="n">exclude</span><span class="p">))</span> \
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">query</span></div>
 
     <span class="k">def</span> <span class="nf">clear_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
         <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
@@ -756,7 +764,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

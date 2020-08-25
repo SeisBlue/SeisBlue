@@ -19,8 +19,6 @@ seisnn.model.trainer.BaseTrainer
       ~BaseTrainer.__init__
       ~BaseTrainer.create_model_folder
       ~BaseTrainer.get_dataset_length
-      ~BaseTrainer.train_loop
-      ~BaseTrainer.train_step
    
    
 

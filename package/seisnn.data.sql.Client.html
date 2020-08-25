@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>seisnn.data.sql.Client &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -155,7 +155,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.add_events" title="seisnn.data.sql.Client.add_events"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_events</span></code></a>(catalog, tag[, remove_duplicates])</p></td>
 <td><p>Add event data form catalog.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.add_geom" title="seisnn.data.sql.Client.add_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_geom</span></code></a>(geom, network)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.add_inventory" title="seisnn.data.sql.Client.add_inventory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inventory</span></code></a>(geom, network)</p></td>
 <td><p>Add geometry data from geometry dict.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_pick</span></code>(time, station, phase, tag)</p></td>
@@ -170,11 +170,17 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.generate_training_data" title="seisnn.data.sql.Client.generate_training_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_training_data</span></code></a>(pick_list, dataset[, …])</p></td>
 <td><p>Generate TFrecords from database.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.geom_summery" title="seisnn.data.sql.Client.geom_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geom_summery</span></code></a>()</p></td>
-<td><p>Prints summery from geometry table.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_distinct_items" title="seisnn.data.sql.Client.get_distinct_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distinct_items</span></code></a>(table, column)</p></td>
+<td><p>Returns a query of unique items.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_geom" title="seisnn.data.sql.Client.get_geom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_geom</span></code></a>([station, network])</p></td>
-<td><p>Returns query from geometry table.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_events" title="seisnn.data.sql.Client.get_events"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_events</span></code></a>([from_time, to_time, west, east, …])</p></td>
+<td><p>Returns query from event table.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_exclude_items" title="seisnn.data.sql.Client.get_exclude_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_exclude_items</span></code></a>(table, column, exclude)</p></td>
+<td><p>Returns a query of exclude items.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_inventories" title="seisnn.data.sql.Client.get_inventories"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_inventories</span></code></a>([station, network])</p></td>
+<td><p>Returns query from inventory table.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_picks" title="seisnn.data.sql.Client.get_picks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks</span></code></a>([from_time, to_time, station, …])</p></td>
 <td><p>Returns query from pick table.</p></td>
@@ -185,8 +191,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.get_waveform" title="seisnn.data.sql.Client.get_waveform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_waveform</span></code></a>([from_time, to_time, station])</p></td>
 <td><p>Returns query from waveform table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.list_distinct_items" title="seisnn.data.sql.Client.list_distinct_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_distinct_items</span></code></a>(table, column)</p></td>
-<td><p>Returns a query of unique items.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.inventory_summery" title="seisnn.data.sql.Client.inventory_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inventory_summery</span></code></a>()</p></td>
+<td><p>Prints summery from geometry table.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.data.sql.Client.pick_summery" title="seisnn.data.sql.Client.pick_summery"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pick_summery</span></code></a>()</p></td>
 <td><p>Prints summery from pick table.</p></td>
@@ -233,8 +239,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.data.sql.Client.add_geom">
-<code class="sig-name descname">add_geom</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">geom</span></em>, <em class="sig-param"><span class="n">network</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.add_geom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.add_geom" title="Permalink to this definition">¶</a></dt>
+<dt id="seisnn.data.sql.Client.add_inventory">
+<code class="sig-name descname">add_inventory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">geom</span></em>, <em class="sig-param"><span class="n">network</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.add_inventory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.add_inventory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add geometry data from geometry dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -268,15 +274,76 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.data.sql.Client.geom_summery">
-<code class="sig-name descname">geom_summery</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.geom_summery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.geom_summery" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints summery from geometry table.</p>
+<dt id="seisnn.data.sql.Client.get_distinct_items">
+<code class="sig-name descname">get_distinct_items</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span></em>, <em class="sig-param"><span class="n">column</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_distinct_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_distinct_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query of unique items.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>str</em>) – Target table name.</p></li>
+<li><p><strong>column</strong> (<em>str</em>) – Target column name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of query.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.data.sql.Client.get_geom">
-<code class="sig-name descname">get_geom</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">station</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_geom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_geom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns query from geometry table.</p>
+<dt id="seisnn.data.sql.Client.get_events">
+<code class="sig-name descname">get_events</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">from_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">to_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">west</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">east</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">south</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">north</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">from_depth</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">to_depth</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns query from event table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_time</strong> (<em>str</em>) – From time.</p></li>
+<li><p><strong>to_time</strong> (<em>str</em>) – To time.</p></li>
+<li><p><strong>west</strong> – From West.</p></li>
+<li><p><strong>east</strong> – To East.</p></li>
+<li><p><strong>south</strong> – From South.</p></li>
+<li><p><strong>north</strong> – To North.</p></li>
+<li><p><strong>from_depth</strong> – From depth.</p></li>
+<li><p><strong>to_depth</strong> – To depth.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>sqlalchemy.orm.query.Query</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A Query.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="seisnn.data.sql.Client.get_exclude_items">
+<code class="sig-name descname">get_exclude_items</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">exclude</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_exclude_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_exclude_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query of exclude items.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>str</em>) – Target table name.</p></li>
+<li><p><strong>column</strong> (<em>str</em>) – Target column name.</p></li>
+<li><p><strong>exclude</strong> – Exclude list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of query.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="seisnn.data.sql.Client.get_inventories">
+<code class="sig-name descname">get_inventories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">station</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.get_inventories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.get_inventories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns query from inventory table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -357,23 +424,9 @@ will be select.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.data.sql.Client.list_distinct_items">
-<code class="sig-name descname">list_distinct_items</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">table</span></em>, <em class="sig-param"><span class="n">column</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.list_distinct_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.list_distinct_items" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a query of unique items.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>table</strong> (<em>str</em>) – Target table name.</p></li>
-<li><p><strong>column</strong> (<em>str</em>) – Target column name.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A list of query.</p>
-</dd>
-</dl>
+<dt id="seisnn.data.sql.Client.inventory_summery">
+<code class="sig-name descname">inventory_summery</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/data/sql.html#Client.inventory_summery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.data.sql.Client.inventory_summery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints summery from geometry table.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -490,7 +543,7 @@ If all columns matches, then marks it as a duplicate data.</p></li>
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
     </p>
   </div>
 </footer>

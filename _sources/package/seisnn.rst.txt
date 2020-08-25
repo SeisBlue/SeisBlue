@@ -1,4 +1,4 @@
-seisnn
+﻿seisnn
 ======
 
 .. automodule:: seisnn
