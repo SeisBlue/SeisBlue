@@ -13,13 +13,15 @@ from seisnn.data.core import Instance
 from seisnn import utils
 
 
-class BaseTrainer(abc.ABC):
+class BaseTrainer:
     @staticmethod
-    def get_dataset_length(database):
-        db = sql.Client(database)
-        with db.session_scope() as session:
-            Waveform = db.get_table_class('waveform')
-            count = session.query(Waveform).count()
+    def get_dataset_length(database=None):
+        count = None
+        try:
+            db = sql.Client(database)
+            count = len(db.get_waveform().all())
+        except Exception as error:
+            print(f'{type(error).__name__}: {error}')
 
         return count
 
@@ -36,17 +38,6 @@ class BaseTrainer(abc.ABC):
         utils.make_dirs(save_history_path)
 
         return save_model_path, save_history_path
-
-    def train_step(self, train, val):
-        pass
-
-    def train_loop(self,
-                   dataset,
-                   model_name,
-                   epochs,
-                   batch_size,
-                   plot=False):
-        pass
 
 
 class GeneratorTrainer(BaseTrainer):
@@ -121,9 +112,10 @@ class GeneratorTrainer(BaseTrainer):
                                                   max_to_keep=100)
 
         metrics_names = ['loss', 'val']
+
+        data_len = self.get_dataset_length(self.database)
         progbar = tf.keras.utils.Progbar(
-            self.get_dataset_length(self.database),
-            stateful_metrics=metrics_names)
+            data_len, stateful_metrics=metrics_names)
 
         for epoch in range(epochs):
             print(f'epoch {epoch + 1} / {epochs}')

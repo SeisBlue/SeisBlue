@@ -39,7 +39,7 @@ def _standard_unit(input_tensor, stage, nb_filter, kernel_size):
     return x
 
 
-def unet(img_rows, img_cols, color_type=1, num_class=3):
+def unet(img_rows=None, img_cols=None, color_type=1, num_class=3):
     """
     Standard U-Net [Ronneberger et.al, 2015]
 

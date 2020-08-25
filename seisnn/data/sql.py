@@ -222,7 +222,7 @@ class Client:
         """
 
         geom = io.read_hyp(hyp)
-        self.add_geom(geom, network)
+        self.add_inventory(geom, network)
 
     def read_kml_placemark(self, kml, network):
         """
@@ -235,9 +235,9 @@ class Client:
         """
 
         geom = io.read_kml_placemark(kml)
-        self.add_geom(geom, network)
+        self.add_inventory(geom, network)
 
-    def add_geom(self, geom, network):
+    def add_inventory(self, geom, network):
         """
         Add geometry data from geometry dict.
 
@@ -252,9 +252,9 @@ class Client:
 
             print(f'Input {counter} stations')
 
-    def get_geom(self, station=None, network=None):
+    def get_inventories(self, station=None, network=None):
         """
-        Returns query from geometry table.
+        Returns query from inventory table.
 
         :param str station: Station name.
         :param str network: Network name.
@@ -272,50 +272,33 @@ class Client:
 
         return query
 
-    def geom_summery(self):
+    def inventory_summery(self):
         """
         Prints summery from geometry table.
         """
-        with self.session_scope() as session:
-            station = session \
-                .query(Inventory.station) \
-                .order_by(Inventory.station)
-            station_count = session \
-                .query(Inventory.station) \
-                .count()
-            print('Station name:')
-            print([stat[0] for stat in station], '\n')
-            print(f'Total {station_count} stations\n')
+        stations = self.get_distinct_items('inventory', 'station')
 
-            boundary = session \
-                .query(sqlalchemy.func.min(Inventory.longitude),
-                       sqlalchemy.func.max(Inventory.longitude),
-                       sqlalchemy.func.min(Inventory.latitude),
-                       sqlalchemy.func.max(Inventory.latitude)) \
-                .all()
-            print('Station boundary:')
-            print(f'West: {boundary[0][0]:>8.4f}')
-            print(f'East: {boundary[0][1]:>8.4f}')
-            print(f'South: {boundary[0][2]:>7.4f}')
-            print(f'North: {boundary[0][3]:>7.4f}\n')
+        print('Station name:')
+        print([station for station in stations], '\n')
+        print(f'Total {len(stations)} stations\n')
+
+        latitudes = self.get_distinct_items('inventory', 'latitude')
+        longitudes = self.get_distinct_items('inventory', 'longitude')
+
+        print('Station boundary:')
+        print(f'West: {min(longitudes):>8.4f}')
+        print(f'East: {max(longitudes):>8.4f}')
+        print(f'South: {min(latitudes):>7.4f}')
+        print(f'North: {max(latitudes):>7.4f}\n')
 
     def plot_map(self):
         """
         Plots station and event map.
         """
+        inventories = self.get_inventories()
+        events = self.get_events()
 
-        with self.session_scope() as session:
-            geometry = session \
-                .query(Inventory.latitude,
-                       Inventory.longitude,
-                       Inventory.network) \
-                .all()
-            events = session \
-                .query(Event.latitude,
-                       Event.longitude) \
-                .all()
-
-        plot.plot_map(geometry, events)
+        plot.plot_map(inventories, events)
 
     def add_events(self, catalog, tag, remove_duplicates=True):
         """
@@ -351,6 +334,49 @@ class Client:
                 'pick',
                 ['time', 'phase', 'station', 'tag'])
 
+    def get_events(self,
+                   from_time=None, to_time=None,
+                   west=None, east=None,
+                   south=None, north=None,
+                   from_depth=None, to_depth=None):
+        """
+        Returns query from event table.
+
+        :param str from_time: From time.
+        :param str to_time: To time.
+        :param west: From West.
+        :param east: To East.
+        :param south: From South.
+        :param north: To North.
+        :param from_depth: From depth.
+        :param to_depth: To depth.
+        :rtype: sqlalchemy.orm.query.Query
+        :return: A Query.
+        """
+        with self.session_scope() as session:
+            query = session.query(Event)
+            if from_time is not None:
+                query = query.filter(Event.time >= from_time)
+            if to_time is not None:
+                query = query.filter(Event.time <= to_time)
+
+            if west is not None:
+                query = query.filter(Event.longitude >= west)
+            if east is not None:
+                query = query.filter(Event.latitude <= east)
+
+            if south is not None:
+                query = query.filter(Event.latitude >= south)
+            if north is not None:
+                query = query.filter(Event.latitude <= north)
+
+            if from_depth is not None:
+                query = query.filter(Event.depth >= from_depth)
+            if to_depth is not None:
+                query = query.filter(Event.depth <= to_depth)
+
+        return query
+
     def add_pick(self, time, station, phase, tag):
         with self.session_scope() as session:
             Pick(time, station, phase, tag).add_db(session)
@@ -370,16 +396,16 @@ class Client:
         """
         with self.session_scope() as session:
             query = session.query(Pick)
-            if from_time:
+            if from_time is not None:
                 query = query.filter(Pick.time >= from_time)
-            if to_time:
+            if to_time is not None:
                 query = query.filter(Pick.time <= to_time)
-            if station:
+            if station is not None:
                 station = self.replace_sql_wildcard(station)
                 query = query.filter(Pick.station.like(station))
-            if phase:
+            if phase is not None:
                 query = query.filter(Pick.phase.like(phase))
-            if tag:
+            if tag is not None:
                 query = query.filter(Pick.tag.like(tag))
 
         return query
@@ -388,85 +414,56 @@ class Client:
         """
         Prints summery from event table.
         """
-        with self.session_scope() as session:
-            time = session \
-                .query(sqlalchemy.func.min(Event.time),
-                       sqlalchemy.func.max(Event.time)) \
-                .all()
-            print('Event time duration:')
-            print(f'From: {time[0][0].isoformat()}')
-            print(f'To:   {time[0][1].isoformat()}\n')
+        times = self.get_distinct_items('event', 'time')
+        print('Event time duration:')
+        print(f'From: {min(times).isoformat()}')
+        print(f'To:   {max(times).isoformat()}\n')
 
-            event_count = session.query(Event).count()
-            print(f'Total {event_count} events\n')
+        events = self.get_events().all()
+        print(f'Total {len(events)} events\n')
 
-            boundary = session \
-                .query(sqlalchemy.func.min(Event.longitude),
-                       sqlalchemy.func.max(Event.longitude),
-                       sqlalchemy.func.min(Event.latitude),
-                       sqlalchemy.func.max(Event.latitude)) \
-                .all()
-            print('Event boundary:')
-            print(f'West: {boundary[0][0]:>8.4f}')
-            print(f'East: {boundary[0][1]:>8.4f}')
-            print(f'South: {boundary[0][2]:>7.4f}')
-            print(f'North: {boundary[0][3]:>7.4f}\n')
+        latitudes = self.get_distinct_items('event', 'latitude')
+        longitudes = self.get_distinct_items('event', 'longitude')
+
+        print('Station boundary:')
+        print(f'West: {min(longitudes):>8.4f}')
+        print(f'East: {max(longitudes):>8.4f}')
+        print(f'South: {min(latitudes):>7.4f}')
+        print(f'North: {max(latitudes):>7.4f}\n')
 
     def pick_summery(self):
         """
         Prints summery from pick table.
         """
-        with self.session_scope() as session:
-            time = session \
-                .query(sqlalchemy.func.min(Pick.time),
-                       sqlalchemy.func.max(Pick.time)) \
-                .all()
-            print('Pick time duration:')
-            print(f'From: {time[0][0].isoformat()}')
-            print(f'To:   {time[0][1].isoformat()}\n')
+        times = self.get_distinct_items('pick', 'time')
+        print('Event time duration:')
+        print(f'From: {min(times).isoformat()}')
+        print(f'To:   {max(times).isoformat()}\n')
 
-            print('Phase count:')
-            phase_group_count = session \
-                .query(Pick.phase, sqlalchemy.func.count(Pick.phase)) \
-                .group_by(Pick.phase) \
-                .all()
-            ps_picks = 0
-            for phase, count in phase_group_count:
-                if phase in ['P', 'S']:
-                    ps_picks += count
-                print(f'{count} "{phase}" picks')
-            print(f'Total {ps_picks} P + S picks\n')
+        print('Phase count:')
+        phases = self.get_distinct_items('pick', 'phase')
+        for phase in phases:
+            picks = self.get_picks(phase=phase).all()
+            print(f'{len(picks)} "{phase}" picks')
+        print()
 
-            station_count = session \
-                .query(Pick.station.distinct()) \
-                .count()
-            print(f'Picks cover {station_count} stations:')
+        pick_stations = self.get_distinct_items('pick', 'station')
+        print(f'Picks cover {len(pick_stations)} stations:')
+        print([station for station in pick_stations], '\n')
 
-            station = session \
-                .query(Pick.station.distinct()) \
-                .order_by(Pick.station) \
-                .all()
-            print([stat[0] for stat in station], '\n')
+        no_pick_station = self.get_exclude_items('inventory', 'station',
+                                                 pick_stations)
+        if no_pick_station:
+            print(f'{len(no_pick_station)} stations without picks:')
+            print([station for station in no_pick_station], '\n')
 
-            no_pick_station = session \
-                .query(Inventory.station) \
-                .order_by(Inventory.station) \
-                .filter(Inventory.station
-                        .notin_(session.query(Pick.station))) \
-                .all()
-            if no_pick_station:
-                print(f'{len(no_pick_station)} stations without picks:')
-                print([stat[0] for stat in no_pick_station], '\n')
+        inventory_station = self.get_distinct_items('inventory', 'station')
+        no_inventory_station = self.get_exclude_items('pick', 'station',
+                                                      inventory_station)
 
-            no_geom_station = session \
-                .query(Pick.station.distinct()) \
-                .order_by(Pick.station) \
-                .filter(Pick.station
-                        .notin_(session.query(Inventory.station))) \
-                .all()
-            if no_geom_station:
-                print(f'{len(no_geom_station)} stations without geometry:')
-                print([stat[0] for stat in no_geom_station], '\n')
+        if no_inventory_station:
+            print(f'{len(no_inventory_station)} stations without geometry:')
+            print([station for station in no_inventory_station], '\n')
 
     def generate_training_data(self, pick_list, dataset, chunk_size=64):
         """
@@ -514,11 +511,11 @@ class Client:
         """
         with self.session_scope() as session:
             query = session.query(Waveform)
-            if from_time:
+            if from_time is not None:
                 query = query.filter(from_time <= Waveform.endtime)
-            if to_time:
+            if to_time is not None:
                 query = query.filter(Waveform.starttime <= to_time)
-            if station:
+            if station is not None:
                 station = self.replace_sql_wildcard(station)
                 query = query.filter(Waveform.station.like(station))
 
@@ -528,28 +525,18 @@ class Client:
         """
         Prints summery from waveform table.
         """
-        with self.session_scope() as session:
-            time = session \
-                .query(sqlalchemy.func.min(Waveform.starttime),
-                       sqlalchemy.func.max(Waveform.endtime)) \
-                .all()
-            print('Event time duration:')
-            print(f'From: {time[0][0].isoformat()}')
-            print(f'To:   {time[0][1].isoformat()}\n')
+        starttimes = self.get_distinct_items('waveform', 'starttime')
+        endtimes = self.get_distinct_items('waveform', 'endtime')
+        print('Waveform time duration:')
+        print(f'From: {min(starttimes).isoformat()}')
+        print(f'To:   {max(endtimes).isoformat()}\n')
 
-            event_count = session.query(Waveform).count()
-            print(f'Total {event_count} events\n')
+        waveforms = self.get_events().all()
+        print(f'Total {len(waveforms)} events\n')
 
-            station_count = session \
-                .query(Waveform.station.distinct()) \
-                .count()
-            print(f'Picks cover {station_count} stations:')
-
-            station = session \
-                .query(Waveform.station.distinct()) \
-                .order_by(Waveform.station) \
-                .all()
-            print([stat[0] for stat in station], '\n')
+        stations = self.get_distinct_items('waveform', 'station')
+        print(f'Picks cover {len(stations)} stations:')
+        print([station for station in stations], '\n')
 
     def remove_duplicates(self, table, match_columns):
         """
@@ -572,7 +559,7 @@ class Client:
                 .delete(synchronize_session='fetch')
             print(f'Remove {duplicate} duplicate {table.__tablename__}s')
 
-    def list_distinct_items(self, table, column):
+    def get_distinct_items(self, table, column):
         """
         Returns a query of unique items.
 
@@ -582,14 +569,35 @@ class Client:
         :return: A list of query.
         """
         table = self.get_table_class(table)
+        col = operator.attrgetter(column)
         with self.session_scope() as session:
-            col = operator.attrgetter(column)
             query = session \
                 .query(col(table).distinct()) \
                 .order_by(col(table)) \
                 .all()
-            query = [q[0] for q in query]
-            return query
+        query = [q[0] for q in query]
+        return query
+
+    def get_exclude_items(self, table, column, exclude):
+        """
+        Returns a query of exclude items.
+
+        :param str table: Target table name.
+        :param str column: Target column name.
+        :param exclude: Exclude list.
+        :rtype: list
+        :return: A list of query.
+        """
+        table = self.get_table_class(table)
+        with self.session_scope() as session:
+            col = operator.attrgetter(column)
+            query = session \
+                .query(col(table)) \
+                .order_by(col(table)) \
+                .filter(col(table).notin_(exclude)) \
+                .all()
+        query = [q[0] for q in query]
+        return query
 
     def clear_table(self, table):
         table = self.get_table_class(table)
