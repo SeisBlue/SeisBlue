@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   docs-build:
     docker:
-      - image: seisnn/tf_ssh:latest
+      - image: seisnn/dev
     steps:
       - checkout
       - run:
