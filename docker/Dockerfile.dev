@@ -38,8 +38,5 @@ ENV LD_LIBRARY_PATH /usr/local/cuda-10.1/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 # Add SeisNN into Python PATH
 RUN echo "export PYTHONPATH=$PYTHONPATH:/SeisNN" >> /etc/profile
 
-# Change Jupyter interpreter
-RUN sed -i 's/\/usr\/bin\/python3/\/usr\/local\/bin\/python/g' /usr/local/share/jupyter/kernels/python3/kernel.json
-
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
