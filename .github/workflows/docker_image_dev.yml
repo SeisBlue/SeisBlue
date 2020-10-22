@@ -5,6 +5,7 @@ on:
     paths: 
       - 'docker/Dockerfile.dev'
       - '.github/workflows/docker_image_dev.yml'
+      - 'requirements.txt'
 env:
   DOCKER_REPO: seisnn/dev
 

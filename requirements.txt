@@ -1,0 +1,16 @@
+jupyterlab
+ipympl
+pyyaml
+obspy
+scikit-learn
+sklearn
+tqdm
+Cartopy
+Pillow
+seaborn
+pylint
+flake8
+yapf
+Sphinx
+sphinx-bootstrap-theme
+recommonmark
