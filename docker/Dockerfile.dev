@@ -9,7 +9,7 @@ RUN apt-mark hold libcudnn7; apt-get update && apt-get upgrade -y; apt-get insta
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 COPY requirements.txt /tmp/
-RUN python -m pip install --upgrade pip; pip install shapely --no-binary shapely; python -m pip --no-cache-dir install --upgrade /tmp/requirements.txt
+RUN python -m pip install --upgrade pip; pip install shapely --no-binary shapely; python -m pip --no-cache-dir install --upgrade --requirement /tmp/requirements.txt
 
 # Jupyter Lab interactive plot
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build && jupyter labextension install jupyter-matplotlib --no-build; jupyter lab build
