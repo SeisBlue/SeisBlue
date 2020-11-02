@@ -31,11 +31,11 @@ RUN echo "export PYTHONPATH=$PYTHONPATH:/SeisNN" >> /etc/profile
 # Delete Tensorflow login message for sftp login
 RUN mv /etc/bash.bashrc /etc/bash.bashrc.old; echo 'alias ls="ls --color"' > /etc/bash.bashrc
 
-ENV PATH /usr/local/cuda-10.1/bin:$PATH
-ENV LD_LIBRARY_PATH /usr/local/cuda-10.1/lib64:/usr/local/cuda-10.2/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
-ENV LIBRARY_PATH /usr/local/cuda-10.1/lib64/stubs:$LIBRARY_PATH
-ENV CUPIT_LIB_PATH /usr/local/cuda-10.1/extras/CUPTI/lib64:$CUPIT_LIB_PATH
-ENV LD_LIBRARY_PATH $CUPIT_LIB_PATH:$LD_LIBRARY_PATH
+ENV PATH=/usr/local/cuda-10.1/bin:$PATH
+ENV LD_LIBRARY_PATH=/usr/local/cuda-10.1/lib64:/usr/local/cuda-10.2/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH=/usr/local/cuda-10.1/lib64/stubs:$LIBRARY_PATH
+ENV CUPIT_LIB_PATH=/usr/local/cuda-10.1/extras/CUPTI/lib64:$CUPIT_LIB_PATH
+ENV LD_LIBRARY_PATH=$CUPIT_LIB_PATH:$LD_LIBRARY_PATH
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
