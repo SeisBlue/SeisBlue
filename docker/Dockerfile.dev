@@ -27,7 +27,6 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 
 # Delete Tensorflow login message for sftp login
 RUN mv /etc/bash.bashrc /etc/bash.bashrc.old; echo 'alias ls="ls --color"' > /etc/bash.bashrc
-RUN env | grep = >> /etc/environment
 
 ENV PATH /usr/local/cuda-10.1/bin:${PATH:+:${PATH}}
 ENV LD_LIBRARY_PATH /usr/local/cuda-10.1/lib64:/usr/local/cuda-10.2/targets/x86_64-linux/lib/${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
