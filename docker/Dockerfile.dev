@@ -3,7 +3,7 @@ FROM tensorflow/tensorflow:2.3.1-gpu-jupyter
 # nodejs source
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
-RUN apt-mark hold libcudnn* cuda*; apt-get update && apt-get upgrade -y; apt-get install sudo openssh-server vim htop screen reptyr git nodejs ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y
+RUN apt-mark hold libcudnn* cuda*; apt-get update && apt-get upgrade -y; apt-get install sudo openssh-server vim htop screen reptyr git nodejs ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y; apt-get install --reinstall libcublas10 -y
 
 # Add all user into sudoers
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
@@ -26,13 +26,12 @@ ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
 # Set PATH
-RUN echo "export PATH=$PATH" >> /etc/profile
-RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda-10.2/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/profile
+RUN echo "export PATH=$PATH" >> /etc/profile; echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda-10.2/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/profile
 RUN echo "export PYTHONPATH=$PYTHONPATH:/SeisNN" >> /etc/profile
 
 
 # Delete login message for sftp login
-RUN mv /etc/bash.bashrc /etc/bash.bashrc.old; echo 'alias ls="ls --color"' > /etc/bash.bashrc
+RUN mv /etc/bash.bashrc /etc/bash.bashrc.old; echo 'alias ls="ls --color"' > /etc/bash.bashrc; echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda-10.2/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/bash.bashrc
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
