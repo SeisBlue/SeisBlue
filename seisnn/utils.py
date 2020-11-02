@@ -55,13 +55,16 @@ def parallel(par, file_list):
     :rtype: list
     :return: List of results.
     """
-    print(f'Parallel in {mp.cpu_count()} threads:')
-    batch_size = int(np.ceil(len(file_list) / mp.cpu_count()))
-    pool = mp.Pool(processes=mp.cpu_count(), maxtasksperchild=1)
+    cpu_count = mp.cpu_count()
+    print(f'Found {cpu_count} cpu threads:')
+    pool = mp.Pool(processes=cpu_count, maxtasksperchild=1)
+
+    batch_size = int(np.ceil(len(file_list) / cpu_count))
+    total = int(np.ceil(len(file_list) / batch_size))
+    map_func = pool.imap_unordered(par, batch(file_list, batch_size))
+
     output = []
-    for thread_output in tqdm.tqdm(
-            pool.imap_unordered(par, batch(file_list, batch_size)),
-            total=int(np.ceil(len(file_list) / batch_size))):
+    for thread_output in tqdm.tqdm(map_func, total=total):
         if thread_output:
             output.extend(thread_output)
 
