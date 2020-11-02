@@ -5,7 +5,6 @@ on:
     paths:
       - '.github/workflows/docker_image_dev.yml'
       - 'docker/Dockerfile.dev'
-      - 'docker/profile'
       - 'requirements.txt'
 
 env:
