@@ -2,10 +2,12 @@ name: Docker Image Dev
 
 on:
   push:
-    paths: 
-      - 'docker/Dockerfile.dev'
+    paths:
       - '.github/workflows/docker_image_dev.yml'
+      - 'docker/Dockerfile.dev'
+      - 'docker/profile'
       - 'requirements.txt'
+
 env:
   DOCKER_REPO: seisnn/dev
 
