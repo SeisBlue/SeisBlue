@@ -86,7 +86,7 @@ def get_example_list(batch_picks, database):
             stream = signal_preprocessing(stream)
 
             instance = core.Instance().from_stream(stream)
-            instance.phase = ['EQ', 'P', 'S']
+            instance.phase = ['P', 'S', 'N']
             instance.get_label(database, shape='triang')
             instance.predict = np.zeros(instance.label.shape)
 
@@ -97,7 +97,7 @@ def get_example_list(batch_picks, database):
     return example_list
 
 
-def get_label(instance, database, shape, half_width=10):
+def get_label(instance, database, shape, half_width=20):
     """
     Add generated label to stream.
 
@@ -109,9 +109,11 @@ def get_label(instance, database, shape, half_width=10):
     :return: Label.
     """
     db = sql.Client(database)
+    label = np.zeros([instance.npts, len(instance.phase)])
 
-    label = np.zeros([instance.npts, 3])
+    ph_index = {}
     for i, phase in enumerate(instance.phase):
+        ph_index[phase] = i
         picks = db.get_picks(from_time=instance.starttime.datetime,
                              to_time=instance.endtime.datetime,
                              station=instance.station,
@@ -122,17 +124,26 @@ def get_label(instance, database, shape, half_width=10):
             pick_time_index = int(pick_time / instance.delta)
             label[pick_time_index, i] = 1
 
+    if 'EQ' in instance.phase:
+        # Make EQ window start by P and end by S.
+        label[:, ph_index['EQ']] = label[:, ph_index['P']] \
+                                   - label[:, ph_index['S']]
+        label[:, ph_index['EQ']] = np.cumsum(label[:, ph_index['EQ']])
+        if np.any(label[:, ph_index['EQ']] < 0):
+            label[:, ph_index['EQ']] += 1
+
     for i, phase in enumerate(instance.phase):
-        if phase == 'EQ':
-            # Make EQ window start by P and end by S.
-            label[:, 0] = label[:, 1] - label[:, 2]
-            label[:, 0] = np.cumsum(label[:, 0])
-            if np.any(label[:, 0] < 0):
-                label[:, 0] += 1
-        else:
+        if not phase == 'EQ':
             wavelet = scipy.signal.windows.get_window(shape, 2 * half_width)
             label[:, i] = scipy.signal.convolve(label[:, i], wavelet[1:],
                                                 mode='same')
+
+    if 'N' in instance.phase:
+        # Make Noise window by 1 - P - S
+        label[:, ph_index['N']] = 1
+        label[:, ph_index['N']] -= label[:, ph_index['P']]
+        label[:, ph_index['N']] -= label[:, ph_index['S']]
+
     return label
 
 
