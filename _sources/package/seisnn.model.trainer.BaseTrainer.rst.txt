@@ -17,8 +17,8 @@ seisnn.model.trainer.BaseTrainer
    .. autosummary::
    
       ~BaseTrainer.__init__
-      ~BaseTrainer.create_model_folder
       ~BaseTrainer.get_dataset_length
+      ~BaseTrainer.get_model_dir
    
    
 

@@ -17,8 +17,9 @@ seisnn.model.trainer.GeneratorTrainer
    .. autosummary::
    
       ~GeneratorTrainer.__init__
-      ~GeneratorTrainer.create_model_folder
+      ~GeneratorTrainer.export_model
       ~GeneratorTrainer.get_dataset_length
+      ~GeneratorTrainer.get_model_dir
       ~GeneratorTrainer.train_loop
       ~GeneratorTrainer.train_step
    
