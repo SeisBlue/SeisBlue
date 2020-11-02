@@ -1,7 +1,6 @@
 """
 Training settings.
 """
-import abc
 import os
 import shutil
 
@@ -26,7 +25,7 @@ class BaseTrainer:
         return count
 
     @staticmethod
-    def create_model_folder(model_instance, remove=False):
+    def get_model_dir(model_instance, remove=False):
         config = utils.get_config()
         save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
 
@@ -45,9 +44,7 @@ class GeneratorTrainer(BaseTrainer):
     Trainer class.
     """
 
-    def __init__(self,
-                 database=None,
-                 model=nest_net(),
+    def __init__(self, database=None, model=nest_net(),
                  optimizer=tf.keras.optimizers.Adam(1e-4),
                  loss=tf.keras.losses.BinaryCrossentropy()):
         """
@@ -90,7 +87,8 @@ class GeneratorTrainer(BaseTrainer):
     def train_loop(self,
                    dataset, model_name,
                    epochs=1, batch_size=1,
-                   log_step=100, plot=False):
+                   log_step=100, plot=False,
+                   remove=False):
         """
         Main training loop.
 
@@ -101,16 +99,23 @@ class GeneratorTrainer(BaseTrainer):
         :param int log_step: Logging step interval.
         :param bool plot: Plot training validation,
             False save fig, True show fig.
+        :param bool remove: If True, remove model folder before training.
         :return:
         """
-        model_path, history_path = self.create_model_folder(model_name)
-        dataset = io.read_dataset(dataset).shuffle(100000)
-        val = next(iter(dataset.batch(1)))
+        model_path, history_path = self.get_model_dir(model_name,
+                                                      remove=remove)
 
         ckpt = tf.train.Checkpoint(model=self.model, optimizer=self.optimizer)
         ckpt_manager = tf.train.CheckpointManager(ckpt, model_path,
                                                   max_to_keep=100)
 
+        if ckpt_manager.latest_checkpoint:
+            ckpt.restore(ckpt_manager.latest_checkpoint)
+            last_epoch = len(ckpt_manager.checkpoints)
+            print(f'Latest checkpoint epoch {last_epoch} restored!!')
+
+        dataset = io.read_dataset(dataset).shuffle(100000)
+        val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
         data_len = self.get_dataset_length(self.database)
@@ -148,4 +153,17 @@ class GeneratorTrainer(BaseTrainer):
                 n += 1
 
         ckpt_save_path = ckpt_manager.save()
-        print(f'Saving pre-train checkpoint to {ckpt_save_path}')
+        print(f'Saving checkpoint to {ckpt_save_path}')
+
+    def export_model(self, model_name):
+        model_path, history_path = self.get_model_dir(model_name)
+        ckpt = tf.train.Checkpoint(model=self.model, optimizer=self.optimizer)
+        ckpt_manager = tf.train.CheckpointManager(ckpt, model_path,
+                                                  max_to_keep=100)
+
+        if ckpt_manager.latest_checkpoint:
+            ckpt.restore(ckpt_manager.latest_checkpoint)
+            last_epoch = len(ckpt_manager.checkpoints)
+            print(f'Latest checkpoint epoch {last_epoch} restored!!')
+
+        self.model.save(model_path)
