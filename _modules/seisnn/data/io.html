@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>seisnn.data.io &#8212; SeisNN 0.3.0dev documentation</title>
-    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -277,10 +277,22 @@
                 <span class="k">if</span> <span class="n">lon</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;W&#39;</span><span class="p">:</span>
                     <span class="n">EW</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
-                <span class="n">lat</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span> <span class="o">*</span> <span class="n">NS</span>
+                <span class="n">lat_degree</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">lat_minute</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">60</span>
+
+                <span class="k">if</span> <span class="n">lat_minute</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># high accuracy lat-lon</span>
+                    <span class="n">lat_minute</span> <span class="o">/=</span> <span class="mi">1000</span>
+
+                <span class="n">lat</span> <span class="o">=</span> <span class="p">(</span><span class="n">lat_degree</span> <span class="o">+</span> <span class="n">lat_minute</span><span class="p">)</span> <span class="o">*</span> <span class="n">NS</span>
                 <span class="n">lat</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Latitude</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
 
-                <span class="n">lon</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lon</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span> <span class="o">*</span> <span class="n">EW</span>
+                <span class="n">lon_degree</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+                <span class="n">lon_minute</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">60</span>
+
+                <span class="k">if</span> <span class="n">lon_minute</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># high accuracy lat-lon</span>
+                    <span class="n">lon_minute</span> <span class="o">/=</span> <span class="mi">1000</span>
+
+                <span class="n">lon</span> <span class="o">=</span> <span class="p">(</span><span class="n">lon_degree</span> <span class="o">+</span> <span class="n">lat_minute</span><span class="p">)</span> <span class="o">*</span> <span class="n">EW</span>
                 <span class="n">lon</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Longitude</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
 
                 <span class="n">location</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="n">lat</span><span class="p">,</span>
@@ -369,7 +381,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
     </p>
   </div>
 </footer>
