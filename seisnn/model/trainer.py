@@ -119,12 +119,14 @@ class GeneratorTrainer(BaseTrainer):
         metrics_names = ['loss', 'val']
 
         data_len = self.get_dataset_length(self.database)
-        progbar = tf.keras.utils.Progbar(
-            data_len, stateful_metrics=metrics_names)
 
         for epoch in range(epochs):
             print(f'epoch {epoch + 1} / {epochs}')
+
             n = 0
+            progbar = tf.keras.utils.Progbar(
+                data_len, stateful_metrics=metrics_names)
+
             loss_buffer = []
             for train in dataset.prefetch(100).batch(batch_size):
                 train_loss, val_loss = self.train_step(train, val)
