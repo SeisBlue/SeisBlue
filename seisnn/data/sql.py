@@ -143,6 +143,7 @@ class Waveform(Base):
     station = sqlalchemy.Column(sqlalchemy.String,
                                 sqlalchemy.ForeignKey('inventory.station'),
                                 nullable=False)
+    channel = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     dataset = sqlalchemy.Column(sqlalchemy.String)
     data_index = sqlalchemy.Column(sqlalchemy.Integer)
 
@@ -150,6 +151,7 @@ class Waveform(Base):
         self.starttime = UTCDateTime(instance.starttime).datetime
         self.endtime = UTCDateTime(instance.endtime).datetime
         self.station = instance.station
+        self.channel = ', '.join(instance.channel)
         self.dataset = dataset
         self.data_index = data_index
 
@@ -158,6 +160,7 @@ class Waveform(Base):
                f"Start={self.starttime}, " \
                f"End={self.endtime}, " \
                f"Station={self.station}, " \
+               f"Channel={self.channel}, " \
                f"Dataset={self.dataset}, " \
                f"Index={self.data_index})"
 
