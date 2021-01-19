@@ -67,8 +67,8 @@ class Instance:
         self.delta = trace.stats.delta
 
         channel = []
-        trace = np.zeros([3008, 1])
-        for i, comp in enumerate(['Z']):
+        trace = np.zeros([3008, 3])
+        for i, comp in enumerate(['Z', 'N', 'E']):
             try:
                 st = stream.select(component=comp)
                 trace[:, i] = st.traces[0].data
