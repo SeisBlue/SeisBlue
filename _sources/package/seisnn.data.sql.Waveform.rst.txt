@@ -27,6 +27,7 @@ seisnn.data.sql.Waveform
 
    .. autosummary::
    
+      ~Waveform.channel
       ~Waveform.data_index
       ~Waveform.dataset
       ~Waveform.endtime
