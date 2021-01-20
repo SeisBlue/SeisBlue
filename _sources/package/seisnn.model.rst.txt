@@ -27,6 +27,7 @@ seisnn.model
    :toctree:
    :recursive:
 
+   seisnn.model.attention
    seisnn.model.generator
    seisnn.model.trainer
 

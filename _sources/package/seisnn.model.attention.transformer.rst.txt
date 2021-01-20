@@ -1,0 +1,6 @@
+seisnn.model.attention.transformer
+==================================
+
+.. currentmodule:: seisnn.model.attention
+
+.. autofunction:: transformer

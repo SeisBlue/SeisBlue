@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seisnn.model.attention &#8212; SeisNN 0.3.0dev documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          SeisNN</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docker.html">Docker</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../package/seisnn.html">seisnn</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for seisnn.model.attention</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span><span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">BatchNormalization</span><span class="p">,</span> \
+    <span class="n">Bidirectional</span><span class="p">,</span> <span class="n">concatenate</span><span class="p">,</span> <span class="n">Conv1D</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Layer</span><span class="p">,</span> \
+    <span class="n">LayerNormalization</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">MaxPooling1D</span><span class="p">,</span> <span class="n">UpSampling1D</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="transformer"><a class="viewcode-back" href="../../../package/seisnn.model.attention.transformer.html#seisnn.model.attention.transformer">[docs]</a><span class="k">def</span> <span class="nf">transformer</span><span class="p">(</span><span class="n">img_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="p">))</span>
+    <span class="n">new_dim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">ff_dim</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">num_head</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">conv1</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">new_dim</span><span class="p">)</span>
+    <span class="n">pool1</span> <span class="o">=</span> <span class="n">MaxPooling1D</span><span class="p">(</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv1</span><span class="p">)</span>
+    <span class="n">conv2</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">pool1</span><span class="p">)</span>
+    <span class="n">pool2</span> <span class="o">=</span> <span class="n">MaxPooling1D</span><span class="p">(</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv2</span><span class="p">)</span>
+    <span class="n">conv3</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">pool2</span><span class="p">)</span>
+    <span class="n">pool3</span> <span class="o">=</span> <span class="n">MaxPooling1D</span><span class="p">(</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv3</span><span class="p">)</span>
+    <span class="c1"># conv4 = Conv1D(32, 7, activation=&#39;relu&#39;, padding=&#39;same&#39;)(pool3)</span>
+    <span class="c1"># pool4 = MaxPooling1D(2)(conv4)</span>
+    <span class="n">conv5</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">pool3</span><span class="p">)</span>
+    <span class="n">pool5</span> <span class="o">=</span> <span class="n">MaxPooling1D</span><span class="p">(</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv5</span><span class="p">)</span>
+    <span class="n">conv6</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">pool5</span><span class="p">)</span>
+    <span class="n">pool6</span> <span class="o">=</span> <span class="n">MaxPooling1D</span><span class="p">(</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv6</span><span class="p">)</span>
+    <span class="n">conv7</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">pool6</span><span class="p">)</span>
+    <span class="n">pool7</span> <span class="o">=</span> <span class="n">MaxPooling1D</span><span class="p">(</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv7</span><span class="p">)</span>
+    <span class="n">resCNN</span> <span class="o">=</span> <span class="n">ResNet_build</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">res1</span> <span class="o">=</span> <span class="n">resCNN</span><span class="p">(</span><span class="n">pool7</span><span class="p">)</span>
+
+    <span class="n">bilstm1</span> <span class="o">=</span> <span class="n">Bidirectional</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">))(</span><span class="n">res1</span><span class="p">)</span>
+    <span class="n">bilstm1</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)(</span><span class="n">bilstm1</span><span class="p">)</span>
+    <span class="n">bilstm1</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">bilstm1</span><span class="p">)</span>
+    <span class="n">bilstm1</span> <span class="o">=</span> <span class="n">LayerNormalization</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)(</span><span class="n">bilstm1</span><span class="p">)</span>
+    <span class="n">bilstm1</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">bilstm1</span><span class="p">)</span>
+
+    <span class="n">bilstm2</span> <span class="o">=</span> <span class="n">Bidirectional</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">))(</span><span class="n">bilstm1</span><span class="p">)</span>
+    <span class="n">bilstm2</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)(</span><span class="n">bilstm2</span><span class="p">)</span>
+    <span class="n">bilstm2</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">bilstm2</span><span class="p">)</span>
+    <span class="n">bilstm2</span> <span class="o">=</span> <span class="n">LayerNormalization</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)(</span><span class="n">bilstm2</span><span class="p">)</span>
+    <span class="n">bilstm2</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">bilstm2</span><span class="p">)</span>
+
+    <span class="n">lstm1</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">bilstm2</span><span class="p">)</span>
+    <span class="n">transformer_block1</span> <span class="o">=</span> <span class="n">TransformerBlockE</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">num_head</span><span class="p">,</span> <span class="n">ff_dim</span><span class="p">)</span>
+    <span class="n">transE</span> <span class="o">=</span> <span class="n">transformer_block1</span><span class="p">(</span><span class="n">lstm1</span><span class="p">)</span>
+    <span class="n">transformer_block2</span> <span class="o">=</span> <span class="n">TransformerBlockE</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">num_head</span><span class="p">,</span> <span class="n">ff_dim</span><span class="p">)</span>
+    <span class="n">transE</span> <span class="o">=</span> <span class="n">transformer_block2</span><span class="p">(</span><span class="n">transE</span><span class="p">)</span>
+    <span class="n">up1</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">transE</span><span class="p">)</span>
+    <span class="n">conv8</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up1</span><span class="p">)</span>
+    <span class="n">up2</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv8</span><span class="p">)</span>
+    <span class="n">conv9</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up2</span><span class="p">)</span>
+    <span class="n">up3</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv9</span><span class="p">)</span>
+    <span class="n">conv10</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up3</span><span class="p">)</span>
+    <span class="c1"># up4 = UpSampling1D(size=2)(conv10)</span>
+    <span class="c1"># conv11 = Conv1D(32, 7, activation=&#39;relu&#39;, padding=&#39;same&#39;)(up4)</span>
+    <span class="n">up5</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv10</span><span class="p">)</span>
+    <span class="n">conv12</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up5</span><span class="p">)</span>
+    <span class="n">up6</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv12</span><span class="p">)</span>
+    <span class="n">conv13</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up6</span><span class="p">)</span>
+    <span class="n">up7</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv13</span><span class="p">)</span>
+    <span class="n">conv14</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up7</span><span class="p">)</span>
+
+    <span class="n">conv15</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv14</span><span class="p">)</span>
+    <span class="c1">#############################################################################</span>
+    <span class="n">lstm2</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">transE</span><span class="p">)</span>
+    <span class="n">transformer_block3</span> <span class="o">=</span> <span class="n">TransformerBlockE</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">num_head</span><span class="p">,</span> <span class="n">ff_dim</span><span class="p">)</span>
+    <span class="n">transE_P</span> <span class="o">=</span> <span class="n">transformer_block3</span><span class="p">(</span><span class="n">lstm2</span><span class="p">)</span>
+    <span class="n">up1_P</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">transE_P</span><span class="p">)</span>
+    <span class="n">conv8_P</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up1_P</span><span class="p">)</span>
+    <span class="n">up2_P</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv8_P</span><span class="p">)</span>
+    <span class="n">conv9_P</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up2_P</span><span class="p">)</span>
+    <span class="n">up3_P</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv9_P</span><span class="p">)</span>
+    <span class="n">conv10_P</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up3_P</span><span class="p">)</span>
+    <span class="c1"># up4_P = UpSampling1D(size=2)(conv10_P)</span>
+    <span class="c1"># conv11_P = Conv1D(32, 7, activation=&#39;relu&#39;, padding=&#39;same&#39;)(up4_P)</span>
+    <span class="n">up5_P</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv10_P</span><span class="p">)</span>
+    <span class="n">conv12_P</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up5_P</span><span class="p">)</span>
+    <span class="n">up6_P</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv12_P</span><span class="p">)</span>
+    <span class="n">conv13_P</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up6_P</span><span class="p">)</span>
+    <span class="n">up7_P</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv13_P</span><span class="p">)</span>
+    <span class="n">conv14_P</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up7_P</span><span class="p">)</span>
+    <span class="n">conv15_P</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv14_P</span><span class="p">)</span>
+    <span class="c1">#############################################################################</span>
+    <span class="n">lstm3</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">transE</span><span class="p">)</span>
+    <span class="n">transformer_block4</span> <span class="o">=</span> <span class="n">TransformerBlockE</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">num_head</span><span class="p">,</span> <span class="n">ff_dim</span><span class="p">)</span>
+    <span class="n">transE_S</span> <span class="o">=</span> <span class="n">transformer_block4</span><span class="p">(</span><span class="n">lstm3</span><span class="p">)</span>
+    <span class="n">up1_S</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">transE_S</span><span class="p">)</span>
+    <span class="n">conv8_S</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up1_S</span><span class="p">)</span>
+    <span class="n">up2_S</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv8_S</span><span class="p">)</span>
+    <span class="n">conv9_S</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">96</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up2_S</span><span class="p">)</span>
+    <span class="n">up3_S</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv9_S</span><span class="p">)</span>
+    <span class="n">conv10_S</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up3_S</span><span class="p">)</span>
+    <span class="c1"># up4_S = UpSampling1D(size=2)(conv10_S)</span>
+    <span class="c1"># conv11_S = Conv1D(32, 7, activation=&#39;relu&#39;, padding=&#39;same&#39;)(up4_S)</span>
+    <span class="n">up5_S</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv10_S</span><span class="p">)</span>
+    <span class="n">conv12_S</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up5_S</span><span class="p">)</span>
+    <span class="n">up6_S</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv12_S</span><span class="p">)</span>
+    <span class="n">conv13_S</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up6_S</span><span class="p">)</span>
+    <span class="n">up7_S</span> <span class="o">=</span> <span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">conv13_S</span><span class="p">)</span>
+    <span class="n">conv14_S</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">up7_S</span><span class="p">)</span>
+    <span class="n">conv15_S</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">conv14_S</span><span class="p">)</span>
+    <span class="c1">#############################################################################</span>
+    <span class="n">ouput</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">conv15</span><span class="p">,</span> <span class="n">conv15_P</span><span class="p">,</span> <span class="n">conv15_S</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ouput</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">ouput</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">ouput</span><span class="p">)</span>
+
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">opt</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span>
+                  <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="ResBlock"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResBlock.html#seisnn.model.attention.ResBlock">[docs]</a><span class="k">class</span> <span class="nc">ResBlock</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+<div class="viewcode-block" id="ResBlock.__init__"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResBlock.html#seisnn.model.attention.ResBlock.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_nums</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">residual_path</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ResBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_nums</span> <span class="o">=</span> <span class="n">filter_nums</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strides</span> <span class="o">=</span> <span class="n">strides</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">residual_path</span> <span class="o">=</span> <span class="n">residual_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn_1</span> <span class="o">=</span> <span class="n">BatchNormalization</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act_relu1</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_1</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="n">filter_nums</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">strides</span><span class="p">,</span>
+                             <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn_2</span> <span class="o">=</span> <span class="n">BatchNormalization</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act_relu2</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_2</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_2</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="n">filter_nums</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">strides</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">block</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Conv1D</span><span class="p">(</span><span class="n">filter_nums</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">strides</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">block</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="ResBlock.call"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResBlock.html#seisnn.model.attention.ResBlock.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn_1</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="n">training</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act_relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn_2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="n">training</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act_relu2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">identity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">add</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">identity</span><span class="p">])</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+<div class="viewcode-block" id="ResBlock.get_config"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResBlock.html#seisnn.model.attention.ResBlock.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;filter_nums&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_nums</span><span class="p">,</span>
+            <span class="s1">&#39;strides&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">strides</span><span class="p">,</span>
+            <span class="s1">&#39;residual_path&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">residual_path</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">config</span></div></div>
+
+
+<div class="viewcode-block" id="ResNet_build"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResNet_build.html#seisnn.model.attention.ResNet_build">[docs]</a><span class="k">def</span> <span class="nf">ResNet_build</span><span class="p">(</span><span class="n">filter_nums</span><span class="p">,</span> <span class="n">block_nums</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">build_model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">build_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ResBlock</span><span class="p">(</span><span class="n">filter_nums</span><span class="p">,</span> <span class="n">strides</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">block_nums</span><span class="p">):</span>
+        <span class="n">build_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ResBlock</span><span class="p">(</span><span class="n">filter_nums</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">build_model</span></div>
+
+
+<div class="viewcode-block" id="MultiHeadSelfAttention"><a class="viewcode-back" href="../../../package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention">[docs]</a><span class="k">class</span> <span class="nc">MultiHeadSelfAttention</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+<div class="viewcode-block" id="MultiHeadSelfAttention.__init__"><a class="viewcode-back" href="../../../package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiHeadSelfAttention</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span> <span class="o">=</span> <span class="n">embed_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="k">if</span> <span class="n">embed_dim</span> <span class="o">%</span> <span class="n">num_heads</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;embedding dimension = </span><span class="si">{</span><span class="n">embed_dim</span><span class="si">}</span><span class="s2"> should be divisible by number of heads = </span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_dim</span> <span class="o">=</span> <span class="n">embed_dim</span> <span class="o">//</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_dense</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_dense</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_dense</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combine_heads</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span></div>
+
+    <span class="k">def</span> <span class="nf">attention</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">transpose_b</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dim_key</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">key</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">scaled_score</span> <span class="o">=</span> <span class="n">score</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dim_key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">:</span>
+            <span class="n">infmatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_dim</span><span class="p">])</span> <span class="o">*</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="n">infmatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">infmatrix</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">infmatrix</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">infmatrix</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">scaled_score</span> <span class="o">=</span> <span class="n">scaled_score</span> <span class="o">+</span> <span class="n">infmatrix</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scaled_score</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">weights</span>
+
+    <span class="k">def</span> <span class="nf">separate_heads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>
+                       <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_dim</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">perm</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+<div class="viewcode-block" id="MultiHeadSelfAttention.call"><a class="viewcode-back" href="../../../package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="c1"># x.shape = [batch_size, seq_len, embedding_dim]</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_dim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_dense</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>  <span class="c1"># (batch_size, seq_len, embed_dim)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_dense</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>  <span class="c1"># (batch_size, seq_len, embed_dim)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_dense</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>  <span class="c1"># (batch_size, seq_len, embed_dim)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_heads</span><span class="p">(</span>
+            <span class="n">query</span><span class="p">,</span> <span class="n">batch_size</span>
+        <span class="p">)</span>  <span class="c1"># (batch_size, num_heads, seq_len, projection_dim)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_heads</span><span class="p">(</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">batch_size</span>
+        <span class="p">)</span>  <span class="c1"># (batch_size, num_heads, seq_len, projection_dim)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separate_heads</span><span class="p">(</span>
+            <span class="n">value</span><span class="p">,</span> <span class="n">batch_size</span>
+        <span class="p">)</span>  <span class="c1"># (batch_size, num_heads, seq_len, projection_dim)</span>
+        <span class="n">attention</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">attention</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+            <span class="n">attention</span><span class="p">,</span> <span class="n">perm</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="p">)</span>  <span class="c1"># (batch_size, seq_len, num_heads, projection_dim)</span>
+        <span class="n">concat_attention</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+            <span class="n">attention</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># (batch_size, seq_len, embed_dim)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_heads</span><span class="p">(</span>
+            <span class="n">concat_attention</span>
+        <span class="p">)</span>  <span class="c1"># (batch_size, seq_len, embed_dim)</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="MultiHeadSelfAttention.get_config"><a class="viewcode-back" href="../../../package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;embed_dim&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">,</span>
+            <span class="s1">&#39;num_heads&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span>
+            <span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">config</span></div></div>
+
+
+<div class="viewcode-block" id="TransformerBlockE"><a class="viewcode-back" href="../../../package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE">[docs]</a><span class="k">class</span> <span class="nc">TransformerBlockE</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+<div class="viewcode-block" id="TransformerBlockE.__init__"><a class="viewcode-back" href="../../../package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">ff_dim</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TransformerBlockE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span> <span class="o">=</span> <span class="n">embed_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ff_dim</span> <span class="o">=</span> <span class="n">ff_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">att1</span> <span class="o">=</span> <span class="n">MultiHeadSelfAttention</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffn1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">Dense</span><span class="p">(</span><span class="n">ff_dim</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">),</span>
+             <span class="n">Dense</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">),</span> <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1</span> <span class="o">=</span> <span class="n">LayerNormalization</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2</span> <span class="o">=</span> <span class="n">LayerNormalization</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransformerBlockE.call"><a class="viewcode-back" href="../../../package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwrags</span><span class="p">):</span>
+        <span class="n">att1_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">att1</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">att1_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span><span class="p">(</span><span class="n">att1_output</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1</span><span class="p">(</span><span class="n">inputs</span> <span class="o">+</span> <span class="n">att1_output</span><span class="p">)</span>
+        <span class="n">ffn_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffn1</span><span class="p">(</span><span class="n">out1</span><span class="p">)</span>
+        <span class="n">ffn_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span><span class="p">(</span><span class="n">ffn_output</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2</span><span class="p">(</span><span class="n">out1</span> <span class="o">+</span> <span class="n">ffn_output</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransformerBlockE.get_config"><a class="viewcode-back" href="../../../package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+
+            <span class="s1">&#39;embed_dim&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">,</span>
+            <span class="s1">&#39;num_heads&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span>
+            <span class="s1">&#39;ff_dim&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ff_dim</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">config</span></div></div>
+
+
+<div class="viewcode-block" id="TransformerBlockD"><a class="viewcode-back" href="../../../package/seisnn.model.attention.TransformerBlockD.html#seisnn.model.attention.TransformerBlockD">[docs]</a><span class="k">class</span> <span class="nc">TransformerBlockD</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+<div class="viewcode-block" id="TransformerBlockD.__init__"><a class="viewcode-back" href="../../../package/seisnn.model.attention.TransformerBlockD.html#seisnn.model.attention.TransformerBlockD.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">ff_dim</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TransformerBlockD</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span> <span class="o">=</span> <span class="n">embed_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ff_dim</span> <span class="o">=</span> <span class="n">ff_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">att1</span> <span class="o">=</span> <span class="n">MultiHeadSelfAttention</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">att2</span> <span class="o">=</span> <span class="n">MultiHeadSelfAttention</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ffn1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">Dense</span><span class="p">(</span><span class="n">ff_dim</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">),</span>
+             <span class="n">Dense</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">),</span> <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1</span> <span class="o">=</span> <span class="n">LayerNormalization</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2</span> <span class="o">=</span> <span class="n">LayerNormalization</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layernorm3</span> <span class="o">=</span> <span class="n">LayerNormalization</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout3</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransformerBlockD.call"><a class="viewcode-back" href="../../../package/seisnn.model.attention.TransformerBlockD.html#seisnn.model.attention.TransformerBlockD.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">att1_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">att1</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">att1_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout1</span><span class="p">(</span><span class="n">att1_output</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layernorm1</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">att1_output</span><span class="p">)</span>
+        <span class="n">att2_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">att2</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">out1</span><span class="p">)</span>
+        <span class="n">att2_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout2</span><span class="p">(</span><span class="n">att2_output</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layernorm2</span><span class="p">(</span><span class="n">att2_output</span> <span class="o">+</span> <span class="n">out1</span><span class="p">)</span>
+        <span class="n">ffn_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ffn1</span><span class="p">(</span><span class="n">out2</span><span class="p">)</span>
+        <span class="n">ffn_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout3</span><span class="p">(</span><span class="n">ffn_output</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layernorm3</span><span class="p">(</span><span class="n">out2</span> <span class="o">+</span> <span class="n">ffn_output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out3</span></div>
+
+<div class="viewcode-block" id="TransformerBlockD.get_config"><a class="viewcode-back" href="../../../package/seisnn.model.attention.TransformerBlockD.html#seisnn.model.attention.TransformerBlockD.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;embed_dim&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">,</span>
+            <span class="s1">&#39;num_heads&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span>
+            <span class="s1">&#39;ff_dim&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ff_dim</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">config</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Jimmy.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
