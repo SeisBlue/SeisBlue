@@ -6,11 +6,17 @@ import shutil
 
 import tensorflow as tf
 
-from seisnn.model.generator import nest_net
 from seisnn.data import example_proto, io, logger, sql
 from seisnn.data.core import Instance
 from seisnn import utils
 
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+  try:
+    for gpu in gpus:
+      tf.config.experimental.set_memory_growth(gpu, True)
+  except RuntimeError as e:
+    print(e)
 
 class BaseTrainer:
     @staticmethod
@@ -44,7 +50,7 @@ class GeneratorTrainer(BaseTrainer):
     Trainer class.
     """
 
-    def __init__(self, database=None, model=nest_net(),
+    def __init__(self, database=None, model=None,
                  optimizer=tf.keras.optimizers.Adam(1e-4),
                  loss=tf.keras.losses.BinaryCrossentropy()):
         """
