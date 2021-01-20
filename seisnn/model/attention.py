@@ -1,12 +1,14 @@
-from tensorflow.keras.models import *
-from tensorflow.keras.layers import *
+from tensorflow.keras.models import Model,Sequential
+from tensorflow.keras.layers import Activation, add, BatchNormalization, \
+    Bidirectional, concatenate, Conv1D, Dense, Dropout, Input, Layer, \
+    LayerNormalization, LSTM, MaxPooling1D, UpSampling1D
 from tensorflow.keras.optimizers import Adam
 import tensorflow as tf
 import numpy as np
 
 
 def transformer(img_rows=None, img_cols=None, color_type=3, num_class=3):
-    inputs = Input(shape=(img_rows,img_cols, color_type))
+    inputs = Input(shape=(img_rows, img_cols, color_type))
     new_dim = tf.squeeze(inputs, axis=1, name=None)
     ff_dim = 64
     num_head = 1
@@ -24,7 +26,7 @@ def transformer(img_rows=None, img_cols=None, color_type=3, num_class=3):
     pool6 = MaxPooling1D(2)(conv6)
     conv7 = Conv1D(64, 3, activation='relu', padding='same')(pool6)
     pool7 = MaxPooling1D(2)(conv7)
-    resCNN = ResNet_build(64,3)
+    resCNN = ResNet_build(64, 3)
     res1 = resCNN(pool7)
 
     bilstm1 = Bidirectional(LSTM(64, return_sequences=True))(res1)
@@ -111,9 +113,8 @@ def transformer(img_rows=None, img_cols=None, color_type=3, num_class=3):
     return model
 
 
-
 class ResBlock(Layer):
-    def __init__(self, filter_nums, strides=1, residual_path=False,**kwargs):
+    def __init__(self, filter_nums, strides=1, residual_path=False, **kwargs):
         super(ResBlock, self).__init__()
         self.filter_nums = filter_nums
         self.strides = strides
@@ -122,12 +123,12 @@ class ResBlock(Layer):
         self.act_relu1 = Activation('relu')
         self.drop_1 = Dropout(0.1)
         self.conv_1 = Conv1D(filter_nums, 3, strides=strides,
-                                    padding='same')
+                             padding='same')
         self.bn_2 = BatchNormalization()
         self.act_relu2 = Activation('relu')
         self.drop_2 = Dropout(0.1)
         self.conv_2 = Conv1D(filter_nums, 3, strides=1,
-                                    padding='same')
+                             padding='same')
 
         if strides != 1:
             self.block = Sequential()
@@ -136,7 +137,6 @@ class ResBlock(Layer):
             self.block = lambda x: x
 
     def call(self, inputs, training=None):
-
 
         x = self.bn_1(inputs, training=training)
         x = self.act_relu1(x)
@@ -152,6 +152,7 @@ class ResBlock(Layer):
         outputs = tf.nn.relu(outputs)
 
         return outputs
+
     def get_config(self):
         config = super().get_config().copy()
         config.update({
@@ -160,12 +161,16 @@ class ResBlock(Layer):
             'residual_path': self.residual_path,
         })
         return config
-def ResNet_build(filter_nums,block_nums,strides=1):
+
+
+def ResNet_build(filter_nums, block_nums, strides=1):
     build_model = Sequential()
-    build_model.add(ResBlock(filter_nums,strides))
-    for _ in range(1,block_nums):
-      build_model.add(ResBlock(filter_nums,strides=1))
+    build_model.add(ResBlock(filter_nums, strides))
+    for _ in range(1, block_nums):
+        build_model.add(ResBlock(filter_nums, strides=1))
     return build_model
+
+
 class MultiHeadSelfAttention(Layer):
     def __init__(self, embed_dim, num_heads=4, mask=False, **kwargs):
         super(MultiHeadSelfAttention, self).__init__()
