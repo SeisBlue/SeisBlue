@@ -8,6 +8,7 @@ import cartopy.crs as ccrs
 from cartopy.io import img_tiles
 from cartopy.mpl import ticker
 import matplotlib.pyplot as plt
+from scipy.signal import find_peaks
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -58,32 +59,42 @@ def plot_dataset(instance, title=None, save_dir=None):
     if title is None:
         title = f'{instance.starttime}_{instance.id[:-3]}'
 
-    # plot trace
     subplot = len(instance.channel) + 1
     fig = plt.figure(figsize=(8, subplot * 2))
-    for i, chan in enumerate(instance.channel):
-        ax = fig.add_subplot(subplot, 1, i + 1)
-        ax.set_ylim([-1.05, 1.05])
-        plt.title(title + chan)
-
-        trace = instance.trace[-1, :, i]
-
-        ax.plot(get_time_array(instance), trace, "k-", label=chan)
-        ax.legend(loc=1)
 
     # plot label
     ax = fig.add_subplot(subplot, 1, subplot)
     ax.set_ylim([-0.05, 1.05])
+    threshold = 0.5
+    ax.hlines(threshold, 0, 30, lw=1, linestyles='--')
+    peak_flag = []
     for i, label in enumerate(['label', 'predict']):
-        for j, phase in enumerate(instance.phase):
+        for j, phase in enumerate(instance.phase[0:2]):
             color = color_palette(j, i)
             ax.plot(get_time_array(instance),
                     getattr(instance, label)[-1, :, j],
                     color=color, label=f'{phase} {label}')
+            peaks, _ = find_peaks(getattr(instance, label)[-1, :, j],
+                                  distance=100,
+                                  height=threshold)
+            peak_flag.append(peaks)
             ax.legend()
+    peak_flag = np.reshape(peak_flag, [2, 2])
 
-    threshold = 0.5
-    ax.hlines(threshold, 0, 30, lw=1, linestyles='--')
+    # plot trace
+    lines_shape = [':','-']
+    for i, chan in enumerate(instance.channel):
+        ax = fig.add_subplot(subplot, 1, i + 1)
+        ax.set_ylim([-1.05, 1.05])
+        if i == 0:
+            plt.title(title[0:-2])
+        trace = instance.trace[-1, :, i]
+        ax.plot(get_time_array(instance), trace, "k-", label=chan)
+        for j, phase in enumerate(['label', 'predict']):
+            for k, peak in enumerate(peak_flag[j]):
+                color = color_palette(k, j)
+                ax.vlines(peak_flag[j, k] / 100,-1.05, 1.05, color,lines_shape[j])
+        ax.legend(loc=1)
 
     if save_dir:
         utils.make_dirs(save_dir)
