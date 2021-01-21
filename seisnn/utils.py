@@ -2,6 +2,7 @@
 Utilities
 """
 
+import functools
 import multiprocessing as mp
 import os
 
@@ -36,7 +37,7 @@ def make_dirs(path):
 
 def batch(iterable, size=1):
     """
-    Yield a batch from a list.
+    Yields a batch from a list.
 
     :param iterable: Data list.
     :param int size: Batch size.
@@ -46,34 +47,62 @@ def batch(iterable, size=1):
         yield iterable[ndx:min(ndx + size, iter_len)]
 
 
-def parallel(par, file_list):
+def batch_operation(data_list, func, **kwargs):
+    """
+    Unpacks and repacks a batch.
+
+    :param data_list: List of data.
+    :param func: Targeted function.
+    :param kwargs: Fixed function parameter.
+
+    :return: List of results.
+    """
+    return [func(data, **kwargs) for data in data_list]
+
+
+def _parallel_process(file_list, par, batch_size=None):
     """
     Parallelize a partial function and return results in a list.
 
-    :param par: Partial function.
     :param list file_list: Process list for partial function.
+    :param par: Partial function.
     :rtype: list
+
     :return: List of results.
     """
     cpu_count = mp.cpu_count()
     print(f'Found {cpu_count} cpu threads:')
     pool = mp.Pool(processes=cpu_count, maxtasksperchild=1)
 
-    batch_size = int(np.ceil(len(file_list) / cpu_count))
+    if batch_size is None:
+        batch_size = int(np.ceil(len(file_list) / cpu_count))
     total = int(np.ceil(len(file_list) / batch_size))
     map_func = pool.imap_unordered(par, batch(file_list, batch_size))
 
-    output = []
-    for thread_output in tqdm.tqdm(map_func, total=total):
-        if thread_output:
-            output.extend(thread_output)
+    result = [output for output in tqdm.tqdm(map_func, total=total)]
 
     pool.close()
     pool.join()
-    return output
+    return result
 
 
-def parallel_iter(par, iterator):
+def parallel(data_list, func, batch_size=None, **kwargs):
+    """
+    Parallels a function.
+
+    :param data_list: List of data.
+    :param func: Paralleled function.
+    :param kwargs: Fixed function parameters.
+
+    :return: List of results.
+    """
+    par = functools.partial(batch_operation, func=func, **kwargs)
+
+    result_list = _parallel_process(data_list, par, batch_size)
+    return result_list
+
+
+def _parallel_iter(par, iterator):
     """
     Parallelize a partial function and return results in a list.
 

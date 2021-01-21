@@ -1,7 +1,6 @@
 """
 Processing
 """
-import functools
 import os
 
 import numpy as np
@@ -26,16 +25,18 @@ def generate_training_data(pick_list, dataset, database, chunk_size):
     dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
     utils.make_dirs(dataset_dir)
 
-    par = functools.partial(get_example_list, database=database)
 
     total_batch = int(len(pick_list) / chunk_size)
     batch_picks = utils.batch(pick_list, size=chunk_size)
     for index, picks in enumerate(batch_picks):
-        example_list = utils.parallel(par, picks)
+        example_list = utils.parallel(picks,
+                                      func=get_example_list,
+                                      database=database)
+        flat_list = [item for sublist in example_list for item in sublist]
 
         file_name = f'{index:0>5}.tfrecord'
         save_file = os.path.join(dataset_dir, file_name)
-        io.write_tfrecord(example_list, save_file)
+        io.write_tfrecord(flat_list, save_file)
         print(f'output {file_name} / {total_batch}')
 
 
@@ -66,34 +67,32 @@ def get_time_window(anchor_time, station, trace_length=30, shift=0):
     return window
 
 
-def get_example_list(batch_picks, database):
+def get_example_list(pick, database):
     """
     Returns example list form list of picks and SQL database.
 
-    :param list batch_picks: List of picks.
+    :param pick: List of picks.
     :param str database: SQL database root.
     :return:
     """
 
+    window = get_time_window(anchor_time=pick.time,
+                             station=pick.station,
+                             shift='random')
+
+    streams = io.read_sds(window)
     example_list = []
-    for pick in batch_picks:
-        window = get_time_window(anchor_time=pick.time,
-                                 station=pick.station,
-                                 shift='random')
+    for _, stream in streams.items():
+        stream = signal_preprocessing(stream)
 
-        streams = io.read_sds(window)
-        for _, stream in streams.items():
-            stream = signal_preprocessing(stream)
+        instance = core.Instance().from_stream(stream)
+        instance.phase = ['P', 'S', 'N']
+        instance.get_label(database, shape='triang')
+        instance.predict = np.zeros(instance.label.shape)
 
-            instance = core.Instance().from_stream(stream)
-            instance.phase = ['P', 'S', 'N']
-            instance.get_label(database, shape='triang')
-            instance.predict = np.zeros(instance.label.shape)
-
-            feature = instance.to_feature()
-            example = example_proto.feature_to_example(feature)
-            example_list.append(example)
-
+        feature = instance.to_feature()
+        example = example_proto.feature_to_example(feature)
+        example_list.append(example)
     return example_list
 
 

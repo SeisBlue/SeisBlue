@@ -4,6 +4,7 @@ Input / Output
 
 import collections
 import multiprocessing as mp
+import itertools
 import os
 import warnings
 
@@ -61,16 +62,19 @@ def read_event_list(sfile_dir):
     sfile_list = utils.get_dir_list(sfile_dir)
     print(f'Reading events from {sfile_dir}')
 
-    events = utils.parallel(par=get_event, file_list=sfile_list)
+    event_list = utils.parallel(sfile_list, func=get_event)
+    flatten = itertools.chain.from_iterable
+
+    events = list(flatten(flatten(event_list)))
     print(f'Read {len(events)} events\n')
     return events
 
 
-def get_event(filename, debug=False):
+def get_event(file, debug=False):
     """
     Returns obspy.event list from sfile.
 
-    :param str filename: Sfile file path.
+    :param str file: Sfile file path.
     :param bool debug: If False, warning from reader will be ignore,
         default to False.
     :rtype: list
@@ -79,20 +83,14 @@ def get_event(filename, debug=False):
     with warnings.catch_warnings():
         if not debug:
             warnings.simplefilter("ignore")
+        try:
+            catalog = obspy.io.nordic.core.read_nordic(file)
+            return catalog.events
 
-        events = []
-        for file in filename:
-            try:
-                catalog = obspy.io.nordic.core.read_nordic(file)
-            except Exception as err:
-                if debug:
-                    print(err)
-                continue
+        except Exception as err:
+            if debug:
+                print(err)
 
-            for event in catalog.events:
-                events.append(event)
-
-        return events
 
 
 def read_sds(window):
