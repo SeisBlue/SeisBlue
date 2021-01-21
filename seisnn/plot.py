@@ -82,7 +82,7 @@ def plot_dataset(instance, title=None, save_dir=None):
     peak_flag = np.reshape(peak_flag, [2, 2])
 
     # plot trace
-    lines_shape = ['-','--']
+    lines_shape = [':','-']
     for i, chan in enumerate(instance.channel):
         ax = fig.add_subplot(subplot, 1, i + 1)
         ax.set_ylim([-1.05, 1.05])
