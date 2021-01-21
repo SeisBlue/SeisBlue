@@ -69,6 +69,10 @@ In the [notebook](notebook) folder:
 ---
 
 Reference:
+ 
+ [EQTansfomer](https://www.nature.com/articles/s41467-020-17591-w) | [Github](https://github.com/smousavi05/EQTransformer)
+
+ Mousavi, S. M., Ellsworth, W. L., Zhu, W., Chuang, L. Y., & Beroza, G. C. (2020). Earthquake transformer—an attentive deep-learning model for simultaneous earthquake detection and phase picking. Nature communications, 11(1), 1-12.
 
  [PhaseNet](https://doi.org/10.1093/gji/ggy423) | [Github](https://github.com/wayneweiqiang/PhaseNet)
 
