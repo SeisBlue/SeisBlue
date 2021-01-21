@@ -82,19 +82,18 @@ def plot_dataset(instance, title=None, save_dir=None):
     peak_flag = np.reshape(peak_flag, [2, 2])
 
     # plot trace
+    line_length = [1.05,0.85]
     for i, chan in enumerate(instance.channel):
         ax = fig.add_subplot(subplot, 1, i + 1)
         ax.set_ylim([-1.05, 1.05])
         if i == 0:
             plt.title(title[0:-2])
-
         trace = instance.trace[-1, :, i]
-
         ax.plot(get_time_array(instance), trace, "k-", label=chan)
         for j, phase in enumerate(['label', 'predict']):
             for k, peak in enumerate(peak_flag[j]):
                 color = color_palette(k, j)
-                ax.vlines(peak_flag[j, k] / 100, -1.05, 1.05, color)
+                ax.vlines(peak_flag[j, k] / 100,-line_length[j], line_length[j], color)
         ax.legend(loc=1)
 
     if save_dir:
