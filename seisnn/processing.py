@@ -1,6 +1,8 @@
 """
 Processing
 """
+
+import itertools
 import os
 
 import numpy as np
@@ -32,7 +34,8 @@ def generate_training_data(pick_list, dataset, database, chunk_size):
         example_list = utils.parallel(picks,
                                       func=get_example_list,
                                       database=database)
-        flat_list = [item for sublist in example_list for item in sublist]
+        flatten = itertools.chain.from_iterable
+        flat_list = list(flatten(flatten(example_list)))
 
         file_name = f'{index:0>5}.tfrecord'
         save_file = os.path.join(dataset_dir, file_name)
