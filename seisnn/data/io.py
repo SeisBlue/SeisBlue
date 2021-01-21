@@ -162,14 +162,14 @@ def read_hyp(hyp):
 
                 lat_degree = int(lat[0:2])
                 lat_minute = float(lat[2:-1]) / 60
-                if lat[2] != '.':  # high accuracy lat-lon
+                if '.' not in lat:  # high accuracy lat-lon
                     lat_minute /= 1000
                 lat = (lat_degree + lat_minute) * NS
                 lat = inventory.util.Latitude(lat)
 
                 lon_degree = int(lon[0:3])
                 lon_minute = float(lon[3:-1]) / 60
-                if lon[3] != '.':  # high accuracy lat-lon
+                if '.' not in lon:  # high accuracy lat-lon
                     lon_minute /= 1000
                 lon = (lon_degree + lon_minute) * EW
                 lon = inventory.util.Longitude(lon)
