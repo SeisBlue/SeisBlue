@@ -119,6 +119,7 @@
 
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -176,16 +177,19 @@
     <span class="n">sfile_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_dir_list</span><span class="p">(</span><span class="n">sfile_dir</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Reading events from </span><span class="si">{</span><span class="n">sfile_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="n">events</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">par</span><span class="o">=</span><span class="n">get_event</span><span class="p">,</span> <span class="n">file_list</span><span class="o">=</span><span class="n">sfile_list</span><span class="p">)</span>
+    <span class="n">event_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">sfile_list</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">get_event</span><span class="p">)</span>
+    <span class="n">flatten</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span>
+
+    <span class="n">events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">event_list</span><span class="p">)))</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Read </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span><span class="si">}</span><span class="s1"> events</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">events</span></div>
 
 
-<div class="viewcode-block" id="get_event"><a class="viewcode-back" href="../../../package/seisnn.data.io.get_event.html#seisnn.data.io.get_event">[docs]</a><span class="k">def</span> <span class="nf">get_event</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_event"><a class="viewcode-back" href="../../../package/seisnn.data.io.get_event.html#seisnn.data.io.get_event">[docs]</a><span class="k">def</span> <span class="nf">get_event</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns obspy.event list from sfile.</span>
 
-<span class="sd">    :param str filename: Sfile file path.</span>
+<span class="sd">    :param str file: Sfile file path.</span>
 <span class="sd">    :param bool debug: If False, warning from reader will be ignore,</span>
 <span class="sd">        default to False.</span>
 <span class="sd">    :rtype: list</span>
@@ -194,20 +198,14 @@
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">debug</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">catalog</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">nordic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">read_nordic</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">events</span>
 
-        <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">catalog</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">nordic</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">read_nordic</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
-                <span class="k">continue</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
 
-            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
-                <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">events</span></div>
 
 
 <div class="viewcode-block" id="read_sds"><a class="viewcode-back" href="../../../package/seisnn.data.io.read_sds.html#seisnn.data.io.read_sds">[docs]</a><span class="k">def</span> <span class="nf">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>
@@ -279,14 +277,14 @@
 
                 <span class="n">lat_degree</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
                 <span class="n">lat_minute</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">60</span>
-                <span class="k">if</span> <span class="n">lat</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>  <span class="c1"># high accuracy lat-lon</span>
+                <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">lat</span><span class="p">:</span>  <span class="c1"># high accuracy lat-lon</span>
                     <span class="n">lat_minute</span> <span class="o">/=</span> <span class="mi">1000</span>
                 <span class="n">lat</span> <span class="o">=</span> <span class="p">(</span><span class="n">lat_degree</span> <span class="o">+</span> <span class="n">lat_minute</span><span class="p">)</span> <span class="o">*</span> <span class="n">NS</span>
                 <span class="n">lat</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Latitude</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
 
                 <span class="n">lon_degree</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lon</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
                 <span class="n">lon_minute</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">60</span>
-                <span class="k">if</span> <span class="n">lon</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>  <span class="c1"># high accuracy lat-lon</span>
+                <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">lon</span><span class="p">:</span>  <span class="c1"># high accuracy lat-lon</span>
                     <span class="n">lon_minute</span> <span class="o">/=</span> <span class="mi">1000</span>
                 <span class="n">lon</span> <span class="o">=</span> <span class="p">(</span><span class="n">lon_degree</span> <span class="o">+</span> <span class="n">lon_minute</span><span class="p">)</span> <span class="o">*</span> <span class="n">EW</span>
                 <span class="n">lon</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Longitude</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
