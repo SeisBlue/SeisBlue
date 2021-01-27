@@ -10,4 +10,3 @@ trainer.export_model(model_instance)
 
 evaluator = GeneratorEvaluator(database, model_instance)
 evaluator.eval(test_set)
-
