@@ -3,12 +3,10 @@ Evaluator settings.
 """
 
 import os
-import shutil
 
 import tensorflow as tf
 
-from seisnn.model.generator import nest_net
-from seisnn.data import example_proto, io, logger, sql
+from seisnn.data import example_proto, io, sql
 from seisnn.data.core import Instance
 from seisnn import utils
 
@@ -34,6 +32,15 @@ class BaseEvaluator:
 
         return save_model_path, save_history_path
 
+    @staticmethod
+    def get_eval_dir(dataset):
+        config = utils.get_config()
+        dataset_path = os.path.join(config['DATASET_ROOT'], dataset)
+        eval_path = os.path.join(config['DATASET_ROOT'], "eval")
+        utils.make_dirs(eval_path)
+
+        return dataset_path, eval_path
+
 
 class GeneratorEvaluator(BaseEvaluator):
     """
@@ -51,8 +58,9 @@ class GeneratorEvaluator(BaseEvaluator):
         """
         self.database = database
         self.model_name = model_name
+        self.model = None
 
-    def eval(self, dataset):
+    def eval(self, dataset, batch_size=100):
         """
         Main eval loop.
 
@@ -62,53 +70,24 @@ class GeneratorEvaluator(BaseEvaluator):
 
         """
         model_path, history_path = self.get_model_dir(self.model_name)
+        dataset_path, eval_path = self.get_eval_dir(dataset)
+
         dataset = io.read_dataset(dataset)
-        val = next(iter(dataset.batch(1)))
-
-        ckpt = tf.train.Checkpoint(model=self.model, optimizer=self.optimizer)
-        ckpt_manager = tf.train.CheckpointManager(ckpt, model_path,
-                                                  max_to_keep=100)
-
-        if ckpt_manager.latest_checkpoint:
-            ckpt.restore(ckpt_manager.latest_checkpoint)
-            last_epoch = len(ckpt_manager.checkpoints)
-            print(f'Latest checkpoint epoch {last_epoch} restored!!')
-
-        metrics_names = ['loss', 'val']
+        self.model = tf.keras.models.load_model(model_path)
 
         data_len = self.get_dataset_length(self.database)
-        progbar = tf.keras.utils.Progbar(
-            data_len, stateful_metrics=metrics_names)
+        progbar = tf.keras.utils.Progbar(data_len)
 
-        for epoch in range(epochs):
-            print(f'epoch {epoch + 1} / {epochs}')
-            n = 0
-            loss_buffer = []
-            for train in dataset.prefetch(100).batch(batch_size):
-                train_loss, val_loss = self.train_step(train, val)
-                loss_buffer.append([train_loss, val_loss])
+        n = 0
+        for val in dataset.prefetch(100).batch(batch_size):
+            progbar.add(batch_size)
 
-                values = [('loss', train_loss.numpy()),
-                          ('val', val_loss.numpy())]
-                progbar.add(batch_size, values=values)
+            title = f"eval_{n:0>5}"
+            val['predict'] = self.model.predict(val['trace'])
+            val['id'] = tf.convert_to_tensor(
+                title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
 
-                if n % log_step == 0:
-                    logger.save_loss(loss_buffer, model_name, model_path)
-                    loss_buffer.clear()
-
-                    title = f'epoch{epoch + 1:0>2}_step{n:0>5}___'
-                    val['predict'] = self.model.predict(val['trace'])
-                    val['id'] = tf.convert_to_tensor(
-                        title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
-
-                    example = next(example_proto.batch_iterator(val))
-                    instance = Instance(example)
-
-                    if plot:
-                        instance.plot()
-                    else:
-                        instance.plot(save_dir=history_path)
-                n += 1
-
-        ckpt_save_path = ckpt_manager.save()
-        print(f'Saving pre-train checkpoint to {ckpt_save_path}')
+            example = next(example_proto.batch_iterator(val))
+            instance = Instance(example)
+            instance.to_tfrecord(os.path.join(eval_path, title + '.tfrecord'))
+            n += 1
