@@ -8,6 +8,7 @@ import tensorflow as tf
 
 from seisnn.data import example_proto, io, logger, sql
 from seisnn.data.core import Instance
+from seisnn.model.generator import nest_net
 from seisnn import utils
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -50,7 +51,7 @@ class GeneratorTrainer(BaseTrainer):
     Trainer class.
     """
 
-    def __init__(self, database=None, model=None,
+    def __init__(self, database=None, model=nest_net(),
                  optimizer=tf.keras.optimizers.Adam(1e-4),
                  loss=tf.keras.losses.BinaryCrossentropy()):
         """
