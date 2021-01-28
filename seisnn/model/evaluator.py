@@ -27,10 +27,7 @@ class BaseEvaluator:
     def get_model_dir(model_instance):
         config = utils.get_config()
         save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
-        save_history_path = os.path.join(save_model_path, "history")
-        utils.make_dirs(save_history_path)
-
-        return save_model_path, save_history_path
+        return save_model_path
 
     @staticmethod
     def get_eval_dir(dataset):
@@ -69,7 +66,7 @@ class GeneratorEvaluator(BaseEvaluator):
         :param str model_name: Model directory name.
 
         """
-        model_path, history_path = self.get_model_dir(self.model_name)
+        model_path = self.get_model_dir(self.model_name)
         dataset_path, eval_path = self.get_eval_dir(dataset)
 
         dataset = io.read_dataset(dataset)
