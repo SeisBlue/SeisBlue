@@ -79,10 +79,10 @@ def plot_dataset(instance, title=None, save_dir=None):
                                   height=threshold)
             peak_flag.append(peaks)
             ax.legend()
-    peak_flag = np.reshape(peak_flag, [2, 2])
+    peak_flag = [[peak_flag[0], peak_flag[1]], [peak_flag[2], peak_flag[3]]]
 
     # plot trace
-    lines_shape = [':','-']
+    lines_shape = [':', '-']
     for i, chan in enumerate(instance.channel):
         ax = fig.add_subplot(subplot, 1, i + 1)
         ax.set_ylim([-1.05, 1.05])
@@ -93,7 +93,7 @@ def plot_dataset(instance, title=None, save_dir=None):
         for j, phase in enumerate(['label', 'predict']):
             for k, peak in enumerate(peak_flag[j]):
                 color = color_palette(k, j)
-                ax.vlines(peak_flag[j, k] / 100,-1.05, 1.05, color,lines_shape[j])
+                ax.vlines(peak_flag[j][k]/100, -1.05, 1.05, color, lines_shape[j])
         ax.legend(loc=1)
 
     if save_dir:
