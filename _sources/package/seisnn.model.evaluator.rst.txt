@@ -1,0 +1,31 @@
+seisnn.model.evaluator
+======================
+
+.. automodule:: seisnn.model.evaluator
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+   
+      BaseEvaluator
+      GeneratorEvaluator
+   
+   
+
+   
+   
+   
+
+
+

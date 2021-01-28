@@ -32,5 +32,6 @@
    seisnn.plot
    seisnn.processing
    seisnn.qc
+   seisnn.ui
    seisnn.utils
 

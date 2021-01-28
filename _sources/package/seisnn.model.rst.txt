@@ -28,6 +28,7 @@ seisnn.model
    :recursive:
 
    seisnn.model.attention
+   seisnn.model.evaluator
    seisnn.model.generator
    seisnn.model.trainer
 

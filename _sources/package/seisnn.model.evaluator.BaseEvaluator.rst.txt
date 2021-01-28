@@ -1,0 +1,28 @@
+seisnn.model.evaluator.BaseEvaluator
+====================================
+
+.. currentmodule:: seisnn.model.evaluator
+
+.. autoclass:: BaseEvaluator
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BaseEvaluator.__init__
+      ~BaseEvaluator.get_dataset_length
+      ~BaseEvaluator.get_eval_dir
+      ~BaseEvaluator.get_model_dir
+   
+   
+
+   
+   
+   
