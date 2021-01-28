@@ -1,0 +1,6 @@
+seisnn.model.GAN\_model.build\_discriminator
+============================================
+
+.. currentmodule:: seisnn.model.GAN_model
+
+.. autofunction:: build_discriminator

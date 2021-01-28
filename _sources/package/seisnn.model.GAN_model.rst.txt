@@ -1,0 +1,31 @@
+seisnn.model.GAN\_model
+=======================
+
+.. automodule:: seisnn.model.GAN_model
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      build_cgan
+      build_discriminator
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
