@@ -1,6 +1,6 @@
 import seisnn
 
-db = seisnn.data.sql.Client('HL2017.db')
+db = seisnn.data.sql.Client('HL2019.db')
 
 picks = db.get_picks(phase='S').all()
 
