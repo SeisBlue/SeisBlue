@@ -69,8 +69,10 @@ class GeneratorTrainer(BaseTrainer):
                                                        img_cols=3008,
                                                        color_type=3,
                                                        num_class=3)
+        self.generator_optimizer = Adam(learning_rate=1e-3)
         self.generator_model.compile(loss='binary_crossentropy',
-                                     optimizer=Adam(learning_rate=1e-3))
+                                     optimizer=self.generator_optimizer)
+
         self.discriminator_model.trainable = False
 
         self.cgan_model = build_cgan(self.generator_model,
@@ -79,13 +81,13 @@ class GeneratorTrainer(BaseTrainer):
         loss = [tf.keras.losses.BinaryCrossentropy(),
                 tf.keras.losses.BinaryCrossentropy()]
         loss_weights = [100000, 1]
-
+        self.cgan_optimizer = Adam(learning_rate=1e-3)
         self.cgan_model.compile(loss=loss, loss_weights=loss_weights,
-                                optimizer=Adam(learning_rate=1e-3))
-
+                                optimizer=self.cgan_optimizer)
+        self.discriminator_optimizer = Adam(learning_rate=1e-3)
         self.discriminator_model.trainable = True
         self.discriminator_model.compile(loss='binary_crossentropy',
-                                         optimizer=Adam(learning_rate=2e-3))
+                                         optimizer=self.discriminator_optimizer)
 
         self.database = database
         self.model = self.cgan_model
@@ -112,7 +114,14 @@ class GeneratorTrainer(BaseTrainer):
         model_path, history_path = self.get_model_dir(model_name,
                                                       remove=remove)
 
-        ckpt = tf.train.Checkpoint(model=self.model, optimizer=self.optimizer)
+        ckpt = tf.train.Checkpoint(
+            generator_model=self.generator_model,
+            discriminator_model=self.discriminator_model,
+            cgan_model = self.cgan_model,
+            generator_optimizer = self.generator_optimizer,
+            discriminator_optimizer =self.discriminator_optimizer,
+            cgan_optimizer = self.cgan_optimizer,
+        )
         ckpt_manager = tf.train.CheckpointManager(ckpt, model_path,
                                                   max_to_keep=100)
 
@@ -160,9 +169,9 @@ class GeneratorTrainer(BaseTrainer):
                     else:
                         instance.plot(save_dir=history_path)
 
-        ckpt_save_path = ckpt_manager.save()
-        print(f'Saving checkpoint to {ckpt_save_path}')
-        self.generator_model.save('/home/andy/models/test_model.h5')
+            # ckpt_save_path = ckpt_manager.save()
+            # print(f'Saving checkpoint to {ckpt_save_path}')
+            self.model.save(os.path.join(model_path,model_name)+'.h5')
     def train_step(self, train, val):
         """
         Training step.
@@ -195,5 +204,5 @@ if __name__ == "__main__":
     database = 'HL2019.db'
 
     trainer = GeneratorTrainer(database)
-    trainer.train_loop(dataset, model_instance, plot=True, batch_size=100,
-                       remove=True, epochs=50, log_step=50)
+    trainer.train_loop(dataset, model_instance, plot=True, batch_size=500,
+                       remove=True, epochs=500, log_step=10)
