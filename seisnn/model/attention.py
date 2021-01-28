@@ -95,7 +95,6 @@ def transformer(img_rows=None, img_cols=None, color_type=3, num_class=3):
     output = concatenate([conv13, conv13_P, conv13_S], axis=2)
     output = output[:, tf.newaxis, :, :]
     model = Model(inputs=inputs, outputs=output)
-    model.summary()
     return model
 
 
