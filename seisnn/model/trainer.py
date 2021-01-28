@@ -13,11 +13,12 @@ from seisnn import utils
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
-  try:
-    for gpu in gpus:
-      tf.config.experimental.set_memory_growth(gpu, True)
-  except RuntimeError as e:
-    print(e)
+    try:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    except RuntimeError as e:
+        print(e)
+
 
 class BaseTrainer:
     @staticmethod
@@ -175,4 +176,4 @@ class GeneratorTrainer(BaseTrainer):
             last_epoch = len(ckpt_manager.checkpoints)
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
-        self.model.save(model_path)
+        self.model.save(model_path + ".h5")
