@@ -9,6 +9,8 @@ import tensorflow as tf
 from seisnn.data import example_proto, io, sql
 from seisnn.data.core import Instance
 from seisnn import utils
+from seisnn.model.attention import TransformerBlockE, TransformerBlockD, \
+    MultiHeadSelfAttention, ResBlock
 
 
 class BaseEvaluator:
@@ -70,7 +72,14 @@ class GeneratorEvaluator(BaseEvaluator):
         dataset_path, eval_path = self.get_eval_dir(dataset)
 
         dataset = io.read_dataset(dataset)
-        self.model = tf.keras.models.load_model(model_path)
+        self.model = tf.keras.models.load_model(
+            model_path,
+            custom_objects={
+                'TransformerBlockE': TransformerBlockE,
+                'TransformerBlockD': TransformerBlockD,
+                'MultiHeadSelfAttention': MultiHeadSelfAttention,
+                'ResBlock': ResBlock
+            })
 
         data_len = self.get_dataset_length(self.database)
         progbar = tf.keras.utils.Progbar(data_len)
