@@ -124,6 +124,8 @@
 <span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">example_proto</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">sql</span>
 <span class="kn">from</span> <span class="nn">seisnn.data.core</span> <span class="kn">import</span> <span class="n">Instance</span>
 <span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">seisnn.model.attention</span> <span class="kn">import</span> <span class="n">TransformerBlockE</span><span class="p">,</span> <span class="n">TransformerBlockD</span><span class="p">,</span> \
+    <span class="n">MultiHeadSelfAttention</span><span class="p">,</span> <span class="n">ResBlock</span>
 
 
 <div class="viewcode-block" id="BaseEvaluator"><a class="viewcode-back" href="../../../package/seisnn.model.evaluator.BaseEvaluator.html#seisnn.model.evaluator.BaseEvaluator">[docs]</a><span class="k">class</span> <span class="nc">BaseEvaluator</span><span class="p">:</span>
@@ -185,7 +187,14 @@
         <span class="n">dataset_path</span><span class="p">,</span> <span class="n">eval_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_eval_dir</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
 
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
+            <span class="n">model_path</span><span class="p">,</span>
+            <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;TransformerBlockE&#39;</span><span class="p">:</span> <span class="n">TransformerBlockE</span><span class="p">,</span>
+                <span class="s1">&#39;TransformerBlockD&#39;</span><span class="p">:</span> <span class="n">TransformerBlockD</span><span class="p">,</span>
+                <span class="s1">&#39;MultiHeadSelfAttention&#39;</span><span class="p">:</span> <span class="n">MultiHeadSelfAttention</span><span class="p">,</span>
+                <span class="s1">&#39;ResBlock&#39;</span><span class="p">:</span> <span class="n">ResBlock</span>
+            <span class="p">})</span>
 
         <span class="n">data_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dataset_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
         <span class="n">progbar</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Progbar</span><span class="p">(</span><span class="n">data_len</span><span class="p">)</span>
