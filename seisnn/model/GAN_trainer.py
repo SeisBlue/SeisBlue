@@ -169,9 +169,8 @@ class GeneratorTrainer(BaseTrainer):
                     else:
                         instance.plot(save_dir=history_path)
 
-            # ckpt_save_path = ckpt_manager.save()
-            # print(f'Saving checkpoint to {ckpt_save_path}')
-            self.model.save(os.path.join(model_path,model_name)+'.h5')
+            ckpt_save_path = ckpt_manager.save()
+            print(f'Saving checkpoint to {ckpt_save_path}')
     def train_step(self, train, val):
         """
         Training step.

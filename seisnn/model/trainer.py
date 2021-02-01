@@ -162,8 +162,8 @@ class GeneratorTrainer(BaseTrainer):
                         instance.plot(save_dir=history_path)
                 n += 1
 
-        ckpt_save_path = ckpt_manager.save()
-        print(f'Saving checkpoint to {ckpt_save_path}')
+            ckpt_save_path = ckpt_manager.save()
+            print(f'Saving checkpoint to {ckpt_save_path}')
 
     def export_model(self, model_name):
         model_path, history_path = self.get_model_dir(model_name)
