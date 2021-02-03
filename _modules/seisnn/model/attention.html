@@ -122,6 +122,15 @@
 
 
 <div class="viewcode-block" id="transformer"><a class="viewcode-back" href="../../../package/seisnn.model.attention.transformer.html#seisnn.model.attention.transformer">[docs]</a><span class="k">def</span> <span class="nf">transformer</span><span class="p">(</span><span class="n">img_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_type</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">num_class</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    EQtransformer_model</span>
+
+<span class="sd">    :param img_rows:  Height of the data.</span>
+<span class="sd">    :param img_cols:  Width of the data.</span>
+<span class="sd">    :param color_type: Channel number of the data.</span>
+<span class="sd">    :param num_class: Output class number.</span>
+<span class="sd">    :return: EQtransformer model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">inputs</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">img_rows</span><span class="p">,</span> <span class="n">img_cols</span><span class="p">,</span> <span class="n">color_type</span><span class="p">))</span>
     <span class="n">new_dim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">ff_dim</span> <span class="o">=</span> <span class="mi">64</span>
@@ -214,6 +223,9 @@
 
 
 <div class="viewcode-block" id="ResBlock"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResBlock.html#seisnn.model.attention.ResBlock">[docs]</a><span class="k">class</span> <span class="nc">ResBlock</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Residual CNN block Structure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ResBlock.__init__"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResBlock.html#seisnn.model.attention.ResBlock.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_nums</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">residual_path</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ResBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filter_nums</span> <span class="o">=</span> <span class="n">filter_nums</span>
@@ -254,6 +266,10 @@
         <span class="k">return</span> <span class="n">outputs</span></div>
 
 <div class="viewcode-block" id="ResBlock.get_config"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResBlock.html#seisnn.model.attention.ResBlock.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save model config.</span>
+<span class="sd">        :return: config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="s1">&#39;filter_nums&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_nums</span><span class="p">,</span>
@@ -264,6 +280,14 @@
 
 
 <div class="viewcode-block" id="ResNet_build"><a class="viewcode-back" href="../../../package/seisnn.model.attention.ResNet_build.html#seisnn.model.attention.ResNet_build">[docs]</a><span class="k">def</span> <span class="nf">ResNet_build</span><span class="p">(</span><span class="n">filter_nums</span><span class="p">,</span> <span class="n">block_nums</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build ResNet</span>
+<span class="sd">    </span>
+<span class="sd">    :param filter_nums: number of convolution channel.</span>
+<span class="sd">    :param block_nums: number of residual block.</span>
+<span class="sd">    :param strides: stride of convolution layer</span>
+<span class="sd">    :return: model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">build_model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
     <span class="n">build_model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ResBlock</span><span class="p">(</span><span class="n">filter_nums</span><span class="p">,</span> <span class="n">strides</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">block_nums</span><span class="p">):</span>

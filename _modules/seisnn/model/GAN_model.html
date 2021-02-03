@@ -172,6 +172,12 @@
 
 
 <div class="viewcode-block" id="build_cgan"><a class="viewcode-back" href="../../../package/seisnn.model.GAN_model.build_cgan.html#seisnn.model.GAN_model.build_cgan">[docs]</a><span class="k">def</span> <span class="nf">build_cgan</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">discriminator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param generator:</span>
+<span class="sd">    :param discriminator:</span>
+<span class="sd">    :return:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">trace</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3008</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
     <span class="n">gen_label</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
     <span class="n">concat</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">([</span><span class="n">trace</span><span class="p">,</span> <span class="n">gen_label</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>

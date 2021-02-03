@@ -135,6 +135,7 @@
 <dt id="seisnn.model.attention.ResBlock">
 <em class="property">class </em><code class="sig-prename descclassname">seisnn.model.attention.</code><code class="sig-name descname">ResBlock</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#ResBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.attention.ResBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.engine.base_layer.Layer</span></code></p>
+<p>Residual CNN block Structure</p>
 <dl class="py method">
 <dt id="seisnn.model.attention.ResBlock.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filter_nums</span></em>, <em class="sig-param"><span class="n">strides</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">residual_path</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#ResBlock.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.attention.ResBlock.__init__" title="Permalink to this definition">¶</a></dt>
@@ -190,7 +191,7 @@
 <td><p>Creates a layer from its config.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.model.attention.ResBlock.get_config" title="seisnn.model.attention.ResBlock.get_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config</span></code></a>()</p></td>
-<td><p>Returns the config of the layer.</p></td>
+<td><p>Save model config.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.model.attention.ResBlock.get_input_at" title="seisnn.model.attention.ResBlock.get_input_at"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_input_at</span></code></a>(node_index)</p></td>
 <td><p>Retrieves the input tensor(s) of a layer at a given node.</p></td>
@@ -734,19 +735,8 @@ output of get_config.</p>
 <dl class="py method">
 <dt id="seisnn.model.attention.ResBlock.get_config">
 <code class="sig-name descname">get_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#ResBlock.get_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.attention.ResBlock.get_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the config of the layer.</p>
-<p>A layer config is a Python dictionary (serializable)
-containing the configuration of a layer.
-The same layer can be reinstantiated later
-(without its trained weights) from this configuration.</p>
-<p>The config of a layer does not include connectivity
-information, nor the layer class name. These are handled
-by <cite>Network</cite> (one layer of abstraction above).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Python dictionary.</p>
-</dd>
-</dl>
+<dd><p>Save model config.
+:return: config</p>
 </dd></dl>
 
 <dl class="py method">
