@@ -167,6 +167,7 @@ class ResBlock(Layer):
 def ResNet_build(filter_nums, block_nums, strides=1):
     """
     Build ResNet
+    
     :param filter_nums: number of convolution channel.
     :param block_nums: number of residual block.
     :param strides: stride of convolution layer
