@@ -57,6 +57,12 @@ def build_discriminator(img_rows=1, img_cols=3008, color_type=3,
 
 
 def build_cgan(generator, discriminator):
+    """
+    :param generator:
+    :param discriminator:
+    :return:
+
+    """
     trace = Input(shape=(1, 3008, 3))
     gen_label = generator(trace)
     concat = concatenate([trace, gen_label], axis=3)
