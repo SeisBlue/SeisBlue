@@ -23,6 +23,7 @@ seisnn.data.core.Instance
       ~Instance.get_label
       ~Instance.get_picks
       ~Instance.plot
+      ~Instance.predict_into_database
       ~Instance.to_example
       ~Instance.to_feature
       ~Instance.to_tfrecord
