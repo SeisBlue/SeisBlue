@@ -7,6 +7,15 @@ import numpy as np
 
 
 def transformer(img_rows=None, img_cols=None, color_type=3, num_class=3):
+    """
+    EQtransformer_model
+
+    :param img_rows:  Height of the data.
+    :param img_cols:  Width of the data.
+    :param color_type: Channel number of the data.
+    :param num_class: Output class number.
+    :return: EQtransformer model.
+    """
     inputs = Input(shape=(img_rows, img_cols, color_type))
     new_dim = tf.squeeze(inputs, axis=1, name=None)
     ff_dim = 64
@@ -99,6 +108,9 @@ def transformer(img_rows=None, img_cols=None, color_type=3, num_class=3):
 
 
 class ResBlock(Layer):
+    """
+    Residual CNN block Structure
+    """
     def __init__(self, filter_nums, strides=1, residual_path=False, **kwargs):
         super(ResBlock, self).__init__()
         self.filter_nums = filter_nums
@@ -139,6 +151,10 @@ class ResBlock(Layer):
         return outputs
 
     def get_config(self):
+        """
+        Save model config.
+        :return: config
+        """
         config = super().get_config().copy()
         config.update({
             'filter_nums': self.filter_nums,
@@ -149,6 +165,14 @@ class ResBlock(Layer):
 
 
 def ResNet_build(filter_nums, block_nums, strides=1):
+    """
+    Build ResNet
+    
+    :param filter_nums: number of convolution channel.
+    :param block_nums: number of residual block.
+    :param strides: stride of convolution layer
+    :return: model
+    """
     build_model = Sequential()
     build_model.add(ResBlock(filter_nums, strides))
     for _ in range(1, block_nums):

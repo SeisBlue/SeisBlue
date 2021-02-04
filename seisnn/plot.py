@@ -64,7 +64,7 @@ def plot_dataset(instance, title=None, save_dir=None):
 
     # plot label
     ax = fig.add_subplot(subplot, 1, subplot)
-    ax.set_ylim([-0.05, 1.05])
+
     threshold = 0.5
     ax.hlines(threshold, 0, 30, lw=1, linestyles='--')
     peak_flag = []
@@ -80,7 +80,8 @@ def plot_dataset(instance, title=None, save_dir=None):
             peak_flag.append(peaks)
             ax.legend()
     peak_flag = [[peak_flag[0], peak_flag[1]], [peak_flag[2], peak_flag[3]]]
-
+    if ax.get_ylim()[1]<1.5:
+        ax.set_ylim([-0.05,1.05])
     # plot trace
     lines_shape = [':', '-']
     for i, chan in enumerate(instance.channel):
