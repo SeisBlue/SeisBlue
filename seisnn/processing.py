@@ -161,7 +161,7 @@ def get_picks_from_predict(instance, tag, database,
     :param int distance: Distance threshold in data point.
     """
     db = sql.Client(database)
-    for i in instance.predict.shape[2]:
+    for i, phase in enumerate(instance.phase[0:2]):
         peaks, _ = scipy.signal.find_peaks(instance.predict[-1, :, i],
                                            height=height,
                                            distance=distance)
