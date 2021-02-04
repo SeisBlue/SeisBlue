@@ -179,6 +179,14 @@ class Instance:
         """
         plot.plot_dataset(self, **kwargs)
 
+    def predict_into_database(self, **kwargs):
+        """
+
+        :param kwargs:
+        :return:
+        """
+        processing.get_picks_from_predict(self, **kwargs)
+
 
 if __name__ == "__main__":
     pass
