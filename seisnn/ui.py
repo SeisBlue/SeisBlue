@@ -1,6 +1,6 @@
 from ipywidgets import interact, IntSlider, Dropdown, IntText, ToggleButton, SelectMultiple
 
-from seisnn import plot
+import seisnn.plot
 
 def iplot_map(gepmetry, event):
     pass

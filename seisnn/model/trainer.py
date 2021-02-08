@@ -6,10 +6,13 @@ import shutil
 
 import tensorflow as tf
 
-from seisnn.data import example_proto, io, logger, sql
-from seisnn.data.core import Instance
+from seisnn.core import Instance
 from seisnn.model.generator import nest_net
-from seisnn import utils
+import seisnn.example_proto
+import seisnn.io
+import seisnn.logger
+import seisnn.sql
+import seisnn.utils
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
@@ -25,7 +28,7 @@ class BaseTrainer:
     def get_dataset_length(database=None):
         count = None
         try:
-            db = sql.Client(database)
+            db = seisnn.sql.Client(database)
             count = len(db.get_waveform().all())
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
@@ -34,15 +37,15 @@ class BaseTrainer:
 
     @staticmethod
     def get_model_dir(model_instance, remove=False):
-        config = utils.get_config()
+        config = seisnn.utils.get_config()
         save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
 
         if remove:
             shutil.rmtree(save_model_path, ignore_errors=True)
-        utils.make_dirs(save_model_path)
+        seisnn.utils.make_dirs(save_model_path)
 
         save_history_path = os.path.join(save_model_path, "history")
-        utils.make_dirs(save_history_path)
+        seisnn.utils.make_dirs(save_history_path)
 
         return save_model_path, save_history_path
 
@@ -122,7 +125,7 @@ class GeneratorTrainer(BaseTrainer):
             last_epoch = len(ckpt_manager.checkpoints)
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
-        dataset = io.read_dataset(dataset).shuffle(100000)
+        dataset = seisnn.io.read_dataset(dataset).shuffle(100000)
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
@@ -145,7 +148,8 @@ class GeneratorTrainer(BaseTrainer):
                 progbar.add(batch_size, values=values)
 
                 if n % log_step == 0:
-                    logger.save_loss(loss_buffer, model_name, model_path)
+                    seisnn.logger.save_loss(loss_buffer, model_name,
+                                            model_path)
                     loss_buffer.clear()
 
                     title = f'epoch{epoch + 1:0>2}_step{n:0>5}___'
@@ -153,7 +157,7 @@ class GeneratorTrainer(BaseTrainer):
                     val['id'] = tf.convert_to_tensor(
                         title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
 
-                    example = next(example_proto.batch_iterator(val))
+                    example = next(seisnn.example_proto.batch_iterator(val))
                     instance = Instance(example)
 
                     if plot:

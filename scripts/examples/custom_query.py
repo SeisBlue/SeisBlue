@@ -3,7 +3,7 @@ import datetime
 import seisnn
 
 # connect to sql database
-db = seisnn.data.sql.Client('HL2017.db')
+db = seisnn.sql.Client('HL2017.db')
 
 # open sql session, it will terminate the session when exit `with` statement
 with db.session_scope() as session:

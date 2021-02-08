@@ -15,8 +15,8 @@ from obspy.clients.filesystem import sds
 import obspy.io.nordic.core
 import tensorflow as tf
 
-from seisnn.data import example_proto
-from seisnn import utils
+import seisnn.example_proto
+import seisnn.utils
 
 
 def read_dataset(dataset):
@@ -27,11 +27,11 @@ def read_dataset(dataset):
     :rtype: tf.data.Dataset
     :return: A Dataset.
     """
-    config = utils.get_config()
+    config = seisnn.utils.get_config()
     dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
-    file_list = utils.get_dir_list(dataset_dir)
+    file_list = seisnn.utils.get_dir_list(dataset_dir)
     dataset = tf.data.TFRecordDataset(file_list)
-    dataset = dataset.map(example_proto.sequence_example_parser,
+    dataset = dataset.map(seisnn.example_proto.sequence_example_parser,
                           num_parallel_calls=mp.cpu_count())
     return dataset
 
@@ -56,13 +56,13 @@ def read_event_list(sfile_dir):
     :rtype: list
     :return: list of event.
     """
-    config = utils.get_config()
+    config = seisnn.utils.get_config()
     sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
 
-    sfile_list = utils.get_dir_list(sfile_dir)
+    sfile_list = seisnn.utils.get_dir_list(sfile_dir)
     print(f'Reading events from {sfile_dir}')
 
-    event_list = utils.parallel(sfile_list, func=get_event)
+    event_list = seisnn.utils.parallel(sfile_list, func=get_event)
     flatten = itertools.chain.from_iterable
 
     events = list(flatten(flatten(event_list)))
@@ -92,7 +92,6 @@ def get_event(file, debug=False):
                 print(err)
 
 
-
 def read_sds(window):
     """
     Read SDS database.
@@ -101,7 +100,7 @@ def read_sds(window):
     :rtype: dict
     :return: Dict contains all traces within the time window.
     """
-    config = utils.get_config()
+    config = seisnn.utils.get_config()
     station = window['station']
     starttime = window['starttime']
     endtime = window['endtime'] + 0.1
@@ -131,7 +130,7 @@ def read_hyp(hyp):
     :rtype: dict
     :return: Geometry dict.
     """
-    config = utils.get_config()
+    config = seisnn.utils.get_config()
     hyp_file = os.path.join(config['GEOM_ROOT'], hyp)
     geom = {}
     with open(hyp_file, 'r') as file:
@@ -189,7 +188,7 @@ def write_hyp_station(geom, save_file):
     :param dict geom: Geometry dict.
     :param str save_file: Name of .HYP file.
     """
-    config = utils.get_config()
+    config = seisnn.utils.get_config()
     hyp = []
     for sta, loc in geom.items():
         lat = int(loc['latitude'])
@@ -225,7 +224,7 @@ def read_kml_placemark(kml):
     :rtype: dict
     :return: Geometry dict.
     """
-    config = utils.get_config()
+    config = seisnn.utils.get_config()
     kml_file = os.path.join(config['GEOM_ROOT'], kml)
 
     parser = etree.XMLParser()

@@ -1,6 +1,6 @@
-import seisnn.data
+import seisnn
 
-db = seisnn.data.sql.Client("HL2019.db")
+db = seisnn.sql.Client("HL2019.db")
 
 db.read_hyp("HL2019.HYP", network="HL2019")
 db.inventory_summery()

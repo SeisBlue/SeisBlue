@@ -1,5 +1,5 @@
 from seisnn.utils import get_config
-from seisnn.data.io import read_kml_placemark, write_hyp_station
+from seisnn.io import read_kml_placemark, write_hyp_station
 
 config = get_config()
 

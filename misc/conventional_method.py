@@ -6,21 +6,24 @@ import os
 
 import tensorflow as tf
 import numpy as np
-import scipy
-
-from seisnn.data import example_proto, io, sql
-from seisnn.data.core import Instance
-from seisnn import utils
-from seisnn.model.attention import TransformerBlockE, TransformerBlockD, \
-    MultiHeadSelfAttention, ResBlock
 from obspy.signal.trigger import recursive_sta_lta
 from obspy.signal.trigger import ar_pick
+
+from seisnn.core import Instance
+from seisnn.model.attention import TransformerBlockE, TransformerBlockD, \
+    MultiHeadSelfAttention, ResBlock
+import seisnn.example_proto
+import seisnn.io
+import seisnn.sql
+import seisnn.utils
+
+
 class BaseEvaluator:
     @staticmethod
     def get_dataset_length(database=None):
         count = None
         try:
-            db = sql.Client(database)
+            db = seisnn.sql.Client(database)
             count = len(db.get_waveform().all())
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
@@ -29,16 +32,16 @@ class BaseEvaluator:
 
     @staticmethod
     def get_model_dir(model_instance):
-        config = utils.get_config()
+        config = seisnn.utils.get_config()
         save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
         return save_model_path
 
     @staticmethod
     def get_eval_dir(dataset):
-        config = utils.get_config()
+        config = seisnn.utils.get_config()
         dataset_path = os.path.join(config['DATASET_ROOT'], dataset)
         eval_path = os.path.join(config['DATASET_ROOT'], "eval")
-        utils.make_dirs(eval_path)
+        seisnn.utils.make_dirs(eval_path)
 
         return dataset_path, eval_path
 
@@ -73,7 +76,7 @@ class GeneratorEvaluator(BaseEvaluator):
         model_path = self.get_model_dir(self.model_name)
         dataset_path, eval_path = self.get_eval_dir(dataset)
 
-        dataset = io.read_dataset(dataset)
+        dataset = seisnn.io.read_dataset(dataset)
         self.model = tf.keras.models.load_model(
             model_path,
             custom_objects={
@@ -95,7 +98,7 @@ class GeneratorEvaluator(BaseEvaluator):
             val['id'] = tf.convert_to_tensor(
                 title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
 
-            example = next(example_proto.batch_iterator(val))
+            example = next(seisnn.example_proto.batch_iterator(val))
             instance = Instance(example)
             instance.to_tfrecord(os.path.join(eval_path, title + '.tfrecord'))
             n += 1
@@ -111,7 +114,7 @@ class GeneratorEvaluator(BaseEvaluator):
 
         dataset_path, eval_path = self.get_eval_dir(dataset)
 
-        dataset = io.read_dataset(dataset)
+        dataset = seisnn.io.read_dataset(dataset)
         data_len = self.get_dataset_length(self.database)
         progbar = tf.keras.utils.Progbar(data_len)
 
@@ -126,14 +129,15 @@ class GeneratorEvaluator(BaseEvaluator):
             for i in range(batch_len):
                 z_trace = val['trace'].numpy()[i, :, :, 0].reshape(trace_len)
                 cft = recursive_sta_lta(z_trace, short_window, long_window)
-                predict[i,:,:,0] = cft
+                predict[i, :, :, 0] = cft
             val['predict'] = predict
             val['id'] = tf.convert_to_tensor(
                 title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
-            example = next(example_proto.batch_iterator(val))
+            example = next(seisnn.example_proto.batch_iterator(val))
             instance = Instance(example)
             instance.to_tfrecord(os.path.join(eval_path, title + '.tfrecord'))
             n += 1
+
     def AR_AIC(self, dataset, batch_size=100):
         """
         AR_AIC method
@@ -143,7 +147,7 @@ class GeneratorEvaluator(BaseEvaluator):
         """
         dataset_path, eval_path = self.get_eval_dir(dataset)
 
-        dataset = io.read_dataset(dataset)
+        dataset = seisnn.io.read_dataset(dataset)
         data_len = self.get_dataset_length(self.database)
         progbar = tf.keras.utils.Progbar(data_len)
         df = 100
@@ -157,6 +161,12 @@ class GeneratorEvaluator(BaseEvaluator):
                 x_z = val['trace'].numpy()[i, :, :, 0]
                 x_n = val['trace'].numpy()[i, :, :, 1]
                 x_e = val['trace'].numpy()[i, :, :, 2]
-                p_pick, s_pick = ar_pick(x_z, x_n, x_e, df,
-                                         1.0, 45, 2, 0.3, 2, 0.3, 2, 8, 0.1,
-                                         0.2)
+                p_pick, s_pick = ar_pick(
+                    a=x_z, b=x_n, c=x_e,
+                    samp_rate=df,
+                    f1=1.0, f2=45,
+                    lta_p=2, sta_p=0.3,
+                    lta_s=2, sta_s=0.3,
+                    m_p=2, m_s=8,
+                    l_p=0.1, l_s=0.2
+                )

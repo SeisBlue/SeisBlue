@@ -1,14 +1,19 @@
-from GAN_model import *
 import os
 import shutil
 
+import numpy as np
 import tensorflow as tf
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import concatenate
 
-from seisnn.data import example_proto, io, logger, sql
-from seisnn.data.core import Instance
+from seisnn.core import Instance
+from seisnn.model.generator import nest_net
 from seisnn.model.attention import transformer
-from seisnn import utils
-import numpy
+from seisnn.model.GAN_model import build_discriminator, build_cgan
+import seisnn.example_proto
+import seisnn.io
+import seisnn.sql
+import seisnn.utils
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
@@ -24,7 +29,7 @@ class BaseTrainer:
     def get_dataset_length(database=None):
         count = None
         try:
-            db = sql.Client(database)
+            db = seisnn.sql.Client(database)
             count = len(db.get_waveform().all())
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
@@ -33,15 +38,15 @@ class BaseTrainer:
 
     @staticmethod
     def get_model_dir(model_instance, remove=False):
-        config = utils.get_config()
+        config = seisnn.utils.get_config()
         save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
 
         if remove:
             shutil.rmtree(save_model_path, ignore_errors=True)
-        utils.make_dirs(save_model_path)
+        seisnn.utils.make_dirs(save_model_path)
 
         save_history_path = os.path.join(save_model_path, "history")
-        utils.make_dirs(save_history_path)
+        seisnn.utils.make_dirs(save_history_path)
 
         return save_model_path, save_history_path
 
@@ -117,10 +122,10 @@ class GeneratorTrainer(BaseTrainer):
         ckpt = tf.train.Checkpoint(
             generator_model=self.generator_model,
             discriminator_model=self.discriminator_model,
-            cgan_model = self.cgan_model,
-            generator_optimizer = self.generator_optimizer,
-            discriminator_optimizer =self.discriminator_optimizer,
-            cgan_optimizer = self.cgan_optimizer,
+            cgan_model=self.cgan_model,
+            generator_optimizer=self.generator_optimizer,
+            discriminator_optimizer=self.discriminator_optimizer,
+            cgan_optimizer=self.cgan_optimizer,
         )
         ckpt_manager = tf.train.CheckpointManager(ckpt, model_path,
                                                   max_to_keep=100)
@@ -130,7 +135,7 @@ class GeneratorTrainer(BaseTrainer):
             last_epoch = len(ckpt_manager.checkpoints)
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
-        dataset = io.read_dataset(dataset).shuffle(100000)
+        dataset = seisnn.io.read_dataset(dataset).shuffle(100000)
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
@@ -161,7 +166,7 @@ class GeneratorTrainer(BaseTrainer):
                     val['id'] = tf.convert_to_tensor(
                         title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
 
-                    example = next(example_proto.batch_iterator(val))
+                    example = next(seisnn.example_proto.batch_iterator(val))
                     instance = Instance(example)
 
                     if plot:
@@ -171,6 +176,7 @@ class GeneratorTrainer(BaseTrainer):
 
             ckpt_save_path = ckpt_manager.save()
             print(f'Saving checkpoint to {ckpt_save_path}')
+
     def train_step(self, train, val):
         """
         Training step.

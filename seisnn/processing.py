@@ -10,8 +10,11 @@ import obspy
 import scipy.signal
 import scipy.stats
 
-from seisnn.data import core, example_proto, io, sql
-from seisnn import utils
+import seisnn.core
+import seisnn.example_proto
+import seisnn.io
+import seisnn.sql
+import seisnn.utils
 
 
 def generate_training_data(pick_list, dataset, database, chunk_size):
@@ -23,23 +26,22 @@ def generate_training_data(pick_list, dataset, database, chunk_size):
     :param str database: SQL database.
     :param int chunk_size: Number of data stores in TFRecord.
     """
-    config = utils.get_config()
+    config = seisnn.utils.get_config()
     dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
-    utils.make_dirs(dataset_dir)
-
+    seisnn.utils.make_dirs(dataset_dir)
 
     total_batch = int(len(pick_list) / chunk_size)
-    batch_picks = utils.batch(pick_list, size=chunk_size)
+    batch_picks = seisnn.utils.batch(pick_list, size=chunk_size)
     for index, picks in enumerate(batch_picks):
-        example_list = utils.parallel(picks,
-                                      func=get_example_list,
-                                      database=database)
+        example_list = seisnn.utils.parallel(picks,
+                                             func=get_example_list,
+                                             database=database)
         flatten = itertools.chain.from_iterable
         flat_list = list(flatten(flatten(example_list)))
 
         file_name = f'{index:0>5}.tfrecord'
         save_file = os.path.join(dataset_dir, file_name)
-        io.write_tfrecord(flat_list, save_file)
+        seisnn.io.write_tfrecord(flat_list, save_file)
         print(f'output {file_name} / {total_batch}')
 
 
@@ -83,18 +85,18 @@ def get_example_list(pick, database):
                              station=pick.station,
                              shift='random')
 
-    streams = io.read_sds(window)
+    streams = seisnn.io.read_sds(window)
     example_list = []
     for _, stream in streams.items():
         stream = signal_preprocessing(stream)
 
-        instance = core.Instance().from_stream(stream)
+        instance = seisnn.core.Instance().from_stream(stream)
         instance.phase = ['P', 'S', 'N']
         instance.get_label(database, shape='triang')
         instance.predict = np.zeros(instance.label.shape)
 
         feature = instance.to_feature()
-        example = example_proto.feature_to_example(feature)
+        example = seisnn.example_proto.feature_to_example(feature)
         example_list.append(example)
     return example_list
 
@@ -110,7 +112,7 @@ def get_label(instance, database, shape, half_width=20):
     :rtype: np.array
     :return: Label.
     """
-    db = sql.Client(database)
+    db = seisnn.sql.Client(database)
     label = np.zeros([instance.npts, len(instance.phase)])
 
     ph_index = {}
@@ -160,7 +162,7 @@ def get_picks_from_predict(instance, tag, database,
     :param float height: Height threshold, from 0 to 1, default is 0.5.
     :param int distance: Distance threshold in data point.
     """
-    db = sql.Client(database)
+    db = seisnn.sql.Client(database)
     for i, phase in enumerate(instance.phase[0:2]):
         peaks, _ = scipy.signal.find_peaks(instance.predict[-1, :, i],
                                            height=height,

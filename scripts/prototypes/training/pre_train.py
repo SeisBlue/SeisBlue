@@ -7,13 +7,13 @@ import argparse
 import tensorflow as tf
 
 from seisnn.utils import get_config, make_dirs
-from seisnn.data.io import read_dataset
+from seisnn.io import read_dataset
 
-from seisnn.data.logger import save_loss
+from seisnn.logger import save_loss
 from seisnn.model.settings import model, optimizer, train_step
 from seisnn.plot import plot_loss
-from seisnn.data.core import Instance
-from seisnn.data.example_proto import batch_iterator
+from seisnn.core import Instance
+from seisnn.example_proto import batch_iterator
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-d', '--dataset', required=True, help='dataset', type=str)
