@@ -1,7 +1,7 @@
 import seisnn
 
 dataset = 'HL2019'
-db = seisnn.data.sql.Client('HL2019.db')
+db = seisnn.sql.Client('HL2019.db')
 db.pick_summery()
 
 pick_list = db.get_picks(phase='S').all()

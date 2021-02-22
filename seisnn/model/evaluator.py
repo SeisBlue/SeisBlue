@@ -6,19 +6,20 @@ import os
 
 import tensorflow as tf
 
-from seisnn.data import example_proto, io, sql
-from seisnn.data.core import Instance
-from seisnn import utils
+from seisnn.core import Instance
 from seisnn.model.attention import TransformerBlockE, TransformerBlockD, \
     MultiHeadSelfAttention, ResBlock
-
+import seisnn.example_proto
+import seisnn.io
+import seisnn.sql
+import seisnn.utils
 
 class BaseEvaluator:
     @staticmethod
     def get_dataset_length(database=None):
         count = None
         try:
-            db = sql.Client(database)
+            db = seisnn.sql.Client(database)
             count = len(db.get_waveform().all())
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
@@ -27,16 +28,16 @@ class BaseEvaluator:
 
     @staticmethod
     def get_model_dir(model_instance):
-        config = utils.get_config()
+        config = seisnn.utils.get_config()
         save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
         return save_model_path
 
     @staticmethod
     def get_eval_dir(dataset):
-        config = utils.get_config()
+        config = seisnn.utils.get_config()
         dataset_path = os.path.join(config['DATASET_ROOT'], dataset)
         eval_path = os.path.join(config['DATASET_ROOT'], "eval")
-        utils.make_dirs(eval_path)
+        seisnn.utils.make_dirs(eval_path)
 
         return dataset_path, eval_path
 
@@ -71,7 +72,7 @@ class GeneratorEvaluator(BaseEvaluator):
         model_path = self.get_model_dir(self.model_name)
         dataset_path, eval_path = self.get_eval_dir(dataset)
 
-        dataset = io.read_dataset(dataset)
+        dataset = seisnn.io.read_dataset(dataset)
         self.model = tf.keras.models.load_model(
             model_path,
             custom_objects={
@@ -93,7 +94,7 @@ class GeneratorEvaluator(BaseEvaluator):
             val['id'] = tf.convert_to_tensor(
                 title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
 
-            example = next(example_proto.batch_iterator(val))
+            example = next(seisnn.example_proto.batch_iterator(val))
             instance = Instance(example)
             instance.to_tfrecord(os.path.join(eval_path, title + '.tfrecord'))
             n += 1

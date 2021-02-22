@@ -3,9 +3,6 @@ from tensorflow.keras.layers import concatenate, Conv2D, Conv2DTranspose, \
     Dropout, Input, MaxPooling2D, LeakyReLU, BatchNormalization, Flatten, \
     Dense, Embedding, Reshape, Concatenate
 from tensorflow.keras.regularizers import l2
-from tensorflow.keras.optimizers import Adam
-from seisnn.model.generator import nest_net
-import numpy as np
 
 
 def _standard_unit(input_tensor, stage, nb_filter, kernel_size):

@@ -1,8 +1,8 @@
-from seisnn import data
+import seisnn
 
 dataset = 'eval'
 
-dataset = data.io.read_dataset(dataset)
+dataset = seisnn.io.read_dataset(dataset)
 for item in dataset:
-    instance = data.core.Instance(item)
+    instance = seisnn.core.Instance(item)
     instance.plot()

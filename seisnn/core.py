@@ -4,9 +4,10 @@ Core
 import numpy as np
 import obspy
 
-from seisnn import data
-from seisnn import plot
-from seisnn import processing
+import seisnn.example_proto
+import seisnn.io
+import seisnn.plot
+import seisnn.sql
 
 
 class Instance:
@@ -32,8 +33,8 @@ class Instance:
         if input_data is None:
             pass
         try:
-            if isinstance(input_data, data.sql.Waveform):
-                dataset = data.io.read_dataset(input_data.dataset)
+            if isinstance(input_data, seisnn.sql.Waveform):
+                dataset = seisnn.io.read_dataset(input_data.dataset)
                 for item in dataset.skip(input_data.data_index).take(1):
                     input_data = item
 
@@ -136,7 +137,7 @@ class Instance:
 
         :param example: Example protocol.
         """
-        feature = data.example_proto.eval_eager_tensor(example)
+        feature = seisnn.example_proto.eval_eager_tensor(example)
         self.from_feature(feature)
 
     def to_example(self):
@@ -146,7 +147,7 @@ class Instance:
         :return: Example protocol.
         """
         feature = self.to_feature()
-        example = data.example_proto.feature_to_example(feature)
+        example = seisnn.example_proto.feature_to_example(feature)
         return example
 
     def to_tfrecord(self, file_path):
@@ -156,20 +157,11 @@ class Instance:
         :param str file_path: Output path.
         """
         feature = self.to_feature()
-        example = data.example_proto.feature_to_example(feature)
-        data.io.write_tfrecord([example], file_path)
+        example = seisnn.example_proto.feature_to_example(feature)
+        seisnn.io.write_tfrecord([example], file_path)
 
     def get_label(self, database, **kwargs):
-        self.label = processing.get_label(self, database, **kwargs)
-
-    def get_picks(self, phase, pick_set):
-        """
-        Extract picks from predict.
-
-        :param str phase: Phase name.
-        :param str pick_set: Pick set name.
-        """
-        processing.get_picks_from_predict(self, phase, pick_set)
+        self.label = seisnn.processing.get_label(self, database, **kwargs)
 
     def plot(self, **kwargs):
         """
@@ -177,15 +169,7 @@ class Instance:
 
         :param kwargs: Keywords pass into plot.
         """
-        plot.plot_dataset(self, **kwargs)
-
-    def predict_into_database(self, **kwargs):
-        """
-
-        :param kwargs:
-        :return:
-        """
-        processing.get_picks_from_predict(self, **kwargs)
+        seisnn.plot.plot_dataset(self, **kwargs)
 
 
 if __name__ == "__main__":

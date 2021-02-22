@@ -3,9 +3,9 @@ import argparse
 import pandas as pd
 from obspy import UTCDateTime
 
-from seisnn.data.core import Instance
+from seisnn.core import Instance
 from seisnn.utils import get_config
-from seisnn.data.io import read_dataset
+from seisnn.io import read_dataset
 from seisnn.qc import signal_to_noise_ratio
 from seisnn.plot import plot_snr_distribution
 

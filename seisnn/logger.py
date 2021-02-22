@@ -6,7 +6,7 @@ import os
 
 import numpy as np
 
-from seisnn import utils
+import seisnn.utils
 
 
 def save_loss(loss_buffer, title, save_dir):
@@ -17,7 +17,7 @@ def save_loss(loss_buffer, title, save_dir):
     :param str title: Log file name.
     :param str save_dir: Output directory.
     """
-    utils.make_dirs(save_dir)
+    seisnn.utils.make_dirs(save_dir)
     file_path = os.path.join(save_dir, f'{title}.log')
     loss_buffer = np.asarray(loss_buffer)
     with open(file_path, 'ab') as f:

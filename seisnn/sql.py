@@ -11,10 +11,11 @@ import sqlalchemy.orm
 import sqlalchemy.ext.declarative
 from obspy import UTCDateTime
 
+import seisnn.core
+import seisnn.io
+import seisnn.plot
 import seisnn.processing
-from seisnn.data import core, io
-from seisnn import plot
-from seisnn import utils
+import seisnn.utils
 
 Base = sqlalchemy.ext.declarative.declarative_base()
 
@@ -180,7 +181,7 @@ class Client:
     """
 
     def __init__(self, database, echo=False):
-        config = utils.get_config()
+        config = seisnn.utils.get_config()
         self.database = database
         db_path = os.path.join(config['SQL_ROOT'], self.database)
         self.engine = sqlalchemy.create_engine(
@@ -224,7 +225,7 @@ class Client:
         :param str network: Output network name.
         """
 
-        geom = io.read_hyp(hyp)
+        geom = seisnn.io.read_hyp(hyp)
         self.add_inventory(geom, network)
 
     def read_kml_placemark(self, kml, network):
@@ -237,7 +238,7 @@ class Client:
         :param str network: Output network name.
         """
 
-        geom = io.read_kml_placemark(kml)
+        geom = seisnn.io.read_kml_placemark(kml)
         self.add_inventory(geom, network)
 
     def add_inventory(self, geom, network):
@@ -301,7 +302,7 @@ class Client:
         inventories = self.get_inventories()
         events = self.get_events()
 
-        plot.plot_map(inventories, events)
+        seisnn.plot.plot_map(inventories, events)
 
     def add_events(self, catalog, tag, remove_duplicates=True):
         """
@@ -312,7 +313,7 @@ class Client:
         :param bool remove_duplicates: Removes duplicates in event table.
         """
 
-        events = io.read_event_list(catalog)
+        events = seisnn.io.read_event_list(catalog)
         with self.session_scope() as session:
             event_count = 0
             pick_count = 0
@@ -485,11 +486,11 @@ class Client:
 
         :param str dataset: Dataset name.
         """
-        ds = io.read_dataset(dataset)
+        ds = seisnn.io.read_dataset(dataset)
         index = 0
         with self.session_scope() as session:
             for example in ds:
-                instance = core.Instance(example)
+                instance = seisnn.core.Instance(example)
                 try:
                     Waveform(instance, dataset, index).add_db(session)
                     index += 1

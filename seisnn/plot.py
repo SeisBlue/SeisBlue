@@ -4,17 +4,17 @@ Plot
 
 import os
 
-import cartopy.crs as ccrs
 from cartopy.io import img_tiles
 from cartopy.mpl import ticker
-import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
+import cartopy.crs as ccrs
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from seisnn import utils
-from seisnn import qc
+import seisnn.utils
+import seisnn.qc
 
 
 def color_palette(color=1, shade=1):
@@ -80,8 +80,8 @@ def plot_dataset(instance, title=None, save_dir=None):
             peak_flag.append(peaks)
             ax.legend()
     peak_flag = [[peak_flag[0], peak_flag[1]], [peak_flag[2], peak_flag[3]]]
-    if ax.get_ylim()[1]<1.5:
-        ax.set_ylim([-0.05,1.05])
+    if ax.get_ylim()[1] < 1.5:
+        ax.set_ylim([-0.05, 1.05])
     # plot trace
     lines_shape = [':', '-']
     for i, chan in enumerate(instance.channel):
@@ -94,11 +94,12 @@ def plot_dataset(instance, title=None, save_dir=None):
         for j, phase in enumerate(['label', 'predict']):
             for k, peak in enumerate(peak_flag[j]):
                 color = color_palette(k, j)
-                ax.vlines(peak_flag[j][k]/100, -1.05, 1.05, color, lines_shape[j])
+                ax.vlines(peak_flag[j][k] / 100, -1.05, 1.05, color,
+                          lines_shape[j])
         ax.legend(loc=1)
 
     if save_dir:
-        utils.make_dirs(save_dir)
+        seisnn.utils.make_dirs(save_dir)
         plt.savefig(os.path.join(save_dir, f'{title}.png'))
         plt.close()
     else:
@@ -132,7 +133,7 @@ def plot_loss(log_file, save_dir=None):
     plt.title(f'{file_name[0]} loss')
 
     if save_dir:
-        utils.make_dirs(save_dir)
+        seisnn.utils.make_dirs(save_dir)
         plt.savefig(os.path.join(save_dir, f'{file_name[0]}.png'))
         plt.close()
     else:
@@ -154,7 +155,7 @@ def plot_error_distribution(time_residuals, save_dir=None):
     plt.title("Error Distribution")
 
     if save_dir:
-        utils.make_dirs(save_dir)
+        seisnn.utils.make_dirs(save_dir)
         plt.savefig(os.path.join(save_dir, f'error_distribution.png'))
         plt.close()
     else:
@@ -177,7 +178,7 @@ def plot_snr_distribution(pick_snr, save_dir=None):
     plt.title("SNR Distribution")
 
     if save_dir:
-        utils.make_dirs(save_dir)
+        seisnn.utils.make_dirs(save_dir)
         plt.savefig(os.path.join(save_dir, f'error_distribution.png'))
         plt.close()
     else:
@@ -197,9 +198,9 @@ def plot_confusion_matrix(true_positive, pred_count, val_count):
                           columns=['True', 'False'],
                           index=['True', 'False'])
 
-    precision, recall, f1 = qc.precision_recall_f1_score(true_positive,
-                                                         pred_count,
-                                                         val_count)
+    precision, recall, f1 = seisnn.qc.precision_recall_f1_score(true_positive,
+                                                                pred_count,
+                                                                val_count)
 
     sns.set(font_scale=1.2)
     sns.heatmap(matrix, annot=True, cbar=False, fmt="d", cmap='Blues',

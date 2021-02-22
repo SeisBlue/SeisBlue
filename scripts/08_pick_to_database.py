@@ -1,8 +1,10 @@
-from seisnn import data
+import seisnn
 
 dataset = 'eval'
-dataset = data.io.read_dataset(dataset)
-for item in dataset:
-    instance = data.core.Instance(item)
-    instance.predict_into_database(tag = 'predict',database = "HL2019.db")
+dataset = seisnn.io.read_dataset(dataset)
 
+for item in dataset:
+    instance = seisnn.core.Instance(item)
+    seisnn.processing.get_picks_from_predict(instance,
+                                             tag='predict',
+                                             database="HL2019.db")

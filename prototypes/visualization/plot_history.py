@@ -2,11 +2,11 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import argparse
 
-from seisnn.data.core import Instance
+from seisnn.core import Instance
 from seisnn.utils import get_config
-from seisnn.data.io import read_dataset
+from seisnn.io import read_dataset
 from seisnn.plot import plot_loss
-from seisnn.data.example_proto import batch_iterator
+from seisnn.example_proto import batch_iterator
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-m', '--model', required=False, help='model', type=str)
