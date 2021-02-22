@@ -1,0 +1,6 @@
+seisnn.io.get\_event
+====================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: get_event

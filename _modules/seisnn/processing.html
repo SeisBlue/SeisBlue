@@ -11,7 +11,6 @@
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 <meta charset='utf-8'>
@@ -125,8 +124,11 @@
 <span class="kn">import</span> <span class="nn">scipy.signal</span>
 <span class="kn">import</span> <span class="nn">scipy.stats</span>
 
-<span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">example_proto</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">sql</span>
-<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">import</span> <span class="nn">seisnn.core</span>
+<span class="kn">import</span> <span class="nn">seisnn.example_proto</span>
+<span class="kn">import</span> <span class="nn">seisnn.io</span>
+<span class="kn">import</span> <span class="nn">seisnn.sql</span>
+<span class="kn">import</span> <span class="nn">seisnn.utils</span>
 
 
 <div class="viewcode-block" id="generate_training_data"><a class="viewcode-back" href="../../package/seisnn.processing.generate_training_data.html#seisnn.processing.generate_training_data">[docs]</a><span class="k">def</span> <span class="nf">generate_training_data</span><span class="p">(</span><span class="n">pick_list</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
@@ -138,23 +140,22 @@
 <span class="sd">    :param str database: SQL database.</span>
 <span class="sd">    :param int chunk_size: Number of data stores in TFRecord.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
     <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATASET_ROOT&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="p">)</span>
-    <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
-
+    <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
 
     <span class="n">total_batch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pick_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">chunk_size</span><span class="p">)</span>
-    <span class="n">batch_picks</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">pick_list</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">)</span>
+    <span class="n">batch_picks</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">pick_list</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">picks</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batch_picks</span><span class="p">):</span>
-        <span class="n">example_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">picks</span><span class="p">,</span>
-                                      <span class="n">func</span><span class="o">=</span><span class="n">get_example_list</span><span class="p">,</span>
-                                      <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">)</span>
+        <span class="n">example_list</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">picks</span><span class="p">,</span>
+                                             <span class="n">func</span><span class="o">=</span><span class="n">get_example_list</span><span class="p">,</span>
+                                             <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">)</span>
         <span class="n">flatten</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span>
         <span class="n">flat_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">example_list</span><span class="p">)))</span>
 
         <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">index</span><span class="si">:</span><span class="s1">0&gt;5</span><span class="si">}</span><span class="s1">.tfrecord&#39;</span>
         <span class="n">save_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
-        <span class="n">io</span><span class="o">.</span><span class="n">write_tfrecord</span><span class="p">(</span><span class="n">flat_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">)</span>
+        <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_tfrecord</span><span class="p">(</span><span class="n">flat_list</span><span class="p">,</span> <span class="n">save_file</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;output </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">total_batch</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
@@ -198,18 +199,18 @@
                              <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
                              <span class="n">shift</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
 
-    <span class="n">streams</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+    <span class="n">streams</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_sds</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
     <span class="n">example_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">stream</span> <span class="o">=</span> <span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
 
-        <span class="n">instance</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">from_stream</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span><span class="o">.</span><span class="n">from_stream</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
         <span class="n">instance</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">]</span>
         <span class="n">instance</span><span class="o">.</span><span class="n">get_label</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;triang&#39;</span><span class="p">)</span>
         <span class="n">instance</span><span class="o">.</span><span class="n">predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="n">feature</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
-        <span class="n">example</span> <span class="o">=</span> <span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="n">example</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
         <span class="n">example_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">example_list</span></div>
 
@@ -225,7 +226,7 @@
 <span class="sd">    :rtype: np.array</span>
 <span class="sd">    :return: Label.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">instance</span><span class="o">.</span><span class="n">npts</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">)])</span>
 
     <span class="n">ph_index</span> <span class="o">=</span> <span class="p">{}</span>
@@ -275,7 +276,7 @@
 <span class="sd">    :param float height: Height threshold, from 0 to 1, default is 0.5.</span>
 <span class="sd">    :param int distance: Distance threshold in data point.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]):</span>
         <span class="n">peaks</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">predict</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
                                            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
@@ -392,7 +393,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.<br/>
     </p>
   </div>
 </footer>

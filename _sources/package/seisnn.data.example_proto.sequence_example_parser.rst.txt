@@ -1,6 +1,0 @@
-seisnn.data.example\_proto.sequence\_example\_parser
-====================================================
-
-.. currentmodule:: seisnn.data.example_proto
-
-.. autofunction:: sequence_example_parser

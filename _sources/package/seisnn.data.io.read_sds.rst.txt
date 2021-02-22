@@ -1,6 +1,0 @@
-seisnn.data.io.read\_sds
-========================
-
-.. currentmodule:: seisnn.data.io
-
-.. autofunction:: read_sds

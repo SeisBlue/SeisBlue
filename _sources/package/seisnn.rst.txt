@@ -27,11 +27,15 @@
    :toctree:
    :recursive:
 
-   seisnn.data
+   seisnn.core
+   seisnn.example_proto
+   seisnn.io
+   seisnn.logger
    seisnn.model
    seisnn.plot
    seisnn.processing
    seisnn.qc
+   seisnn.sql
    seisnn.ui
    seisnn.utils
 

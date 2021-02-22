@@ -1,6 +1,0 @@
-seisnn.data.io.read\_hyp
-========================
-
-.. currentmodule:: seisnn.data.io
-
-.. autofunction:: read_hyp

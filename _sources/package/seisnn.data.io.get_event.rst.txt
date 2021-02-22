@@ -1,6 +1,0 @@
-seisnn.data.io.get\_event
-=========================
-
-.. currentmodule:: seisnn.data.io
-
-.. autofunction:: get_event

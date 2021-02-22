@@ -1,6 +1,0 @@
-seisnn.data.io.read\_kml\_placemark
-===================================
-
-.. currentmodule:: seisnn.data.io
-
-.. autofunction:: read_kml_placemark

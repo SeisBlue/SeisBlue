@@ -1,0 +1,30 @@
+seisnn.core
+===========
+
+.. automodule:: seisnn.core
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+   
+      Instance
+   
+   
+
+   
+   
+   
+
+
+

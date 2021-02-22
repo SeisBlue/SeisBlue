@@ -1,6 +1,0 @@
-seisnn.data.io.write\_hyp\_station
-==================================
-
-.. currentmodule:: seisnn.data.io
-
-.. autofunction:: write_hyp_station

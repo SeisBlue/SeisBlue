@@ -1,6 +1,0 @@
-seisnn.data.io.read\_dataset
-============================
-
-.. currentmodule:: seisnn.data.io
-
-.. autofunction:: read_dataset

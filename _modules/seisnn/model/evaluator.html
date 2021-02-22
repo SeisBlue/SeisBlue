@@ -11,7 +11,6 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
 <meta charset='utf-8'>
@@ -121,19 +120,20 @@
 
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
-<span class="kn">from</span> <span class="nn">seisnn.data</span> <span class="kn">import</span> <span class="n">example_proto</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">sql</span>
-<span class="kn">from</span> <span class="nn">seisnn.data.core</span> <span class="kn">import</span> <span class="n">Instance</span>
-<span class="kn">from</span> <span class="nn">seisnn</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">seisnn.core</span> <span class="kn">import</span> <span class="n">Instance</span>
 <span class="kn">from</span> <span class="nn">seisnn.model.attention</span> <span class="kn">import</span> <span class="n">TransformerBlockE</span><span class="p">,</span> <span class="n">TransformerBlockD</span><span class="p">,</span> \
     <span class="n">MultiHeadSelfAttention</span><span class="p">,</span> <span class="n">ResBlock</span>
-
+<span class="kn">import</span> <span class="nn">seisnn.example_proto</span>
+<span class="kn">import</span> <span class="nn">seisnn.io</span>
+<span class="kn">import</span> <span class="nn">seisnn.sql</span>
+<span class="kn">import</span> <span class="nn">seisnn.utils</span>
 
 <div class="viewcode-block" id="BaseEvaluator"><a class="viewcode-back" href="../../../package/seisnn.model.evaluator.BaseEvaluator.html#seisnn.model.evaluator.BaseEvaluator">[docs]</a><span class="k">class</span> <span class="nc">BaseEvaluator</span><span class="p">:</span>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_dataset_length</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">count</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">db</span> <span class="o">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
             <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">get_waveform</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -142,16 +142,16 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_model_dir</span><span class="p">(</span><span class="n">model_instance</span><span class="p">):</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="n">save_model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;MODELS_ROOT&#39;</span><span class="p">],</span> <span class="n">model_instance</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">save_model_path</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_eval_dir</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATASET_ROOT&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="p">)</span>
         <span class="n">eval_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATASET_ROOT&#39;</span><span class="p">],</span> <span class="s2">&quot;eval&quot;</span><span class="p">)</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">eval_path</span><span class="p">)</span>
+        <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_dirs</span><span class="p">(</span><span class="n">eval_path</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">dataset_path</span><span class="p">,</span> <span class="n">eval_path</span></div>
 
@@ -186,7 +186,7 @@
         <span class="n">model_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
         <span class="n">dataset_path</span><span class="p">,</span> <span class="n">eval_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_eval_dir</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
 
-        <span class="n">dataset</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
             <span class="n">model_path</span><span class="p">,</span>
             <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span>
@@ -208,7 +208,7 @@
             <span class="n">val</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span>
                 <span class="n">title</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">)[</span><span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 
-            <span class="n">example</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">example_proto</span><span class="o">.</span><span class="n">batch_iterator</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+            <span class="n">example</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">batch_iterator</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
             <span class="n">instance</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
             <span class="n">instance</span><span class="o">.</span><span class="n">to_tfrecord</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">eval_path</span><span class="p">,</span> <span class="n">title</span> <span class="o">+</span> <span class="s1">&#39;.tfrecord&#39;</span><span class="p">))</span>
             <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span></div></div>
@@ -226,7 +226,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.<br/>
     </p>
   </div>
 </footer>

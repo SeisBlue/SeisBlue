@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seisnn.model.GAN_trainer.GeneratorTrainer &#8212; SeisNN 0.3.0dev documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="seisnn.model.attention" href="seisnn.model.attention.html" />
+    <link rel="prev" title="seisnn.model.GAN_trainer.BaseTrainer" href="seisnn.model.GAN_trainer.BaseTrainer.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          SeisNN</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docker.html">Docker</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">Scripts</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="seisnn.html">seisnn</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">seisnn.model.GAN_trainer.GeneratorTrainer</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="seisnn.model.GAN_trainer.BaseTrainer.html" title="Previous Chapter: seisnn.model.GAN_trainer.BaseTrainer"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model....</span>
+    </a>
+  </li>
+  <li>
+    <a href="seisnn.model.attention.html" title="Next Chapter: seisnn.model.attention"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/package/seisnn.model.GAN_trainer.GeneratorTrainer.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="seisnn-model-gan-trainer-generatortrainer">
+<h1>seisnn.model.GAN_trainer.GeneratorTrainer<a class="headerlink" href="#seisnn-model-gan-trainer-generatortrainer" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="seisnn.model.GAN_trainer.GeneratorTrainer">
+<em class="property">class </em><code class="sig-prename descclassname">seisnn.model.GAN_trainer.</code><code class="sig-name descname">GeneratorTrainer</code><span class="sig-paren">(</span><em class="sig-param">database=None</em>, <em class="sig-param">model=&lt;tensorflow.python.keras.engine.functional.Functional object&gt;</em>, <em class="sig-param">optimizer=&lt;tensorflow.python.keras.optimizer_v2.adam.Adam object&gt;</em>, <em class="sig-param">loss=&lt;tensorflow.python.keras.losses.BinaryCrossentropy object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/GAN_trainer.html#GeneratorTrainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.GAN_trainer.GeneratorTrainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="seisnn.model.GAN_trainer.BaseTrainer.html#seisnn.model.GAN_trainer.BaseTrainer" title="seisnn.model.GAN_trainer.BaseTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">seisnn.model.GAN_trainer.BaseTrainer</span></code></a></p>
+<p>Trainer class.</p>
+<dl class="py method">
+<dt id="seisnn.model.GAN_trainer.GeneratorTrainer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">database=None</em>, <em class="sig-param">model=&lt;tensorflow.python.keras.engine.functional.Functional object&gt;</em>, <em class="sig-param">optimizer=&lt;tensorflow.python.keras.optimizer_v2.adam.Adam object&gt;</em>, <em class="sig-param">loss=&lt;tensorflow.python.keras.losses.BinaryCrossentropy object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/GAN_trainer.html#GeneratorTrainer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.GAN_trainer.GeneratorTrainer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the trainer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – SQL database.</p></li>
+<li><p><strong>model</strong> – keras model.</p></li>
+<li><p><strong>optimizer</strong> – keras optimizer.</p></li>
+<li><p><strong>loss</strong> – keras loss.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.model.GAN_trainer.GeneratorTrainer.__init__" title="seisnn.model.GAN_trainer.GeneratorTrainer.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([database, model, optimizer, loss])</p></td>
+<td><p>Initialize the trainer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dataset_length</span></code>([database])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_dir</span></code>(model_instance[, remove])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.model.GAN_trainer.GeneratorTrainer.train_loop" title="seisnn.model.GAN_trainer.GeneratorTrainer.train_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_loop</span></code></a>(dataset, model_name[, epochs, …])</p></td>
+<td><p>Main training loop.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.model.GAN_trainer.GeneratorTrainer.train_step" title="seisnn.model.GAN_trainer.GeneratorTrainer.train_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_step</span></code></a>(train, val)</p></td>
+<td><p>Training step.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="seisnn.model.GAN_trainer.GeneratorTrainer.train_loop">
+<code class="sig-name descname">train_loop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">model_name</span></em>, <em class="sig-param"><span class="n">epochs</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">log_step</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">remove</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/GAN_trainer.html#GeneratorTrainer.train_loop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.GAN_trainer.GeneratorTrainer.train_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main training loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<em>str</em>) – Dataset name.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Model directory name.</p></li>
+<li><p><strong>epochs</strong> (<em>int</em>) – Epoch number.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size.</p></li>
+<li><p><strong>log_step</strong> (<em>int</em>) – Logging step interval.</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – Plot training validation,
+False save fig, True show fig.</p></li>
+<li><p><strong>remove</strong> (<em>bool</em>) – If True, remove model folder before training.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="seisnn.model.GAN_trainer.GeneratorTrainer.train_step">
+<code class="sig-name descname">train_step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">train</span></em>, <em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/GAN_trainer.html#GeneratorTrainer.train_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.GAN_trainer.GeneratorTrainer.train_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Training step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train</strong> – Training data.</p></li>
+<li><p><strong>val</strong> – Validation data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>predict loss, validation loss</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Jimmy.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
