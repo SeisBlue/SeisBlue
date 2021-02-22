@@ -2,6 +2,9 @@ import seisnn
 
 dataset = 'eval'
 dataset = seisnn.io.read_dataset(dataset)
+
 for item in dataset:
     instance = seisnn.core.Instance(item)
-    instance.predict_into_database(tag='predict', database="HL2019.db")
+    seisnn.processing.get_picks_from_predict(instance,
+                                             tag='predict',
+                                             database="HL2019.db")

@@ -1,4 +1,4 @@
-import seisnn.model
+import seisnn
 
 test_set = 'HL2017'
 model_instance = 'test_model'

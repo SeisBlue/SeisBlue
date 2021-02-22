@@ -4,11 +4,11 @@ Plot
 
 import os
 
-import cartopy.crs as ccrs
 from cartopy.io import img_tiles
 from cartopy.mpl import ticker
-import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
+import cartopy.crs as ccrs
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns

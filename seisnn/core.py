@@ -163,15 +163,6 @@ class Instance:
     def get_label(self, database, **kwargs):
         self.label = seisnn.processing.get_label(self, database, **kwargs)
 
-    def get_picks(self, phase, pick_set):
-        """
-        Extract picks from predict.
-
-        :param str phase: Phase name.
-        :param str pick_set: Pick set name.
-        """
-        seisnn.processing.get_picks_from_predict(self, phase, pick_set)
-
     def plot(self, **kwargs):
         """
         Plot dataset.
@@ -179,14 +170,6 @@ class Instance:
         :param kwargs: Keywords pass into plot.
         """
         seisnn.plot.plot_dataset(self, **kwargs)
-
-    def predict_into_database(self, **kwargs):
-        """
-
-        :param kwargs:
-        :return:
-        """
-        seisnn.processing.get_picks_from_predict(self, **kwargs)
 
 
 if __name__ == "__main__":
