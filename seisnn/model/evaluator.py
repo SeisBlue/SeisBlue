@@ -5,6 +5,8 @@ Evaluator settings.
 import os
 
 import tensorflow as tf
+from obspy.core.utcdatetime import UTCDateTime
+from datetime import datetime
 
 from seisnn.core import Instance
 from seisnn.model.attention import TransformerBlockE, TransformerBlockD, \
@@ -90,6 +92,7 @@ class GeneratorEvaluator(BaseEvaluator):
             progbar.add(batch_size)
 
             val['predict'] = self.model.predict(val['trace'])
+
             iterator = seisnn.example_proto.batch_iterator(val)
             for i in range(len(val['predict'])):
                 title = f"eval_{n:0>5}"
@@ -98,3 +101,47 @@ class GeneratorEvaluator(BaseEvaluator):
                 instance.to_tfrecord(
                     os.path.join(eval_path, title + '.tfrecord'))
                 n += 1
+
+            val['id'] = tf.convert_to_tensor(
+                title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
+
+            example = next(seisnn.example_proto.batch_iterator(val))
+            instance = Instance(example)
+            instance.to_tfrecord(os.path.join(eval_path, title + '.tfrecord'))
+            n += 1
+
+    def score(self, delta=0.1):
+        db = seisnn.sql.Client('HL2019.db')
+        for phase in ['P', 'S']:
+            tp = 0
+            predict_pick = db.get_picks(phase=phase, tag='val_predict')
+            manual_pick = db.get_picks(phase=phase, tag='val_manual')
+            total_predict = len(predict_pick.all())
+            total_manual = len(manual_pick.all())
+            for pick in predict_pick:
+                from_time, to_time = get_from_time_to_time(pick,delta)
+                manual = db.get_picks(
+                    from_time=str(from_time),
+                    to_time=str(to_time),
+                    phase = phase,
+                    station=pick.station,
+                    tag='manual'
+                )
+                if manual.all():
+                    tp = tp + 1
+            print(
+                f'{phase}: tp = {tp},fp = {total_predict - tp},fn = {total_manual - tp}')
+            precision, recall, f1 = seisnn.qc.precision_recall_f1_score(
+                true_positive=tp, val_count=total_manual,
+                pred_count=total_predict)
+            print(
+                f'{phase}: precision = {precision},recall = {recall},f1 = {f1}')
+
+
+def get_from_time_to_time(pick,delta = 0.1):
+    from_time = UTCDateTime(pick.time) - delta
+    from_time = datetime.strptime(str(from_time), '%Y-%m-%dT%H:%M:%S.%fZ')
+    to_time = UTCDateTime(pick.time) + delta
+    to_time = datetime.strptime(str(to_time), '%Y-%m-%dT%H:%M:%S.%fZ')
+    return from_time, to_time
+
