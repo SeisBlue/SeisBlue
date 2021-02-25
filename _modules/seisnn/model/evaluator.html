@@ -205,8 +205,17 @@
         <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">prefetch</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
             <span class="n">progbar</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
 
-            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;eval_</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">0&gt;5</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">val</span><span class="p">[</span><span class="s1">&#39;predict&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">])</span>
+
+            <span class="n">iterator</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">batch_iterator</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s1">&#39;predict&#39;</span><span class="p">])):</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;eval_</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">0&gt;5</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="n">instance</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">iterator</span><span class="p">))</span>
+                <span class="n">instance</span><span class="o">.</span><span class="n">to_tfrecord</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">eval_path</span><span class="p">,</span> <span class="n">title</span> <span class="o">+</span> <span class="s1">&#39;.tfrecord&#39;</span><span class="p">))</span>
+                <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+
             <span class="n">val</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span>
                 <span class="n">title</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">)[</span><span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 
@@ -249,6 +258,7 @@
     <span class="n">to_time</span> <span class="o">=</span> <span class="n">UTCDateTime</span><span class="p">(</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">+</span> <span class="n">delta</span>
     <span class="n">to_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">to_time</span><span class="p">),</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S.</span><span class="si">%f</span><span class="s1">Z&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">from_time</span><span class="p">,</span> <span class="n">to_time</span></div>
+
 </pre></div>
 
     </div>
