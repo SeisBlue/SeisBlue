@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>seisnn.model.GAN_model.build_cgan &#8212; SeisNN 0.3.0dev documentation</title>
+    <title>seisnn.model.evaluator.get_from_time_to_time &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -13,8 +13,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.model.GAN_model.build_discriminator" href="seisnn.model.GAN_model.build_discriminator.html" />
-    <link rel="prev" title="seisnn.model.GAN_model" href="seisnn.model.GAN_model.html" />
+    <link rel="next" title="seisnn.model.evaluator.BaseEvaluator" href="seisnn.model.evaluator.BaseEvaluator.html" />
+    <link rel="prev" title="seisnn.model.evaluator" href="seisnn.model.evaluator.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -80,7 +80,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.model.GAN_model.build_cgan</a></li>
+<li><a class="reference internal" href="#">seisnn.model.evaluator.get_from_time_to_time</a></li>
 </ul>
 </ul>
 </li>
@@ -90,11 +90,11 @@
               
                 
   <li>
-    <a href="seisnn.model.GAN_model.html" title="Previous Chapter: seisnn.model.GAN_model"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model....</span>
+    <a href="seisnn.model.evaluator.html" title="Previous Chapter: seisnn.model.evaluator"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.model....</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.model.GAN_model.build_discriminator.html" title="Next Chapter: seisnn.model.GAN_model.build_discriminator"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.... &raquo;</span>
+    <a href="seisnn.model.evaluator.BaseEvaluator.html" title="Next Chapter: seisnn.model.evaluator.BaseEvaluator"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.model.... &raquo;</span>
     </a>
   </li>
               
@@ -104,7 +104,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/package/seisnn.model.GAN_model.build_cgan.rst.txt"
+  <a href="../_sources/package/seisnn.model.evaluator.get_from_time_to_time.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -128,23 +128,12 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-model-gan-model-build-cgan">
-<h1>seisnn.model.GAN_model.build_cgan<a class="headerlink" href="#seisnn-model-gan-model-build-cgan" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="seisnn-model-evaluator-get-from-time-to-time">
+<h1>seisnn.model.evaluator.get_from_time_to_time<a class="headerlink" href="#seisnn-model-evaluator-get-from-time-to-time" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="seisnn.model.GAN_model.build_cgan">
-<code class="sig-prename descclassname"><span class="pre">seisnn.model.GAN_model.</span></code><code class="sig-name descname"><span class="pre">build_cgan</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discriminator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/GAN_model.html#build_cgan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.GAN_model.build_cgan" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>generator</strong> – </p></li>
-<li><p><strong>discriminator</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
+<dt id="seisnn.model.evaluator.get_from_time_to_time">
+<code class="sig-prename descclassname"><span class="pre">seisnn.model.evaluator.</span></code><code class="sig-name descname"><span class="pre">get_from_time_to_time</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/evaluator.html#get_from_time_to_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.evaluator.get_from_time_to_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

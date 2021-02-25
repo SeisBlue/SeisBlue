@@ -132,11 +132,11 @@
 <h1>seisnn.model.attention.TransformerBlockE<a class="headerlink" href="#seisnn-model-attention-transformerblocke" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="seisnn.model.attention.TransformerBlockE">
-<em class="property">class </em><code class="sig-prename descclassname">seisnn.model.attention.</code><code class="sig-name descname">TransformerBlockE</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#TransformerBlockE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">seisnn.model.attention.</span></code><code class="sig-name descname"><span class="pre">TransformerBlockE</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#TransformerBlockE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.engine.base_layer.Layer</span></code></p>
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embed_dim</span></em>, <em class="sig-param"><span class="n">num_heads</span></em>, <em class="sig-param"><span class="n">ff_dim</span></em>, <em class="sig-param"><span class="n">rate</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#TransformerBlockE.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ff_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#TransformerBlockE.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -327,13 +327,13 @@
 </table>
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.activity_regularizer">
-<em class="property">property </em><code class="sig-name descname">activity_regularizer</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.activity_regularizer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">activity_regularizer</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.activity_regularizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optional regularizer function for the output of this layer.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.add_loss">
-<code class="sig-name descname">add_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">losses</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_loss" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_loss</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">losses</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_loss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add loss tensor(s), potentially dependent on layer inputs.</p>
 <p>Some losses (for instance, activity regularization losses) may be dependent
 on the inputs passed when calling a layer. Hence, when reusing the same
@@ -398,7 +398,7 @@ Accepted values:</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.add_metric">
-<code class="sig-name descname">add_metric</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_metric" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_metric</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_metric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds metric tensor to the layer.</p>
 <p>This method can be used inside the <cite>call()</cite> method of a subclassed layer
 or model.</p>
@@ -455,7 +455,7 @@ using a <cite>keras.Metric.Mean</cite>.</p></li>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.add_update">
-<code class="sig-name descname">add_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">updates</span></em>, <em class="sig-param"><span class="n">inputs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">updates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add update op(s), potentially dependent on layer inputs.</p>
 <p>Weight updates (for instance, the updates of the moving mean and variance
 in a BatchNormalization layer) may be dependent on the inputs passed
@@ -481,13 +481,13 @@ on this Layer, when executing in Eager mode.</p></li>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.add_variable">
-<code class="sig-name descname">add_variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_variable" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_variable</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_variable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deprecated, do NOT use! Alias for <cite>add_weight</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.add_weight">
-<code class="sig-name descname">add_weight</code><span class="sig-paren">(</span><em class="sig-param">name=None</em>, <em class="sig-param">shape=None</em>, <em class="sig-param">dtype=None</em>, <em class="sig-param">initializer=None</em>, <em class="sig-param">regularizer=None</em>, <em class="sig-param">trainable=None</em>, <em class="sig-param">constraint=None</em>, <em class="sig-param">use_resource=None</em>, <em class="sig-param">synchronization=&lt;VariableSynchronization.AUTO: 0&gt;</em>, <em class="sig-param">aggregation=&lt;VariableAggregation.NONE: 0&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_weight" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_weight</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">name=None</span></em>, <em class="sig-param"><span class="pre">shape=None</span></em>, <em class="sig-param"><span class="pre">dtype=None</span></em>, <em class="sig-param"><span class="pre">initializer=None</span></em>, <em class="sig-param"><span class="pre">regularizer=None</span></em>, <em class="sig-param"><span class="pre">trainable=None</span></em>, <em class="sig-param"><span class="pre">constraint=None</span></em>, <em class="sig-param"><span class="pre">use_resource=None</span></em>, <em class="sig-param"><span class="pre">synchronization=&lt;VariableSynchronization.AUTO:</span> <span class="pre">0&gt;</span></em>, <em class="sig-param"><span class="pre">aggregation=&lt;VariableAggregation.NONE:</span> <span class="pre">0&gt;</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.add_weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new variable to the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -529,7 +529,7 @@ Accepted values are constants defined in the class
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.apply">
-<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.apply" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">apply</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deprecated, do NOT use!</p>
 <p>This is an alias of <cite>self.__call__</cite>.</p>
 <dl class="field-list simple">
@@ -548,7 +548,7 @@ Accepted values are constants defined in the class
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.build">
-<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.build" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">build</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
 <p>This is a method that implementers of subclasses of <cite>Layer</cite> or <cite>Model</cite>
 can override if they need a state-creation step in-between
@@ -565,7 +565,7 @@ layer instantiation and layer call.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.call">
-<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwrags</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#TransformerBlockE.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.call" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">call</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwrags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#TransformerBlockE.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.call" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is where the layer’s logic lives.</p>
 <p>Note here that <cite>call()</cite> method in <cite>tf.keras</cite> is little bit different
 from <cite>keras</cite> API. In <cite>keras</cite> API, you can pass support masking for
@@ -586,7 +586,7 @@ method to support masking.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.compute_dtype">
-<em class="property">property </em><code class="sig-name descname">compute_dtype</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.compute_dtype" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">compute_dtype</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.compute_dtype" title="Permalink to this definition">¶</a></dt>
 <dd><p>The dtype of the layer’s computations.</p>
 <p>This is equivalent to <cite>Layer.dtype_policy.compute_dtype</cite>. Unless
 mixed precision is used, this is the same as <cite>Layer.dtype</cite>, the dtype of
@@ -607,7 +607,7 @@ will still typically be float16 or bfloat16 in such cases.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.compute_mask">
-<code class="sig-name descname">compute_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em>, <em class="sig-param"><span class="n">mask</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.compute_mask" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">compute_mask</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.compute_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes an output mask tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -628,7 +628,7 @@ will still typically be float16 or bfloat16 in such cases.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.compute_output_shape">
-<code class="sig-name descname">compute_output_shape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_shape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.compute_output_shape" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">compute_output_shape</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.compute_output_shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the output shape of the layer.</p>
 <p>If the layer has not been built, this method will call <cite>build</cite> on the
 layer. This assumes that the layer will later be used with inputs that
@@ -648,7 +648,7 @@ instead of an integer.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.compute_output_signature">
-<code class="sig-name descname">compute_output_signature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_signature</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.compute_output_signature" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">compute_output_signature</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_signature</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.compute_output_signature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the output tensor signature of the layer based on the inputs.</p>
 <p>Unlike a TensorShape object, a TensorSpec object contains both shape
 and dtype information for a tensor. This method allows layers to provide
@@ -676,7 +676,7 @@ objects, describing a candidate input for the layer.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.count_params">
-<code class="sig-name descname">count_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.count_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">count_params</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.count_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Count the total number of scalars composing the weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -691,7 +691,7 @@ objects, describing a candidate input for the layer.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.dtype">
-<em class="property">property </em><code class="sig-name descname">dtype</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.dtype" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">dtype</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.dtype" title="Permalink to this definition">¶</a></dt>
 <dd><p>The dtype of the layer weights.</p>
 <p>This is equivalent to <cite>Layer.dtype_policy.variable_dtype</cite>. Unless
 mixed precision is used, this is the same as <cite>Layer.compute_dtype</cite>, the
@@ -700,20 +700,20 @@ dtype of the layer’s computations.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.dtype_policy">
-<em class="property">property </em><code class="sig-name descname">dtype_policy</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.dtype_policy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">dtype_policy</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.dtype_policy" title="Permalink to this definition">¶</a></dt>
 <dd><p>The dtype policy associated with this layer.</p>
 <p>This is an instance of a <cite>tf.keras.mixed_precision.Policy</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.dynamic">
-<em class="property">property </em><code class="sig-name descname">dynamic</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.dynamic" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">dynamic</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.dynamic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether the layer is dynamic (eager-only); set in the constructor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.from_config">
-<em class="property">classmethod </em><code class="sig-name descname">from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.from_config" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.from_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a layer from its config.</p>
 <p>This method is the reverse of <cite>get_config</cite>,
 capable of instantiating the same layer from the config
@@ -732,7 +732,7 @@ output of get_config.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_config">
-<code class="sig-name descname">get_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#TransformerBlockE.get_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/attention.html#TransformerBlockE.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the config of the layer.</p>
 <p>A layer config is a Python dictionary (serializable)
 containing the configuration of a layer.
@@ -750,7 +750,7 @@ by <cite>Network</cite> (one layer of abstraction above).</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_input_at">
-<code class="sig-name descname">get_input_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_input_at" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_input_at</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_input_at" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the input tensor(s) of a layer at a given node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -770,7 +770,7 @@ first time the layer was called.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_input_mask_at">
-<code class="sig-name descname">get_input_mask_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_input_mask_at" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_input_mask_at</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_input_mask_at" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the input mask tensor(s) of a layer at a given node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -788,7 +788,7 @@ first time the layer was called.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_input_shape_at">
-<code class="sig-name descname">get_input_shape_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_input_shape_at" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_input_shape_at</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_input_shape_at" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the input shape(s) of a layer at a given node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -809,7 +809,7 @@ first time the layer was called.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_losses_for">
-<code class="sig-name descname">get_losses_for</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_losses_for" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_losses_for</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_losses_for" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deprecated, do NOT use!</p>
 <p>Retrieves losses relevant to a specific set of inputs.</p>
 <dl class="field-list simple">
@@ -824,7 +824,7 @@ first time the layer was called.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_output_at">
-<code class="sig-name descname">get_output_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_output_at" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_output_at</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_output_at" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the output tensor(s) of a layer at a given node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -844,7 +844,7 @@ first time the layer was called.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_output_mask_at">
-<code class="sig-name descname">get_output_mask_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_output_mask_at" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_output_mask_at</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_output_mask_at" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the output mask tensor(s) of a layer at a given node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -862,7 +862,7 @@ first time the layer was called.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_output_shape_at">
-<code class="sig-name descname">get_output_shape_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_output_shape_at" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_output_shape_at</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_output_shape_at" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the output shape(s) of a layer at a given node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -883,7 +883,7 @@ first time the layer was called.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_updates_for">
-<code class="sig-name descname">get_updates_for</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_updates_for" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_updates_for</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_updates_for" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deprecated, do NOT use!</p>
 <p>Retrieves updates relevant to a specific set of inputs.</p>
 <dl class="field-list simple">
@@ -898,7 +898,7 @@ first time the layer was called.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.get_weights">
-<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_weights</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.get_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current weights of the layer.</p>
 <p>The weights of a layer represent the state of the layer. This function
 returns both trainable and non-trainable weight values associated with this
@@ -937,13 +937,13 @@ Dense layer:</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.inbound_nodes">
-<em class="property">property </em><code class="sig-name descname">inbound_nodes</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.inbound_nodes" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">inbound_nodes</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.inbound_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.input">
-<em class="property">property </em><code class="sig-name descname">input</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.input" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">input</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the input tensor(s) of a layer.</p>
 <p>Only applicable if the layer has exactly one input,
 i.e. if it is connected to one incoming layer.</p>
@@ -962,7 +962,7 @@ i.e. if it is connected to one incoming layer.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.input_mask">
-<em class="property">property </em><code class="sig-name descname">input_mask</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.input_mask" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">input_mask</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.input_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the input mask tensor(s) of a layer.</p>
 <p>Only applicable if the layer has exactly one inbound node,
 i.e. if it is connected to one incoming layer.</p>
@@ -982,7 +982,7 @@ mask tensors.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.input_shape">
-<em class="property">property </em><code class="sig-name descname">input_shape</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.input_shape" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">input_shape</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.input_shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the input shape(s) of a layer.</p>
 <p>Only applicable if the layer has exactly one input,
 i.e. if it is connected to one incoming layer, or if all inputs
@@ -1003,7 +1003,7 @@ have the same shape.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.input_spec">
-<em class="property">property </em><code class="sig-name descname">input_spec</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.input_spec" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">input_spec</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.input_spec" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>InputSpec</cite> instance(s) describing the input format for this layer.</p>
 <p>When you create a layer subclass, you can set <cite>self.input_spec</cite> to enable
 the layer to run input compatibility checks when it is called.
@@ -1034,7 +1034,7 @@ error:</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.losses">
-<em class="property">property </em><code class="sig-name descname">losses</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.losses" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">losses</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.losses" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of losses added using the <cite>add_loss()</cite> API.</p>
 <p>Variable regularization tensors are created when this property is accessed,
 so it is eager safe: accessing <cite>losses</cite> under a <cite>tf.GradientTape</cite> will
@@ -1082,7 +1082,7 @@ propagate gradients back to the corresponding variables.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.metrics">
-<em class="property">property </em><code class="sig-name descname">metrics</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.metrics" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">metrics</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of metrics added using the <cite>add_metric()</cite> API.</p>
 <p>Example:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
@@ -1103,19 +1103,19 @@ propagate gradients back to the corresponding variables.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.name">
-<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.name" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Name of the layer (string), set in the constructor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.name_scope">
-<em class="property">property </em><code class="sig-name descname">name_scope</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.name_scope" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">name_scope</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.name_scope" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a <cite>tf.name_scope</cite> instance for this class.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.non_trainable_weights">
-<em class="property">property </em><code class="sig-name descname">non_trainable_weights</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.non_trainable_weights" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">non_trainable_weights</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.non_trainable_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all non-trainable weights tracked by this layer.</p>
 <p>Non-trainable weights are <em>not</em> updated during training. They are expected
 to be updated manually in <cite>call()</cite>.</p>
@@ -1130,13 +1130,13 @@ themselves Keras layers.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.outbound_nodes">
-<em class="property">property </em><code class="sig-name descname">outbound_nodes</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.outbound_nodes" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">outbound_nodes</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.outbound_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deprecated, do NOT use! Only for compatibility with external Keras.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.output">
-<em class="property">property </em><code class="sig-name descname">output</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.output" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">output</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the output tensor(s) of a layer.</p>
 <p>Only applicable if the layer has exactly one output,
 i.e. if it is connected to one incoming layer.</p>
@@ -1156,7 +1156,7 @@ i.e. if it is connected to one incoming layer.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.output_mask">
-<em class="property">property </em><code class="sig-name descname">output_mask</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.output_mask" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">output_mask</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.output_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the output mask tensor(s) of a layer.</p>
 <p>Only applicable if the layer has exactly one inbound node,
 i.e. if it is connected to one incoming layer.</p>
@@ -1176,7 +1176,7 @@ mask tensors.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.output_shape">
-<em class="property">property </em><code class="sig-name descname">output_shape</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.output_shape" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">output_shape</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.output_shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the output shape(s) of a layer.</p>
 <p>Only applicable if the layer has one output,
 or if all outputs have the same shape.</p>
@@ -1196,7 +1196,7 @@ or if all outputs have the same shape.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.set_weights">
-<code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.set_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_weights</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.set_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the weights of the layer, from Numpy arrays.</p>
 <p>The weights of a layer represent the state of the layer. This function
 sets the weight values from numpy arrays. The weight values should be
@@ -1244,7 +1244,7 @@ output of <cite>get_weights</cite>).</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.submodules">
-<em class="property">property </em><code class="sig-name descname">submodules</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.submodules" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">submodules</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.submodules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sequence of all sub-modules.</p>
 <p>Submodules are modules which are properties of this module, or found as
 properties of modules which are properties of this module (and so on).</p>
@@ -1270,13 +1270,13 @@ properties of modules which are properties of this module (and so on).</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.supports_masking">
-<em class="property">property </em><code class="sig-name descname">supports_masking</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.supports_masking" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">supports_masking</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.supports_masking" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether this layer supports computing a mask using <cite>compute_mask</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.trainable_variables">
-<em class="property">property </em><code class="sig-name descname">trainable_variables</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.trainable_variables" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">trainable_variables</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.trainable_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sequence of trainable variables owned by this module and its submodules.</p>
 <p>Note: this method uses reflection to find variables on the current instance
 and submodules. For performance reasons you may wish to cache the result
@@ -1292,7 +1292,7 @@ first).</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.trainable_weights">
-<em class="property">property </em><code class="sig-name descname">trainable_weights</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.trainable_weights" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">trainable_weights</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.trainable_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all trainable weights tracked by this layer.</p>
 <p>Trainable weights are updated via gradient descent during training.</p>
 <p>Note: This will not track the weights of nested <cite>tf.Modules</cite> that are not
@@ -1306,13 +1306,13 @@ themselves Keras layers.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.variable_dtype">
-<em class="property">property </em><code class="sig-name descname">variable_dtype</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.variable_dtype" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">variable_dtype</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.variable_dtype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias of <cite>Layer.dtype</cite>, the dtype of the weights.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.variables">
-<em class="property">property </em><code class="sig-name descname">variables</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.variables" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">variables</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of all layer variables/weights.</p>
 <p>Alias of <cite>self.weights</cite>.</p>
 <p>Note: This will not track the weights of nested <cite>tf.Modules</cite> that are not
@@ -1326,7 +1326,7 @@ themselves Keras layers.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.weights">
-<em class="property">property </em><code class="sig-name descname">weights</code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.weights" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">weights</span></code><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of all layer variables/weights.</p>
 <p>Note: This will not track the weights of nested <cite>tf.Modules</cite> that are not
 themselves Keras layers.</p>
@@ -1339,7 +1339,7 @@ themselves Keras layers.</p>
 
 <dl class="py method">
 <dt id="seisnn.model.attention.TransformerBlockE.with_name_scope">
-<em class="property">classmethod </em><code class="sig-name descname">with_name_scope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">method</span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.with_name_scope" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">with_name_scope</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.model.attention.TransformerBlockE.with_name_scope" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator to automatically enter the module name scope.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyModule</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="gp">... </span>  <span class="nd">@tf</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="n">with_name_scope</span>
@@ -1386,7 +1386,7 @@ names included the module name:</p>
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.1.<br/>
     </p>
   </div>
 </footer>

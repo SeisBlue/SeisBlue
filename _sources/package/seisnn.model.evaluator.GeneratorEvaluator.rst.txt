@@ -21,6 +21,7 @@ seisnn.model.evaluator.GeneratorEvaluator
       ~GeneratorEvaluator.get_dataset_length
       ~GeneratorEvaluator.get_eval_dir
       ~GeneratorEvaluator.get_model_dir
+      ~GeneratorEvaluator.score
    
    
 

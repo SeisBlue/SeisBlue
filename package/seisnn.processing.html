@@ -150,22 +150,25 @@
 <tr class="row-even"><td><p><a class="reference internal" href="seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset" title="seisnn.processing.get_picks_from_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_dataset</span></code></a>(dataset)</p></td>
 <td><p>Returns pick list from TFRecord Dataset.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.processing.get_picks_from_predict.html#seisnn.processing.get_picks_from_predict" title="seisnn.processing.get_picks_from_predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_predict</span></code></a>(instance, tag, database)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.processing.get_picks_from_manual.html#seisnn.processing.get_picks_from_manual" title="seisnn.processing.get_picks_from_manual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_manual</span></code></a>(instance, tag, database)</p></td>
 <td><p>Extract pick from predict.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="seisnn.processing.get_time_residual.html#seisnn.processing.get_time_residual" title="seisnn.processing.get_time_residual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_residual</span></code></a>(val_pick, pred_pick)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="seisnn.processing.get_picks_from_predict.html#seisnn.processing.get_picks_from_predict" title="seisnn.processing.get_picks_from_predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_picks_from_predict</span></code></a>(instance, tag, database)</p></td>
+<td><p>Extract pick from predict.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.processing.get_time_residual.html#seisnn.processing.get_time_residual" title="seisnn.processing.get_time_residual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_residual</span></code></a>(val_pick, pred_pick)</p></td>
 <td><p>Returns time difference from validate pick to predict pick.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.processing.get_time_window.html#seisnn.processing.get_time_window" title="seisnn.processing.get_time_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_window</span></code></a>(anchor_time, station[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="seisnn.processing.get_time_window.html#seisnn.processing.get_time_window" title="seisnn.processing.get_time_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_time_window</span></code></a>(anchor_time, station[, …])</p></td>
 <td><p>Returns time window from anchor time.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="seisnn.processing.signal_preprocessing.html#seisnn.processing.signal_preprocessing" title="seisnn.processing.signal_preprocessing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signal_preprocessing</span></code></a>(stream)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.processing.signal_preprocessing.html#seisnn.processing.signal_preprocessing" title="seisnn.processing.signal_preprocessing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signal_preprocessing</span></code></a>(stream)</p></td>
 <td><p>Return a signal processed stream.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.processing.trim_trace.html#seisnn.processing.trim_trace" title="seisnn.processing.trim_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim_trace</span></code></a>(stream[, points])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="seisnn.processing.trim_trace.html#seisnn.processing.trim_trace" title="seisnn.processing.trim_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim_trace</span></code></a>(stream[, points])</p></td>
 <td><p>Return trimmed stream in a given length.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="seisnn.processing.validate_picks_nearby.html#seisnn.processing.validate_picks_nearby" title="seisnn.processing.validate_picks_nearby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_picks_nearby</span></code></a>(val_pick, pred_pick[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.processing.validate_picks_nearby.html#seisnn.processing.validate_picks_nearby" title="seisnn.processing.validate_picks_nearby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_picks_nearby</span></code></a>(val_pick, pred_pick[, …])</p></td>
 <td><p>Finds nearby picks within a given range.</p></td>
 </tr>
 </tbody>
@@ -185,7 +188,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.1.<br/>
     </p>
   </div>
 </footer>
