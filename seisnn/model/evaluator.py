@@ -91,8 +91,17 @@ class GeneratorEvaluator(BaseEvaluator):
         for val in dataset.prefetch(100).batch(batch_size):
             progbar.add(batch_size)
 
-            title = f"eval_{n:0>5}"
             val['predict'] = self.model.predict(val['trace'])
+
+            iterator = seisnn.example_proto.batch_iterator(val)
+            for i in range(len(val['predict'])):
+                title = f"eval_{n:0>5}"
+
+                instance = Instance(next(iterator))
+                instance.to_tfrecord(
+                    os.path.join(eval_path, title + '.tfrecord'))
+                n += 1
+
             val['id'] = tf.convert_to_tensor(
                 title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
 
@@ -135,3 +144,4 @@ def get_from_time_to_time(pick,delta = 0.1):
     to_time = UTCDateTime(pick.time) + delta
     to_time = datetime.strptime(str(to_time), '%Y-%m-%dT%H:%M:%S.%fZ')
     return from_time, to_time
+
