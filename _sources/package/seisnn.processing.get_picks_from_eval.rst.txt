@@ -1,0 +1,6 @@
+seisnn.processing.get\_picks\_from\_eval
+========================================
+
+.. currentmodule:: seisnn.processing
+
+.. autofunction:: get_picks_from_eval

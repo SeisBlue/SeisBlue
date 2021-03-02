@@ -18,8 +18,7 @@ seisnn.processing
       get_example_list
       get_label
       get_picks_from_dataset
-      get_picks_from_manual
-      get_picks_from_predict
+      get_picks_from_eval
       get_time_residual
       get_time_window
       signal_preprocessing

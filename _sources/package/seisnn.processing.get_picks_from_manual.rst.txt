@@ -1,6 +1,0 @@
-seisnn.processing.get\_picks\_from\_manual
-==========================================
-
-.. currentmodule:: seisnn.processing
-
-.. autofunction:: get_picks_from_manual

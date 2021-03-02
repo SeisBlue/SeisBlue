@@ -289,7 +289,8 @@
                         <span class="n">instance</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="n">history_path</span><span class="p">)</span>
 
             <span class="n">ckpt_save_path</span> <span class="o">=</span> <span class="n">ckpt_manager</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saving checkpoint to </span><span class="si">{</span><span class="n">ckpt_save_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saving checkpoint to </span><span class="si">{</span><span class="n">ckpt_save_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generator_model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;/home/andy/models/test_model.h5&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GeneratorTrainer.train_step"><a class="viewcode-back" href="../../../package/seisnn.model.GAN_trainer.GeneratorTrainer.html#seisnn.model.GAN_trainer.GeneratorTrainer.train_step">[docs]</a>    <span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -265,8 +265,8 @@
     <span class="k">return</span> <span class="n">label</span></div>
 
 
-<div class="viewcode-block" id="get_picks_from_predict"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_predict.html#seisnn.processing.get_picks_from_predict">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_predict</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span>
-                           <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="viewcode-block" id="get_picks_from_eval"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_eval.html#seisnn.processing.get_picks_from_eval">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_eval</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span>
+                        <span class="n">height</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract pick from predict.</span>
 
@@ -276,47 +276,23 @@
 <span class="sd">    :param float height: Height threshold, from 0 to 1, default is 0.5.</span>
 <span class="sd">    :param int distance: Distance threshold in data point.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]):</span>
-        <span class="n">peaks</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">predict</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
-                                           <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-                                           <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">peak</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">peak</span><span class="p">:</span>
-                <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span>
-                    <span class="n">instance</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> <span class="o">+</span> <span class="n">peak</span> <span class="o">*</span> <span class="n">instance</span><span class="o">.</span><span class="n">delta</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;predict&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">peaks</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">label</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
 
-                <span class="n">db</span><span class="o">.</span><span class="n">add_pick</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pick_time</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
-                            <span class="n">station</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
-                            <span class="n">phase</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                            <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span></div>
-<div class="viewcode-block" id="get_picks_from_manual"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_manual.html#seisnn.processing.get_picks_from_manual">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_manual</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span>
-                           <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extract pick from predict.</span>
+            <span class="k">for</span> <span class="n">peak</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">peak</span><span class="p">:</span>
+                    <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span>
+                        <span class="n">instance</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> <span class="o">+</span> <span class="n">peak</span> <span class="o">*</span> <span class="n">instance</span><span class="o">.</span><span class="n">delta</span>
 
-<span class="sd">    :param instance: Data instance.</span>
-<span class="sd">    :param str tag: Output pick tag name.</span>
-<span class="sd">    :param str database: SQL database name.</span>
-<span class="sd">    :param float height: Height threshold, from 0 to 1, default is 0.5.</span>
-<span class="sd">    :param int distance: Distance threshold in data point.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]):</span>
-        <span class="n">peaks</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
-                                           <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-                                           <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">peak</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">peak</span><span class="p">:</span>
-                <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span>
-                    <span class="n">instance</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> <span class="o">+</span> <span class="n">peak</span> <span class="o">*</span> <span class="n">instance</span><span class="o">.</span><span class="n">delta</span>
-
-                <span class="n">db</span><span class="o">.</span><span class="n">add_pick</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pick_time</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
-                            <span class="n">station</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
-                            <span class="n">phase</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                            <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span></div>
+                    <span class="n">db</span><span class="o">.</span><span class="n">add_pick</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pick_time</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
+                                <span class="n">station</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                                <span class="n">phase</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                <span class="n">tag</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;val_</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_picks_from_dataset"><a class="viewcode-back" href="../../package/seisnn.processing.get_picks_from_dataset.html#seisnn.processing.get_picks_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_picks_from_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
