@@ -105,6 +105,7 @@ class Pick(Base):
                                 nullable=False)
     phase = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     tag = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    split = sqlalchemy.Column(sqlalchemy.String)
     snr = sqlalchemy.Column(sqlalchemy.Float)
 
     def __init__(self, time, station, phase, tag):
@@ -119,6 +120,7 @@ class Pick(Base):
                f"Station={self.station}, " \
                f"Phase={self.phase}, " \
                f"Tag={self.tag}, " \
+               f"Split={self.split}, " \
                f"SNR={self.snr})"
 
     def add_db(self, session):
