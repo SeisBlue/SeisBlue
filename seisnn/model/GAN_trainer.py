@@ -176,6 +176,7 @@ class GeneratorTrainer(BaseTrainer):
 
             ckpt_save_path = ckpt_manager.save()
             print(f'Saving checkpoint to {ckpt_save_path}')
+            self.generator_model.save('/home/andy/models/test_model.h5')
 
     def train_step(self, train, val):
         """

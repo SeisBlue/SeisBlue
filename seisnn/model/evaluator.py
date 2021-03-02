@@ -11,6 +11,7 @@ from datetime import datetime
 from seisnn.core import Instance
 from seisnn.model.attention import TransformerBlockE, TransformerBlockD, \
     MultiHeadSelfAttention, ResBlock
+from seisnn.plot import plot_error_distribution
 import seisnn.example_proto
 import seisnn.io
 import seisnn.sql
@@ -110,38 +111,44 @@ class GeneratorEvaluator(BaseEvaluator):
             instance.to_tfrecord(os.path.join(eval_path, title + '.tfrecord'))
             n += 1
 
-    def score(self, delta=0.1):
+    def score(self, delta=0.1, error_distribution=True):
         db = seisnn.sql.Client('HL2019.db')
         for phase in ['P', 'S']:
             tp = 0
+            error = []
             predict_pick = db.get_picks(phase=phase, tag='val_predict')
-            manual_pick = db.get_picks(phase=phase, tag='val_manual')
+            label_pick = db.get_picks(phase=phase, tag='val_label')
             total_predict = len(predict_pick.all())
-            total_manual = len(manual_pick.all())
+            total_label = len(label_pick.all())
+            print(f'{phase}_total_predict: {total_predict} {phase}_total_label: {total_label}')
+
             for pick in predict_pick:
-                from_time, to_time = get_from_time_to_time(pick,delta)
-                manual = db.get_picks(
+                from_time, to_time = get_from_time_to_time(pick, delta)
+                label = db.get_picks(
                     from_time=str(from_time),
                     to_time=str(to_time),
-                    phase = phase,
+                    phase=phase,
                     station=pick.station,
-                    tag='manual'
+                    tag='val_label'
                 )
-                if manual.all():
+                if label.all():
                     tp = tp + 1
+                    if error_distribution:
+                        error.append(UTCDateTime(label[0].time) - UTCDateTime(
+                            pick.time))
+            plot_error_distribution(error)
             print(
-                f'{phase}: tp = {tp},fp = {total_predict - tp},fn = {total_manual - tp}')
+                f'{phase}: tp = {tp},fp = {total_predict - tp},fn = {total_label - tp}')
             precision, recall, f1 = seisnn.qc.precision_recall_f1_score(
-                true_positive=tp, val_count=total_manual,
+                true_positive=tp, val_count=total_label,
                 pred_count=total_predict)
             print(
                 f'{phase}: precision = {precision},recall = {recall},f1 = {f1}')
 
 
-def get_from_time_to_time(pick,delta = 0.1):
+def get_from_time_to_time(pick, delta=0.1):
     from_time = UTCDateTime(pick.time) - delta
     from_time = datetime.strptime(str(from_time), '%Y-%m-%dT%H:%M:%S.%fZ')
     to_time = UTCDateTime(pick.time) + delta
     to_time = datetime.strptime(str(to_time), '%Y-%m-%dT%H:%M:%S.%fZ')
     return from_time, to_time
-

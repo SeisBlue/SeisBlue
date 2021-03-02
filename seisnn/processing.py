@@ -151,8 +151,8 @@ def get_label(instance, database, shape, half_width=20):
     return label
 
 
-def get_picks_from_predict(instance, tag, database,
-                           height=0.5, distance=100):
+def get_picks_from_eval(instance, db,
+                        height=0.4, distance=100):
     """
     Extract pick from predict.
 
@@ -162,47 +162,23 @@ def get_picks_from_predict(instance, tag, database,
     :param float height: Height threshold, from 0 to 1, default is 0.5.
     :param int distance: Distance threshold in data point.
     """
-    db = seisnn.sql.Client(database)
-    for i, phase in enumerate(instance.phase[0:2]):
-        peaks, _ = scipy.signal.find_peaks(instance.predict[-1, :, i],
-                                           height=height,
-                                           distance=distance)
 
-        for peak in peaks:
-            if peak:
-                pick_time = obspy.UTCDateTime(
-                    instance.starttime) + peak * instance.delta
+    for label in ['label', 'predict']:
+        for i, phase in enumerate(instance.phase[0:2]):
+            peaks, _ = scipy.signal.find_peaks(
+                getattr(instance, label)[-1, :, i],
+                height=height,
+                distance=distance)
 
-                db.add_pick(time=pick_time.datetime,
-                            station=instance.station,
-                            phase=instance.phase[i],
-                            tag=tag)
-def get_picks_from_manual(instance, tag, database,
-                           height=0.5, distance=100):
-    """
-    Extract pick from predict.
+            for peak in peaks:
+                if peak:
+                    pick_time = obspy.UTCDateTime(
+                        instance.starttime) + peak * instance.delta
 
-    :param instance: Data instance.
-    :param str tag: Output pick tag name.
-    :param str database: SQL database name.
-    :param float height: Height threshold, from 0 to 1, default is 0.5.
-    :param int distance: Distance threshold in data point.
-    """
-    db = seisnn.sql.Client(database)
-    for i, phase in enumerate(instance.phase[0:2]):
-        peaks, _ = scipy.signal.find_peaks(instance.label[-1, :, i],
-                                           height=height,
-                                           distance=distance)
-
-        for peak in peaks:
-            if peak:
-                pick_time = obspy.UTCDateTime(
-                    instance.starttime) + peak * instance.delta
-
-                db.add_pick(time=pick_time.datetime,
-                            station=instance.station,
-                            phase=instance.phase[i],
-                            tag=tag)
+                    db.add_pick(time=pick_time.datetime,
+                                station=instance.station,
+                                phase=instance.phase[i],
+                                tag=f'val_{label}')
 
 
 def get_picks_from_dataset(dataset):
