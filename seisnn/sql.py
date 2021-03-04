@@ -14,7 +14,6 @@ from obspy import UTCDateTime
 import seisnn.core
 import seisnn.io
 import seisnn.plot
-import seisnn.processing
 import seisnn.utils
 
 Base = sqlalchemy.ext.declarative.declarative_base()
@@ -151,10 +150,10 @@ class Waveform(Base):
     data_index = sqlalchemy.Column(sqlalchemy.Integer)
 
     def __init__(self, instance, dataset, data_index):
-        self.starttime = UTCDateTime(instance.starttime).datetime
-        self.endtime = UTCDateTime(instance.endtime).datetime
-        self.station = instance.station
-        self.channel = ', '.join(instance.channel)
+        self.starttime = UTCDateTime(instance.metadata.starttime).datetime
+        self.endtime = UTCDateTime(instance.metadata.endtime).datetime
+        self.station = instance.metadata.station
+        self.channel = ', '.join(instance.trace.channel)
         self.dataset = dataset
         self.data_index = data_index
 
@@ -388,7 +387,8 @@ class Client:
             Pick(time, station, phase, tag).add_db(session)
 
     def get_picks(self, from_time=None, to_time=None,
-                  station=None, phase=None, tag=None):
+                  station=None, phase=None,
+                  tag=None, split=None):
         """
         Returns query from pick table.
 
@@ -397,6 +397,7 @@ class Client:
         :param str station: Station name.
         :param str phase: Phase name.
         :param str tag: Catalog tag.
+        :param str split: Train test split.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
@@ -413,6 +414,8 @@ class Client:
                 query = query.filter(Pick.phase.like(phase))
             if tag is not None:
                 query = query.filter(Pick.tag.like(tag))
+            if split is not None:
+                query = query.filter(Pick.tag.like(split))
 
         return query
 
@@ -470,17 +473,6 @@ class Client:
         if no_inventory_station:
             print(f'{len(no_inventory_station)} stations without geometry:')
             print([station for station in no_inventory_station], '\n')
-
-    def generate_training_data(self, pick_list, dataset, chunk_size=64):
-        """
-        Generate TFrecords from database.
-
-        :param pick_list: List of picks from Pick SQL query.
-        :param str dataset: Output directory name.
-        :param int chunk_size: Number of data stores in TFRecord.
-        """
-        seisnn.processing.generate_training_data(
-            pick_list, dataset, self.database, chunk_size)
 
     def read_tfrecord_header(self, dataset):
         """
@@ -606,9 +598,24 @@ class Client:
         return query
 
     def clear_table(self, table):
+        """
+        Delete full table from database.
+
+        :param table: Target table name.
+        """
         table = self.get_table_class(table)
         with self.session_scope() as session:
             session.query(table).delete()
+
+    def split_pick(self, proportion):
+        """
+        Split training data into portions.
+
+        :param proportion: List of portions.
+        """
+        with self.session_scope() as session:
+            query = session.query(Pick).slice(0, 20)
+            query.update({Pick.split: "1"})
 
     @contextlib.contextmanager
     def session_scope(self):

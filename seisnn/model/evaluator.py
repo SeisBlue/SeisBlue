@@ -17,6 +17,7 @@ import seisnn.io
 import seisnn.sql
 import seisnn.utils
 
+
 class BaseEvaluator:
     @staticmethod
     def get_dataset_length(database=None):
@@ -120,7 +121,8 @@ class GeneratorEvaluator(BaseEvaluator):
             label_pick = db.get_picks(phase=phase, tag='val_label')
             total_predict = len(predict_pick.all())
             total_label = len(label_pick.all())
-            print(f'{phase}_total_predict: {total_predict} {phase}_total_label: {total_label}')
+            print(f'{phase}_total_predict: {total_predict} '
+                  f'{phase}_total_label: {total_label}')
 
             for pick in predict_pick:
                 from_time, to_time = get_from_time_to_time(pick, delta)

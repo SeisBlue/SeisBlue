@@ -43,8 +43,8 @@ def get_time_array(instance):
     :rtype: numpy.array
     :return: Time array.
     """
-    time_array = np.arange(instance.npts)
-    time_array = time_array * instance.delta
+    time_array = np.arange(instance.metadata.npts)
+    time_array = time_array * instance.metadata.delta
     return time_array
 
 
@@ -57,9 +57,9 @@ def plot_dataset(instance, title=None, save_dir=None):
     :param save_dir:
     """
     if title is None:
-        title = f'{instance.starttime}_{instance.id[:-3]}'
+        title = f'{instance.metadata.starttime}_{instance.metadata.id[:-3]}'
 
-    subplot = len(instance.channel) + 1
+    subplot = len(instance.trace.channel) + 1
     fig = plt.figure(figsize=(8, subplot * 2))
 
     # plot label
@@ -68,28 +68,31 @@ def plot_dataset(instance, title=None, save_dir=None):
     threshold = 0.5
     ax.hlines(threshold, 0, 30, lw=1, linestyles='--')
     peak_flag = []
-    for i, label in enumerate(['label', 'predict']):
-        for j, phase in enumerate(instance.phase[0:2]):
+    for i, label in enumerate([instance.label, instance.predict]):
+        for j, phase in enumerate(label.phase[0:2]):
             color = color_palette(j, i)
             ax.plot(get_time_array(instance),
-                    getattr(instance, label)[-1, :, j],
-                    color=color, label=f'{phase} {label}')
-            peaks, _ = find_peaks(getattr(instance, label)[-1, :, j],
+                    label.data[-1, :, j],
+                    color=color, label=f'{phase} {label.tag}')
+
+            peaks, _ = find_peaks(label.data[-1, :, j],
                                   distance=100,
                                   height=threshold)
             peak_flag.append(peaks)
             ax.legend()
+
     peak_flag = [[peak_flag[0], peak_flag[1]], [peak_flag[2], peak_flag[3]]]
     if ax.get_ylim()[1] < 1.5:
         ax.set_ylim([-0.05, 1.05])
+
     # plot trace
     lines_shape = [':', '-']
-    for i, chan in enumerate(instance.channel):
+    for i, chan in enumerate(instance.trace.channel):
         ax = fig.add_subplot(subplot, 1, i + 1)
         ax.set_ylim([-1.05, 1.05])
         if i == 0:
             plt.title(title[0:-2])
-        trace = instance.trace[-1, :, i]
+        trace = instance.trace.data[-1, :, i]
         ax.plot(get_time_array(instance), trace, "k-", label=chan)
         for j, phase in enumerate(['label', 'predict']):
             for k, peak in enumerate(peak_flag[j]):
