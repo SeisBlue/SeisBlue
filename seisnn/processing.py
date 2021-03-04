@@ -19,7 +19,7 @@ import seisnn.utils
 
 def generate_training_data(pick_list, dataset, database, chunk_size):
     """
-    Generate TFrecords from database.
+    Generate TFRecords from database.
 
     :param pick_list: List of picks from Pick SQL query.
     :param str dataset: Output directory name.

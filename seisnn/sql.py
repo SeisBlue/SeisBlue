@@ -606,14 +606,23 @@ class Client:
         return query
 
     def clear_table(self, table):
+        """
+        Delete full table from database.
+
+        :param table: Target table name.
+        """
         table = self.get_table_class(table)
         with self.session_scope() as session:
             session.query(table).delete()
 
-    def split_pick(self,proportion):
-        with self.session_scope() as session:
+    def split_pick(self, proportion):
+        """
+        Split training data into portions.
 
-            query = session.query(Pick).slice(0,20)
+        :param proportion: List of portions.
+        """
+        with self.session_scope() as session:
+            query = session.query(Pick).slice(0, 20)
             query.update({Pick.split: "1"})
 
     @contextlib.contextmanager
