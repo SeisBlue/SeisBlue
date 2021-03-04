@@ -56,10 +56,11 @@ class Metadata:
         return self
 
 
-class Trace(Metadata):
+class Trace:
     """
     Main class for trace data.
     """
+    metadata = None
     channel = None
     data = None
 
@@ -104,13 +105,14 @@ class Trace(Metadata):
         return self
 
 
-class Label(Metadata):
+class Label:
     """
     Main class for label data.
     """
+    metadata = None
+
     phase = None
     data = None
-    metadata = None
 
     picks = None
 
@@ -216,7 +218,6 @@ class Pick:
                  station=None,
                  phase=None,
                  tag=None):
-
         self.time = time
         self.station = station
         self.phase = phase
