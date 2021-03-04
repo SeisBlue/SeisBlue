@@ -79,11 +79,11 @@ class Trace:
         :return: Waveform object.
         """
         channel = []
-        trace = np.zeros([3008, 3])
+        data = np.zeros([3008, 3])
         for i, comp in enumerate(['Z', 'N', 'E']):
             try:
                 st = stream.select(component=comp)
-                trace[:, i] = st.traces[0].data
+                data[:, i] = st.traces[0].data
                 channel.append(st.traces[0].stats.channel)
 
             except IndexError:
@@ -92,7 +92,7 @@ class Trace:
             except Exception as error:
                 print(f'{type(error).__name__}: {error}')
 
-        self.data = trace
+        self.data = data
         self.channel = channel
         self.metadata = Metadata().from_trace(stream.traces[0])
 
@@ -258,6 +258,7 @@ class Instance:
 
     def from_stream(self, stream):
         """
+        Initialized from stream.
 
         :param stream:
         :return:
