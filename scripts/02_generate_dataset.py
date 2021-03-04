@@ -7,7 +7,7 @@ tag = 'manual'
 db = seisnn.sql.Client(database)
 db.pick_summery()
 
-pick_list = db.get_picks(phase='S').all()
+pick_list = db.get_picks(phase='S', tag='manual').all()
 
 example_gen = seisnn.component.ExampleGen()
 example_gen.generate_training_data(pick_list, dataset, tag, database)
