@@ -94,14 +94,14 @@ class Trace:
 
         self.data = data
         self.channel = channel
-        self.metadata = Metadata().from_trace(stream.traces[0])
+        self.metadata = Metadata(stream.traces[0])
 
         return self
 
     def from_feature(self, feature):
-        self.metadata = Metadata().from_feature(feature)
-        self.data = feature['trace']
-        self.channel = feature['channel']
+        self.metadata = Metadata(feature)
+        self.data = feature.trace
+        self.channel = feature.channel
         return self
 
 
@@ -183,11 +183,11 @@ class Label:
 
             for peak in peaks:
                 if peak:
-                    pick_time = obspy.UTCDateTime(self.starttime) \
-                                + peak * self.delta
+                    pick_time = obspy.UTCDateTime(self.metadata.starttime) \
+                                + peak * self.metadata.delta
 
                     picks.append(Pick(time=pick_time,
-                                      station=self.station,
+                                      station=self.metadata.station,
                                       phase=self.phase[i])
                                  )
 
@@ -238,12 +238,18 @@ class Instance:
         if input_data is None:
             pass
         try:
-            if isinstance(input_data, seisnn.sql.Waveform):
+            if isinstance(input_data, obspy.Stream):
+                self.from_stream(input_data)
+
+            elif isinstance(input_data, seisnn.sql.Waveform):
                 dataset = seisnn.io.read_dataset(input_data.dataset)
                 for item in dataset.skip(input_data.data_index).take(1):
                     input_data = item
+                self.from_example(input_data)
 
-            self.from_example(input_data)
+            elif isinstance(input_data, dict):
+                self.from_example(input_data)
+
         except TypeError:
             pass
 
@@ -254,7 +260,7 @@ class Instance:
         return f"Instance(" \
                f"ID={self.metadata.id}, " \
                f"Start Time={self.metadata.starttime}, " \
-               f"Phase={self.phase})"
+               f"Phase={self.label.phase})"
 
     def from_stream(self, stream):
         """
@@ -263,8 +269,11 @@ class Instance:
         :param stream:
         :return:
         """
-        self.trace = Trace().from_stream(stream)
+        self.trace = Trace(stream)
         self.metadata = self.trace.metadata
+
+        self.label.metadata = self.metadata
+        self.predict.metadata = self.metadata
         return self
 
     def from_feature(self, feature):
