@@ -388,7 +388,8 @@ class Client:
             Pick(time, station, phase, tag).add_db(session)
 
     def get_picks(self, from_time=None, to_time=None,
-                  station=None, phase=None, tag=None):
+                  station=None, phase=None,
+                  tag=None, split=None):
         """
         Returns query from pick table.
 
@@ -397,6 +398,7 @@ class Client:
         :param str station: Station name.
         :param str phase: Phase name.
         :param str tag: Catalog tag.
+        :param str split: Train test split.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
@@ -413,6 +415,8 @@ class Client:
                 query = query.filter(Pick.phase.like(phase))
             if tag is not None:
                 query = query.filter(Pick.tag.like(tag))
+            if split is not None:
+                query = query.filter(Pick.tag.like(split))
 
         return query
 
