@@ -109,26 +109,26 @@ class Label:
     """
     Main class for label data.
     """
-    metadata = None
-
-    phase = None
-    data = None
-
     picks = None
+
+    def __init__(self, metadata, phase, tag=None):
+        self.metadata = metadata
+        self.phase = phase
+        self.tag = tag
+        self.data = np.zeros([metadata.npts, len(phase)])
 
     def generate_label(self, database, tag, shape, half_width=20):
         """
         Add generated label to stream.
 
         :param str database: SQL database.
-        :param str tag: Pick tag in database.
+        :param str tag: Pick tag in SQL database.
         :param str shape: Label shape, see scipy.signal.windows.get_window().
         :param int half_width: Label half width in data point.
         :rtype: np.array
         :return: Label.
         """
         db = seisnn.sql.Client(database)
-        label = np.zeros([self.metadata.npts, len(self.phase)])
 
         ph_index = {}
         for i, phase in enumerate(self.phase):
@@ -142,28 +142,31 @@ class Label:
                 pick_time = obspy.UTCDateTime(
                     pick.time) - self.metadata.starttime
                 pick_time_index = int(pick_time / self.metadata.delta)
-                label[pick_time_index, i] = 1
+                self.data[pick_time_index, i] = 1
 
         if 'EQ' in self.phase:
             # Make EQ window start by P and end by S.
-            label[:, ph_index['EQ']] = label[:, ph_index['P']] \
-                                       - label[:, ph_index['S']]
-            label[:, ph_index['EQ']] = np.cumsum(label[:, ph_index['EQ']])
-            if np.any(label[:, ph_index['EQ']] < 0):
-                label[:, ph_index['EQ']] += 1
+            self.data[:, ph_index['EQ']] = \
+                self.data[:, ph_index['P']] - self.data[:, ph_index['S']]
+
+            self.data[:, ph_index['EQ']] = \
+                np.cumsum(self.data[:, ph_index['EQ']])
+
+            if np.any(self.data[:, ph_index['EQ']] < 0):
+                self.data[:, ph_index['EQ']] += 1
 
         for i, phase in enumerate(self.phase):
             if not phase == 'EQ':
-                wavelet = scipy.signal.windows.get_window(shape,
-                                                          2 * half_width)
-                label[:, i] = scipy.signal.convolve(label[:, i], wavelet[1:],
-                                                    mode='same')
+                wavelet = scipy.signal.windows.get_window(
+                    shape, 2 * half_width)
+                self.data[:, i] = scipy.signal.convolve(
+                    self.data[:, i], wavelet[1:], mode='same')
 
         if 'N' in self.phase:
             # Make Noise window by 1 - P - S
-            label[:, ph_index['N']] = 1
-            label[:, ph_index['N']] -= label[:, ph_index['P']]
-            label[:, ph_index['N']] -= label[:, ph_index['S']]
+            self.data[:, ph_index['N']] = 1
+            self.data[:, ph_index['N']] -= self.data[:, ph_index['P']]
+            self.data[:, ph_index['N']] -= self.data[:, ph_index['S']]
 
         return self
 
@@ -272,8 +275,6 @@ class Instance:
         self.trace = Trace(stream)
         self.metadata = self.trace.metadata
 
-        self.label.metadata = self.metadata
-        self.predict.metadata = self.metadata
         return self
 
     def from_feature(self, feature):
@@ -285,10 +286,10 @@ class Instance:
         self.trace = Trace(feature)
         self.metadata = self.trace.metadata
 
-        self.label.phase = feature.phase
+        self.label = Label(self.metadata, feature.phase, tag='label')
         self.label.data = feature.label
 
-        self.predict.phase = feature.phase
+        self.predict = Label(self.metadata, feature.phase, tag='predict')
         self.predict.data = feature.predict
         return self
 
@@ -404,6 +405,7 @@ class ExampleGen:
         Returns example list form list of picks and SQL database.
 
         :param pick: List of picks.
+        :param str tag: Pick tag in SQL database.
         :param str database: SQL database root.
         :return:
         """
@@ -418,10 +420,11 @@ class ExampleGen:
             stream = self.signal_preprocessing(stream)
 
             instance = seisnn.core.Instance(stream)
-            instance.phase = self.phase
-            instance.label.generate_label(database, tag,
-                                          shape='triang')
-            instance.predict = np.zeros(instance.label.data.shape)
+
+            instance.label = Label(instance.metadata, self.phase)
+            instance.label.generate_label(database, tag, self.shape)
+
+            instance.predict = Label(instance.metadata, self.phase)
 
             feature = instance.to_feature()
             example = seisnn.example_proto.feature_to_example(feature)
