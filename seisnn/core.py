@@ -2,6 +2,7 @@
 Core
 """
 import numpy as np
+import scipy.signal
 import obspy
 
 import seisnn.example_proto
@@ -170,6 +171,83 @@ class Instance:
         :param kwargs: Keywords pass into plot.
         """
         seisnn.plot.plot_dataset(self, **kwargs)
+
+
+class TimeFrame:
+    """
+    Main class for time frame.
+    """
+    id = None
+    station = None
+
+    starttime = None
+    endtime = None
+    npts = None
+    delta = None
+
+    data = None
+
+
+class Waveform(TimeFrame):
+    """
+    Main class for waveform.
+    """
+    channel = None
+
+
+class CharFunc(TimeFrame):
+    """
+    Main class for Characteristic function.
+    """
+    phase = None
+    picks = []
+
+    def get_picks(self, height=0.4, distance=100):
+        """
+        Extract pick from label and write into the database.
+
+        :param float height: Height threshold, from 0 to 1, default is 0.5.
+        :param int distance: Distance threshold in data point.
+        """
+        for i, phase in enumerate(self.phase[0:2]):
+            peaks, _ = scipy.signal.find_peaks(
+                self.data[-1, :, i],
+                height=height,
+                distance=distance)
+
+            for peak in peaks:
+                if peak:
+                    pick_time = obspy.UTCDateTime(self.starttime) \
+                                + peak * self.delta
+
+                    self.picks.append(
+                        Pick(pick_time, self.station, self.phase[i])
+                    )
+
+    def write_picks_to_database(self, tag, database):
+        """
+        Write picks into the database.
+
+        :param str tag: Output pick tag name.
+        :param database: SQL database name.
+        """
+        db = seisnn.sql.Client(database)
+        for pick in self.picks:
+            db.add_pick(time=pick.time.datetime,
+                        station=pick.station,
+                        phase=pick.phase,
+                        tag=tag)
+
+
+class Pick:
+    """
+    Main class for phase pick.
+    """
+
+    def __init__(self, time, station, phase):
+        self.time = time
+        self.station = station
+        self.phase = phase
 
 
 if __name__ == "__main__":
