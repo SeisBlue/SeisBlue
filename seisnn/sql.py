@@ -474,17 +474,6 @@ class Client:
             print(f'{len(no_inventory_station)} stations without geometry:')
             print([station for station in no_inventory_station], '\n')
 
-    def generate_training_data(self, pick_list, dataset, chunk_size=64):
-        """
-        Generate TFrecords from database.
-
-        :param pick_list: List of picks from Pick SQL query.
-        :param str dataset: Output directory name.
-        :param int chunk_size: Number of data stores in TFRecord.
-        """
-        seisnn.processing.generate_training_data(
-            pick_list, dataset, self.database, chunk_size)
-
     def read_tfrecord_header(self, dataset):
         """
         Sync header into SQL database from tfrecord dataset.
