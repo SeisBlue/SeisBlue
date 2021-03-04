@@ -1,0 +1,31 @@
+seisnn.model.generator
+======================
+
+.. automodule:: seisnn.model.generator
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      nest_net
+      unet
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

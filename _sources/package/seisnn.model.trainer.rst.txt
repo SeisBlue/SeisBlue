@@ -1,0 +1,31 @@
+seisnn.model.trainer
+====================
+
+.. automodule:: seisnn.model.trainer
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+   
+      BaseTrainer
+      GeneratorTrainer
+   
+   
+
+   
+   
+   
+
+
+

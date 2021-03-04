@@ -1,0 +1,38 @@
+seisnn.core.Metadata
+====================
+
+.. currentmodule:: seisnn.core
+
+.. autoclass:: Metadata
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Metadata.__init__
+      ~Metadata.from_feature
+      ~Metadata.from_trace
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Metadata.delta
+      ~Metadata.endtime
+      ~Metadata.id
+      ~Metadata.npts
+      ~Metadata.starttime
+      ~Metadata.station
+   
+   

@@ -1,0 +1,30 @@
+seisnn.component.ExampleGen
+===========================
+
+.. currentmodule:: seisnn.component
+
+.. autoclass:: ExampleGen
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ExampleGen.__init__
+      ~ExampleGen.generate_training_data
+      ~ExampleGen.get_example_list
+      ~ExampleGen.get_time_window
+      ~ExampleGen.signal_preprocessing
+      ~ExampleGen.trim_trace
+   
+   
+
+   
+   
+   

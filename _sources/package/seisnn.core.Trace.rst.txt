@@ -1,0 +1,35 @@
+seisnn.core.Trace
+=================
+
+.. currentmodule:: seisnn.core
+
+.. autoclass:: Trace
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Trace.__init__
+      ~Trace.from_feature
+      ~Trace.from_stream
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Trace.channel
+      ~Trace.data
+      ~Trace.metadata
+   
+   

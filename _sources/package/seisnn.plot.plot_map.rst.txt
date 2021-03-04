@@ -1,0 +1,6 @@
+seisnn.plot.plot\_map
+=====================
+
+.. currentmodule:: seisnn.plot
+
+.. autofunction:: plot_map

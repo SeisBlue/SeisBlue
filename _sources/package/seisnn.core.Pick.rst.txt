@@ -1,0 +1,25 @@
+seisnn.core.Pick
+================
+
+.. currentmodule:: seisnn.core
+
+.. autoclass:: Pick
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Pick.__init__
+   
+   
+
+   
+   
+   

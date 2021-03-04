@@ -1,0 +1,6 @@
+seisnn.model.evaluator.get\_from\_time\_to\_time
+================================================
+
+.. currentmodule:: seisnn.model.evaluator
+
+.. autofunction:: get_from_time_to_time

@@ -1,0 +1,41 @@
+﻿seisnn
+======
+
+.. automodule:: seisnn
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   seisnn.component
+   seisnn.core
+   seisnn.example_proto
+   seisnn.io
+   seisnn.logger
+   seisnn.model
+   seisnn.plot
+   seisnn.qc
+   seisnn.sql
+   seisnn.ui
+   seisnn.utils
+

@@ -1,0 +1,6 @@
+seisnn.utils.batch\_operation
+=============================
+
+.. currentmodule:: seisnn.utils
+
+.. autofunction:: batch_operation

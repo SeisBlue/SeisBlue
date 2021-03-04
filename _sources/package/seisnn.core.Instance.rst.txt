@@ -1,0 +1,41 @@
+seisnn.core.Instance
+====================
+
+.. currentmodule:: seisnn.core
+
+.. autoclass:: Instance
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Instance.__init__
+      ~Instance.from_example
+      ~Instance.from_feature
+      ~Instance.from_stream
+      ~Instance.plot
+      ~Instance.to_example
+      ~Instance.to_feature
+      ~Instance.to_tfrecord
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Instance.label
+      ~Instance.metadata
+      ~Instance.predict
+      ~Instance.trace
+   
+   

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>seisnn.core &#8212; SeisNN 0.3.0dev documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          SeisNN</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docker.html">Docker</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../package/seisnn.html">seisnn</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for seisnn.core</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Core</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.signal</span>
+<span class="kn">import</span> <span class="nn">obspy</span>
+
+<span class="kn">import</span> <span class="nn">seisnn.example_proto</span>
+<span class="kn">import</span> <span class="nn">seisnn.io</span>
+<span class="kn">import</span> <span class="nn">seisnn.plot</span>
+<span class="kn">import</span> <span class="nn">seisnn.sql</span>
+
+
+<div class="viewcode-block" id="Metadata"><a class="viewcode-back" href="../../package/seisnn.core.Metadata.html#seisnn.core.Metadata">[docs]</a><span class="k">class</span> <span class="nc">Metadata</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">station</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">starttime</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">endtime</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">npts</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Metadata.__init__"><a class="viewcode-back" href="../../package/seisnn.core.Metadata.html#seisnn.core.Metadata.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">obspy</span><span class="o">.</span><span class="n">Trace</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">from_trace</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">Feature</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">from_feature</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">from_trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">station</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">starttime</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">starttime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endtime</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">endtime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npts</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">npts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">delta</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">from_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">station</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">starttime</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endtime</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">endtime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npts</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">npts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">delta</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Trace"><a class="viewcode-back" href="../../package/seisnn.core.Trace.html#seisnn.core.Trace">[docs]</a><span class="k">class</span> <span class="nc">Trace</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for trace data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Trace.__init__"><a class="viewcode-back" href="../../package/seisnn.core.Trace.html#seisnn.core.Trace.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">obspy</span><span class="o">.</span><span class="n">Stream</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">from_stream</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">Feature</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">from_feature</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Trace.from_stream"><a class="viewcode-back" href="../../package/seisnn.core.Trace.html#seisnn.core.Trace.from_stream">[docs]</a>    <span class="k">def</span> <span class="nf">from_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets waveform from Obspy stream.</span>
+
+<span class="sd">        :param stream: Obspy stream object.</span>
+<span class="sd">        :return: Waveform object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3008</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">st</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+                <span class="n">channel</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">Metadata</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">traces</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">from_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">Metadata</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">trace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">channel</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Label"><a class="viewcode-back" href="../../package/seisnn.core.Label.html#seisnn.core.Label">[docs]</a><span class="k">class</span> <span class="nc">Label</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for label data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">picks</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Label.__init__"><a class="viewcode-back" href="../../package/seisnn.core.Label.html#seisnn.core.Label.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">metadata</span><span class="o">.</span><span class="n">npts</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">phase</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="Label.generate_label"><a class="viewcode-back" href="../../package/seisnn.core.Label.html#seisnn.core.Label.generate_label">[docs]</a>    <span class="k">def</span> <span class="nf">generate_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">half_width</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add generated label to stream.</span>
+
+<span class="sd">        :param str database: SQL database.</span>
+<span class="sd">        :param str tag: Pick tag in SQL database.</span>
+<span class="sd">        :param str shape: Label shape, see scipy.signal.windows.get_window().</span>
+<span class="sd">        :param int half_width: Label half width in data point.</span>
+<span class="sd">        :rtype: np.array</span>
+<span class="sd">        :return: Label.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+
+        <span class="n">ph_index</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">):</span>
+            <span class="n">ph_index</span><span class="p">[</span><span class="n">phase</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">picks</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_picks</span><span class="p">(</span><span class="n">from_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
+                                 <span class="n">to_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">endtime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
+                                 <span class="n">station</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                                 <span class="n">phase</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">:</span>
+                <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span>
+                    <span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span>
+                <span class="n">pick_time_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pick_time</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">pick_time_index</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="s1">&#39;EQ&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">:</span>
+            <span class="c1"># Make EQ window start by P and end by S.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;EQ&#39;</span><span class="p">]]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;EQ&#39;</span><span class="p">]]</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;EQ&#39;</span><span class="p">]])</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;EQ&#39;</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;EQ&#39;</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">phase</span> <span class="o">==</span> <span class="s1">&#39;EQ&#39;</span><span class="p">:</span>
+                <span class="n">wavelet</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">get_window</span><span class="p">(</span>
+                    <span class="n">shape</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">half_width</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">wavelet</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;N&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">:</span>
+            <span class="c1"># Make Noise window by 1 - P - S</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">ph_index</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Label.get_picks"><a class="viewcode-back" href="../../package/seisnn.core.Label.html#seisnn.core.Label.get_picks">[docs]</a>    <span class="k">def</span> <span class="nf">get_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract pick from label and write into the database.</span>
+
+<span class="sd">        :param float height: Height threshold, from 0 to 1, default is 0.5.</span>
+<span class="sd">        :param int distance: Distance threshold in data point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">picks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">peaks</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">find_peaks</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">],</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">peak</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">peak</span><span class="p">:</span>
+                    <span class="n">pick_time</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> \
+                                <span class="o">+</span> <span class="n">peak</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">delta</span>
+
+                    <span class="n">picks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Pick</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pick_time</span><span class="p">,</span>
+                                      <span class="n">station</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                                      <span class="n">phase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                                 <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">picks</span> <span class="o">=</span> <span class="n">picks</span></div>
+
+<div class="viewcode-block" id="Label.write_picks_to_database"><a class="viewcode-back" href="../../package/seisnn.core.Label.html#seisnn.core.Label.write_picks_to_database">[docs]</a>    <span class="k">def</span> <span class="nf">write_picks_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write picks into the database.</span>
+
+<span class="sd">        :param str tag: Output pick tag name.</span>
+<span class="sd">        :param database: SQL database name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">picks</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">add_pick</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
+                        <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                        <span class="n">phase</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span>
+                        <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Pick"><a class="viewcode-back" href="../../package/seisnn.core.Pick.html#seisnn.core.Pick">[docs]</a><span class="k">class</span> <span class="nc">Pick</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for phase pick.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Pick.__init__"><a class="viewcode-back" href="../../package/seisnn.core.Pick.html#seisnn.core.Pick.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">station</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span></div></div>
+
+
+<div class="viewcode-block" id="Instance"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance">[docs]</a><span class="k">class</span> <span class="nc">Instance</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for data transfer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">trace</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">predict</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Instance.__init__"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">input_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">obspy</span><span class="o">.</span><span class="n">Stream</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">from_stream</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Waveform</span><span class="p">):</span>
+                <span class="n">dataset</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">data_index</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">input_data</span> <span class="o">=</span> <span class="n">item</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Instance(&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;ID=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;Start Time=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;Phase=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">phase</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+<div class="viewcode-block" id="Instance.from_stream"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.from_stream">[docs]</a>    <span class="k">def</span> <span class="nf">from_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialized from stream.</span>
+
+<span class="sd">        :param stream:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">Trace</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">metadata</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Instance.from_feature"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.from_feature">[docs]</a>    <span class="k">def</span> <span class="nf">from_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialized from feature dict.</span>
+
+<span class="sd">        :param Feature feature: Feature dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">Trace</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">metadata</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">feature</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">label</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">predict</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">feature</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;predict&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">predict</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Instance.to_feature"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.to_feature">[docs]</a>    <span class="k">def</span> <span class="nf">to_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns Feature object.</span>
+
+<span class="sd">        :rtype: Feature</span>
+<span class="sd">        :return: Feature object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">Feature</span><span class="p">()</span>
+
+        <span class="n">feature</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">station</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">starttime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">endtime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">endtime</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="n">feature</span><span class="o">.</span><span class="n">npts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">npts</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">delta</span>
+
+        <span class="n">feature</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">channel</span>
+
+        <span class="n">feature</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">phase</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">predict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="k">return</span> <span class="n">feature</span></div>
+
+<div class="viewcode-block" id="Instance.from_example"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.from_example">[docs]</a>    <span class="k">def</span> <span class="nf">from_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialized from example protocol.</span>
+
+<span class="sd">        :param example: Example protocol.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">eval_eager_tensor</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Instance.to_example"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.to_example">[docs]</a>    <span class="k">def</span> <span class="nf">to_example</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns example protocol.</span>
+
+<span class="sd">        :return: Example protocol.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
+        <span class="n">example</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">example</span></div>
+
+<div class="viewcode-block" id="Instance.to_tfrecord"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.to_tfrecord">[docs]</a>    <span class="k">def</span> <span class="nf">to_tfrecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write TFRecord to file path.</span>
+
+<span class="sd">        :param str file_path: Output path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_feature</span><span class="p">()</span>
+        <span class="n">example</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">feature_to_example</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_tfrecord</span><span class="p">([</span><span class="n">example</span><span class="p">],</span> <span class="n">file_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Instance.plot"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot dataset.</span>
+
+<span class="sd">        :param kwargs: Keywords pass into plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">seisnn</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Jimmy.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+seisnn.sql.Event
+================
+
+.. currentmodule:: seisnn.sql
+
+.. autoclass:: Event
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Event.__init__
+      ~Event.add_db
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Event.depth
+      ~Event.id
+      ~Event.latitude
+      ~Event.longitude
+      ~Event.metadata
+      ~Event.time
+   
+   

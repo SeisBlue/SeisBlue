@@ -1,0 +1,41 @@
+seisnn.model.attention
+======================
+
+.. automodule:: seisnn.model.attention
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      ResNet_build
+      transformer
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+   
+      MultiHeadSelfAttention
+      ResBlock
+      TransformerBlockD
+      TransformerBlockE
+   
+   
+
+   
+   
+   
+
+
+

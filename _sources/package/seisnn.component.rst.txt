@@ -1,0 +1,30 @@
+seisnn.component
+================
+
+.. automodule:: seisnn.component
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+   
+      ExampleGen
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+seisnn.plot.plot\_dataset
+=========================
+
+.. currentmodule:: seisnn.plot
+
+.. autofunction:: plot_dataset

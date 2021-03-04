@@ -1,0 +1,30 @@
+seisnn.ui
+=========
+
+.. automodule:: seisnn.ui
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      iplot_map
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

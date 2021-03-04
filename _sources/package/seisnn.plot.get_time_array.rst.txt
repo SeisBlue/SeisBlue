@@ -1,0 +1,6 @@
+seisnn.plot.get\_time\_array
+============================
+
+.. currentmodule:: seisnn.plot
+
+.. autofunction:: get_time_array

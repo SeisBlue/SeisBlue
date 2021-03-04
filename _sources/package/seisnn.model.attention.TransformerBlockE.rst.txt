@@ -1,0 +1,85 @@
+seisnn.model.attention.TransformerBlockE
+========================================
+
+.. currentmodule:: seisnn.model.attention
+
+.. autoclass:: TransformerBlockE
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TransformerBlockE.__init__
+      ~TransformerBlockE.add_loss
+      ~TransformerBlockE.add_metric
+      ~TransformerBlockE.add_update
+      ~TransformerBlockE.add_variable
+      ~TransformerBlockE.add_weight
+      ~TransformerBlockE.apply
+      ~TransformerBlockE.build
+      ~TransformerBlockE.call
+      ~TransformerBlockE.compute_mask
+      ~TransformerBlockE.compute_output_shape
+      ~TransformerBlockE.compute_output_signature
+      ~TransformerBlockE.count_params
+      ~TransformerBlockE.from_config
+      ~TransformerBlockE.get_config
+      ~TransformerBlockE.get_input_at
+      ~TransformerBlockE.get_input_mask_at
+      ~TransformerBlockE.get_input_shape_at
+      ~TransformerBlockE.get_losses_for
+      ~TransformerBlockE.get_output_at
+      ~TransformerBlockE.get_output_mask_at
+      ~TransformerBlockE.get_output_shape_at
+      ~TransformerBlockE.get_updates_for
+      ~TransformerBlockE.get_weights
+      ~TransformerBlockE.set_weights
+      ~TransformerBlockE.with_name_scope
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TransformerBlockE.activity_regularizer
+      ~TransformerBlockE.compute_dtype
+      ~TransformerBlockE.dtype
+      ~TransformerBlockE.dtype_policy
+      ~TransformerBlockE.dynamic
+      ~TransformerBlockE.inbound_nodes
+      ~TransformerBlockE.input
+      ~TransformerBlockE.input_mask
+      ~TransformerBlockE.input_shape
+      ~TransformerBlockE.input_spec
+      ~TransformerBlockE.losses
+      ~TransformerBlockE.metrics
+      ~TransformerBlockE.name
+      ~TransformerBlockE.name_scope
+      ~TransformerBlockE.non_trainable_variables
+      ~TransformerBlockE.non_trainable_weights
+      ~TransformerBlockE.outbound_nodes
+      ~TransformerBlockE.output
+      ~TransformerBlockE.output_mask
+      ~TransformerBlockE.output_shape
+      ~TransformerBlockE.stateful
+      ~TransformerBlockE.submodules
+      ~TransformerBlockE.supports_masking
+      ~TransformerBlockE.trainable
+      ~TransformerBlockE.trainable_variables
+      ~TransformerBlockE.trainable_weights
+      ~TransformerBlockE.updates
+      ~TransformerBlockE.variable_dtype
+      ~TransformerBlockE.variables
+      ~TransformerBlockE.weights
+   
+   

@@ -1,0 +1,6 @@
+seisnn.model.generator.nest\_net
+================================
+
+.. currentmodule:: seisnn.model.generator
+
+.. autofunction:: nest_net

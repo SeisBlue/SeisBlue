@@ -1,0 +1,6 @@
+seisnn.ui.iplot\_map
+====================
+
+.. currentmodule:: seisnn.ui
+
+.. autofunction:: iplot_map
