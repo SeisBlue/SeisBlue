@@ -1,6 +1,0 @@
-seisnn.model.attention.ResNet\_build
-====================================
-
-.. currentmodule:: seisnn.model.attention
-
-.. autofunction:: ResNet_build

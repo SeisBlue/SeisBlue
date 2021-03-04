@@ -1,6 +1,0 @@
-seisnn.processing.generate\_training\_data
-==========================================
-
-.. currentmodule:: seisnn.processing
-
-.. autofunction:: generate_training_data

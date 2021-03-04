@@ -1,6 +1,0 @@
-seisnn.processing.trim\_trace
-=============================
-
-.. currentmodule:: seisnn.processing
-
-.. autofunction:: trim_trace

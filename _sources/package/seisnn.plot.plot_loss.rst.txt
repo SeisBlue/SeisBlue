@@ -1,6 +1,0 @@
-seisnn.plot.plot\_loss
-======================
-
-.. currentmodule:: seisnn.plot
-
-.. autofunction:: plot_loss

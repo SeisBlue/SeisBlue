@@ -1,6 +1,0 @@
-seisnn.plot.plot\_snr\_distribution
-===================================
-
-.. currentmodule:: seisnn.plot
-
-.. autofunction:: plot_snr_distribution

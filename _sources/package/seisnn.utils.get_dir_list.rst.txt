@@ -1,6 +1,0 @@
-seisnn.utils.get\_dir\_list
-===========================
-
-.. currentmodule:: seisnn.utils
-
-.. autofunction:: get_dir_list

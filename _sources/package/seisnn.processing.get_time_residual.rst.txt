@@ -1,6 +1,0 @@
-seisnn.processing.get\_time\_residual
-=====================================
-
-.. currentmodule:: seisnn.processing
-
-.. autofunction:: get_time_residual

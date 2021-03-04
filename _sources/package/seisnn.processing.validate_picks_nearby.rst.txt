@@ -1,6 +1,0 @@
-seisnn.processing.validate\_picks\_nearby
-=========================================
-
-.. currentmodule:: seisnn.processing
-
-.. autofunction:: validate_picks_nearby

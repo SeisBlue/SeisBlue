@@ -1,6 +1,0 @@
-seisnn.qc.precision\_recall\_f1\_score
-======================================
-
-.. currentmodule:: seisnn.qc
-
-.. autofunction:: precision_recall_f1_score

@@ -1,6 +1,0 @@
-seisnn.processing.signal\_preprocessing
-=======================================
-
-.. currentmodule:: seisnn.processing
-
-.. autofunction:: signal_preprocessing

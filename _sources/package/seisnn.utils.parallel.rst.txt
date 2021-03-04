@@ -1,6 +1,0 @@
-seisnn.utils.parallel
-=====================
-
-.. currentmodule:: seisnn.utils
-
-.. autofunction:: parallel

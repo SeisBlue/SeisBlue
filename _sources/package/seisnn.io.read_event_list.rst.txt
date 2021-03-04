@@ -1,6 +1,0 @@
-seisnn.io.read\_event\_list
-===========================
-
-.. currentmodule:: seisnn.io
-
-.. autofunction:: read_event_list
