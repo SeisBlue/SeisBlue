@@ -92,18 +92,18 @@ def get_event(file, debug=False):
                 print(err)
 
 
-def read_sds(window):
+def read_sds(metadata):
     """
     Read SDS database.
 
-    :param dict window: Time window.
+    :param metadata: Metadata.
     :rtype: dict
     :return: Dict contains all traces within the time window.
     """
     config = seisnn.utils.get_config()
-    station = window['station']
-    starttime = window['starttime']
-    endtime = window['endtime'] + 0.1
+    station = metadata.station
+    starttime = metadata.starttime
+    endtime = metadata.endtime + 0.1
 
     client = sds.Client(sds_root=config['SDS_ROOT'])
     stream = client.get_waveforms(network="*",
