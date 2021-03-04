@@ -151,10 +151,10 @@ class Waveform(Base):
     data_index = sqlalchemy.Column(sqlalchemy.Integer)
 
     def __init__(self, instance, dataset, data_index):
-        self.starttime = UTCDateTime(instance.starttime).datetime
-        self.endtime = UTCDateTime(instance.endtime).datetime
-        self.station = instance.station
-        self.channel = ', '.join(instance.channel)
+        self.starttime = UTCDateTime(instance.metadata.starttime).datetime
+        self.endtime = UTCDateTime(instance.metadata.endtime).datetime
+        self.station = instance.metadata.station
+        self.channel = ', '.join(instance.trace.channel)
         self.dataset = dataset
         self.data_index = data_index
 
@@ -615,9 +615,6 @@ class Client:
 
             query = session.query(Pick).slice(0,20)
             query.update({Pick.split: "1"})
-
-
-
 
     @contextlib.contextmanager
     def session_scope(self):
