@@ -363,9 +363,14 @@ class ExampleGen:
 
     Consumes data from external source and emit TFRecord.
     """
-    phase = ['P', 'S', 'N']
-    trace_length = 30
-    points = 3008
+
+    def __init__(self,
+                 phase=('P', 'S', 'N'),
+                 trace_length=30,
+                 shape='triang'):
+        self.phase = phase
+        self.trace_length = trace_length
+        self.shape = shape
 
     def generate_training_data(self,
                                pick_list,
@@ -378,6 +383,7 @@ class ExampleGen:
 
         :param pick_list: List of picks from Pick SQL query.
         :param str dataset: Output directory name.
+        :param str tag: Pick tag in SQL database.
         :param str database: SQL database name.
         :param int chunk_size: Number of data stores in TFRecord.
         """
@@ -433,14 +439,14 @@ class ExampleGen:
 
     def get_time_window(self, anchor_time, station, shift=0):
         """
-        Returns time window from anchor time.
+        Returns metadata from anchor time.
 
         :param anchor_time: Anchor of the time window.
         :param str station: Station name.
         :param float or str shift: (Optional.) Shift in sec,
             if 'random' will shift randomly within the trace length.
         :rtype: dict
-        :return: Time window.
+        :return: Metadata object.
         """
         if shift == 'random':
             rng = np.random.default_rng()
@@ -468,7 +474,8 @@ class ExampleGen:
         stream = self.trim_trace(stream)
         return stream
 
-    def trim_trace(self, stream, points=3008):
+    @staticmethod
+    def trim_trace(stream, points=3008):
         """
         Return trimmed stream in a given length.
 
