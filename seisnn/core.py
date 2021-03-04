@@ -28,6 +28,13 @@ class Metadata:
 
     data = None
 
+    def __init__(self, input_data=None):
+        if isinstance(input_data, obspy.Trace):
+            self.from_trace(input_data)
+
+        elif isinstance(input_data, seisnn.example_proto.Feature):
+            self.from_feature(input_data)
+
     def from_trace(self, trace):
         self.id = trace.id
         self.station = trace.stats.station
@@ -39,13 +46,13 @@ class Metadata:
         return self
 
     def from_feature(self, feature):
-        self.id = feature['id']
-        self.station = feature['station']
+        self.id = feature.id
+        self.station = feature.station
 
-        self.starttime = obspy.UTCDateTime(feature['starttime'])
-        self.endtime = obspy.UTCDateTime(feature['endtime'])
-        self.npts = feature['npts']
-        self.delta = feature['delta']
+        self.starttime = obspy.UTCDateTime(feature.starttime)
+        self.endtime = obspy.UTCDateTime(feature.endtime)
+        self.npts = feature.npts
+        self.delta = feature.delta
         return self
 
 
@@ -55,7 +62,13 @@ class Trace(Metadata):
     """
     channel = None
     data = None
-    metadata = None
+
+    def __init__(self, input_data):
+        if isinstance(input_data, obspy.Stream):
+            self.from_stream(input_data)
+
+        elif isinstance(input_data, seisnn.example_proto.Feature):
+            self.from_feature(input_data)
 
     def from_stream(self, stream):
         """
@@ -256,39 +269,42 @@ class Instance:
         """
         Initialized from feature dict.
 
-        :type feature: dict
-        :param feature: Feature dict.
+        :param Feature feature: Feature dict.
         """
-        self.trace = Trace().from_feature(feature)
+        self.trace = Trace(feature)
         self.metadata = self.trace.metadata
 
-        self.phase = feature['phase']
-        self.label = feature['label']
-        self.predict = feature['predict']
+        self.label.phase = feature.phase
+        self.label.data = feature.label
+
+        self.predict.phase = feature.phase
+        self.predict.data = feature.predict
+        return self
 
     def to_feature(self):
         """
-        Returns feature dict.
+        Returns Feature object.
 
-        :rtype: dict
-        :return: Feature dict.
+        :rtype: Feature
+        :return: Feature object.
         """
-        feature = {
-            'id': self.metadata.id,
-            'station': self.metadata.station,
-            'starttime': self.metadata.starttime.isoformat(),
-            'endtime': self.metadata.endtime.isoformat(),
+        feature = seisnn.example_proto.Feature()
 
-            'npts': self.metadata.npts,
-            'delta': self.metadata.delta,
+        feature.id = self.metadata.id
+        feature.station = self.metadata.station
+        feature.starttime = self.metadata.starttime.isoformat()
+        feature.endtime = self.metadata.endtime.isoformat()
 
-            'trace': self.trace.data,
-            'channel': self.trace.channel,
+        feature.npts = self.metadata.npts
+        feature.delta = self.metadata.delta
 
-            'phase': self.phase,
-            'label': self.label,
-            'predict': self.predict,
-        }
+        feature.trace = self.trace.data
+        feature.channel = self.trace.channel
+
+        feature.phase = self.label.phase
+        feature.label = self.label.data
+        feature.predict = self.predict.data
+
         return feature
 
     def from_example(self, example):

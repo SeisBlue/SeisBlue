@@ -5,6 +5,25 @@ import numpy as np
 import tensorflow as tf
 
 
+class Feature:
+    __slots__ = [
+        'id',
+        'station',
+        'starttime',
+        'endtime',
+
+        'npts',
+        'delta',
+
+        'trace',
+        'channel',
+
+        'phase',
+        'label',
+        'predict',
+    ]
+
+
 def _bytes_feature(value):
     """
     Returns a bytes_list from a string / byte.
@@ -35,30 +54,30 @@ def feature_to_example(feature):
     """
     Returns tf.SequenceExample serialize string from feature dict.
 
-    :param dict feature: Feature dict extract from stream.
+    :param Feature feature: Feature dict extract from stream.
     :return: Serialized example.
     """
     # Convert array data into numpy bytes string.
     for key in ['trace', 'label', 'predict']:
-        if isinstance(feature[key], tf.Tensor):
-            feature[key] = feature[key].numpy()
+        if isinstance(getattr(feature, key), tf.Tensor):
+            setattr(feature, key, getattr(feature, key).numpy())
 
     # Convert single data into tf.train.Features.
     context_data = {
-        'id': _bytes_feature(feature['id']),
-        'starttime': _bytes_feature(feature['starttime']),
-        'endtime': _bytes_feature(feature['endtime']),
-        'station': _bytes_feature(feature['station']),
+        'id': _bytes_feature(feature.id),
+        'starttime': _bytes_feature(feature.starttime),
+        'endtime': _bytes_feature(feature.endtime),
+        'station': _bytes_feature(feature.station),
 
-        'npts': _int64_feature(feature['npts']),
-        'delta': _float_feature(feature['delta']),
+        'npts': _int64_feature(feature.npts),
+        'delta': _float_feature(feature.delta),
 
         'trace': _bytes_feature(
-            feature['trace'].astype(dtype=np.float32).tostring()),
+            feature.trace.astype(dtype=np.float32).tostring()),
         'label': _bytes_feature(
-            feature['label'].astype(dtype=np.float32).tostring()),
+            feature.label.astype(dtype=np.float32).tostring()),
         'predict': _bytes_feature(
-            feature['predict'].astype(dtype=np.float32).tostring()),
+            feature.predict.astype(dtype=np.float32).tostring()),
     }
     context = tf.train.Features(feature=context_data)
 
@@ -66,8 +85,8 @@ def feature_to_example(feature):
     sequence_data = {}
     for key in ['channel', 'phase']:
         pick_features = []
-        if feature[key]:
-            for context_data in feature[key]:
+        if getattr(feature, key):
+            for context_data in getattr(feature, key):
                 pick_feature = _bytes_feature(context_data)
                 pick_features.append(pick_feature)
 
@@ -113,13 +132,12 @@ def sequence_example_parser(record):
         sequence_features=sequence)
     parsed_example = {
         'id': parsed_context['id'],
+        'station': parsed_context['station'],
         'starttime': parsed_context['starttime'],
         'endtime': parsed_context['endtime'],
 
-        'delta': parsed_context['delta'],
         'npts': parsed_context['npts'],
-
-        'station': parsed_context['station'],
+        'delta': parsed_context['delta'],
 
         "channel": tf.RaggedTensor.from_sparse(parsed_sequence['channel']),
         "phase": tf.RaggedTensor.from_sparse(parsed_sequence['phase']),
@@ -140,30 +158,29 @@ def eval_eager_tensor(parsed_example):
     :param parsed_example: Parsed example.
     :return: Feature dict.
     """
-    feature = {
-        'id': parsed_example['id'].numpy().decode('utf-8'),
-        'starttime': parsed_example['starttime'].numpy().decode('utf-8'),
-        'endtime': parsed_example['endtime'].numpy().decode('utf-8'),
+    feature = Feature()
 
-        'delta': parsed_example['delta'].numpy(),
-        'npts': parsed_example['npts'].numpy(),
+    feature.id = parsed_example['id'].numpy().decode('utf-8')
+    feature.station = parsed_example['station'].numpy().decode('utf-8')
+    feature.starttime = parsed_example['starttime'].numpy().decode('utf-8')
+    feature.endtime = parsed_example['endtime'].numpy().decode('utf-8')
 
-        'station': parsed_example['station'].numpy().decode('utf-8'),
+    feature.npts = parsed_example['npts'].numpy()
+    feature.delta = parsed_example['delta'].numpy()
 
-        "trace": parsed_example['trace'],
-        "channel": parsed_example['channel'],
+    feature.trace = parsed_example['trace']
+    feature.channel = parsed_example['channel']
 
-        "phase": parsed_example['phase'],
-        "label": parsed_example['label'],
-        "predict": parsed_example['predict'],
-    }
+    feature.phase = parsed_example['phase']
+    feature.label = parsed_example['label']
+    feature.predict = parsed_example['predict']
 
     for key in ['channel', 'phase']:
         data_list = []
-        for bytes_string in feature[key]:
+        for bytes_string in getattr(feature, key):
             item = bytes_string[0].numpy().decode('utf-8')
             data_list.append(item)
-        feature[key] = data_list
+        setattr(feature, key, data_list)
 
     return feature
 
@@ -177,13 +194,12 @@ def batch_iterator(batch):
     for index in range(batch['id'].shape[0]):
         parsed_example = {
             'id': batch['id'][index],
+            'station': batch['station'][index],
             'starttime': batch['starttime'][index],
             'endtime': batch['endtime'][index],
 
-            'delta': batch['delta'][index],
             'npts': batch['npts'][index],
-
-            'station': batch['station'][index],
+            'delta': batch['delta'][index],
 
             "trace": batch['trace'][index, :],
             "channel": batch['channel'][index, :],
