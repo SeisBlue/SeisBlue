@@ -26,8 +26,6 @@ class Metadata:
     npts = None
     delta = None
 
-    data = None
-
     def __init__(self, input_data=None):
         if isinstance(input_data, obspy.Trace):
             self.from_trace(input_data)
@@ -170,7 +168,7 @@ class Label:
 
         return self
 
-    def get_picks(self, height=0.4, distance=100):
+    def get_picks(self, height=0.5, distance=100):
         """
         Extract pick from label and write into the database.
 
@@ -240,6 +238,7 @@ class Instance:
     def __init__(self, input_data=None):
         if input_data is None:
             pass
+
         try:
             if isinstance(input_data, obspy.Stream):
                 self.from_stream(input_data)
@@ -250,7 +249,7 @@ class Instance:
                     input_data = item
                 self.from_example(input_data)
 
-            elif isinstance(input_data, dict):
+            else:
                 self.from_example(input_data)
 
         except TypeError:
@@ -327,6 +326,7 @@ class Instance:
         """
         feature = seisnn.example_proto.eval_eager_tensor(example)
         self.from_feature(feature)
+        return self
 
     def to_example(self):
         """
