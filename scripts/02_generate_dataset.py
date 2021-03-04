@@ -9,7 +9,7 @@ db.pick_summery()
 
 pick_list = db.get_picks(phase='S').all()
 
-example_gen = seisnn.core.ExampleGen()
+example_gen = seisnn.component.ExampleGen()
 example_gen.generate_training_data(pick_list, dataset, tag, database)
 
 db.clear_table('waveform')
