@@ -610,6 +610,15 @@ class Client:
         with self.session_scope() as session:
             session.query(table).delete()
 
+    def split_pick(self,proportion):
+        with self.session_scope() as session:
+
+            query = session.query(Pick).slice(0,20)
+            query.update({Pick.split: "1"})
+
+
+
+
     @contextlib.contextmanager
     def session_scope(self):
         """
