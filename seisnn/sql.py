@@ -14,7 +14,6 @@ from obspy import UTCDateTime
 import seisnn.core
 import seisnn.io
 import seisnn.plot
-import seisnn.processing
 import seisnn.utils
 
 Base = sqlalchemy.ext.declarative.declarative_base()
