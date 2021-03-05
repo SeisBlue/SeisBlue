@@ -104,7 +104,6 @@ class Pick(Base):
                                 nullable=False)
     phase = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     tag = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    split = sqlalchemy.Column(sqlalchemy.String)
     snr = sqlalchemy.Column(sqlalchemy.Float)
 
     def __init__(self, time, station, phase, tag):
@@ -119,7 +118,6 @@ class Pick(Base):
                f"Station={self.station}, " \
                f"Phase={self.phase}, " \
                f"Tag={self.tag}, " \
-               f"Split={self.split}, " \
                f"SNR={self.snr})"
 
     def add_db(self, session):
@@ -388,7 +386,7 @@ class Client:
 
     def get_picks(self, from_time=None, to_time=None,
                   station=None, phase=None,
-                  tag=None, split=None):
+                  tag=None):
         """
         Returns query from pick table.
 
@@ -397,7 +395,6 @@ class Client:
         :param str station: Station name.
         :param str phase: Phase name.
         :param str tag: Catalog tag.
-        :param str split: Train test split.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
@@ -414,8 +411,6 @@ class Client:
                 query = query.filter(Pick.phase.like(phase))
             if tag is not None:
                 query = query.filter(Pick.tag.like(tag))
-            if split is not None:
-                query = query.filter(Pick.tag.like(split))
 
         return query
 
@@ -606,16 +601,6 @@ class Client:
         table = self.get_table_class(table)
         with self.session_scope() as session:
             session.query(table).delete()
-
-    def split_pick(self, proportion):
-        """
-        Split training data into portions.
-
-        :param proportion: List of portions.
-        """
-        with self.session_scope() as session:
-            query = session.query(Pick).slice(0, 20)
-            query.update({Pick.split: "1"})
 
     @contextlib.contextmanager
     def session_scope(self):
