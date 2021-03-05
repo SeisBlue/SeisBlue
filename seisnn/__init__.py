@@ -2,7 +2,7 @@
 SeisNN - Deep learning seismic phase picking project
 """
 
-from . import component
+from . import components
 from . import core
 from . import example_proto
 from . import io
