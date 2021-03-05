@@ -1,7 +1,7 @@
-seisnn.component.ExampleGen
-===========================
+seisnn.components.ExampleGen
+============================
 
-.. currentmodule:: seisnn.component
+.. currentmodule:: seisnn.components
 
 .. autoclass:: ExampleGen
    :members:

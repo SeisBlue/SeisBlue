@@ -27,7 +27,7 @@
    :toctree:
    :recursive:
 
-   seisnn.component
+   seisnn.components
    seisnn.core
    seisnn.example_proto
    seisnn.io
