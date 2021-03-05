@@ -31,7 +31,6 @@ seisnn.sql.Pick
       ~Pick.metadata
       ~Pick.phase
       ~Pick.snr
-      ~Pick.split
       ~Pick.station
       ~Pick.tag
       ~Pick.time

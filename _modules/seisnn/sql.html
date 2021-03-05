@@ -218,7 +218,6 @@
                                 <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">tag</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">split</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
     <span class="n">snr</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
@@ -233,7 +232,6 @@
                <span class="sa">f</span><span class="s2">&quot;Station=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">station</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;Phase=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;Tag=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;Split=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">split</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;SNR=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snr</span><span class="si">}</span><span class="s2">)&quot;</span>
 
 <div class="viewcode-block" id="Pick.add_db"><a class="viewcode-back" href="../../package/seisnn.sql.Pick.html#seisnn.sql.Pick.add_db">[docs]</a>    <span class="k">def</span> <span class="nf">add_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
@@ -502,7 +500,7 @@
 
 <div class="viewcode-block" id="Client.get_picks"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.get_picks">[docs]</a>    <span class="k">def</span> <span class="nf">get_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                  <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns query from pick table.</span>
 
@@ -511,7 +509,6 @@
 <span class="sd">        :param str station: Station name.</span>
 <span class="sd">        :param str phase: Phase name.</span>
 <span class="sd">        :param str tag: Catalog tag.</span>
-<span class="sd">        :param str split: Train test split.</span>
 <span class="sd">        :rtype: sqlalchemy.orm.query.Query</span>
 <span class="sd">        :return: A Query.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -528,8 +525,6 @@
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">phase</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">split</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Pick</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">split</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">query</span></div>
 
@@ -720,16 +715,6 @@
         <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_table_class</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="Client.split_pick"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.split_pick">[docs]</a>    <span class="k">def</span> <span class="nf">split_pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proportion</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Split training data into portions.</span>
-
-<span class="sd">        :param proportion: List of portions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Pick</span><span class="p">)</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-            <span class="n">query</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">Pick</span><span class="o">.</span><span class="n">split</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">})</span></div>
 
 <div class="viewcode-block" id="Client.session_scope"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.session_scope">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">session_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

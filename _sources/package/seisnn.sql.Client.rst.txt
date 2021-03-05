@@ -38,7 +38,6 @@ seisnn.sql.Client
       ~Client.remove_duplicates
       ~Client.replace_sql_wildcard
       ~Client.session_scope
-      ~Client.split_pick
       ~Client.waveform_summery
    
    
