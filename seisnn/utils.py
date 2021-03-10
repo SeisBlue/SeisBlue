@@ -3,6 +3,7 @@ Utilities
 """
 
 import functools
+import glob
 import multiprocessing as mp
 import os
 
@@ -122,21 +123,18 @@ def _parallel_iter(par, iterator):
     return output
 
 
-def get_dir_list(file_dir, suffix=""):
+def get_dir_list(file_dir, suffix="", recursive=True):
     """
     Returns directory list from the given path.
 
     :param str file_dir: Target directory.
-    :param str suffix: (Optional.) File extension.
+    :param str suffix: (Optional.) File extension, Ex: '.tfrecord'.
+    :param bool recursive: (Optional.) Search directory recursively. Default is True.
     :rtype: list
     :return: List of file name.
     """
-    file_list = []
-    for file_name in os.listdir(file_dir):
-        f = os.path.join(file_dir, file_name)
-        if file_name.endswith(suffix):
-            file_list.append(f)
-
+    file = os.path.join(file_dir, f'**/*{suffix}')
+    file_list = glob.glob(file, recursive=recursive)
     file_list = sorted(file_list)
 
     return file_list

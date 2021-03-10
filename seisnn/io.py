@@ -23,13 +23,13 @@ def read_dataset(dataset):
     """
     Returns TFRecord Dataset from TFRecord directory.
 
-    :param str dataset_dir: Directory contains TFRecords.
+    :param str dataset: Directory contains TFRecords.
     :rtype: tf.data.Dataset
     :return: A Dataset.
     """
     config = seisnn.utils.get_config()
     dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
-    file_list = seisnn.utils.get_dir_list(dataset_dir)
+    file_list = seisnn.utils.get_dir_list(dataset_dir, suffix='.tfrecord')
     dataset = tf.data.TFRecordDataset(file_list)
     dataset = dataset.map(seisnn.example_proto.sequence_example_parser,
                           num_parallel_calls=mp.cpu_count())
@@ -59,7 +59,7 @@ def read_event_list(sfile_dir):
     config = seisnn.utils.get_config()
     sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
 
-    sfile_list = seisnn.utils.get_dir_list(sfile_dir)
+    sfile_list = seisnn.utils.get_dir_list(sfile_dir, ".S*")
     print(f'Reading events from {sfile_dir}')
 
     event_list = seisnn.utils.parallel(sfile_list, func=get_event)
