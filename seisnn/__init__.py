@@ -11,7 +11,6 @@ from . import model
 from . import plot
 from . import qc
 from . import sql
-from . import ui
 from . import utils
 
 name = "seisnn"
