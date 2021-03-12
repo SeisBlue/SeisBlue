@@ -10,6 +10,7 @@ import sqlalchemy
 import sqlalchemy.orm
 import sqlalchemy.ext.declarative
 from obspy import UTCDateTime
+from tqdm import tqdm
 
 import seisnn.core
 import seisnn.io
@@ -144,15 +145,15 @@ class Waveform(Base):
                                 sqlalchemy.ForeignKey('inventory.station'),
                                 nullable=False)
     channel = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    dataset = sqlalchemy.Column(sqlalchemy.String)
+    tfrecord = sqlalchemy.Column(sqlalchemy.String)
     data_index = sqlalchemy.Column(sqlalchemy.Integer)
 
-    def __init__(self, instance, dataset, data_index):
+    def __init__(self, instance, tfrecord, data_index):
         self.starttime = UTCDateTime(instance.metadata.starttime).datetime
         self.endtime = UTCDateTime(instance.metadata.endtime).datetime
         self.station = instance.metadata.station
         self.channel = ', '.join(instance.trace.channel)
-        self.dataset = dataset
+        self.tfrecord = tfrecord
         self.data_index = data_index
 
     def __repr__(self):
@@ -161,7 +162,7 @@ class Waveform(Base):
                f"End={self.endtime}, " \
                f"Station={self.station}, " \
                f"Channel={self.channel}, " \
-               f"Dataset={self.dataset}, " \
+               f"TFRecord={self.tfrecord}, " \
                f"Index={self.data_index})"
 
     def add_db(self, session):
@@ -384,7 +385,8 @@ class Client:
         with self.session_scope() as session:
             Pick(time, station, phase, tag).add_db(session)
 
-    def get_picks(self, from_time=None, to_time=None,
+    def get_picks(self,
+                  from_time=None, to_time=None,
                   station=None, phase=None,
                   tag=None):
         """
@@ -473,22 +475,24 @@ class Client:
         """
         Sync header into SQL database from tfrecord dataset.
 
-        :param str dataset: Dataset name.
+        :param tfr_list: TFRecord list.
         """
-        ds = seisnn.io.read_dataset(dataset)
-        index = 0
-        with self.session_scope() as session:
-            for example in ds:
-                instance = seisnn.core.Instance(example)
-                try:
-                    Waveform(instance, dataset, index).add_db(session)
-                    index += 1
-                except Exception as error:
-                    print(f'{type(error).__name__}: {error}')
+
+        for tfrecord in tqdm(tfr_list):
+            dataset = seisnn.io.read_dataset(tfrecord)
+            with self.session_scope() as session:
+                for index, example in enumerate(dataset):
+                    instance = seisnn.core.Instance(example)
+                    try:
+                        Waveform(instance, tfrecord, index).add_db(session)
+                        index += 1
+                    except Exception as error:
+                        print(f'{type(error).__name__}: {error}')
 
         print(f'Input {index} waveforms.')
 
-    def get_waveform(self, from_time=None, to_time=None, station=None):
+    def get_waveform(self, from_time=None, to_time=None,
+                     station=None, tfrecord=None):
         """
         Returns query from waveform table.
 
@@ -499,6 +503,7 @@ class Client:
         :param str from_time: Get which waveform endtime after from_time.
         :param str to_time: Get which waveform starttime after to_time.
         :param str station: Station name.
+        :param str tfrecord: TFRecord path.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
@@ -509,8 +514,11 @@ class Client:
             if to_time is not None:
                 query = query.filter(Waveform.starttime <= to_time)
             if station is not None:
-                station = self.replace_sql_wildcard(station)
-                query = query.filter(Waveform.station.like(station))
+                station = [self.replace_sql_wildcard(sta) for sta in station]
+                query = query.filter(
+                    Waveform.station.like(Waveform.station.in_(station)))
+            if tfrecord is not None:
+                query = query.filter(Waveform.station.like(tfrecord))
 
         return query
 

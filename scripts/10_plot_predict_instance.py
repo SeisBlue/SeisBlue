@@ -1,8 +1,10 @@
 import seisnn
 
-config = seisnn.utils.get_config()
+config = seisnn.utils.Config()
 
-dataset = seisnn.io.read_dataset(dataset)
+tfr_list = seisnn.utils.get_dir_list(config.tfrecord, suffix='.tfrecord')
+
+dataset = seisnn.io.read_dataset(tfr_list)
 for item in dataset:
     instance = seisnn.core.Instance(item)
     instance.plot()

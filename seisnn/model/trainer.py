@@ -29,7 +29,7 @@ class BaseTrainer:
         count = None
         try:
             db = seisnn.sql.Client(database)
-            count = len(db.get_waveform().all())
+            count = len(db.get_waveform(tfrecord=tfr_list).all())
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
 

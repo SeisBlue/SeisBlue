@@ -242,7 +242,7 @@ class Instance:
                 self.from_stream(input_data)
 
             elif isinstance(input_data, seisnn.sql.Waveform):
-                dataset = seisnn.io.read_dataset(input_data.dataset)
+                dataset = seisnn.io.read_dataset(input_data.tfrecord)
                 for item in dataset.skip(input_data.data_index).take(1):
                     input_data = item
                 self.from_example(input_data)
