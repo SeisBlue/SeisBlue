@@ -1,8 +1,10 @@
 import seisnn
 
-dataset = 'HL2019'
-model_instance = 'test_model'
-database = 'HL2019.db'
+database = 'Hualien.db'
+db = seisnn.sql.Client(database=database)
 
-trainer = seisnn.model.trainer.GeneratorTrainer(database)
-trainer.train_loop(dataset, model_instance, plot=True, remove=True)
+waveform_list = db.get_waveform()
+
+model_instance = 'test_model'
+trainer = seisnn.model.trainer.GeneratorTrainer(database=database)
+trainer.train_loop(waveform_list, model_instance, plot=True, remove=True)
