@@ -1,6 +1,7 @@
 import seisnn
 
-dataset = 'eval'
+config = seisnn.utils.Config()
+
 database = 'HL2019.db'
 
 dataset = seisnn.io.read_dataset(dataset)

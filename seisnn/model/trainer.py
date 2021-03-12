@@ -37,8 +37,8 @@ class BaseTrainer:
 
     @staticmethod
     def get_model_dir(model_instance, remove=False):
-        config = seisnn.utils.get_config()
-        save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
+        config = seisnn.utils.Config()
+        save_model_path = os.path.join(config.models, model_instance)
 
         if remove:
             shutil.rmtree(save_model_path, ignore_errors=True)

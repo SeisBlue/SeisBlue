@@ -12,18 +12,76 @@ import tqdm
 import yaml
 
 
-def get_config():
-    """
-    Returns path dict in config.yaml.
+class Config:
+    __slots__ = [
+        'workspace',
+        'sds_root',
+        'sfile_root',
 
-    :rtype: dict
-    :return: Dictionary contains predefined workspace paths.
-    """
-    config_file = os.path.abspath(
-        os.path.join(os.path.expanduser("~"), 'config.yaml'))
-    with open(config_file, 'r') as file:
-        config = yaml.full_load(file)
-    return config
+        'tfrecord',
+        'eval',
+        'sql_database',
+
+        'catalog',
+        'geom',
+        'models',
+    ]
+
+    def __init__(self, workspace=os.path.expanduser("~")):
+        self.load_config(workspace)
+
+    def load_config(self, workspace=os.path.expanduser("~")):
+        config_file = os.path.abspath(os.path.join(workspace, 'config.yml'))
+
+        with open(config_file, 'r') as file:
+            config = yaml.full_load(file)
+            self.workspace = config['WORKSPACE']
+            self.sds_root = config['SDS_ROOT']
+            self.sfile_root = config['SFILE_ROOT']
+
+            self.tfrecord = config['TFRecord']
+            self.eval = config['Eval']
+            self.sql_database = config['SQL_Database']
+
+            self.catalog = config['Catalog']
+            self.geom = config['Geom']
+            self.models = config['Models']
+
+    @staticmethod
+    def generate_config(workspace=os.path.expanduser('~')):
+        config = {
+            'WORKSPACE': workspace,
+            'SDS_ROOT': os.path.join(workspace, 'SDS_ROOT'),
+            'SFILE_ROOT': os.path.join(workspace, 'SFILE_ROOT'),
+
+            'TFRecord': os.path.join(workspace, 'TFRecord'),
+            'Eval': os.path.join(workspace, 'Eval'),
+            'SQL_Database': os.path.join(workspace, 'SQL_Database'),
+
+            'Catalog': os.path.join(workspace, 'Catalog'),
+            'Geom': os.path.join(workspace, 'Geom'),
+            'Models': os.path.join(workspace, 'Models'),
+        }
+
+        path = os.path.join(workspace, 'config.yml')
+        with open(path, 'w') as file:
+            yaml.dump(config, file, sort_keys=False)
+
+    def create_folders(self):
+        path_list = [
+            self.tfrecord,
+            self.eval,
+            self.sql_database,
+
+            self.catalog,
+            self.geom,
+            self.models,
+        ]
+
+        for d in path_list:
+            make_dirs(d)
+
+        print('SeisNN folders created.')
 
 
 def make_dirs(path):

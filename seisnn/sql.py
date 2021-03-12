@@ -180,9 +180,9 @@ class Client:
     """
 
     def __init__(self, database, echo=False):
-        config = seisnn.utils.get_config()
+        config = seisnn.utils.Config()
         self.database = database
-        db_path = os.path.join(config['SQL_ROOT'], self.database)
+        db_path = os.path.join(config.sql_database, self.database)
         self.engine = sqlalchemy.create_engine(
             f'sqlite:///{db_path}?check_same_thread=False',
             echo=echo)

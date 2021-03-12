@@ -32,18 +32,17 @@ class BaseEvaluator:
 
     @staticmethod
     def get_model_dir(model_instance):
-        config = seisnn.utils.get_config()
-        save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
+        config = seisnn.utils.Config()
+        save_model_path = os.path.join(config.models, model_instance)
         return save_model_path
 
     @staticmethod
-    def get_eval_dir(dataset):
-        config = seisnn.utils.get_config()
-        dataset_path = os.path.join(config['DATASET_ROOT'], dataset)
-        eval_path = os.path.join(config['DATASET_ROOT'], "eval")
+    def get_eval_dir(dir_name="eval"):
+        config = seisnn.utils.Config()
+        eval_path = os.path.join(config.models, dir_name)
         seisnn.utils.make_dirs(eval_path)
 
-        return dataset_path, eval_path
+        return eval_path
 
 
 class GeneratorEvaluator(BaseEvaluator):

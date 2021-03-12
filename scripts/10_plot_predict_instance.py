@@ -1,6 +1,6 @@
 import seisnn
 
-dataset = 'eval'
+config = seisnn.utils.get_config()
 
 dataset = seisnn.io.read_dataset(dataset)
 for item in dataset:
