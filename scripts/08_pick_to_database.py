@@ -3,9 +3,11 @@ import seisnn
 config = seisnn.utils.Config()
 
 database = 'HL2019.db'
-
-dataset = seisnn.io.read_dataset(dataset)
 db = seisnn.sql.Client(database)
+
+tfr_list = seisnn.utils.get_dir_list(config.tfrecord, suffix='.tfrecord')
+dataset = seisnn.io.read_dataset(tfr_list)
+
 for item in dataset:
     instance = seisnn.core.Instance(item)
     instance.predict.get_picks()

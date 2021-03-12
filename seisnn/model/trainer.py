@@ -25,7 +25,7 @@ if gpus:
 
 class BaseTrainer:
     @staticmethod
-    def get_dataset_length(database=None):
+    def get_dataset_length(database=None, tfr_list=None):
         count = None
         try:
             db = seisnn.sql.Client(database)
@@ -96,14 +96,14 @@ class GeneratorTrainer(BaseTrainer):
             return train_loss, val_loss
 
     def train_loop(self,
-                   dataset, model_name,
+                   waveform_list, model_name,
                    epochs=1, batch_size=1,
                    log_step=100, plot=False,
                    remove=False):
         """
         Main training loop.
 
-        :param str dataset: Dataset name.
+        :param waveform_list: List of sql Waveform.
         :param str model_name: Model directory name.
         :param int epochs: Epoch number.
         :param int batch_size: Batch size.
@@ -125,11 +125,11 @@ class GeneratorTrainer(BaseTrainer):
             last_epoch = len(ckpt_manager.checkpoints)
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
-        dataset = seisnn.io.read_dataset(dataset).shuffle(100000)
+        dataset = seisnn.io.read_dataset(waveform_list).shuffle(100000)
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
-        data_len = self.get_dataset_length(self.database)
+        data_len = self.get_dataset_length(self.database, waveform_list)
 
         for epoch in range(epochs):
             print(f'epoch {epoch + 1} / {epochs}')

@@ -63,19 +63,17 @@ class GeneratorEvaluator(BaseEvaluator):
         self.model_name = model_name
         self.model = None
 
-    def eval(self, dataset, batch_size=100):
+    def eval(self, tfr_list, name=None, batch_size=100):
         """
         Main eval loop.
 
-
-        :param str dataset: Dataset name.
-        :param str model_name: Model directory name.
-
+        :param tfr_list: List of .tfrecord.
+        :param str name: Output name.
         """
         model_path = self.get_model_dir(self.model_name)
-        dataset_path, eval_path = self.get_eval_dir(dataset)
+        eval_path = self.get_eval_dir(name)
 
-        dataset = seisnn.io.read_dataset(dataset)
+
         self.model = tf.keras.models.load_model(
             model_path,
             custom_objects={

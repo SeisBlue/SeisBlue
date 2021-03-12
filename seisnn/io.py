@@ -19,11 +19,11 @@ import seisnn.example_proto
 import seisnn.utils
 
 
-def read_dataset(dataset):
+def read_dataset(file_list):
     """
     Returns TFRecord Dataset from TFRecord directory.
 
-    :param str dataset: Directory contains TFRecords.
+    :param file_list: List of .tfrecord.
     :rtype: tf.data.Dataset
     :return: A Dataset.
     """

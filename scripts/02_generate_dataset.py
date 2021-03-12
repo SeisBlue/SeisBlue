@@ -9,7 +9,7 @@ db.pick_summery()
 pick_list = db.get_picks(tag=tag).all()
 
 example_gen = seisnn.components.ExampleGen()
-example_gen.generate_training_data(pick_list, dataset, tag, database)
+example_gen.generate_training_data(pick_list, tag, database)
 
 config = seisnn.utils.Config()
 tfr_list = seisnn.utils.get_dir_list(config.tfrecord, suffix='.tfrecord')

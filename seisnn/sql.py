@@ -471,7 +471,7 @@ class Client:
             print(f'{len(no_inventory_station)} stations without geometry:')
             print([station for station in no_inventory_station], '\n')
 
-    def read_tfrecord_header(self, dataset):
+    def read_tfrecord_header(self, tfr_list):
         """
         Sync header into SQL database from tfrecord dataset.
 
