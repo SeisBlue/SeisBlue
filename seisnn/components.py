@@ -47,7 +47,8 @@ class ExampleGen:
         seisnn.utils.parallel(group_picks,
                               func=self.write_tfrecord,
                               tag=tag,
-                              database=database)
+                              database=database,
+                              batch_size=1)
 
     def write_tfrecord(self, picks, tag, database):
         config = seisnn.utils.Config()
