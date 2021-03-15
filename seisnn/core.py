@@ -354,6 +354,11 @@ class Instance:
         """
         seisnn.plot.plot_dataset(self, **kwargs)
 
+    def get_tfrecord_name(self):
+        year = str(self.metadata.starttime.year)
+        julday = str(self.metadata.starttime.julday)
+        return f'{self.metadata.id[:-1]}.{year}.{julday}.tfrecord'
+
 
 if __name__ == "__main__":
     pass

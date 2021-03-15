@@ -37,7 +37,6 @@ class ExampleGen:
         :param str tag: Pick tag in SQL database.
         :param str database: SQL database name.
         """
-        config = seisnn.utils.Config()
         pick_list = sorted(pick_list,
                            key=lambda pick: [pick.station, pick.time])
         pick_groupby = itertools.groupby(
@@ -45,55 +44,60 @@ class ExampleGen:
             key=lambda pick: [pick.station, UTCDateTime(pick.time).julday])
         group_picks = [[item for item in data] for (key, data) in pick_groupby]
 
-        for index, picks in enumerate(group_picks):
-            instance_list = seisnn.utils.parallel(picks,
-                                                  func=self.get_instance_list,
-                                                  tag=tag,
-                                                  database=database)
-            flatten = itertools.chain.from_iterable
-            flat_list = list(flatten(flatten(instance_list)))
-            feature_list = [instance.to_feature() for instance in flat_list]
-            example_list = [seisnn.example_proto.feature_to_example(feature)
-                            for feature in feature_list]
+        seisnn.utils.parallel(group_picks,
+                              func=self.write_tfrecord,
+                              tag=tag,
+                              database=database)
 
-            net, sta, loc, chan = flat_list[0].metadata.id.split('.')
-            year = str(flat_list[0].metadata.starttime.year)
-            julday = str(flat_list[0].metadata.starttime.julday)
+    def write_tfrecord(self, picks, tag, database):
+        config = seisnn.utils.Config()
 
-            tfr_dir = os.path.join(config.tfrecord, year, net, sta)
-            seisnn.utils.make_dirs(tfr_dir)
-            file_name = f'{net}.{sta}.{loc}.{chan[0:2]}.{year}.{julday}.tfrecord'
+        instance_list = self.get_instance_list(picks, tag, database)
+        feature_list = [instance.to_feature() for instance in instance_list]
+        example_list = [seisnn.example_proto.feature_to_example(feature)
+                        for feature in feature_list]
 
-            save_file = os.path.join(tfr_dir, file_name)
-            seisnn.io.write_tfrecord(example_list, save_file)
-            print(f'output {file_name} ({index + 1}/{len(group_picks)})')
+        file_name = instance_list[0].get_tfrecord_name()
+        net, sta, loc, chan, year, julday, _ = file_name.split('.')
 
-    def get_instance_list(self, pick, tag, database):
+        tfr_dir = os.path.join(config.tfrecord, year, net, sta)
+        seisnn.utils.make_dirs(tfr_dir)
+
+        save_file = os.path.join(tfr_dir, file_name)
+        seisnn.io.write_tfrecord(example_list, save_file)
+
+        print(f'output {file_name}')
+
+
+
+    def get_instance_list(self, picks, tag, database):
         """
         Returns instance list form list of picks and SQL database.
 
-        :param pick: List of picks.
+        :param picks: List of picks.
         :param str tag: Pick tag in SQL database.
         :param str database: SQL database root.
         :return:
         """
-
-        metadata = self.get_time_window(anchor_time=pick.time,
-                                        station=pick.station,
-                                        shift='random')
-
-        streams = seisnn.io.read_sds(metadata)
         instance_list = []
-        for _, stream in streams.items():
-            stream = self.signal_preprocessing(stream)
-            instance = seisnn.core.Instance(stream)
+        for pick in picks:
+            metadata = self.get_time_window(anchor_time=pick.time,
+                                            station=pick.station,
+                                            shift='random')
+            streams = seisnn.io.read_sds(metadata)
 
-            instance.label = seisnn.core.Label(instance.metadata, self.phase)
-            instance.label.generate_label(database, tag, self.shape)
+            for _, stream in streams.items():
+                stream = self.signal_preprocessing(stream)
+                instance = seisnn.core.Instance(stream)
 
-            instance.predict = seisnn.core.Label(instance.metadata, self.phase)
+                instance.label = seisnn.core.Label(instance.metadata,
+                                                   self.phase)
+                instance.label.generate_label(database, tag, self.shape)
 
-            instance_list.append(instance)
+                instance.predict = seisnn.core.Label(instance.metadata,
+                                                     self.phase)
+
+                instance_list.append(instance)
         return instance_list
 
     def get_time_window(self, anchor_time, station, shift=0):
