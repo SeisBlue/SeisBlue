@@ -119,7 +119,7 @@ def batch_operation(data_list, func, **kwargs):
     return [func(data, **kwargs) for data in data_list]
 
 
-def _parallel_process(file_list, par, batch_size=None):
+def _parallel_process(file_list, par):
     """
     Parallelize a partial function and return results in a list.
 
@@ -131,21 +131,19 @@ def _parallel_process(file_list, par, batch_size=None):
     """
     cpu_count = mp.cpu_count()
     print(f'Found {cpu_count} cpu threads:')
+
     pool = mp.Pool(processes=cpu_count, maxtasksperchild=1)
 
-    if batch_size is None:
-        batch_size = int(np.ceil(len(file_list) / cpu_count))
-    total = int(np.ceil(len(file_list) / batch_size))
+    batch_size = int(np.ceil(len(file_list) / cpu_count))
     map_func = pool.imap_unordered(par, batch(file_list, batch_size))
-
-    result = [output for output in tqdm.tqdm(map_func, total=total)]
+    result = [output for output in map_func]
 
     pool.close()
     pool.join()
     return result
 
 
-def parallel(data_list, func, batch_size=None, **kwargs):
+def parallel(data_list, func, **kwargs):
     """
     Parallels a function.
 
@@ -157,7 +155,7 @@ def parallel(data_list, func, batch_size=None, **kwargs):
     """
     par = functools.partial(batch_operation, func=func, **kwargs)
 
-    result_list = _parallel_process(data_list, par, batch_size)
+    result_list = _parallel_process(data_list, par)
     return result_list
 
 
