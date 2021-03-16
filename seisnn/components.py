@@ -26,9 +26,9 @@ class TFRecordConverter:
         self.trace_length = trace_length
         self.shape = shape
 
-    def convert_from_picks(self, pick_list, tag, database):
+    def convert_training_from_picks(self, pick_list, tag, database):
         """
-        Convert TFRecords from database picks.
+        Convert training TFRecords from database picks.
 
         :param pick_list: List of picks from Pick SQL query.
         :param str tag: Pick tag in SQL database.

@@ -9,7 +9,7 @@ db.pick_summery()
 pick_list = db.get_picks(tag=tag).all()
 
 tfr_converter = seisnn.components.TFRecordConverter()
-tfr_converter.convert_from_picks(pick_list, tag, database)
+tfr_converter.convert_training_from_picks(pick_list, tag, database)
 
 config = seisnn.utils.Config()
 tfr_list = seisnn.utils.get_dir_list(config.train, suffix='.tfrecord')
