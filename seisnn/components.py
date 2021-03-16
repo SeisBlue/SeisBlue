@@ -11,9 +11,9 @@ import seisnn.io
 import seisnn.utils
 
 
-class ExampleGen:
+class TFRecordConverter:
     """
-    Main class for Example Generator.
+    Main class for TFRecord Converter.
 
     Consumes data from external source and emit TFRecord.
     """
@@ -26,12 +26,9 @@ class ExampleGen:
         self.trace_length = trace_length
         self.shape = shape
 
-    def generate_training_data(self,
-                               pick_list,
-                               tag,
-                               database):
+    def convert_from_picks(self, pick_list, tag, database):
         """
-        Generate TFRecords from database.
+        Convert TFRecords from database picks.
 
         :param pick_list: List of picks from Pick SQL query.
         :param str tag: Pick tag in SQL database.
@@ -51,25 +48,20 @@ class ExampleGen:
                               batch_size=1)
 
     def write_tfrecord(self, picks, tag, database):
-        config = seisnn.utils.Config()
-
         instance_list = self.get_instance_list(picks, tag, database)
         feature_list = [instance.to_feature() for instance in instance_list]
         example_list = [seisnn.example_proto.feature_to_example(feature)
                         for feature in feature_list]
 
-        file_name = instance_list[0].get_tfrecord_name()
-        net, sta, loc, chan, year, julday, _ = file_name.split('.')
-
-        tfr_dir = os.path.join(config.tfrecord, year, net, sta)
+        tfr_dir = instance_list[0].get_tfrecord_dir()
         seisnn.utils.make_dirs(tfr_dir)
 
+        file_name = instance_list[0].get_tfrecord_name()
         save_file = os.path.join(tfr_dir, file_name)
+
         seisnn.io.write_tfrecord(example_list, save_file)
 
         print(f'output {file_name}')
-
-
 
     def get_instance_list(self, picks, tag, database):
         """

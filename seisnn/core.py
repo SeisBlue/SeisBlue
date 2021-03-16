@@ -1,6 +1,7 @@
 """
 Core
 """
+import os
 
 import numpy as np
 import scipy.signal
@@ -359,6 +360,13 @@ class Instance:
         julday = str(self.metadata.starttime.julday)
         return f'{self.metadata.id[:-1]}.{year}.{julday}.tfrecord'
 
+    def get_tfrecord_dir(self):
+        config = seisnn.utils.Config()
+        name = self.get_tfrecord_name()
+        net, sta, loc, chan, year, julday, suffix = name.split('.')
+        tfr_dir = os.path.join(config.tfrecord, year, net, sta, name)
+
+        return tfr_dir
 
 if __name__ == "__main__":
     pass
