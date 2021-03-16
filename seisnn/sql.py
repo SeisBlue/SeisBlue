@@ -185,21 +185,23 @@ class TFRecord(Base):
     id = sqlalchemy.Column(sqlalchemy.BigInteger()
                            .with_variant(sqlalchemy.Integer, "sqlite"),
                            primary_key=True)
-    path = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     station = sqlalchemy.Column(sqlalchemy.String,
                                 sqlalchemy.ForeignKey('inventory.station'),
                                 nullable=False)
     count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
+    path = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     tag = sqlalchemy.Column(sqlalchemy.String)
 
     def __init__(self, path, station, count):
+        self.name = os.path.basename(path)
         self.path = path
         self.station = station
         self.count = count
 
     def __repr__(self):
         return f"TFRecord(" \
-               f"Path={self.path}, " \
+               f"Name={self.name}, " \
                f"Station={self.station}, " \
                f"Count={self.count}, " \
                f"Tag={self.tag})"
