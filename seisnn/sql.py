@@ -145,7 +145,9 @@ class Waveform(Base):
                                 sqlalchemy.ForeignKey('inventory.station'),
                                 nullable=False)
     channel = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    tfrecord = sqlalchemy.Column(sqlalchemy.String)
+    tfrecord = sqlalchemy.Column(sqlalchemy.String,
+                                 sqlalchemy.ForeignKey('tfrecord.path'),
+                                 nullable=False)
     data_index = sqlalchemy.Column(sqlalchemy.Integer)
 
     def __init__(self, instance, tfrecord, data_index):
@@ -164,6 +166,43 @@ class Waveform(Base):
                f"Channel={self.channel}, " \
                f"TFRecord={self.tfrecord}, " \
                f"Index={self.data_index})"
+
+    def add_db(self, session):
+        """
+        Add data into session.
+
+        :type session: sqlalchemy.orm.session.Session
+        :param session: SQL session.
+        """
+        session.add(self)
+
+
+class TFRecord(Base):
+    """
+    TFRecord table for sql database.
+    """
+    __tablename__ = 'tfrecord'
+    id = sqlalchemy.Column(sqlalchemy.BigInteger()
+                           .with_variant(sqlalchemy.Integer, "sqlite"),
+                           primary_key=True)
+    path = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    station = sqlalchemy.Column(sqlalchemy.String,
+                                sqlalchemy.ForeignKey('inventory.station'),
+                                nullable=False)
+    count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
+    tag = sqlalchemy.Column(sqlalchemy.String)
+
+    def __init__(self, path, station, count):
+        self.path = path
+        self.station = station
+        self.count = count
+
+    def __repr__(self):
+        return f"TFRecord(" \
+               f"Path={self.path}, " \
+               f"Station={self.station}, " \
+               f"Count={self.count}, " \
+               f"Tag={self.tag})"
 
     def add_db(self, session):
         """
@@ -206,6 +245,7 @@ class Client:
             'event': Event,
             'pick': Pick,
             'waveform': Waveform,
+            'tfrecord': TFRecord,
         }
         try:
             table_class = table_dict.get(table)
@@ -477,19 +517,20 @@ class Client:
 
         :param tfr_list: TFRecord list.
         """
-
-        for tfrecord in tqdm(tfr_list):
-            dataset = seisnn.io.read_dataset(tfrecord)
-            with self.session_scope() as session:
-                for index, example in enumerate(dataset):
-                    instance = seisnn.core.Instance(example)
-                    try:
+        try:
+            for tfrecord in tqdm(tfr_list):
+                dataset = seisnn.io.read_dataset(tfrecord)
+                with self.session_scope() as session:
+                    for index, example in enumerate(dataset):
+                        instance = seisnn.core.Instance(example)
                         Waveform(instance, tfrecord, index).add_db(session)
-                        index += 1
-                    except Exception as error:
-                        print(f'{type(error).__name__}: {error}')
+                    TFRecord(tfrecord, instance.metadata.station,
+                             index + 1).add_db(session)
 
-        print(f'Input {index} waveforms.')
+        except Exception as error:
+            print(f'{type(error).__name__}: {error}')
+
+        print(f'Input {index + 1} waveforms.')
 
     def get_waveform(self, from_time=None, to_time=None,
                      station=None, tfrecord=None):

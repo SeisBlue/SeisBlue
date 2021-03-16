@@ -15,5 +15,6 @@ config = seisnn.utils.Config()
 tfr_list = seisnn.utils.get_dir_list(config.tfrecord, suffix='.tfrecord')
 
 db.clear_table(table='waveform')
+db.clear_table(table='tfrecord')
 db.read_tfrecord_header(tfr_list)
 db.waveform_summery()
