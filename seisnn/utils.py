@@ -19,16 +19,26 @@ class Config:
         'sfile_root',
 
         'tfrecord',
+        'train',
+        'test',
         'eval',
-        'sql_database',
 
+        'sql_database',
         'catalog',
         'geom',
         'models',
     ]
 
-    def __init__(self, workspace=os.path.expanduser("~")):
-        self.load_config(workspace)
+    def __init__(self, workspace=os.path.expanduser("~"), initialize=False):
+        if initialize:
+            self.generate_config()
+            self.load_config(workspace)
+            self.create_folders()
+
+        try:
+            self.load_config(workspace)
+        except FileNotFoundError:
+            print('Missing config.yml, please use Config(initialize=True).')
 
     def load_config(self, workspace=os.path.expanduser("~")):
         config_file = os.path.abspath(os.path.join(workspace, 'config.yml'))
@@ -40,9 +50,11 @@ class Config:
             self.sfile_root = config['SFILE_ROOT']
 
             self.tfrecord = config['TFRecord']
+            self.train = config['Train']
+            self.test = config['Test']
             self.eval = config['Eval']
-            self.sql_database = config['SQL_Database']
 
+            self.sql_database = config['SQL_Database']
             self.catalog = config['Catalog']
             self.geom = config['Geom']
             self.models = config['Models']
@@ -55,9 +67,11 @@ class Config:
             'SFILE_ROOT': os.path.join(workspace, 'SFILE_ROOT'),
 
             'TFRecord': os.path.join(workspace, 'TFRecord'),
-            'Eval': os.path.join(workspace, 'Eval'),
-            'SQL_Database': os.path.join(workspace, 'SQL_Database'),
+            'Train': os.path.join(workspace, 'TFRecord', 'Train'),
+            'Test': os.path.join(workspace, 'TFRecord', 'Test'),
+            'Eval': os.path.join(workspace, 'TFRecord', 'Eval'),
 
+            'SQL_Database': os.path.join(workspace, 'SQL_Database'),
             'Catalog': os.path.join(workspace, 'Catalog'),
             'Geom': os.path.join(workspace, 'Geom'),
             'Models': os.path.join(workspace, 'Models'),
@@ -66,10 +80,13 @@ class Config:
         path = os.path.join(workspace, 'config.yml')
         with open(path, 'w') as file:
             yaml.dump(config, file, sort_keys=False)
+        print(f'Create config: {path}')
 
     def create_folders(self):
         path_list = [
             self.tfrecord,
+            self.train,
+            self.test,
             self.eval,
             self.sql_database,
 
@@ -80,8 +97,7 @@ class Config:
 
         for d in path_list:
             make_dirs(d)
-
-        print('SeisNN folders created.')
+            print(f'Create folder: {d}')
 
 
 def make_dirs(path):

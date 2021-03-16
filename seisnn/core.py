@@ -360,11 +360,18 @@ class Instance:
         julday = str(self.metadata.starttime.julday)
         return f'{self.metadata.id[:-1]}.{year}.{julday}.tfrecord'
 
-    def get_tfrecord_dir(self):
+    def get_tfrecord_dir(self, sub_dir):
+        """
+
+        :param sub_dir: Sub TFRecord directory: 'train', 'test', 'eval'
+        :return: TFRecord directory
+        """
         config = seisnn.utils.Config()
         name = self.get_tfrecord_name()
         net, sta, loc, chan, year, julday, suffix = name.split('.')
-        tfr_dir = os.path.join(config.tfrecord, year, net, sta, name)
+
+        sub_dir = getattr(config, sub_dir)
+        tfr_dir = os.path.join(sub_dir, year, net, sta)
 
         return tfr_dir
 

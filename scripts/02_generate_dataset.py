@@ -12,7 +12,7 @@ tfr_converter = seisnn.components.TFRecordConverter()
 tfr_converter.convert_from_picks(pick_list, tag, database)
 
 config = seisnn.utils.Config()
-tfr_list = seisnn.utils.get_dir_list(config.tfrecord, suffix='.tfrecord')
+tfr_list = seisnn.utils.get_dir_list(config.train, suffix='.tfrecord')
 
 db.clear_table(table='waveform')
 db.clear_table(table='tfrecord')

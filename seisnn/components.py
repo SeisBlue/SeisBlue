@@ -43,17 +43,18 @@ class TFRecordConverter:
 
         seisnn.utils.parallel(group_picks,
                               func=self.write_tfrecord,
+                              sub_dir='train',
                               tag=tag,
                               database=database,
                               batch_size=1)
 
-    def write_tfrecord(self, picks, tag, database):
+    def write_tfrecord(self, picks, sub_dir, tag, database):
         instance_list = self.get_instance_list(picks, tag, database)
         feature_list = [instance.to_feature() for instance in instance_list]
         example_list = [seisnn.example_proto.feature_to_example(feature)
                         for feature in feature_list]
 
-        tfr_dir = instance_list[0].get_tfrecord_dir()
+        tfr_dir = instance_list[0].get_tfrecord_dir(sub_dir)
         seisnn.utils.make_dirs(tfr_dir)
 
         file_name = instance_list[0].get_tfrecord_name()
