@@ -213,6 +213,10 @@ def get_dir_list(file_dir, suffix="", recursive=True):
     return file_list
 
 
+def flatten_list(nested_list):
+    return [item for sublist in nested_list for item in sublist]
+
+
 def unet_padding_size(trace, pool_size=2, layers=4):
     """
     Return left and right padding size for a given trace.
