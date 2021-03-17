@@ -309,12 +309,14 @@ class Client:
         """
         with self.session_scope() as session:
             query = session.query(Inventory)
-            if station:
-                station = self.replace_sql_wildcard(station)
-                query = query.filter(Inventory.station.like(station))
-            if network:
-                network = self.replace_sql_wildcard(network)
-                query = query.filter(Inventory.network.like(network))
+            if station is not None:
+                station = self.get_matched_list(
+                    station, 'inventory', 'station')
+                query = query.filter(Inventory.station.in_(station))
+            if network is not None:
+                network = self.get_matched_list(
+                    network, 'inventory', 'network')
+                query = query.filter(Inventory.network.in_(network))
 
         return query
 
@@ -449,12 +451,14 @@ class Client:
             if to_time is not None:
                 query = query.filter(Pick.time <= to_time)
             if station is not None:
-                station = self.replace_sql_wildcard(station)
-                query = query.filter(Pick.station.like(station))
+                station = self.get_matched_list(station, 'pick', 'station')
+                query = query.filter(Pick.station.in_(station))
             if phase is not None:
-                query = query.filter(Pick.phase.like(phase))
+                phase = self.get_matched_list(phase, 'pick', 'phase')
+                query = query.filter(Pick.phase.in_(phase))
             if tag is not None:
-                query = query.filter(Pick.tag.like(tag))
+                tag = self.get_matched_list(tag, 'pick', 'tag')
+                query = query.filter(Pick.tag.in_(tag))
 
         return query
 
@@ -534,6 +538,22 @@ class Client:
 
         print(f'Input {index + 1} waveforms.')
 
+    def get_tfrecord(self, station=None):
+        """
+        Returns query from tfrecord table.
+
+        :param str station: Station name.
+        :rtype: sqlalchemy.orm.query.Query
+        :return: A Query.
+        """
+        with self.session_scope() as session:
+            query = session.query(TFRecord)
+            if station is not None:
+                station = self.get_matched_list(station, 'tfrecord', 'station')
+                query = query.filter(TFRecord.station.in_(station))
+
+        return query
+
     def get_waveform(self, from_time=None, to_time=None,
                      station=None, tfrecord=None):
         """
@@ -545,11 +565,12 @@ class Client:
 
         :param str from_time: Get which waveform endtime after from_time.
         :param str to_time: Get which waveform starttime after to_time.
-        :param str station: Station name.
-        :param str tfrecord: TFRecord path.
+        :param str/list station: Station name.
+        :param str/list tfrecord: TFRecord path.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
+
         with self.session_scope() as session:
             query = session.query(Waveform)
             if from_time is not None:
@@ -557,11 +578,13 @@ class Client:
             if to_time is not None:
                 query = query.filter(Waveform.starttime <= to_time)
             if station is not None:
-                station = [self.replace_sql_wildcard(sta) for sta in station]
-                query = query.filter(
-                    Waveform.station.like(Waveform.station.in_(station)))
+                station = self.get_matched_list(
+                    station, 'waveform', 'station')
+                query = query.filter(Waveform.station.in_(station))
             if tfrecord is not None:
-                query = query.filter(Waveform.station.like(tfrecord))
+                tfrecord = self.get_matched_list(
+                    tfrecord, 'waveform', 'tfrecord')
+                query = query.filter(Waveform.tfrecord.in_(tfrecord))
 
         return query
 
@@ -680,6 +703,33 @@ class Client:
         string = string.replace('?', '_')
         string = string.replace('*', '%')
         return string
+
+    def get_matched_list(self, wildcard_list, table, column):
+        """
+        Gets wildcard match list in column.
+
+        :param str/list wildcard_list:
+        :param str table: Table name.
+        :param str column: Column name.
+        :return:
+        """
+        if isinstance(wildcard_list, str):
+            wildcard_list = [wildcard_list]
+
+        table = self.get_table_class(table)
+
+        matched_list = []
+        for wildcard in wildcard_list:
+            wildcard = self.replace_sql_wildcard(wildcard)
+            with self.session_scope() as session:
+                query = session.query(table) \
+                    .filter(getattr(table, column).like(wildcard))
+
+                query = [getattr(item, column) for item in query]
+                matched_list.extend(query)
+
+        matched_list = sorted(list(set(matched_list)))
+        return matched_list
 
 
 if __name__ == "__main__":
