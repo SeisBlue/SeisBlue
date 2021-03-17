@@ -3,8 +3,10 @@ import seisnn
 database = 'Hualien.db'
 db = seisnn.sql.Client(database=database)
 
-waveform_list = db.get_waveform()
+tfr_list = db.get_matched_list('*', 'tfrecord', 'path')
 
 model_instance = 'test_model'
 trainer = seisnn.model.trainer.GeneratorTrainer(database=database)
-trainer.train_loop(waveform_list, model_instance, plot=True, remove=True)
+trainer.train_loop(tfr_list, model_instance,
+                   batch_size=64,
+                   plot=True, remove=True)
