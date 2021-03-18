@@ -37,9 +37,9 @@ class BaseEvaluator:
         return save_model_path
 
     @staticmethod
-    def get_eval_dir(dir_name="eval"):
+    def get_eval_dir(dir_name):
         config = seisnn.utils.Config()
-        eval_path = os.path.join(config.models, dir_name)
+        eval_path = os.path.join(config.eval, dir_name.split('.')[0])
         seisnn.utils.make_dirs(eval_path)
 
         return eval_path
@@ -63,7 +63,7 @@ class GeneratorEvaluator(BaseEvaluator):
         self.model_name = model_name
         self.model = None
 
-    def eval(self, tfr_list, name=None, batch_size=100):
+    def eval(self, tfr_list, batch_size=100):
         """
         Main eval loop.
 
@@ -71,8 +71,7 @@ class GeneratorEvaluator(BaseEvaluator):
         :param str name: Output name.
         """
         model_path = self.get_model_dir(self.model_name)
-        eval_path = self.get_eval_dir(name)
-
+        eval_path = self.get_eval_dir(self.model_name)
 
         self.model = tf.keras.models.load_model(
             model_path,
@@ -85,7 +84,7 @@ class GeneratorEvaluator(BaseEvaluator):
 
         data_len = self.get_dataset_length(self.database)
         progbar = tf.keras.utils.Progbar(data_len)
-
+        dataset = seisnn.io.read_dataset(tfr_list)
         n = 0
         for val in dataset.prefetch(100).batch(batch_size):
             progbar.add(batch_size)
