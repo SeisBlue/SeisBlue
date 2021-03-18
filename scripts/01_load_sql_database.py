@@ -1,12 +1,13 @@
 import seisnn
 
-db = seisnn.sql.Client("HL2019.db")
+db = seisnn.sql.Client(database="Hualien.db")
+inspector = seisnn.sql.DatabaseInspector(db)
 
-db.read_hyp("HL2019.HYP", network="HL2019")
-db.inventory_summery()
+db.read_hyp(hyp="HL2019.HYP", network="HL2019")
+inspector.inventory_summery()
 
-db.add_events("HL2019", tag="manual")
-db.event_summery()
-db.pick_summery()
+db.add_events(catalog="HL2019", tag="manual")
+inspector.event_summery()
+inspector.pick_summery()
 
-db.plot_map()
+inspector.plot_map()

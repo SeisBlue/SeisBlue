@@ -25,11 +25,11 @@ if gpus:
 
 class BaseTrainer:
     @staticmethod
-    def get_dataset_length(database=None):
+    def get_dataset_length(database=None, tfr_list=None):
         count = None
         try:
             db = seisnn.sql.Client(database)
-            count = len(db.get_waveform().all())
+            count = len(db.get_waveform(tfrecord=tfr_list).all())
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
 
@@ -37,8 +37,8 @@ class BaseTrainer:
 
     @staticmethod
     def get_model_dir(model_instance, remove=False):
-        config = seisnn.utils.get_config()
-        save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
+        config = seisnn.utils.Config()
+        save_model_path = os.path.join(config.models, model_instance)
 
         if remove:
             shutil.rmtree(save_model_path, ignore_errors=True)
@@ -96,14 +96,14 @@ class GeneratorTrainer(BaseTrainer):
             return train_loss, val_loss
 
     def train_loop(self,
-                   dataset, model_name,
+                   tfr_list, model_name,
                    epochs=1, batch_size=1,
                    log_step=100, plot=False,
                    remove=False):
         """
         Main training loop.
 
-        :param str dataset: Dataset name.
+        :param tfr_list: List of TFRecord path.
         :param str model_name: Model directory name.
         :param int epochs: Epoch number.
         :param int batch_size: Batch size.
@@ -125,11 +125,12 @@ class GeneratorTrainer(BaseTrainer):
             last_epoch = len(ckpt_manager.checkpoints)
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
-        dataset = seisnn.io.read_dataset(dataset).shuffle(100000)
+        dataset = seisnn.io.read_dataset(tfr_list)
+        dataset = dataset.shuffle(100000)
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
-        data_len = self.get_dataset_length(self.database)
+        data_len = self.get_dataset_length(self.database, tfr_list)
 
         for epoch in range(epochs):
             print(f'epoch {epoch + 1} / {epochs}')

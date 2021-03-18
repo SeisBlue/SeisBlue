@@ -1,8 +1,10 @@
 import seisnn
 
-test_set = 'HL2019'
 model = 'test_model.h5'
-database = 'HL2019.db'
+database = 'Hualien.db'
+
+db = seisnn.sql.Client(database)
+tfr_list = db.get_matched_list('*', 'tfrecord', 'path')
 
 evaluator = seisnn.model.evaluator.GeneratorEvaluator(database, model)
-evaluator.eval(test_set)
+evaluator.eval(tfr_list, model)

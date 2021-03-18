@@ -1,16 +1,12 @@
-# SeisNN ![Version](http://img.shields.io/:Version-0.3.0dev-darkgreen.svg?style=flat-square) [![License](http://img.shields.io/:License-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
+# SeisNN ![Version](http://img.shields.io/:Version-0.5.0dev-darkgreen.svg?style=flat-square) [![License](http://img.shields.io/:License-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
 
- ![Notebook](http://img.shields.io/:Notebook-build.20200806-orange.svg?style=flat-square) ![Docker](http://img.shields.io/:Docker-build.20201102-blue.svg?style=flat-square)
+ ![Notebook](http://img.shields.io/:Notebook-build.20200806-orange.svg?style=flat-square) ![Docker](http://img.shields.io/:Docker-build.20210222-blue.svg?style=flat-square)
 
-Docs build: [![CircleCI](https://circleci.com/gh/SeisNN/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/jimmy60504/SeisNN/tree/master) [![Docker Build](https://github.com/jimmy60504/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/jimmy60504/SeisNN/actions?query=workflow%3A%22Docker+Image%22) 
+Docs build: [![CircleCI](https://circleci.com/gh/SeisNN/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/SeisNN/SeisNN/tree/master) [![Docker Build](https://github.com/SeisNN/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/SeisNN/SeisNN/actions?query=workflow%3A%22Docker+Image%22) 
 
 Github Pages: https://seisnn.github.io/SeisNN/
 
-Seismic event P phase picking project
-
-Main framework: Obspy, Seisan, Tensorflow with Keras
-
-Using U-net to generate pick probability
+Deep learning seismic phase picking framework with SEISAN
 
 ![workflow](workflow.png)
 
@@ -18,11 +14,11 @@ Using U-net to generate pick probability
 
 ---
 
-# Warning 
-
-This version is unstable. Do not use it now.
+# Warning
 
 The code is still in the development state, API will change frequently. 
+
+Beta version will be released soon.
 
 Please star us for upcoming updates!
 
@@ -38,33 +34,6 @@ Prerequisite:
 Installation:
 
 - Follow the instructions in the [Docker](docker) folder to create a Docker container.
-- SSH into the Docker container you create.
-
-      ssh username@localhost -p49154
-
-- Copy `/SeisNN/jupyter.sh` to your workspace and execute to start jupyter lab server
-
-      cp /SeisNN/jupyter.sh ~/.
-      chmod 777 jupyter.sh
-      ./jupyter.sh
-
-- Copy `/SeisNN/notebook` to your workspace
-
-      cp -r /SeisNN/notebook ~/.
-
-- Paste the URL with generate token into your local browser
-
-      http://127.0.0.1:8888/?token=36b31a373a9d18cc9b30a50883ad5a3638b19bed47be8074
-      
-- Go through [notebook/00_initialize.ipynb](notebook/00_initialize.ipynb) to generate [config.yaml](config.yaml)
-
----
-
-In the [notebook](notebook) folder:
-
-[00_initialize](notebook/00_initialize.ipynb)
-
-[01_load_database](notebook/01_load_sql_database.ipynb)
 
 ---
 

@@ -19,17 +19,15 @@ import seisnn.example_proto
 import seisnn.utils
 
 
-def read_dataset(dataset):
+def read_dataset(file_list):
     """
     Returns TFRecord Dataset from TFRecord directory.
 
-    :param str dataset_dir: Directory contains TFRecords.
+    :param file_list: List of .tfrecord.
     :rtype: tf.data.Dataset
     :return: A Dataset.
     """
-    config = seisnn.utils.get_config()
-    dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
-    file_list = seisnn.utils.get_dir_list(dataset_dir)
+
     dataset = tf.data.TFRecordDataset(file_list)
     dataset = dataset.map(seisnn.example_proto.sequence_example_parser,
                           num_parallel_calls=mp.cpu_count())
@@ -56,10 +54,10 @@ def read_event_list(sfile_dir):
     :rtype: list
     :return: list of event.
     """
-    config = seisnn.utils.get_config()
-    sfile_dir = os.path.join(config['CATALOG_ROOT'], sfile_dir)
+    config = seisnn.utils.Config()
+    sfile_dir = os.path.join(config.catalog, sfile_dir)
 
-    sfile_list = seisnn.utils.get_dir_list(sfile_dir)
+    sfile_list = seisnn.utils.get_dir_list(sfile_dir, ".S*")
     print(f'Reading events from {sfile_dir}')
 
     event_list = seisnn.utils.parallel(sfile_list, func=get_event)
@@ -100,12 +98,12 @@ def read_sds(metadata):
     :rtype: dict
     :return: Dict contains all traces within the time window.
     """
-    config = seisnn.utils.get_config()
+    config = seisnn.utils.Config()
     station = metadata.station
     starttime = metadata.starttime
     endtime = metadata.endtime + 0.1
 
-    client = sds.Client(sds_root=config['SDS_ROOT'])
+    client = sds.Client(sds_root=config.sds_root)
     stream = client.get_waveforms(network="*",
                                   station=station,
                                   location="*",
@@ -130,8 +128,8 @@ def read_hyp(hyp):
     :rtype: dict
     :return: Geometry dict.
     """
-    config = seisnn.utils.get_config()
-    hyp_file = os.path.join(config['GEOM_ROOT'], hyp)
+    config = seisnn.utils.Config()
+    hyp_file = os.path.join(config.geom, hyp)
     geom = {}
     with open(hyp_file, 'r') as file:
         blank_line = 0
@@ -188,7 +186,7 @@ def write_hyp_station(geom, save_file):
     :param dict geom: Geometry dict.
     :param str save_file: Name of .HYP file.
     """
-    config = seisnn.utils.get_config()
+    config = seisnn.utils.Config()
     hyp = []
     for sta, loc in geom.items():
         lat = int(loc['latitude'])
@@ -211,7 +209,7 @@ def write_hyp_station(geom, save_file):
             f' {sta: >5}{lat: >2d}{lat_min:>5.2f}{NS}{lon: >3d}{lon_min:>5.2f}{EW}{elev: >4d}\n')
     hyp.sort()
 
-    output = os.path.join(config['GEOM_ROOT'], save_file)
+    output = os.path.join(config.geom, save_file)
     with open(output, 'w') as f:
         f.writelines(hyp)
 
@@ -224,8 +222,8 @@ def read_kml_placemark(kml):
     :rtype: dict
     :return: Geometry dict.
     """
-    config = seisnn.utils.get_config()
-    kml_file = os.path.join(config['GEOM_ROOT'], kml)
+    config = seisnn.utils.Config()
+    kml_file = os.path.join(config.geom, kml)
 
     parser = etree.XMLParser()
     root = etree.parse(kml_file, parser).getroot()

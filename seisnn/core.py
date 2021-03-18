@@ -1,6 +1,7 @@
 """
 Core
 """
+import os
 
 import numpy as np
 import scipy.signal
@@ -242,7 +243,7 @@ class Instance:
                 self.from_stream(input_data)
 
             elif isinstance(input_data, seisnn.sql.Waveform):
-                dataset = seisnn.io.read_dataset(input_data.dataset)
+                dataset = seisnn.io.read_dataset(input_data.tfrecord)
                 for item in dataset.skip(input_data.data_index).take(1):
                     input_data = item
                 self.from_example(input_data)
@@ -354,6 +355,25 @@ class Instance:
         """
         seisnn.plot.plot_dataset(self, **kwargs)
 
+    def get_tfrecord_name(self):
+        year = str(self.metadata.starttime.year)
+        julday = str(self.metadata.starttime.julday)
+        return f'{self.metadata.id[:-1]}.{year}.{julday}.tfrecord'
+
+    def get_tfrecord_dir(self, sub_dir):
+        """
+
+        :param sub_dir: Sub TFRecord directory: 'train', 'test', 'eval'
+        :return: TFRecord directory
+        """
+        config = seisnn.utils.Config()
+        name = self.get_tfrecord_name()
+        net, sta, loc, chan, year, julday, suffix = name.split('.')
+
+        sub_dir = getattr(config, sub_dir)
+        tfr_dir = os.path.join(sub_dir, year, net, sta)
+
+        return tfr_dir
 
 if __name__ == "__main__":
     pass

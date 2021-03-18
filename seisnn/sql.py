@@ -10,6 +10,7 @@ import sqlalchemy
 import sqlalchemy.orm
 import sqlalchemy.ext.declarative
 from obspy import UTCDateTime
+from tqdm import tqdm
 
 import seisnn.core
 import seisnn.io
@@ -144,15 +145,17 @@ class Waveform(Base):
                                 sqlalchemy.ForeignKey('inventory.station'),
                                 nullable=False)
     channel = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    dataset = sqlalchemy.Column(sqlalchemy.String)
+    tfrecord = sqlalchemy.Column(sqlalchemy.String,
+                                 sqlalchemy.ForeignKey('tfrecord.path'),
+                                 nullable=False)
     data_index = sqlalchemy.Column(sqlalchemy.Integer)
 
-    def __init__(self, instance, dataset, data_index):
+    def __init__(self, instance, tfrecord, data_index):
         self.starttime = UTCDateTime(instance.metadata.starttime).datetime
         self.endtime = UTCDateTime(instance.metadata.endtime).datetime
         self.station = instance.metadata.station
         self.channel = ', '.join(instance.trace.channel)
-        self.dataset = dataset
+        self.tfrecord = tfrecord
         self.data_index = data_index
 
     def __repr__(self):
@@ -161,8 +164,47 @@ class Waveform(Base):
                f"End={self.endtime}, " \
                f"Station={self.station}, " \
                f"Channel={self.channel}, " \
-               f"Dataset={self.dataset}, " \
+               f"TFRecord={self.tfrecord}, " \
                f"Index={self.data_index})"
+
+    def add_db(self, session):
+        """
+        Add data into session.
+
+        :type session: sqlalchemy.orm.session.Session
+        :param session: SQL session.
+        """
+        session.add(self)
+
+
+class TFRecord(Base):
+    """
+    TFRecord table for sql database.
+    """
+    __tablename__ = 'tfrecord'
+    id = sqlalchemy.Column(sqlalchemy.BigInteger()
+                           .with_variant(sqlalchemy.Integer, "sqlite"),
+                           primary_key=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    station = sqlalchemy.Column(sqlalchemy.String,
+                                sqlalchemy.ForeignKey('inventory.station'),
+                                nullable=False)
+    count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
+    path = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    tag = sqlalchemy.Column(sqlalchemy.String)
+
+    def __init__(self, path, station, count):
+        self.name = os.path.basename(path)
+        self.path = path
+        self.station = station
+        self.count = count
+
+    def __repr__(self):
+        return f"TFRecord(" \
+               f"Name={self.name}, " \
+               f"Station={self.station}, " \
+               f"Count={self.count}, " \
+               f"Tag={self.tag})"
 
     def add_db(self, session):
         """
@@ -180,9 +222,9 @@ class Client:
     """
 
     def __init__(self, database, echo=False):
-        config = seisnn.utils.get_config()
+        config = seisnn.utils.Config()
         self.database = database
-        db_path = os.path.join(config['SQL_ROOT'], self.database)
+        db_path = os.path.join(config.sql_database, self.database)
         self.engine = sqlalchemy.create_engine(
             f'sqlite:///{db_path}?check_same_thread=False',
             echo=echo)
@@ -205,6 +247,7 @@ class Client:
             'event': Event,
             'pick': Pick,
             'waveform': Waveform,
+            'tfrecord': TFRecord,
         }
         try:
             table_class = table_dict.get(table)
@@ -266,42 +309,16 @@ class Client:
         """
         with self.session_scope() as session:
             query = session.query(Inventory)
-            if station:
-                station = self.replace_sql_wildcard(station)
-                query = query.filter(Inventory.station.like(station))
-            if network:
-                network = self.replace_sql_wildcard(network)
-                query = query.filter(Inventory.network.like(network))
+            if station is not None:
+                station = self.get_matched_list(
+                    station, 'inventory', 'station')
+                query = query.filter(Inventory.station.in_(station))
+            if network is not None:
+                network = self.get_matched_list(
+                    network, 'inventory', 'network')
+                query = query.filter(Inventory.network.in_(network))
 
         return query
-
-    def inventory_summery(self):
-        """
-        Prints summery from geometry table.
-        """
-        stations = self.get_distinct_items('inventory', 'station')
-
-        print('Station name:')
-        print([station for station in stations], '\n')
-        print(f'Total {len(stations)} stations\n')
-
-        latitudes = self.get_distinct_items('inventory', 'latitude')
-        longitudes = self.get_distinct_items('inventory', 'longitude')
-
-        print('Station boundary:')
-        print(f'West: {min(longitudes):>8.4f}')
-        print(f'East: {max(longitudes):>8.4f}')
-        print(f'South: {min(latitudes):>7.4f}')
-        print(f'North: {max(latitudes):>7.4f}\n')
-
-    def plot_map(self):
-        """
-        Plots station and event map.
-        """
-        inventories = self.get_inventories()
-        events = self.get_events()
-
-        seisnn.plot.plot_map(inventories, events)
 
     def add_events(self, catalog, tag, remove_duplicates=True):
         """
@@ -384,7 +401,8 @@ class Client:
         with self.session_scope() as session:
             Pick(time, station, phase, tag).add_db(session)
 
-    def get_picks(self, from_time=None, to_time=None,
+    def get_picks(self,
+                  from_time=None, to_time=None,
                   station=None, phase=None,
                   tag=None):
         """
@@ -405,90 +423,56 @@ class Client:
             if to_time is not None:
                 query = query.filter(Pick.time <= to_time)
             if station is not None:
-                station = self.replace_sql_wildcard(station)
-                query = query.filter(Pick.station.like(station))
+                station = self.get_matched_list(station, 'pick', 'station')
+                query = query.filter(Pick.station.in_(station))
             if phase is not None:
-                query = query.filter(Pick.phase.like(phase))
+                phase = self.get_matched_list(phase, 'pick', 'phase')
+                query = query.filter(Pick.phase.in_(phase))
             if tag is not None:
-                query = query.filter(Pick.tag.like(tag))
+                tag = self.get_matched_list(tag, 'pick', 'tag')
+                query = query.filter(Pick.tag.in_(tag))
 
         return query
 
-    def event_summery(self):
-        """
-        Prints summery from event table.
-        """
-        times = self.get_distinct_items('event', 'time')
-        print('Event time duration:')
-        print(f'From: {min(times).isoformat()}')
-        print(f'To:   {max(times).isoformat()}\n')
-
-        events = self.get_events().all()
-        print(f'Total {len(events)} events\n')
-
-        latitudes = self.get_distinct_items('event', 'latitude')
-        longitudes = self.get_distinct_items('event', 'longitude')
-
-        print('Station boundary:')
-        print(f'West: {min(longitudes):>8.4f}')
-        print(f'East: {max(longitudes):>8.4f}')
-        print(f'South: {min(latitudes):>7.4f}')
-        print(f'North: {max(latitudes):>7.4f}\n')
-
-    def pick_summery(self):
-        """
-        Prints summery from pick table.
-        """
-        times = self.get_distinct_items('pick', 'time')
-        print('Event time duration:')
-        print(f'From: {min(times).isoformat()}')
-        print(f'To:   {max(times).isoformat()}\n')
-
-        print('Phase count:')
-        phases = self.get_distinct_items('pick', 'phase')
-        for phase in phases:
-            picks = self.get_picks(phase=phase).all()
-            print(f'{len(picks)} "{phase}" picks')
-        print()
-
-        pick_stations = self.get_distinct_items('pick', 'station')
-        print(f'Picks cover {len(pick_stations)} stations:')
-        print([station for station in pick_stations], '\n')
-
-        no_pick_station = self.get_exclude_items('inventory', 'station',
-                                                 pick_stations)
-        if no_pick_station:
-            print(f'{len(no_pick_station)} stations without picks:')
-            print([station for station in no_pick_station], '\n')
-
-        inventory_station = self.get_distinct_items('inventory', 'station')
-        no_inventory_station = self.get_exclude_items('pick', 'station',
-                                                      inventory_station)
-
-        if no_inventory_station:
-            print(f'{len(no_inventory_station)} stations without geometry:')
-            print([station for station in no_inventory_station], '\n')
-
-    def read_tfrecord_header(self, dataset):
+    def read_tfrecord_header(self, tfr_list):
         """
         Sync header into SQL database from tfrecord dataset.
 
-        :param str dataset: Dataset name.
+        :param tfr_list: TFRecord list.
         """
-        ds = seisnn.io.read_dataset(dataset)
-        index = 0
+        try:
+            for tfrecord in tqdm(tfr_list):
+                dataset = seisnn.io.read_dataset(tfrecord)
+                with self.session_scope() as session:
+                    for index, example in enumerate(dataset):
+                        instance = seisnn.core.Instance(example)
+                        Waveform(instance, tfrecord, index).add_db(session)
+                    TFRecord(tfrecord, instance.metadata.station,
+                             index + 1).add_db(session)
+
+        except Exception as error:
+            print(f'{type(error).__name__}: {error}')
+
+        print(f'Input {index + 1} waveforms.')
+
+    def get_tfrecord(self, station=None):
+        """
+        Returns query from tfrecord table.
+
+        :param str station: Station name.
+        :rtype: sqlalchemy.orm.query.Query
+        :return: A Query.
+        """
         with self.session_scope() as session:
-            for example in ds:
-                instance = seisnn.core.Instance(example)
-                try:
-                    Waveform(instance, dataset, index).add_db(session)
-                    index += 1
-                except Exception as error:
-                    print(f'{type(error).__name__}: {error}')
+            query = session.query(TFRecord)
+            if station is not None:
+                station = self.get_matched_list(station, 'tfrecord', 'station')
+                query = query.filter(TFRecord.station.in_(station))
 
-        print(f'Input {index} waveforms.')
+        return query
 
-    def get_waveform(self, from_time=None, to_time=None, station=None):
+    def get_waveform(self, from_time=None, to_time=None,
+                     station=None, tfrecord=None):
         """
         Returns query from waveform table.
 
@@ -498,10 +482,12 @@ class Client:
 
         :param str from_time: Get which waveform endtime after from_time.
         :param str to_time: Get which waveform starttime after to_time.
-        :param str station: Station name.
+        :param str/list station: Station name.
+        :param str/list tfrecord: TFRecord path.
         :rtype: sqlalchemy.orm.query.Query
         :return: A Query.
         """
+
         with self.session_scope() as session:
             query = session.query(Waveform)
             if from_time is not None:
@@ -509,27 +495,15 @@ class Client:
             if to_time is not None:
                 query = query.filter(Waveform.starttime <= to_time)
             if station is not None:
-                station = self.replace_sql_wildcard(station)
-                query = query.filter(Waveform.station.like(station))
+                station = self.get_matched_list(
+                    station, 'waveform', 'station')
+                query = query.filter(Waveform.station.in_(station))
+            if tfrecord is not None:
+                tfrecord = self.get_matched_list(
+                    tfrecord, 'waveform', 'tfrecord')
+                query = query.filter(Waveform.tfrecord.in_(tfrecord))
 
         return query
-
-    def waveform_summery(self):
-        """
-        Prints summery from waveform table.
-        """
-        starttimes = self.get_distinct_items('waveform', 'starttime')
-        endtimes = self.get_distinct_items('waveform', 'endtime')
-        print('Waveform time duration:')
-        print(f'From: {min(starttimes).isoformat()}')
-        print(f'To:   {max(endtimes).isoformat()}\n')
-
-        waveforms = self.get_events().all()
-        print(f'Total {len(waveforms)} events\n')
-
-        stations = self.get_distinct_items('waveform', 'station')
-        print(f'Picks cover {len(stations)} stations:')
-        print([station for station in stations], '\n')
 
     def remove_duplicates(self, table, match_columns):
         """
@@ -629,6 +603,149 @@ class Client:
         string = string.replace('?', '_')
         string = string.replace('*', '%')
         return string
+
+    def get_matched_list(self, wildcard_list, table, column):
+        """
+        Gets wildcard match list in column.
+
+        :param str/list wildcard_list:
+        :param str table: Table name.
+        :param str column: Column name.
+        :return:
+        """
+        if isinstance(wildcard_list, str):
+            wildcard_list = [wildcard_list]
+
+        table = self.get_table_class(table)
+
+        matched_list = []
+        for wildcard in wildcard_list:
+            wildcard = self.replace_sql_wildcard(wildcard)
+            with self.session_scope() as session:
+                query = session.query(table) \
+                    .filter(getattr(table, column).like(wildcard))
+
+                query = [getattr(item, column) for item in query]
+                matched_list.extend(query)
+
+        matched_list = sorted(list(set(matched_list)))
+        return matched_list
+
+
+class DatabaseInspector:
+    """
+    Main class for Database Inspector.
+    """
+
+    def __init__(self, database):
+        if isinstance(database, str):
+            try:
+                database = seisnn.sql.Client(database)
+            except Exception as exception:
+                print(f'{exception.__class__.__name__}: {exception.__cause__}')
+
+        self.database = database
+
+    def inventory_summery(self):
+        """
+        Prints summery from geometry table.
+        """
+        stations = self.database.get_distinct_items('inventory', 'station')
+
+        print('Station name:')
+        print([station for station in stations], '\n')
+        print(f'Total {len(stations)} stations\n')
+
+        latitudes = self.database.get_distinct_items('inventory', 'latitude')
+        longitudes = self.database.get_distinct_items('inventory', 'longitude')
+
+        print('Station boundary:')
+        print(f'West: {min(longitudes):>8.4f}')
+        print(f'East: {max(longitudes):>8.4f}')
+        print(f'South: {min(latitudes):>7.4f}')
+        print(f'North: {max(latitudes):>7.4f}\n')
+
+    def event_summery(self):
+        """
+        Prints summery from event table.
+        """
+        times = self.database.get_distinct_items('event', 'time')
+        print('Event time duration:')
+        print(f'From: {min(times).isoformat()}')
+        print(f'To:   {max(times).isoformat()}\n')
+
+        events = self.database.get_events().all()
+        print(f'Total {len(events)} events\n')
+
+        latitudes = self.database.get_distinct_items('event', 'latitude')
+        longitudes = self.database.get_distinct_items('event', 'longitude')
+
+        print('Station boundary:')
+        print(f'West: {min(longitudes):>8.4f}')
+        print(f'East: {max(longitudes):>8.4f}')
+        print(f'South: {min(latitudes):>7.4f}')
+        print(f'North: {max(latitudes):>7.4f}\n')
+
+    def pick_summery(self):
+        """
+        Prints summery from pick table.
+        """
+        times = self.database.get_distinct_items('pick', 'time')
+        print('Event time duration:')
+        print(f'From: {min(times).isoformat()}')
+        print(f'To:   {max(times).isoformat()}\n')
+
+        print('Phase count:')
+        phases = self.database.get_distinct_items('pick', 'phase')
+        for phase in phases:
+            picks = self.database.get_picks(phase=phase).all()
+            print(f'{len(picks)} "{phase}" picks')
+        print()
+
+        pick_stations = self.database.get_distinct_items('pick', 'station')
+        print(f'Picks cover {len(pick_stations)} stations:')
+        print([station for station in pick_stations], '\n')
+
+        no_pick_station = self.database.get_exclude_items(
+            'inventory', 'station', pick_stations)
+        if no_pick_station:
+            print(f'{len(no_pick_station)} stations without picks:')
+            print([station for station in no_pick_station], '\n')
+
+        inventory_station = self.database \
+            .get_distinct_items('inventory', 'station')
+        no_inventory_station = self.database \
+            .get_exclude_items('pick', 'station', inventory_station)
+
+        if no_inventory_station:
+            print(f'{len(no_inventory_station)} stations without geometry:')
+            print([station for station in no_inventory_station], '\n')
+
+    def waveform_summery(self):
+        """
+        Prints summery from waveform table.
+        """
+        starttimes = self.database.get_distinct_items('waveform', 'starttime')
+        endtimes = self.database.get_distinct_items('waveform', 'endtime')
+        print('Waveform time duration:')
+        print(f'From: {min(starttimes).isoformat()}')
+        print(f'To:   {max(endtimes).isoformat()}\n')
+
+        waveforms = self.database.get_events().all()
+        print(f'Total {len(waveforms)} events\n')
+
+        stations = self.database.get_distinct_items('waveform', 'station')
+        print(f'Picks cover {len(stations)} stations:')
+        print([station for station in stations], '\n')
+
+    def plot_map(self):
+        """
+        Plots station and event map.
+        """
+        inventories = self.database.get_inventories()
+        events = self.database.get_events()
+
+        seisnn.plot.plot_map(inventories, events)
 
 
 if __name__ == "__main__":

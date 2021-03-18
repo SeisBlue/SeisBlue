@@ -3,6 +3,7 @@ import os
 
 import numpy as np
 import obspy
+from obspy import UTCDateTime
 
 import seisnn.core
 import seisnn.example_proto
@@ -10,9 +11,9 @@ import seisnn.io
 import seisnn.utils
 
 
-class ExampleGen:
+class TFRecordConverter:
     """
-    Main class for Example Generator.
+    Main class for TFRecord Converter.
 
     Consumes data from external source and emit TFRecord.
     """
@@ -25,70 +26,73 @@ class ExampleGen:
         self.trace_length = trace_length
         self.shape = shape
 
-    def generate_training_data(self,
-                               pick_list,
-                               dataset,
-                               tag,
-                               database,
-                               chunk_size=64):
+    def convert_training_from_picks(self, pick_list, tag, database):
         """
-        Generate TFRecords from database.
+        Convert training TFRecords from database picks.
 
         :param pick_list: List of picks from Pick SQL query.
-        :param str dataset: Output directory name.
         :param str tag: Pick tag in SQL database.
         :param str database: SQL database name.
-        :param int chunk_size: Number of data stores in TFRecord.
         """
-        config = seisnn.utils.get_config()
-        dataset_dir = os.path.join(config['DATASET_ROOT'], dataset)
-        seisnn.utils.make_dirs(dataset_dir)
+        pick_list = sorted(pick_list,
+                           key=lambda pick: [pick.station, pick.time])
+        pick_groupby = itertools.groupby(
+            pick_list,
+            key=lambda pick: [pick.station, UTCDateTime(pick.time).julday])
+        group_picks = [[item for item in data] for (key, data) in pick_groupby]
 
-        total_batch = int(len(pick_list) / chunk_size)
-        batch_picks = seisnn.utils.batch(pick_list, size=chunk_size)
-        for index, picks in enumerate(batch_picks):
-            example_list = seisnn.utils.parallel(picks,
-                                                 func=self.get_example_list,
-                                                 tag=tag,
-                                                 database=database)
-            flatten = itertools.chain.from_iterable
-            flat_list = list(flatten(flatten(example_list)))
+        seisnn.utils.parallel(group_picks,
+                              func=self.write_tfrecord,
+                              sub_dir='train',
+                              tag=tag,
+                              database=database,
+                              batch_size=1)
 
-            file_name = f'{index:0>5}.tfrecord'
-            save_file = os.path.join(dataset_dir, file_name)
-            seisnn.io.write_tfrecord(flat_list, save_file)
-            print(f'output {file_name} / {total_batch}')
+    def write_tfrecord(self, picks, sub_dir, tag, database):
+        instance_list = self.get_instance_list(picks, tag, database)
+        feature_list = [instance.to_feature() for instance in instance_list]
+        example_list = [seisnn.example_proto.feature_to_example(feature)
+                        for feature in feature_list]
 
-    def get_example_list(self, pick, tag, database):
+        tfr_dir = instance_list[0].get_tfrecord_dir(sub_dir)
+        seisnn.utils.make_dirs(tfr_dir)
+
+        file_name = instance_list[0].get_tfrecord_name()
+        save_file = os.path.join(tfr_dir, file_name)
+
+        seisnn.io.write_tfrecord(example_list, save_file)
+
+        print(f'output {file_name}')
+
+    def get_instance_list(self, picks, tag, database):
         """
-        Returns example list form list of picks and SQL database.
+        Returns instance list form list of picks and SQL database.
 
-        :param pick: List of picks.
+        :param picks: List of picks.
         :param str tag: Pick tag in SQL database.
         :param str database: SQL database root.
         :return:
         """
+        instance_list = []
+        for pick in picks:
+            metadata = self.get_time_window(anchor_time=pick.time,
+                                            station=pick.station,
+                                            shift='random')
+            streams = seisnn.io.read_sds(metadata)
 
-        metadata = self.get_time_window(anchor_time=pick.time,
-                                        station=pick.station,
-                                        shift='random')
+            for _, stream in streams.items():
+                stream = self.signal_preprocessing(stream)
+                instance = seisnn.core.Instance(stream)
 
-        streams = seisnn.io.read_sds(metadata)
-        example_list = []
-        for _, stream in streams.items():
-            stream = self.signal_preprocessing(stream)
+                instance.label = seisnn.core.Label(instance.metadata,
+                                                   self.phase)
+                instance.label.generate_label(database, tag, self.shape)
 
-            instance = seisnn.core.Instance(stream)
+                instance.predict = seisnn.core.Label(instance.metadata,
+                                                     self.phase)
 
-            instance.label = seisnn.core.Label(instance.metadata, self.phase)
-            instance.label.generate_label(database, tag, self.shape)
-
-            instance.predict = seisnn.core.Label(instance.metadata, self.phase)
-
-            feature = instance.to_feature()
-            example = seisnn.example_proto.feature_to_example(feature)
-            example_list.append(example)
-        return example_list
+                instance_list.append(instance)
+        return instance_list
 
     def get_time_window(self, anchor_time, station, shift=0):
         """

@@ -1,17 +1,21 @@
 import seisnn
 
-dataset = 'HL2019'
-database = 'HL2019.db'
+database = 'Hualien.db'
 tag = 'manual'
 
-db = seisnn.sql.Client(database)
-db.pick_summery()
+db = seisnn.sql.Client(database=database)
+inspector = seisnn.sql.DatabaseInspector(db)
+inspector.pick_summery()
 
-pick_list = db.get_picks(phase='S', tag='manual').all()
+pick_list = db.get_picks(tag=tag).all()
 
-example_gen = seisnn.components.ExampleGen()
-example_gen.generate_training_data(pick_list, dataset, tag, database)
+tfr_converter = seisnn.components.TFRecordConverter()
+tfr_converter.convert_training_from_picks(pick_list, tag, database)
 
-db.clear_table('waveform')
-db.read_tfrecord_header(dataset)
-db.waveform_summery()
+config = seisnn.utils.Config()
+tfr_list = seisnn.utils.get_dir_list(config.train, suffix='.tfrecord')
+
+db.clear_table(table='waveform')
+db.clear_table(table='tfrecord')
+db.read_tfrecord_header(tfr_list)
+inspector.waveform_summery()

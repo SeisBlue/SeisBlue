@@ -32,18 +32,17 @@ class BaseEvaluator:
 
     @staticmethod
     def get_model_dir(model_instance):
-        config = seisnn.utils.get_config()
-        save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
+        config = seisnn.utils.Config()
+        save_model_path = os.path.join(config.models, model_instance)
         return save_model_path
 
     @staticmethod
-    def get_eval_dir(dataset):
-        config = seisnn.utils.get_config()
-        dataset_path = os.path.join(config['DATASET_ROOT'], dataset)
-        eval_path = os.path.join(config['DATASET_ROOT'], "eval")
+    def get_eval_dir(dir_name):
+        config = seisnn.utils.Config()
+        eval_path = os.path.join(config.eval, dir_name.split('.')[0])
         seisnn.utils.make_dirs(eval_path)
 
-        return dataset_path, eval_path
+        return eval_path
 
 
 class GeneratorEvaluator(BaseEvaluator):
@@ -64,19 +63,16 @@ class GeneratorEvaluator(BaseEvaluator):
         self.model_name = model_name
         self.model = None
 
-    def eval(self, dataset, batch_size=100):
+    def eval(self, tfr_list, batch_size=100):
         """
         Main eval loop.
 
-
-        :param str dataset: Dataset name.
-        :param str model_name: Model directory name.
-
+        :param tfr_list: List of .tfrecord.
+        :param str name: Output name.
         """
         model_path = self.get_model_dir(self.model_name)
-        dataset_path, eval_path = self.get_eval_dir(dataset)
+        eval_path = self.get_eval_dir(self.model_name)
 
-        dataset = seisnn.io.read_dataset(dataset)
         self.model = tf.keras.models.load_model(
             model_path,
             custom_objects={
@@ -88,7 +84,7 @@ class GeneratorEvaluator(BaseEvaluator):
 
         data_len = self.get_dataset_length(self.database)
         progbar = tf.keras.utils.Progbar(data_len)
-
+        dataset = seisnn.io.read_dataset(tfr_list)
         n = 0
         for val in dataset.prefetch(100).batch(batch_size):
             progbar.add(batch_size)
