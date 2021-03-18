@@ -13,7 +13,6 @@ from obspy import UTCDateTime
 
 import seisnn.core
 import seisnn.io
-import seisnn.plot
 import seisnn.utils
 
 Base = sqlalchemy.ext.declarative.declarative_base()
@@ -275,34 +274,6 @@ class Client:
 
         return query
 
-    def inventory_summery(self):
-        """
-        Prints summery from geometry table.
-        """
-        stations = self.get_distinct_items('inventory', 'station')
-
-        print('Station name:')
-        print([station for station in stations], '\n')
-        print(f'Total {len(stations)} stations\n')
-
-        latitudes = self.get_distinct_items('inventory', 'latitude')
-        longitudes = self.get_distinct_items('inventory', 'longitude')
-
-        print('Station boundary:')
-        print(f'West: {min(longitudes):>8.4f}')
-        print(f'East: {max(longitudes):>8.4f}')
-        print(f'South: {min(latitudes):>7.4f}')
-        print(f'North: {max(latitudes):>7.4f}\n')
-
-    def plot_map(self):
-        """
-        Plots station and event map.
-        """
-        inventories = self.get_inventories()
-        events = self.get_events()
-
-        seisnn.plot.plot_map(inventories, events)
-
     def add_events(self, catalog, tag, remove_duplicates=True):
         """
         Add event data form catalog.
@@ -414,61 +385,6 @@ class Client:
 
         return query
 
-    def event_summery(self):
-        """
-        Prints summery from event table.
-        """
-        times = self.get_distinct_items('event', 'time')
-        print('Event time duration:')
-        print(f'From: {min(times).isoformat()}')
-        print(f'To:   {max(times).isoformat()}\n')
-
-        events = self.get_events().all()
-        print(f'Total {len(events)} events\n')
-
-        latitudes = self.get_distinct_items('event', 'latitude')
-        longitudes = self.get_distinct_items('event', 'longitude')
-
-        print('Station boundary:')
-        print(f'West: {min(longitudes):>8.4f}')
-        print(f'East: {max(longitudes):>8.4f}')
-        print(f'South: {min(latitudes):>7.4f}')
-        print(f'North: {max(latitudes):>7.4f}\n')
-
-    def pick_summery(self):
-        """
-        Prints summery from pick table.
-        """
-        times = self.get_distinct_items('pick', 'time')
-        print('Event time duration:')
-        print(f'From: {min(times).isoformat()}')
-        print(f'To:   {max(times).isoformat()}\n')
-
-        print('Phase count:')
-        phases = self.get_distinct_items('pick', 'phase')
-        for phase in phases:
-            picks = self.get_picks(phase=phase).all()
-            print(f'{len(picks)} "{phase}" picks')
-        print()
-
-        pick_stations = self.get_distinct_items('pick', 'station')
-        print(f'Picks cover {len(pick_stations)} stations:')
-        print([station for station in pick_stations], '\n')
-
-        no_pick_station = self.get_exclude_items('inventory', 'station',
-                                                 pick_stations)
-        if no_pick_station:
-            print(f'{len(no_pick_station)} stations without picks:')
-            print([station for station in no_pick_station], '\n')
-
-        inventory_station = self.get_distinct_items('inventory', 'station')
-        no_inventory_station = self.get_exclude_items('pick', 'station',
-                                                      inventory_station)
-
-        if no_inventory_station:
-            print(f'{len(no_inventory_station)} stations without geometry:')
-            print([station for station in no_inventory_station], '\n')
-
     def read_tfrecord_header(self, dataset):
         """
         Sync header into SQL database from tfrecord dataset.
@@ -513,23 +429,6 @@ class Client:
                 query = query.filter(Waveform.station.like(station))
 
         return query
-
-    def waveform_summery(self):
-        """
-        Prints summery from waveform table.
-        """
-        starttimes = self.get_distinct_items('waveform', 'starttime')
-        endtimes = self.get_distinct_items('waveform', 'endtime')
-        print('Waveform time duration:')
-        print(f'From: {min(starttimes).isoformat()}')
-        print(f'To:   {max(endtimes).isoformat()}\n')
-
-        waveforms = self.get_events().all()
-        print(f'Total {len(waveforms)} events\n')
-
-        stations = self.get_distinct_items('waveform', 'station')
-        print(f'Picks cover {len(stations)} stations:')
-        print([station for station in stations], '\n')
 
     def remove_duplicates(self, table, match_columns):
         """
@@ -629,6 +528,122 @@ class Client:
         string = string.replace('?', '_')
         string = string.replace('*', '%')
         return string
+
+
+class DatabaseInspector:
+    """
+    Main class for Database Inspector.
+    """
+
+    def __init__(self, database):
+        if isinstance(database, str):
+            try:
+                database = seisnn.sql.Client(database)
+            except Exception as exception:
+                print(f'{exception.__class__.__name__}: {exception.__cause__}')
+
+        self.database = database
+
+    def inventory_summery(self):
+        """
+        Prints summery from geometry table.
+        """
+        stations = self.database.get_distinct_items('inventory', 'station')
+
+        print('Station name:')
+        print([station for station in stations], '\n')
+        print(f'Total {len(stations)} stations\n')
+
+        latitudes = self.database.get_distinct_items('inventory', 'latitude')
+        longitudes = self.database.get_distinct_items('inventory', 'longitude')
+
+        print('Station boundary:')
+        print(f'West: {min(longitudes):>8.4f}')
+        print(f'East: {max(longitudes):>8.4f}')
+        print(f'South: {min(latitudes):>7.4f}')
+        print(f'North: {max(latitudes):>7.4f}\n')
+
+    def event_summery(self):
+        """
+        Prints summery from event table.
+        """
+        times = self.database.get_distinct_items('event', 'time')
+        print('Event time duration:')
+        print(f'From: {min(times).isoformat()}')
+        print(f'To:   {max(times).isoformat()}\n')
+
+        events = self.database.get_events().all()
+        print(f'Total {len(events)} events\n')
+
+        latitudes = self.database.get_distinct_items('event', 'latitude')
+        longitudes = self.database.get_distinct_items('event', 'longitude')
+
+        print('Station boundary:')
+        print(f'West: {min(longitudes):>8.4f}')
+        print(f'East: {max(longitudes):>8.4f}')
+        print(f'South: {min(latitudes):>7.4f}')
+        print(f'North: {max(latitudes):>7.4f}\n')
+
+    def pick_summery(self):
+        """
+        Prints summery from pick table.
+        """
+        times = self.database.get_distinct_items('pick', 'time')
+        print('Event time duration:')
+        print(f'From: {min(times).isoformat()}')
+        print(f'To:   {max(times).isoformat()}\n')
+
+        print('Phase count:')
+        phases = self.database.get_distinct_items('pick', 'phase')
+        for phase in phases:
+            picks = self.database.get_picks(phase=phase).all()
+            print(f'{len(picks)} "{phase}" picks')
+        print()
+
+        pick_stations = self.database.get_distinct_items('pick', 'station')
+        print(f'Picks cover {len(pick_stations)} stations:')
+        print([station for station in pick_stations], '\n')
+
+        no_pick_station = self.database.get_exclude_items(
+            'inventory', 'station', pick_stations)
+        if no_pick_station:
+            print(f'{len(no_pick_station)} stations without picks:')
+            print([station for station in no_pick_station], '\n')
+
+        inventory_station = self.database \
+            .get_distinct_items('inventory', 'station')
+        no_inventory_station = self.database \
+            .get_exclude_items('pick', 'station', inventory_station)
+
+        if no_inventory_station:
+            print(f'{len(no_inventory_station)} stations without geometry:')
+            print([station for station in no_inventory_station], '\n')
+
+    def waveform_summery(self):
+        """
+        Prints summery from waveform table.
+        """
+        starttimes = self.database.get_distinct_items('waveform', 'starttime')
+        endtimes = self.database.get_distinct_items('waveform', 'endtime')
+        print('Waveform time duration:')
+        print(f'From: {min(starttimes).isoformat()}')
+        print(f'To:   {max(endtimes).isoformat()}\n')
+
+        waveforms = self.database.get_events().all()
+        print(f'Total {len(waveforms)} events\n')
+
+        stations = self.database.get_distinct_items('waveform', 'station')
+        print(f'Picks cover {len(stations)} stations:')
+        print([station for station in stations], '\n')
+
+    def plot_map(self):
+        """
+        Plots station and event map.
+        """
+        inventories = self.database.get_inventories()
+        events = self.database.get_events()
+
+        seisnn.plot.plot_map(inventories, events)
 
 
 if __name__ == "__main__":
