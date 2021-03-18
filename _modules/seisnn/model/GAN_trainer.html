@@ -152,7 +152,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_model_dir</span><span class="p">(</span><span class="n">model_instance</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
         <span class="n">save_model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;MODELS_ROOT&#39;</span><span class="p">],</span> <span class="n">model_instance</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">remove</span><span class="p">:</span>

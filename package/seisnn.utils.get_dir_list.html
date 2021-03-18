@@ -14,7 +14,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="seisnn.utils.make_dirs" href="seisnn.utils.make_dirs.html" />
-    <link rel="prev" title="seisnn.utils.get_config" href="seisnn.utils.get_config.html" />
+    <link rel="prev" title="seisnn.utils.flatten_list" href="seisnn.utils.flatten_list.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -90,7 +90,7 @@
               
                 
   <li>
-    <a href="seisnn.utils.get_config.html" title="Previous Chapter: seisnn.utils.get_config"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.utils....</span>
+    <a href="seisnn.utils.flatten_list.html" title="Previous Chapter: seisnn.utils.flatten_list"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.utils....</span>
     </a>
   </li>
   <li>
@@ -132,13 +132,14 @@
 <h1>seisnn.utils.get_dir_list<a class="headerlink" href="#seisnn-utils-get-dir-list" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="seisnn.utils.get_dir_list">
-<code class="sig-prename descclassname"><span class="pre">seisnn.utils.</span></code><code class="sig-name descname"><span class="pre">get_dir_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/utils.html#get_dir_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.utils.get_dir_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">seisnn.utils.</span></code><code class="sig-name descname"><span class="pre">get_dir_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/utils.html#get_dir_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.utils.get_dir_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns directory list from the given path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file_dir</strong> (<em>str</em>) – Target directory.</p></li>
-<li><p><strong>suffix</strong> (<em>str</em>) – (Optional.) File extension.</p></li>
+<li><p><strong>suffix</strong> (<em>str</em>) – (Optional.) File extension, Ex: ‘.tfrecord’.</p></li>
+<li><p><strong>recursive</strong> (<em>bool</em>) – (Optional.) Search directory recursively. Default is True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>

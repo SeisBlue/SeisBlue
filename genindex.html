@@ -140,7 +140,7 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="package/seisnn.components.ExampleGen.html#seisnn.components.ExampleGen.__init__">__init__() (seisnn.components.ExampleGen method)</a>
+      <li><a href="package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter.__init__">__init__() (seisnn.components.TFRecordConverter method)</a>
 
       <ul>
         <li><a href="package/seisnn.core.Instance.html#seisnn.core.Instance.__init__">(seisnn.core.Instance method)</a>
@@ -179,13 +179,19 @@
 </li>
         <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.__init__">(seisnn.sql.Client method)</a>
 </li>
+        <li><a href="package/seisnn.sql.DatabaseInspector.html#seisnn.sql.DatabaseInspector.__init__">(seisnn.sql.DatabaseInspector method)</a>
+</li>
         <li><a href="package/seisnn.sql.Event.html#seisnn.sql.Event.__init__">(seisnn.sql.Event method)</a>
 </li>
         <li><a href="package/seisnn.sql.Inventory.html#seisnn.sql.Inventory.__init__">(seisnn.sql.Inventory method)</a>
 </li>
         <li><a href="package/seisnn.sql.Pick.html#seisnn.sql.Pick.__init__">(seisnn.sql.Pick method)</a>
 </li>
+        <li><a href="package/seisnn.sql.TFRecord.html#seisnn.sql.TFRecord.__init__">(seisnn.sql.TFRecord method)</a>
+</li>
         <li><a href="package/seisnn.sql.Waveform.html#seisnn.sql.Waveform.__init__">(seisnn.sql.Waveform method)</a>
+</li>
+        <li><a href="package/seisnn.utils.Config.html#seisnn.utils.Config.__init__">(seisnn.utils.Config method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -210,6 +216,8 @@
         <li><a href="package/seisnn.sql.Inventory.html#seisnn.sql.Inventory.add_db">(seisnn.sql.Inventory method)</a>
 </li>
         <li><a href="package/seisnn.sql.Pick.html#seisnn.sql.Pick.add_db">(seisnn.sql.Pick method)</a>
+</li>
+        <li><a href="package/seisnn.sql.TFRecord.html#seisnn.sql.TFRecord.add_db">(seisnn.sql.TFRecord method)</a>
 </li>
         <li><a href="package/seisnn.sql.Waveform.html#seisnn.sql.Waveform.add_db">(seisnn.sql.Waveform method)</a>
 </li>
@@ -380,7 +388,11 @@
         <li><a href="package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE.compute_output_signature">(seisnn.model.attention.TransformerBlockE method)</a>
 </li>
       </ul></li>
+      <li><a href="package/seisnn.utils.Config.html#seisnn.utils.Config">Config (class in seisnn.utils)</a>
+</li>
       <li><a href="package/seisnn.plot.ProjectionConverter.html#seisnn.plot.ProjectionConverter.convert">convert() (seisnn.plot.ProjectionConverter method)</a>
+</li>
+      <li><a href="package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter.convert_training_from_picks">convert_training_from_picks() (seisnn.components.TFRecordConverter method)</a>
 </li>
       <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.count_params">count_params() (seisnn.model.attention.MultiHeadSelfAttention method)</a>
 
@@ -398,6 +410,8 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="package/seisnn.sql.DatabaseInspector.html#seisnn.sql.DatabaseInspector">DatabaseInspector (class in seisnn.sql)</a>
+</li>
       <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.dtype">dtype() (seisnn.model.attention.MultiHeadSelfAttention property)</a>
 
       <ul>
@@ -444,9 +458,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="package/seisnn.sql.Event.html#seisnn.sql.Event">Event (class in seisnn.sql)</a>
 </li>
-      <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.event_summery">event_summery() (seisnn.sql.Client method)</a>
-</li>
-      <li><a href="package/seisnn.components.ExampleGen.html#seisnn.components.ExampleGen">ExampleGen (class in seisnn.components)</a>
+      <li><a href="package/seisnn.sql.DatabaseInspector.html#seisnn.sql.DatabaseInspector.event_summery">event_summery() (seisnn.sql.DatabaseInspector method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -457,6 +469,8 @@
       <li><a href="package/seisnn.example_proto.Feature.html#seisnn.example_proto.Feature">Feature (class in seisnn.example_proto)</a>
 </li>
       <li><a href="package/seisnn.example_proto.feature_to_example.html#seisnn.example_proto.feature_to_example">feature_to_example() (in module seisnn.example_proto)</a>
+</li>
+      <li><a href="package/seisnn.utils.flatten_list.html#seisnn.utils.flatten_list">flatten_list() (in module seisnn.utils)</a>
 </li>
       <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.from_config">from_config() (seisnn.model.attention.MultiHeadSelfAttention class method)</a>
 
@@ -488,8 +502,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="package/seisnn.core.Label.html#seisnn.core.Label.generate_label">generate_label() (seisnn.core.Label method)</a>
 </li>
-      <li><a href="package/seisnn.components.ExampleGen.html#seisnn.components.ExampleGen.generate_training_data">generate_training_data() (seisnn.components.ExampleGen method)</a>
-</li>
       <li><a href="package/seisnn.model.evaluator.GeneratorEvaluator.html#seisnn.model.evaluator.GeneratorEvaluator">GeneratorEvaluator (class in seisnn.model.evaluator)</a>
 </li>
       <li><a href="package/seisnn.model.GAN_trainer.GeneratorTrainer.html#seisnn.model.GAN_trainer.GeneratorTrainer">GeneratorTrainer (class in seisnn.model.GAN_trainer)</a>
@@ -498,11 +510,9 @@
         <li><a href="package/seisnn.model.trainer.GeneratorTrainer.html#seisnn.model.trainer.GeneratorTrainer">(class in seisnn.model.trainer)</a>
 </li>
       </ul></li>
-      <li><a href="package/seisnn.utils.get_config.html#seisnn.utils.get_config">get_config() (in module seisnn.utils)</a>
+      <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.get_config">get_config() (seisnn.model.attention.MultiHeadSelfAttention method)</a>
 
       <ul>
-        <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.get_config">(seisnn.model.attention.MultiHeadSelfAttention method)</a>
-</li>
         <li><a href="package/seisnn.model.attention.ResBlock.html#seisnn.model.attention.ResBlock.get_config">(seisnn.model.attention.ResBlock method)</a>
 </li>
         <li><a href="package/seisnn.model.attention.TransformerBlockD.html#seisnn.model.attention.TransformerBlockD.get_config">(seisnn.model.attention.TransformerBlockD method)</a>
@@ -517,8 +527,6 @@
       <li><a href="package/seisnn.io.get_event.html#seisnn.io.get_event">get_event() (in module seisnn.io)</a>
 </li>
       <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.get_events">get_events() (seisnn.sql.Client method)</a>
-</li>
-      <li><a href="package/seisnn.components.ExampleGen.html#seisnn.components.ExampleGen.get_example_list">get_example_list() (seisnn.components.ExampleGen method)</a>
 </li>
       <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.get_exclude_items">get_exclude_items() (seisnn.sql.Client method)</a>
 </li>
@@ -554,10 +562,10 @@
         <li><a href="package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE.get_input_shape_at">(seisnn.model.attention.TransformerBlockE method)</a>
 </li>
       </ul></li>
+      <li><a href="package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter.get_instance_list">get_instance_list() (seisnn.components.TFRecordConverter method)</a>
+</li>
       <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.get_inventories">get_inventories() (seisnn.sql.Client method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.get_losses_for">get_losses_for() (seisnn.model.attention.MultiHeadSelfAttention method)</a>
 
       <ul>
@@ -568,6 +576,10 @@
         <li><a href="package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE.get_losses_for">(seisnn.model.attention.TransformerBlockE method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.get_matched_list">get_matched_list() (seisnn.sql.Client method)</a>
+</li>
       <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.get_output_at">get_output_at() (seisnn.model.attention.MultiHeadSelfAttention method)</a>
 
       <ul>
@@ -606,9 +618,13 @@
       </ul></li>
       <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.get_table_class">get_table_class() (seisnn.sql.Client static method)</a>
 </li>
+      <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.get_tfrecord">get_tfrecord() (seisnn.sql.Client method)</a>
+</li>
+      <li><a href="package/seisnn.core.Instance.html#seisnn.core.Instance.get_tfrecord_dir">get_tfrecord_dir() (seisnn.core.Instance method)</a>
+</li>
       <li><a href="package/seisnn.plot.get_time_array.html#seisnn.plot.get_time_array">get_time_array() (in module seisnn.plot)</a>
 </li>
-      <li><a href="package/seisnn.components.ExampleGen.html#seisnn.components.ExampleGen.get_time_window">get_time_window() (seisnn.components.ExampleGen method)</a>
+      <li><a href="package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter.get_time_window">get_time_window() (seisnn.components.TFRecordConverter method)</a>
 </li>
       <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.get_updates_for">get_updates_for() (seisnn.model.attention.MultiHeadSelfAttention method)</a>
 
@@ -694,9 +710,7 @@
 </li>
       <li><a href="package/seisnn.sql.Inventory.html#seisnn.sql.Inventory">Inventory (class in seisnn.sql)</a>
 </li>
-      <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.inventory_summery">inventory_summery() (seisnn.sql.Client method)</a>
-</li>
-      <li><a href="package/seisnn.ui.iplot_map.html#seisnn.ui.iplot_map">iplot_map() (in module seisnn.ui)</a>
+      <li><a href="package/seisnn.sql.DatabaseInspector.html#seisnn.sql.DatabaseInspector.inventory_summery">inventory_summery() (seisnn.sql.DatabaseInspector method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -771,8 +785,6 @@
         <li><a href="package/seisnn.qc.html#module-seisnn.qc">seisnn.qc</a>
 </li>
         <li><a href="package/seisnn.sql.html#module-seisnn.sql">seisnn.sql</a>
-</li>
-        <li><a href="package/seisnn.ui.html#module-seisnn.ui">seisnn.ui</a>
 </li>
         <li><a href="package/seisnn.utils.html#module-seisnn.utils">seisnn.utils</a>
 </li>
@@ -883,7 +895,7 @@
         <li><a href="package/seisnn.sql.Pick.html#seisnn.sql.Pick">(class in seisnn.sql)</a>
 </li>
       </ul></li>
-      <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.pick_summery">pick_summery() (seisnn.sql.Client method)</a>
+      <li><a href="package/seisnn.sql.DatabaseInspector.html#seisnn.sql.DatabaseInspector.pick_summery">pick_summery() (seisnn.sql.DatabaseInspector method)</a>
 </li>
       <li><a href="package/seisnn.core.Instance.html#seisnn.core.Instance.plot">plot() (seisnn.core.Instance method)</a>
 </li>
@@ -900,7 +912,7 @@
       <li><a href="package/seisnn.plot.plot_map.html#seisnn.plot.plot_map">plot_map() (in module seisnn.plot)</a>
 
       <ul>
-        <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.plot_map">(seisnn.sql.Client method)</a>
+        <li><a href="package/seisnn.sql.DatabaseInspector.html#seisnn.sql.DatabaseInspector.plot_map">(seisnn.sql.DatabaseInspector method)</a>
 </li>
       </ul></li>
       <li><a href="package/seisnn.plot.plot_snr_distribution.html#seisnn.plot.plot_snr_distribution">plot_snr_distribution() (in module seisnn.plot)</a>
@@ -1037,6 +1049,8 @@
         <li><a href="package/seisnn.model.generator.html#module-seisnn.model.generator">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     seisnn.model.trainer
 
@@ -1044,8 +1058,6 @@
         <li><a href="package/seisnn.model.trainer.html#module-seisnn.model.trainer">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     seisnn.plot
 
@@ -1065,13 +1077,6 @@
 
       <ul>
         <li><a href="package/seisnn.sql.html#module-seisnn.sql">module</a>
-</li>
-      </ul></li>
-      <li>
-    seisnn.ui
-
-      <ul>
-        <li><a href="package/seisnn.ui.html#module-seisnn.ui">module</a>
 </li>
       </ul></li>
       <li>
@@ -1095,7 +1100,7 @@
         <li><a href="package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE.set_weights">(seisnn.model.attention.TransformerBlockE method)</a>
 </li>
       </ul></li>
-      <li><a href="package/seisnn.components.ExampleGen.html#seisnn.components.ExampleGen.signal_preprocessing">signal_preprocessing() (seisnn.components.ExampleGen method)</a>
+      <li><a href="package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter.signal_preprocessing">signal_preprocessing() (seisnn.components.TFRecordConverter method)</a>
 </li>
       <li><a href="package/seisnn.qc.signal_to_noise_ratio.html#seisnn.qc.signal_to_noise_ratio">signal_to_noise_ratio() (in module seisnn.qc)</a>
 </li>
@@ -1125,6 +1130,10 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="package/seisnn.sql.TFRecord.html#seisnn.sql.TFRecord">TFRecord (class in seisnn.sql)</a>
+</li>
+      <li><a href="package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter">TFRecordConverter (class in seisnn.components)</a>
+</li>
       <li><a href="package/seisnn.core.Instance.html#seisnn.core.Instance.to_example">to_example() (seisnn.core.Instance method)</a>
 </li>
       <li><a href="package/seisnn.core.Instance.html#seisnn.core.Instance.to_feature">to_feature() (seisnn.core.Instance method)</a>
@@ -1173,7 +1182,7 @@
 </li>
       <li><a href="package/seisnn.model.attention.TransformerBlockE.html#seisnn.model.attention.TransformerBlockE">TransformerBlockE (class in seisnn.model.attention)</a>
 </li>
-      <li><a href="package/seisnn.components.ExampleGen.html#seisnn.components.ExampleGen.trim_trace">trim_trace() (seisnn.components.ExampleGen static method)</a>
+      <li><a href="package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter.trim_trace">trim_trace() (seisnn.components.TFRecordConverter static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1223,7 +1232,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="package/seisnn.sql.Waveform.html#seisnn.sql.Waveform">Waveform (class in seisnn.sql)</a>
 </li>
-      <li><a href="package/seisnn.sql.Client.html#seisnn.sql.Client.waveform_summery">waveform_summery() (seisnn.sql.Client method)</a>
+      <li><a href="package/seisnn.sql.DatabaseInspector.html#seisnn.sql.DatabaseInspector.waveform_summery">waveform_summery() (seisnn.sql.DatabaseInspector method)</a>
 </li>
       <li><a href="package/seisnn.model.attention.MultiHeadSelfAttention.html#seisnn.model.attention.MultiHeadSelfAttention.weights">weights() (seisnn.model.attention.MultiHeadSelfAttention property)</a>
 

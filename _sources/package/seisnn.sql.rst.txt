@@ -19,9 +19,11 @@ seisnn.sql
       :toctree:
    
       Client
+      DatabaseInspector
       Event
       Inventory
       Pick
+      TFRecord
       Waveform
    
    

@@ -164,13 +164,13 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_model</span></code>(model_name)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dataset_length</span></code>([database])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dataset_length</span></code>([database, tfr_list])</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_dir</span></code>(model_instance[, remove])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.model.trainer.GeneratorTrainer.train_loop" title="seisnn.model.trainer.GeneratorTrainer.train_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_loop</span></code></a>(dataset, model_name[, epochs, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.model.trainer.GeneratorTrainer.train_loop" title="seisnn.model.trainer.GeneratorTrainer.train_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_loop</span></code></a>(tfr_list, model_name[, epochs, …])</p></td>
 <td><p>Main training loop.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.model.trainer.GeneratorTrainer.train_step" title="seisnn.model.trainer.GeneratorTrainer.train_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_step</span></code></a>(train, val)</p></td>
@@ -180,12 +180,12 @@
 </table>
 <dl class="py method">
 <dt id="seisnn.model.trainer.GeneratorTrainer.train_loop">
-<code class="sig-name descname"><span class="pre">train_loop</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer.train_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer.train_loop" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">train_loop</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tfr_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer.train_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer.train_loop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main training loop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataset</strong> (<em>str</em>) – Dataset name.</p></li>
+<li><p><strong>tfr_list</strong> – List of TFRecord path.</p></li>
 <li><p><strong>model_name</strong> (<em>str</em>) – Model directory name.</p></li>
 <li><p><strong>epochs</strong> (<em>int</em>) – Epoch number.</p></li>
 <li><p><strong>batch_size</strong> (<em>int</em>) – Batch size.</p></li>

@@ -1,0 +1,6 @@
+seisnn.utils.flatten\_list
+==========================
+
+.. currentmodule:: seisnn.utils
+
+.. autofunction:: flatten_list

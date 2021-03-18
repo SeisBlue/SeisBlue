@@ -1,0 +1,31 @@
+seisnn.components.TFRecordConverter
+===================================
+
+.. currentmodule:: seisnn.components
+
+.. autoclass:: TFRecordConverter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TFRecordConverter.__init__
+      ~TFRecordConverter.convert_training_from_picks
+      ~TFRecordConverter.get_instance_list
+      ~TFRecordConverter.get_time_window
+      ~TFRecordConverter.signal_preprocessing
+      ~TFRecordConverter.trim_trace
+      ~TFRecordConverter.write_tfrecord
+   
+   
+
+   
+   
+   

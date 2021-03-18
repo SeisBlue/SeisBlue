@@ -36,6 +36,5 @@
    seisnn.plot
    seisnn.qc
    seisnn.sql
-   seisnn.ui
    seisnn.utils
 

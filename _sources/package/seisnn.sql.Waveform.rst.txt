@@ -29,11 +29,11 @@ seisnn.sql.Waveform
    
       ~Waveform.channel
       ~Waveform.data_index
-      ~Waveform.dataset
       ~Waveform.endtime
       ~Waveform.id
       ~Waveform.metadata
       ~Waveform.starttime
       ~Waveform.station
+      ~Waveform.tfrecord
    
    

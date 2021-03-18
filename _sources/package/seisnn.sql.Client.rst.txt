@@ -21,24 +21,21 @@ seisnn.sql.Client
       ~Client.add_inventory
       ~Client.add_pick
       ~Client.clear_table
-      ~Client.event_summery
       ~Client.get_distinct_items
       ~Client.get_events
       ~Client.get_exclude_items
       ~Client.get_inventories
+      ~Client.get_matched_list
       ~Client.get_picks
       ~Client.get_table_class
+      ~Client.get_tfrecord
       ~Client.get_waveform
-      ~Client.inventory_summery
-      ~Client.pick_summery
-      ~Client.plot_map
       ~Client.read_hyp
       ~Client.read_kml_placemark
       ~Client.read_tfrecord_header
       ~Client.remove_duplicates
       ~Client.replace_sql_wildcard
       ~Client.session_scope
-      ~Client.waveform_summery
    
    
 

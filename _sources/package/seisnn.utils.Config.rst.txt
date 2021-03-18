@@ -1,0 +1,44 @@
+seisnn.utils.Config
+===================
+
+.. currentmodule:: seisnn.utils
+
+.. autoclass:: Config
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Config.__init__
+      ~Config.create_folders
+      ~Config.generate_config
+      ~Config.load_config
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Config.catalog
+      ~Config.eval
+      ~Config.geom
+      ~Config.models
+      ~Config.sds_root
+      ~Config.sfile_root
+      ~Config.sql_database
+      ~Config.test
+      ~Config.tfrecord
+      ~Config.train
+      ~Config.workspace
+   
+   

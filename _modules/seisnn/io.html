@@ -133,17 +133,15 @@
 <span class="kn">import</span> <span class="nn">seisnn.utils</span>
 
 
-<div class="viewcode-block" id="read_dataset"><a class="viewcode-back" href="../../package/seisnn.io.read_dataset.html#seisnn.io.read_dataset">[docs]</a><span class="k">def</span> <span class="nf">read_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+<div class="viewcode-block" id="read_dataset"><a class="viewcode-back" href="../../package/seisnn.io.read_dataset.html#seisnn.io.read_dataset">[docs]</a><span class="k">def</span> <span class="nf">read_dataset</span><span class="p">(</span><span class="n">file_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns TFRecord Dataset from TFRecord directory.</span>
 
-<span class="sd">    :param str dataset_dir: Directory contains TFRecords.</span>
+<span class="sd">    :param file_list: List of .tfrecord.</span>
 <span class="sd">    :rtype: tf.data.Dataset</span>
 <span class="sd">    :return: A Dataset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-    <span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATASET_ROOT&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="p">)</span>
-    <span class="n">file_list</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_dir_list</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span>
+
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TFRecordDataset</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">seisnn</span><span class="o">.</span><span class="n">example_proto</span><span class="o">.</span><span class="n">sequence_example_parser</span><span class="p">,</span>
                           <span class="n">num_parallel_calls</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>
@@ -170,10 +168,10 @@
 <span class="sd">    :rtype: list</span>
 <span class="sd">    :return: list of event.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-    <span class="n">sfile_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CATALOG_ROOT&#39;</span><span class="p">],</span> <span class="n">sfile_dir</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+    <span class="n">sfile_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">catalog</span><span class="p">,</span> <span class="n">sfile_dir</span><span class="p">)</span>
 
-    <span class="n">sfile_list</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_dir_list</span><span class="p">(</span><span class="n">sfile_dir</span><span class="p">)</span>
+    <span class="n">sfile_list</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_dir_list</span><span class="p">(</span><span class="n">sfile_dir</span><span class="p">,</span> <span class="s2">&quot;.S*&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Reading events from </span><span class="si">{</span><span class="n">sfile_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">event_list</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="n">sfile_list</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">get_event</span><span class="p">)</span>
@@ -214,12 +212,12 @@
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Dict contains all traces within the time window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
     <span class="n">station</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">station</span>
     <span class="n">starttime</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span>
     <span class="n">endtime</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">endtime</span> <span class="o">+</span> <span class="mf">0.1</span>
 
-    <span class="n">client</span> <span class="o">=</span> <span class="n">sds</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">sds_root</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SDS_ROOT&#39;</span><span class="p">])</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">sds</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">sds_root</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">sds_root</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_waveforms</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
                                   <span class="n">station</span><span class="o">=</span><span class="n">station</span><span class="p">,</span>
                                   <span class="n">location</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
@@ -244,8 +242,8 @@
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Geometry dict.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-    <span class="n">hyp_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;GEOM_ROOT&#39;</span><span class="p">],</span> <span class="n">hyp</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+    <span class="n">hyp_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">geom</span><span class="p">,</span> <span class="n">hyp</span><span class="p">)</span>
     <span class="n">geom</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hyp_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">blank_line</span> <span class="o">=</span> <span class="mi">0</span>
@@ -302,7 +300,7 @@
 <span class="sd">    :param dict geom: Geometry dict.</span>
 <span class="sd">    :param str save_file: Name of .HYP file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
     <span class="n">hyp</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">])</span>
@@ -325,7 +323,7 @@
             <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">sta</span><span class="si">:</span><span class="s1"> &gt;5</span><span class="si">}{</span><span class="n">lat</span><span class="si">:</span><span class="s1"> &gt;2d</span><span class="si">}{</span><span class="n">lat_min</span><span class="si">:</span><span class="s1">&gt;5.2f</span><span class="si">}{</span><span class="n">NS</span><span class="si">}{</span><span class="n">lon</span><span class="si">:</span><span class="s1"> &gt;3d</span><span class="si">}{</span><span class="n">lon_min</span><span class="si">:</span><span class="s1">&gt;5.2f</span><span class="si">}{</span><span class="n">EW</span><span class="si">}{</span><span class="n">elev</span><span class="si">:</span><span class="s1"> &gt;4d</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">hyp</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
-    <span class="n">output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;GEOM_ROOT&#39;</span><span class="p">],</span> <span class="n">save_file</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">geom</span><span class="p">,</span> <span class="n">save_file</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">hyp</span><span class="p">)</span></div>
 
@@ -338,8 +336,8 @@
 <span class="sd">    :rtype: dict</span>
 <span class="sd">    :return: Geometry dict.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-    <span class="n">kml_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;GEOM_ROOT&#39;</span><span class="p">],</span> <span class="n">kml</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+    <span class="n">kml_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">geom</span><span class="p">,</span> <span class="n">kml</span><span class="p">)</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">XMLParser</span><span class="p">()</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">kml_file</span><span class="p">,</span> <span class="n">parser</span><span class="p">)</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>

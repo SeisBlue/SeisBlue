@@ -160,6 +160,17 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.core.Instance.from_stream" title="seisnn.core.Instance.from_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_stream</span></code></a>(stream)</p></td>
 <td><p>Initialized from stream.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.core.Instance.get_tfrecord_dir" title="seisnn.core.Instance.get_tfrecord_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tfrecord_dir</span></code></a>(sub_dir)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param sub_dir</dt>
+<dd class="field-odd"><p>Sub TFRecord directory: ‘train’, ‘test’, ‘eval’</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tfrecord_name</span></code>()</p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.core.Instance.plot" title="seisnn.core.Instance.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>(**kwargs)</p></td>
 <td><p>Plot dataset.</p></td>
 </tr>
@@ -227,6 +238,19 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="seisnn.core.Instance.get_tfrecord_dir">
+<code class="sig-name descname"><span class="pre">get_tfrecord_dir</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/core.html#Instance.get_tfrecord_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.core.Instance.get_tfrecord_dir" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sub_dir</strong> – Sub TFRecord directory: ‘train’, ‘test’, ‘eval’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>TFRecord directory</p>
 </dd>
 </dl>
 </dd></dl>

@@ -117,6 +117,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
@@ -125,18 +126,92 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 
 
-<div class="viewcode-block" id="get_config"><a class="viewcode-back" href="../../package/seisnn.utils.get_config.html#seisnn.utils.get_config">[docs]</a><span class="k">def</span> <span class="nf">get_config</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns path dict in config.yaml.</span>
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../package/seisnn.utils.Config.html#seisnn.utils.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;workspace&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sds_root&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sfile_root&#39;</span><span class="p">,</span>
 
-<span class="sd">    :rtype: dict</span>
-<span class="sd">    :return: Dictionary contains predefined workspace paths.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s1">&#39;config.yaml&#39;</span><span class="p">))</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">full_load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">config</span></div>
+        <span class="s1">&#39;tfrecord&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;train&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;test&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;eval&#39;</span><span class="p">,</span>
+
+        <span class="s1">&#39;sql_database&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;catalog&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;geom&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;models&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+<div class="viewcode-block" id="Config.__init__"><a class="viewcode-back" href="../../package/seisnn.utils.Config.html#seisnn.utils.Config.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workspace</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="n">initialize</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">initialize</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate_config</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_folders</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Missing config.yml, please use Config(initialize=True).&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workspace</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)):</span>
+        <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;config.yml&#39;</span><span class="p">))</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">full_load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workspace</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;WORKSPACE&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sds_root</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SDS_ROOT&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sfile_root</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SFILE_ROOT&#39;</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfrecord</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;TFRecord&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Test&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Eval&#39;</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">sql_database</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SQL_Database&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Catalog&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">geom</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Geom&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Models&#39;</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_config</span><span class="p">(</span><span class="n">workspace</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">)):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;WORKSPACE&#39;</span><span class="p">:</span> <span class="n">workspace</span><span class="p">,</span>
+            <span class="s1">&#39;SDS_ROOT&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;SDS_ROOT&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;SFILE_ROOT&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;SFILE_ROOT&#39;</span><span class="p">),</span>
+
+            <span class="s1">&#39;TFRecord&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;TFRecord&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;Train&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;TFRecord&#39;</span><span class="p">,</span> <span class="s1">&#39;Train&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;Test&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;TFRecord&#39;</span><span class="p">,</span> <span class="s1">&#39;Test&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;Eval&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;TFRecord&#39;</span><span class="p">,</span> <span class="s1">&#39;Eval&#39;</span><span class="p">),</span>
+
+            <span class="s1">&#39;SQL_Database&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;SQL_Database&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;Catalog&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;Catalog&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;Geom&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;Geom&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;Models&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;Models&#39;</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;config.yml&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Create config: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create_folders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tfrecord</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sql_database</span><span class="p">,</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">geom</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">path_list</span><span class="p">:</span>
+            <span class="n">make_dirs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Create folder: </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="make_dirs"><a class="viewcode-back" href="../../package/seisnn.utils.make_dirs.html#seisnn.utils.make_dirs">[docs]</a><span class="k">def</span> <span class="nf">make_dirs</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -186,14 +261,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cpu_count</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Found </span><span class="si">{</span><span class="n">cpu_count</span><span class="si">}</span><span class="s1"> cpu threads:&#39;</span><span class="p">)</span>
+
     <span class="n">pool</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">cpu_count</span><span class="p">,</span> <span class="n">maxtasksperchild</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">batch_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">batch_size</span><span class="p">:</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">cpu_count</span><span class="p">))</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">batch_size</span><span class="p">))</span>
     <span class="n">map_func</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">batch</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
-
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">output</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">map_func</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">output</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">map_func</span><span class="p">]</span>
 
     <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
@@ -236,24 +310,25 @@
     <span class="k">return</span> <span class="n">output</span>
 
 
-<div class="viewcode-block" id="get_dir_list"><a class="viewcode-back" href="../../package/seisnn.utils.get_dir_list.html#seisnn.utils.get_dir_list">[docs]</a><span class="k">def</span> <span class="nf">get_dir_list</span><span class="p">(</span><span class="n">file_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_dir_list"><a class="viewcode-back" href="../../package/seisnn.utils.get_dir_list.html#seisnn.utils.get_dir_list">[docs]</a><span class="k">def</span> <span class="nf">get_dir_list</span><span class="p">(</span><span class="n">file_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns directory list from the given path.</span>
 
 <span class="sd">    :param str file_dir: Target directory.</span>
-<span class="sd">    :param str suffix: (Optional.) File extension.</span>
+<span class="sd">    :param str suffix: (Optional.) File extension, Ex: &#39;.tfrecord&#39;.</span>
+<span class="sd">    :param bool recursive: (Optional.) Search directory recursively. Default is True.</span>
 <span class="sd">    :rtype: list</span>
 <span class="sd">    :return: List of file name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">file_dir</span><span class="p">):</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">file_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">suffix</span><span class="p">):</span>
-            <span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
+    <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;**/*</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
     <span class="n">file_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">file_list</span></div>
+
+
+<div class="viewcode-block" id="flatten_list"><a class="viewcode-back" href="../../package/seisnn.utils.flatten_list.html#seisnn.utils.flatten_list">[docs]</a><span class="k">def</span> <span class="nf">flatten_list</span><span class="p">(</span><span class="n">nested_list</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">nested_list</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="unet_padding_size"><a class="viewcode-back" href="../../package/seisnn.utils.unet_padding_size.html#seisnn.utils.unet_padding_size">[docs]</a><span class="k">def</span> <span class="nf">unet_padding_size</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">pool_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>

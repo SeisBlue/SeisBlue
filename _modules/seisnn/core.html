@@ -115,6 +115,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Core</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.signal</span>
@@ -356,7 +357,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">from_stream</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Waveform</span><span class="p">):</span>
-                <span class="n">dataset</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+                <span class="n">dataset</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">tfrecord</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">data_index</span><span class="p">)</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
                     <span class="n">input_data</span> <span class="o">=</span> <span class="n">item</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">from_example</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
@@ -466,8 +467,27 @@
 
 <span class="sd">        :param kwargs: Keywords pass into plot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">seisnn</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+        <span class="n">seisnn</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">get_tfrecord_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+        <span class="n">julday</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span><span class="o">.</span><span class="n">julday</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">id</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">julday</span><span class="si">}</span><span class="s1">.tfrecord&#39;</span>
+
+<div class="viewcode-block" id="Instance.get_tfrecord_dir"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance.get_tfrecord_dir">[docs]</a>    <span class="k">def</span> <span class="nf">get_tfrecord_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_dir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param sub_dir: Sub TFRecord directory: &#39;train&#39;, &#39;test&#39;, &#39;eval&#39;</span>
+<span class="sd">        :return: TFRecord directory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tfrecord_name</span><span class="p">()</span>
+        <span class="n">net</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">chan</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">julday</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+        <span class="n">sub_dir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sub_dir</span><span class="p">)</span>
+        <span class="n">tfr_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sub_dir</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">sta</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tfr_dir</span></div></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">pass</span>

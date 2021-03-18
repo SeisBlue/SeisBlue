@@ -1,6 +1,0 @@
-seisnn.utils.get\_config
-========================
-
-.. currentmodule:: seisnn.utils
-
-.. autofunction:: get_config

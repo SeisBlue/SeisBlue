@@ -20,6 +20,8 @@ seisnn.core.Instance
       ~Instance.from_example
       ~Instance.from_feature
       ~Instance.from_stream
+      ~Instance.get_tfrecord_dir
+      ~Instance.get_tfrecord_name
       ~Instance.plot
       ~Instance.to_example
       ~Instance.to_feature

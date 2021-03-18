@@ -1,0 +1,30 @@
+seisnn.sql.DatabaseInspector
+============================
+
+.. currentmodule:: seisnn.sql
+
+.. autoclass:: DatabaseInspector
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DatabaseInspector.__init__
+      ~DatabaseInspector.event_summery
+      ~DatabaseInspector.inventory_summery
+      ~DatabaseInspector.pick_summery
+      ~DatabaseInspector.plot_map
+      ~DatabaseInspector.waveform_summery
+   
+   
+
+   
+   
+   

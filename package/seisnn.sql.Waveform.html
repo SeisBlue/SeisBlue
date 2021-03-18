@@ -13,8 +13,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.ui" href="seisnn.ui.html" />
-    <link rel="prev" title="seisnn.sql.Pick" href="seisnn.sql.Pick.html" />
+    <link rel="next" title="seisnn.utils" href="seisnn.utils.html" />
+    <link rel="prev" title="seisnn.sql.TFRecord" href="seisnn.sql.TFRecord.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -90,11 +90,11 @@
               
                 
   <li>
-    <a href="seisnn.sql.Pick.html" title="Previous Chapter: seisnn.sql.Pick"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.sql.Pick</span>
+    <a href="seisnn.sql.TFRecord.html" title="Previous Chapter: seisnn.sql.TFRecord"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.sql.TFRecord</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.ui.html" title="Next Chapter: seisnn.ui"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.ui &raquo;</span>
+    <a href="seisnn.utils.html" title="Next Chapter: seisnn.utils"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.utils &raquo;</span>
     </a>
   </li>
               
@@ -132,12 +132,12 @@
 <h1>seisnn.sql.Waveform<a class="headerlink" href="#seisnn-sql-waveform" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="seisnn.sql.Waveform">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">seisnn.sql.</span></code><code class="sig-name descname"><span class="pre">Waveform</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/sql.html#Waveform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.sql.Waveform" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">seisnn.sql.</span></code><code class="sig-name descname"><span class="pre">Waveform</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tfrecord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/sql.html#Waveform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.sql.Waveform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
 <p>Waveform table for sql database.</p>
 <dl class="py method">
 <dt id="seisnn.sql.Waveform.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.sql.Waveform.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tfrecord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seisnn.sql.Waveform.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple constructor that allows initialization from kwargs.</p>
 <p>Sets attributes on the constructed instance using the names and
 values in <code class="docutils literal notranslate"><span class="pre">kwargs</span></code>.</p>
@@ -153,7 +153,7 @@ for example, any mapped columns or relationships.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Waveform.__init__" title="seisnn.sql.Waveform.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(instance, dataset, data_index)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Waveform.__init__" title="seisnn.sql.Waveform.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(instance, tfrecord, data_index)</p></td>
 <td><p>A simple constructor that allows initialization from kwargs.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Waveform.add_db" title="seisnn.sql.Waveform.add_db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_db</span></code></a>(session)</p></td>
@@ -174,22 +174,22 @@ for example, any mapped columns or relationships.</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_index</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dataset</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">endtime</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">endtime</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">starttime</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">starttime</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">station</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">station</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tfrecord</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

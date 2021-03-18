@@ -16,7 +16,7 @@ seisnn.utils
    
       batch
       batch_operation
-      get_config
+      flatten_list
       get_dir_list
       make_dirs
       parallel
@@ -25,6 +25,13 @@ seisnn.utils
    
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+   
+      Config
    
    
 
