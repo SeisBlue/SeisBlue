@@ -26,11 +26,11 @@ if gpus:
 
 class BaseTrainer:
     @staticmethod
-    def get_dataset_length(database=None):
+    def get_dataset_length(database=None, tfr_list=None):
         count = None
         try:
             db = seisnn.sql.Client(database)
-            count = len(db.get_waveform().all())
+            count = len(db.get_waveform(tfrecord=tfr_list).all())
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
 
@@ -39,7 +39,7 @@ class BaseTrainer:
     @staticmethod
     def get_model_dir(model_instance, remove=False):
         config = seisnn.utils.Config()
-        save_model_path = os.path.join(config['MODELS_ROOT'], model_instance)
+        save_model_path = os.path.join(config.models, model_instance)
 
         if remove:
             shutil.rmtree(save_model_path, ignore_errors=True)
@@ -176,7 +176,7 @@ class GeneratorTrainer(BaseTrainer):
 
             ckpt_save_path = ckpt_manager.save()
             print(f'Saving checkpoint to {ckpt_save_path}')
-            self.generator_model.save('/home/andy/models/test_model.h5')
+            self.generator_model.save('/home/andy/Models/test_model.h5')
 
     def train_step(self, train, val):
         """
@@ -205,10 +205,12 @@ class GeneratorTrainer(BaseTrainer):
 
 
 if __name__ == "__main__":
-    dataset = 'HL2019'
-    model_instance = 'test_model'
-    database = 'HL2019.db'
+    database = 'Hualien.db'
+    db = seisnn.sql.Client(database)
+    tfr_list = db.get_matched_list('*', 'tfrecord', 'path')
 
+    model_instance = 'test_model'
     trainer = GeneratorTrainer(database)
-    trainer.train_loop(dataset, model_instance, plot=True, batch_size=500,
-                       remove=True, epochs=500, log_step=10)
+    trainer.train_loop(tfr_list, model_instance,
+                       batch_size=64, epochs=10,
+                       plot=True)
