@@ -109,12 +109,12 @@ class GeneratorEvaluator(BaseEvaluator):
             n += 1
 
     def score(self, delta=0.1, error_distribution=True):
-        db = seisnn.sql.Client('HL2019.db')
+        db = seisnn.sql.Client(self.database)
         for phase in ['P', 'S']:
             tp = 0
             error = []
-            predict_pick = db.get_picks(phase=phase, tag='val_predict')
-            label_pick = db.get_picks(phase=phase, tag='val_label')
+            predict_pick = db.get_picks(phase=phase, tag='predict')
+            label_pick = db.get_picks(phase=phase, tag='manual')
             total_predict = len(predict_pick.all())
             total_label = len(label_pick.all())
             print(f'{phase}_total_predict: {total_predict} '
@@ -127,7 +127,7 @@ class GeneratorEvaluator(BaseEvaluator):
                     to_time=str(to_time),
                     phase=phase,
                     station=pick.station,
-                    tag='val_label'
+                    tag='manual'
                 )
                 if label.all():
                     tp = tp + 1
