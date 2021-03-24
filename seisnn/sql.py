@@ -622,10 +622,12 @@ class Client:
         for wildcard in wildcard_list:
             wildcard = self.replace_sql_wildcard(wildcard)
             with self.session_scope() as session:
-                query = session.query(table) \
-                    .filter(getattr(table, column).like(wildcard))
-
-                query = [getattr(item, column) for item in query]
+                query = session.query(getattr(table, column)) \
+                    .filter(getattr(table, column).like(wildcard)) \
+                    .distinct() \
+                    .order_by(getattr(table, column))\
+                    .all()
+                query = seisnn.utils.flatten_list(query)
                 matched_list.extend(query)
 
         matched_list = sorted(list(set(matched_list)))
