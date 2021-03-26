@@ -3,7 +3,7 @@ FROM tensorflow/tensorflow:2.4.1-gpu-jupyter
 # nodejs source
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
-RUN apt-mark hold libcudnn* cuda*; apt-get update && apt-get upgrade -y; apt-get install sudo openssh-server vim htop screen reptyr git nodejs ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y; apt-get install --reinstall libcublas10 -y
+RUN apt-mark hold libcudnn* cuda*; apt-get update && apt-get upgrade -y; apt-get install sudo openssh-server vim htop iotop screen reptyr git nodejs ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y; apt-get install --reinstall libcublas10 -y
 
 # Add all user into sudoers
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
