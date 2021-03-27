@@ -3,35 +3,49 @@ FROM tensorflow/tensorflow:2.4.1-gpu-jupyter
 # nodejs source
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
-RUN apt-mark hold libcudnn* cuda*; apt-get update && apt-get upgrade -y; apt-get install sudo openssh-server vim htop iotop screen reptyr git nodejs ffmpeg libproj-dev proj-data proj-bin libgeos-dev -y; apt-get install --reinstall libcublas10 -y
+RUN apt-mark hold libcudnn* cuda*; \
+    apt-get update && apt-get upgrade -y; \
+    apt-get install --reinstall libcublas10 -y; \
+    apt-get install openssh-server \
+                    sudo vim git nodejs \
+                    htop iotop \
+                    screen reptyr \
+                    ffmpeg \
+                    libproj-dev proj-data proj-bin libgeos-dev -y;
 
 # Add all user into sudoers
-RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers
+RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers;
 
+# Install python packages in requirements.txt
 COPY requirements.txt /tmp/
-RUN python -m pip install --upgrade pip; pip install shapely --no-binary shapely; python -m pip --no-cache-dir install --upgrade --requirement /tmp/requirements.txt
+RUN python -m pip install --upgrade pip; \
+    python -m pip install shapely --no-binary shapely; \
+    python -m pip --no-cache-dir install --upgrade --requirement /tmp/requirements.txt;
 
 # Jupyter Lab interactive plot
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build && jupyter labextension install jupyter-matplotlib --no-build; jupyter lab build
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build; \
+    jupyter labextension install jupyter-matplotlib --no-build; \
+    jupyter lab build;
 
 # Change jupyter python kernel
-RUN sed -i 's/\/usr\/bin\/python3/\/usr\/local\/bin\/python/g' /usr/local/share/jupyter/kernels/python3/kernel.json
-
-RUN mkdir /var/run/sshd; sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/\/usr\/bin\/python3/\/usr\/local\/bin\/python/g' /usr/local/share/jupyter/kernels/python3/kernel.json;
 
 # SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+RUN mkdir /var/run/sshd; sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd;
 
+# Hide server profile form docker container, only which written into '/etc/profile' will be seen
 ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> /etc/profile
+RUN echo "export VISIBLE=now" >> /etc/profile;
 
-# Set PATH
-RUN echo "export PATH=$PATH" >> /etc/profile; echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda-10.2/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/profile
-RUN echo "export PYTHONPATH=$PYTHONPATH:/SeisNN" >> /etc/profile
+# Set CUDA path and SeisNN source code path
+RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda-10.2/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/profile; \
+    echo "export PYTHONPATH=$PYTHONPATH:/SeisNN" >> /etc/profile;
 
+# Delete login message for sftp login and set color
+RUN mv /etc/bash.bashrc /etc/bash.bashrc.old; \
+    echo 'alias ls="ls --color"' > /etc/bash.bashrc;
 
-# Delete login message for sftp login
-RUN mv /etc/bash.bashrc /etc/bash.bashrc.old; echo 'alias ls="ls --color"' > /etc/bash.bashrc; echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda-10.2/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/bash.bashrc
-
+# Open SSH port 22 and make SSHD standby for incoming connection
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
