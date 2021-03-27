@@ -32,6 +32,7 @@ seisnn.sql.Waveform
       ~Waveform.endtime
       ~Waveform.id
       ~Waveform.metadata
+      ~Waveform.registry
       ~Waveform.starttime
       ~Waveform.station
       ~Waveform.tfrecord

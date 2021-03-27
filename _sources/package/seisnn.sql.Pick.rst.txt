@@ -30,6 +30,7 @@ seisnn.sql.Pick
       ~Pick.id
       ~Pick.metadata
       ~Pick.phase
+      ~Pick.registry
       ~Pick.snr
       ~Pick.station
       ~Pick.tag

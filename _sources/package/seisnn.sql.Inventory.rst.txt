@@ -32,6 +32,7 @@ seisnn.sql.Inventory
       ~Inventory.longitude
       ~Inventory.metadata
       ~Inventory.network
+      ~Inventory.registry
       ~Inventory.station
    
    

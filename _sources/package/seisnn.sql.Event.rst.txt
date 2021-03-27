@@ -32,6 +32,7 @@ seisnn.sql.Event
       ~Event.latitude
       ~Event.longitude
       ~Event.metadata
+      ~Event.registry
       ~Event.time
    
    

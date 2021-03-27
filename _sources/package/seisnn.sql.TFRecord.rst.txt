@@ -32,6 +32,7 @@ seisnn.sql.TFRecord
       ~TFRecord.metadata
       ~TFRecord.name
       ~TFRecord.path
+      ~TFRecord.registry
       ~TFRecord.station
       ~TFRecord.tag
    
