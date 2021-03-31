@@ -2,7 +2,7 @@ import seisnn
 
 config = seisnn.utils.Config()
 
-database = 'HL2019.db'
+database = 'Hualien.db'
 db = seisnn.sql.Client(database)
 
 tfr_list = seisnn.utils.get_dir_list(config.tfrecord, suffix='.tfrecord')
@@ -13,4 +13,3 @@ for item in dataset:
     instance.predict.get_picks()
     instance.predict.write_picks_to_database('predict', database)
 db.remove_duplicates('pick', ['time', 'phase', 'station', 'tag'])
-
