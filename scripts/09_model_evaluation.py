@@ -1,7 +1,7 @@
 import seisnn
 
 
-database = 'HL2019.db'
+database = 'Hualien.db'
 db = seisnn.sql.Client(database)
 testset = db.get_waveform()
 

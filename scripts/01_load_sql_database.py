@@ -3,7 +3,7 @@ import seisnn
 db = seisnn.sql.Client(database="Hualien.db")
 inspector = seisnn.sql.DatabaseInspector(db)
 
-db.read_hyp(hyp="HL2019.HYP", network="HL2019")
+db.read_hyp(hyp="HL2019.HYP", network="HL")
 inspector.inventory_summery()
 
 db.add_events(catalog="HL2019", tag="manual")
