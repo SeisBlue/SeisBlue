@@ -30,7 +30,9 @@ class BaseTrainer:
         count = None
         try:
             db = seisnn.sql.Client(database)
-            count = len(db.get_waveform(tfrecord=tfr_list).all())
+            tfr_list = seisnn.utils.flatten_list(tfr_list)
+            counts = db.get_tfrecord(path=tfr_list, column='count')
+            count = sum(seisnn.utils.flatten_list(counts))
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
 
@@ -99,14 +101,14 @@ class GeneratorTrainer(BaseTrainer):
         self.optimizer = optimizer
 
     def train_loop(self,
-                   dataset, model_name,
+                   tfr_list, model_name,
                    epochs=1, batch_size=1,
                    log_step=100, plot=False,
                    remove=False):
         """
         Main training loop.
 
-        :param str dataset: Dataset name.
+        :param tfr_list: List of TFRecord path.
         :param str model_name: Model directory name.
         :param int epochs: Epoch number.
         :param int batch_size: Batch size.
@@ -134,12 +136,12 @@ class GeneratorTrainer(BaseTrainer):
             ckpt.restore(ckpt_manager.latest_checkpoint)
             last_epoch = len(ckpt_manager.checkpoints)
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
-
-        dataset = seisnn.io.read_dataset(dataset).shuffle(100000)
+        dataset = seisnn.io.read_dataset(tfr_list)
+        dataset =dataset.shuffle(100000)
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
-        data_len = self.get_dataset_length(self.database)
+        data_len = self.get_dataset_length(self.database,tfr_list)
 
         for epoch in range(epochs):
             print(f'epoch {epoch + 1} / {epochs}')
@@ -152,7 +154,7 @@ class GeneratorTrainer(BaseTrainer):
                 d_loss, g_loss = self.train_step(train, val)
                 values = [('d_loss', d_loss),
                           ('g_loss', g_loss)]
-                progbar.add(batch_size, values=values)
+                progbar.add(len(train['id']), values=values)
 
                 n += 1
                 if n % log_step == 0:
@@ -207,7 +209,7 @@ class GeneratorTrainer(BaseTrainer):
 if __name__ == "__main__":
     database = 'Hualien.db'
     db = seisnn.sql.Client(database)
-    tfr_list = db.get_matched_list('*', 'tfrecord', 'path')
+    tfr_list = db.get_tfrecord(to_date='2019-05-15',column='path')
 
     model_instance = 'test_model'
     trainer = GeneratorTrainer(database)
