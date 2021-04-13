@@ -29,7 +29,9 @@ class BaseTrainer:
         count = None
         try:
             db = seisnn.sql.Client(database)
-            count = len(db.get_waveform(tfrecord=tfr_list).all())
+            tfr_list = seisnn.utils.flatten_list(tfr_list)
+            counts = db.get_tfrecord(path=tfr_list, column='count')
+            count = sum(seisnn.utils.flatten_list(counts))
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
 
@@ -146,7 +148,7 @@ class GeneratorTrainer(BaseTrainer):
 
                 values = [('loss', train_loss.numpy()),
                           ('val', val_loss.numpy())]
-                progbar.add(batch_size, values=values)
+                progbar.add(len(train['id']), values=values)
 
                 if n % log_step == 0:
                     seisnn.logger.save_loss(loss_buffer, model_name,
