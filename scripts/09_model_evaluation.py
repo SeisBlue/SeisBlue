@@ -1,10 +1,8 @@
 import seisnn
 
-
-database = 'Hualien.db'
-db = seisnn.sql.Client(database)
-testset = db.get_waveform()
-
 model_instance = 'test_model'
+database = 'Hualien.db'
 evaluator = seisnn.model.evaluator.GeneratorEvaluator(database, model_instance)
-evaluator.score(delta=0.1, error_distribution=True)
+tfr_list = evaluator.get_eval_list()
+evaluator.score(tfr_list, delta=0.5, error_distribution=True)
+
