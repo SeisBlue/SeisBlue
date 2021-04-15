@@ -178,7 +178,7 @@ class GeneratorTrainer(BaseTrainer):
 
             ckpt_save_path = ckpt_manager.save()
             print(f'Saving checkpoint to {ckpt_save_path}')
-            self.generator_model.save('/home/andy/Models/test_model.h5')
+            self.generator_model.save(f'/home/andy/Models/{model_name}.h5')
 
     def train_step(self, train, val):
         """
@@ -209,7 +209,7 @@ class GeneratorTrainer(BaseTrainer):
 if __name__ == "__main__":
     database = 'Hualien.db'
     db = seisnn.sql.Client(database)
-    tfr_list = db.get_tfrecord(to_date='2019-05-15',column='path')
+    tfr_list = db.get_tfrecord(to_date='2019-05-09', column='path')
 
     model_instance = 'test_model'
     trainer = GeneratorTrainer(database)
