@@ -24,7 +24,7 @@ class BaseEvaluator:
         count = None
         try:
             db = seisnn.sql.Client(self.database)
-            count = len(db.get_waveform().all())
+            count = len(db.get_waveform())
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
 
@@ -90,12 +90,13 @@ class GeneratorEvaluator(BaseEvaluator):
                 'ResBlock': ResBlock
             })
 
-        data_len = self.get_dataset_length()
-        progbar = tf.keras.utils.Progbar(data_len)
+        data_len = len(tfr_list)
+
         dataset = seisnn.io.read_dataset(tfr_list)
         n = 0
         for val in dataset.prefetch(100).batch(batch_size):
-            progbar.add(batch_size)
+            progbar = tf.keras.utils.Progbar(len(val['label']))
+
 
             val['predict'] = self.model.predict(val['trace'])
 
@@ -107,6 +108,7 @@ class GeneratorEvaluator(BaseEvaluator):
                 instance.to_tfrecord(
                     os.path.join(eval_path, title + '.tfrecord'))
                 n += 1
+                progbar.add(1)
 
             val['id'] = tf.convert_to_tensor(
                 title.encode('utf-8'), dtype=tf.string)[tf.newaxis]
@@ -117,7 +119,7 @@ class GeneratorEvaluator(BaseEvaluator):
             n += 1
 
 
-    def score(self, tfr_list, batch_size=500, delta=0.1,
+    def score(self, tfr_list, batch_size=500, delta=0.1,height = 0.5,
                error_distribution=True):
         P_true_positive = 0
         S_true_positive = 0
@@ -133,8 +135,8 @@ class GeneratorEvaluator(BaseEvaluator):
             progbar = tf.keras.utils.Progbar(len(val['predict']))
             for i in range(len(val['predict'])):
                 instance = Instance(next(iterator))
-                instance.label.get_picks()
-                instance.predict.get_picks()
+                instance.label.get_picks(height = height)
+                instance.predict.get_picks(height = height)
 
                 for pick in instance.label.picks:
                     if pick.phase == 'P':
