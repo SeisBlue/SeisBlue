@@ -192,7 +192,7 @@ class TFRecord(Base):
                                 sqlalchemy.ForeignKey('inventory.station'),
                                 nullable=False)
 
-    date = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
+    date = sqlalchemy.Column(sqlalchemy.Date, nullable=False)
 
     count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     path = sqlalchemy.Column(sqlalchemy.String, nullable=False)
