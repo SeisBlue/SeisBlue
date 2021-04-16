@@ -571,7 +571,7 @@ class Client:
                 .order_by(col(table)) \
                 .all()
         query = [q[0] for q in query]
-        return query.all()
+        return query
 
     def get_exclude_items(self, table, column, exclude):
         """
@@ -704,7 +704,7 @@ class DatabaseInspector:
         print(f'From: {min(times).isoformat()}')
         print(f'To:   {max(times).isoformat()}\n')
 
-        events = self.database.get_events().all()
+        events = self.database.get_events()
         print(f'Total {len(events)} events\n')
 
         latitudes = self.database.get_distinct_items('event', 'latitude')
@@ -728,7 +728,7 @@ class DatabaseInspector:
         print('Phase count:')
         phases = self.database.get_distinct_items('pick', 'phase')
         for phase in phases:
-            picks = self.database.get_picks(phase=phase).all()
+            picks = self.database.get_picks(phase=phase)
             print(f'{len(picks)} "{phase}" picks')
         print()
 
@@ -761,7 +761,7 @@ class DatabaseInspector:
         print(f'From: {min(starttimes).isoformat()}')
         print(f'To:   {max(endtimes).isoformat()}\n')
 
-        waveforms = self.database.get_events().all()
+        waveforms = self.database.get_events()
         print(f'Total {len(waveforms)} events\n')
 
         stations = self.database.get_distinct_items('waveform', 'station')
