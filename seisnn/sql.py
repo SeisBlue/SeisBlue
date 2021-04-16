@@ -186,23 +186,34 @@ class TFRecord(Base):
                            .with_variant(sqlalchemy.Integer, "sqlite"),
                            primary_key=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+
+    network = sqlalchemy.Column(sqlalchemy.String)
     station = sqlalchemy.Column(sqlalchemy.String,
                                 sqlalchemy.ForeignKey('inventory.station'),
                                 nullable=False)
+
+    date = sqlalchemy.Column(sqlalchemy.Date, nullable=False)
+
     count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     path = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     tag = sqlalchemy.Column(sqlalchemy.String)
 
-    def __init__(self, path, station, count):
+    def __init__(self, path, count):
         self.name = os.path.basename(path)
-        self.path = path
+        network, station, location, channel, year, julday, suffix = \
+            self.name.split('.')
+        self.network = network
         self.station = station
+        self.date = UTCDateTime(year=int(year), julday=int(julday)).datetime
+        self.path = path
         self.count = count
 
     def __repr__(self):
         return f"TFRecord(" \
                f"Name={self.name}, " \
+               f"Network={self.network}, " \
                f"Station={self.station}, " \
+               f"Date={self.date}, " \
                f"Count={self.count}, " \
                f"Tag={self.tag})"
 
@@ -318,7 +329,7 @@ class Client:
                     network, 'inventory', 'network')
                 query = query.filter(Inventory.network.in_(network))
 
-        return query
+        return query.all()
 
     def add_events(self, catalog, tag, remove_duplicates=True):
         """
@@ -395,7 +406,7 @@ class Client:
             if to_depth is not None:
                 query = query.filter(Event.depth <= to_depth)
 
-        return query
+        return query.all()
 
     def add_pick(self, time, station, phase, tag):
         with self.session_scope() as session:
@@ -432,7 +443,7 @@ class Client:
                 tag = self.get_matched_list(tag, 'pick', 'tag')
                 query = query.filter(Pick.tag.in_(tag))
 
-        return query
+        return query.all()
 
     def read_tfrecord_header(self, tfr_list):
         """
@@ -447,15 +458,15 @@ class Client:
                     for index, example in enumerate(dataset):
                         instance = seisnn.core.Instance(example)
                         Waveform(instance, tfrecord, index).add_db(session)
-                    TFRecord(tfrecord, instance.metadata.station,
-                             index + 1).add_db(session)
+                    TFRecord(tfrecord, index + 1).add_db(session)
 
         except Exception as error:
             print(f'{type(error).__name__}: {error}')
 
         print(f'Input {index + 1} waveforms.')
 
-    def get_tfrecord(self, station=None):
+    def get_tfrecord(self, network=None, station=None, path=None,
+                     from_date=None, to_date=None, column=None):
         """
         Returns query from tfrecord table.
 
@@ -464,12 +475,29 @@ class Client:
         :return: A Query.
         """
         with self.session_scope() as session:
-            query = session.query(TFRecord)
+            if column is not None:
+                query = session.query(getattr(TFRecord, column))
+            else:
+                query = session.query(TFRecord)
+
+            if network is not None:
+                network = self.get_matched_list(network, 'tfrecord', 'network')
+                query = query.filter(TFRecord.network.in_(network))
             if station is not None:
                 station = self.get_matched_list(station, 'tfrecord', 'station')
                 query = query.filter(TFRecord.station.in_(station))
+            if path is not None:
+                path = self.get_matched_list(path, 'tfrecord', 'path')
+                query = query.filter(TFRecord.path.in_(path))
 
-        return query
+            if from_date is not None:
+                from_date = UTCDateTime(from_date).datetime
+                query = query.filter(TFRecord.date >= from_date)
+            if to_date is not None:
+                to_date = UTCDateTime(to_date).datetime
+                query = query.filter(TFRecord.date <= to_date)
+
+        return query.all()
 
     def get_waveform(self, from_time=None, to_time=None,
                      station=None, tfrecord=None):
@@ -491,7 +519,7 @@ class Client:
         with self.session_scope() as session:
             query = session.query(Waveform)
             if from_time is not None:
-                query = query.filter(from_time <= Waveform.endtime)
+                query = query.filter(Waveform.endtime >= from_time)
             if to_time is not None:
                 query = query.filter(Waveform.starttime <= to_time)
             if station is not None:
@@ -503,7 +531,7 @@ class Client:
                     tfrecord, 'waveform', 'tfrecord')
                 query = query.filter(Waveform.tfrecord.in_(tfrecord))
 
-        return query
+        return query.all()
 
     def remove_duplicates(self, table, match_columns):
         """
@@ -563,7 +591,7 @@ class Client:
                 .order_by(col(table)) \
                 .filter(col(table).notin_(exclude)) \
                 .all()
-        query = [q[0] for q in query]
+        query = seisnn.utils.flatten_list(query)
         return query
 
     def clear_table(self, table):
@@ -625,7 +653,7 @@ class Client:
                 query = session.query(getattr(table, column)) \
                     .filter(getattr(table, column).like(wildcard)) \
                     .distinct() \
-                    .order_by(getattr(table, column))\
+                    .order_by(getattr(table, column)) \
                     .all()
                 query = seisnn.utils.flatten_list(query)
                 matched_list.extend(query)
@@ -676,7 +704,7 @@ class DatabaseInspector:
         print(f'From: {min(times).isoformat()}')
         print(f'To:   {max(times).isoformat()}\n')
 
-        events = self.database.get_events().all()
+        events = self.database.get_events()
         print(f'Total {len(events)} events\n')
 
         latitudes = self.database.get_distinct_items('event', 'latitude')
@@ -700,7 +728,7 @@ class DatabaseInspector:
         print('Phase count:')
         phases = self.database.get_distinct_items('pick', 'phase')
         for phase in phases:
-            picks = self.database.get_picks(phase=phase).all()
+            picks = self.database.get_picks(phase=phase)
             print(f'{len(picks)} "{phase}" picks')
         print()
 
@@ -733,7 +761,7 @@ class DatabaseInspector:
         print(f'From: {min(starttimes).isoformat()}')
         print(f'To:   {max(endtimes).isoformat()}\n')
 
-        waveforms = self.database.get_events().all()
+        waveforms = self.database.get_events()
         print(f'Total {len(waveforms)} events\n')
 
         stations = self.database.get_distinct_items('waveform', 'station')

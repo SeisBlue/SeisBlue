@@ -1,10 +1,10 @@
 import seisnn
 
-
-database = 'Hualien.db'
-db = seisnn.sql.Client(database)
-testset = db.get_waveform()
-
 model_instance = 'test_model'
+database = 'Hualien.db'
+tfr_list = seisnn.utils.get_dir_list('/home/andy/TFRecord/Eval/QQQ.h5/', suffix='.tfrecord')
+
 evaluator = seisnn.model.evaluator.GeneratorEvaluator(database, model_instance)
-evaluator.score(delta=0.1, error_distribution=True)
+evaluator.score(tfr_list, height=0.5,delta=0.1, error_distribution=True)
+
+

@@ -7,7 +7,7 @@ db = seisnn.sql.Client(database=database)
 inspector = seisnn.sql.DatabaseInspector(db)
 inspector.pick_summery()
 
-pick_list = db.get_picks(tag=tag).all()
+pick_list = db.get_picks(tag=tag)
 
 tfr_converter = seisnn.components.TFRecordConverter()
 tfr_converter.convert_training_from_picks(pick_list, tag, database)
