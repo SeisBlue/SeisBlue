@@ -17,14 +17,20 @@ seisnn.model.evaluator.GeneratorEvaluator
    .. autosummary::
    
       ~GeneratorEvaluator.__init__
-      ~GeneratorEvaluator.eval
       ~GeneratorEvaluator.get_dataset_length
       ~GeneratorEvaluator.get_eval_dir
       ~GeneratorEvaluator.get_model_dir
+      ~GeneratorEvaluator.predict
       ~GeneratorEvaluator.score
    
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GeneratorEvaluator.database
    
    

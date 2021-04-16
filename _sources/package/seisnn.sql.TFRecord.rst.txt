@@ -28,9 +28,11 @@ seisnn.sql.TFRecord
    .. autosummary::
    
       ~TFRecord.count
+      ~TFRecord.date
       ~TFRecord.id
       ~TFRecord.metadata
       ~TFRecord.name
+      ~TFRecord.network
       ~TFRecord.path
       ~TFRecord.registry
       ~TFRecord.station

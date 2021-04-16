@@ -25,4 +25,10 @@ seisnn.model.evaluator.BaseEvaluator
 
    
    
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BaseEvaluator.database
+   
    

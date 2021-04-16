@@ -159,26 +159,38 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.model.evaluator.GeneratorEvaluator.__init__" title="seisnn.model.evaluator.GeneratorEvaluator.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([database, model_name])</p></td>
 <td><p>Initialize the evaluator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.model.evaluator.GeneratorEvaluator.eval" title="seisnn.model.evaluator.GeneratorEvaluator.eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval</span></code></a>(tfr_list[, batch_size])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dataset_length</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_eval_dir</span></code>(dir_name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_dir</span></code>(model_instance)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.model.evaluator.GeneratorEvaluator.predict" title="seisnn.model.evaluator.GeneratorEvaluator.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(tfr_list[, batch_size])</p></td>
 <td><p>Main eval loop.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dataset_length</span></code>([database])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code>(tfr_list[, batch_size, delta, height, …])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_eval_dir</span></code>(dir_name)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_dir</span></code>(model_instance)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code>([delta, error_distribution])</p></td>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">database</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="seisnn.model.evaluator.GeneratorEvaluator.eval">
-<code class="sig-name descname"><span class="pre">eval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tfr_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/evaluator.html#GeneratorEvaluator.eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.evaluator.GeneratorEvaluator.eval" title="Permalink to this definition">¶</a></dt>
+<dt id="seisnn.model.evaluator.GeneratorEvaluator.predict">
+<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tfr_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/evaluator.html#GeneratorEvaluator.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.evaluator.GeneratorEvaluator.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main eval loop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
