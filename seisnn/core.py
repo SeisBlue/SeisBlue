@@ -133,7 +133,7 @@ class Label:
             picks = db.get_picks(from_time=self.metadata.starttime.datetime,
                                  to_time=self.metadata.endtime.datetime,
                                  station=self.metadata.station,
-                                 phase=phase, tag=tag).all()
+                                 phase=phase, tag=tag)
 
             for pick in picks:
                 pick_time = obspy.UTCDateTime(

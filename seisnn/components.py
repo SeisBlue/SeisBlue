@@ -73,8 +73,13 @@ class TFRecordConverter:
         :param str database: SQL database root.
         :return:
         """
+        metadata = self.get_time_window(anchor_time=UTCDateTime(0),
+                                        station='',
+                                        )
         instance_list = []
         for pick in picks:
+            if metadata.starttime<pick.time<metadata.endtime:
+                continue
             metadata = self.get_time_window(anchor_time=pick.time,
                                             station=pick.station,
                                             shift='random')
