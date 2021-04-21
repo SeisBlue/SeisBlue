@@ -73,11 +73,21 @@ class TFRecordConverter:
         :param str database: SQL database root.
         :return:
         """
+        metadata = self.get_time_window(anchor_time=UTCDateTime(0),
+                                        station='',
+                                        )
         instance_list = []
         for pick in picks:
-            metadata = self.get_time_window(anchor_time=pick.time,
-                                            station=pick.station,
-                                            shift='random')
+            if metadata.starttime < pick.time < metadata.endtime:
+                continue
+            elif metadata.endtime < pick.time < metadata.endtime + 30:
+                metadata = self.get_time_window(anchor_time=metadata.starttime + 30,
+                                                station=pick.station,
+                                                )
+            else:
+                metadata = self.get_time_window(anchor_time=pick.time,
+                                                station=pick.station,
+                                                shift='random')
             streams = seisnn.io.read_sds(metadata)
 
             for _, stream in streams.items():

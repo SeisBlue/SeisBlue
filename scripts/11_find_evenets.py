@@ -29,7 +29,7 @@ def split_event(db, from_time, to_time, station_limit=2):
             for chan in channel:
                 ARC.append(
                     f'ARC {pick.station:<5} {chan:<3} {network:<2} {location:<2} {event_time.year:<4} {event_time.month:0>2}'
-                    f'{event_time.day:0>2} {event_time.time.hour:0>2}{event_time.time.minute:0>2} {event_time.time.second:0>2} {UTCDateTime(to_time) - UTCDateTime(from_time):<5}')
+                    f'{event_time.day:0>2} {event_time.time.hour:0>2}{event_time.time.minute:0>2} {event_time.time.second:0>2} {int(UTCDateTime(to_time) - UTCDateTime(from_time)):<5}')
     if len(station) >= station_limit:
         return picks_query, ARC
     else:
@@ -53,18 +53,20 @@ def write_events(db, start, end):
         )
         ev.picks.append(
             Pick(waveform_id=_waveform_id_1,
-                 phase_hint='I' + p.phase,
+                 phase_hint=p.phase,
                  time=UTCDateTime(p.time),
-                 evaluation_mode="automatic")
+                 evaluation_mode="automatic"
+                 )
         )
     return ev, ARC
 
 
-def picks_to_sfile(database, from_time, to_time, duration_time=300):
+def picks_to_sfile(database, from_time, to_time, duration_time=15):
     db = seisnn.sql.Client(database=database)
     total_time = UTCDateTime(to_time) - UTCDateTime(from_time)
     start = from_time
     end = to_time
+
     for i in range(int(total_time / duration_time) + 1):
         if i == int(total_time / duration_time) + 1:
             ev, ARC = write_events(db, start, end)
@@ -80,6 +82,6 @@ def picks_to_sfile(database, from_time, to_time, duration_time=300):
 
 
 database = 'Hualien.db'
-from_time = '2019-04-19 12:30:00'
-to_time = '2019-04-21 12:45:07'
-picks_to_sfile(database, from_time, to_time)
+from_time = '2019-05-10 12:30:00'
+to_time = '2019-05-12 12:30:00'
+picks_to_sfile(database, from_time, to_time,duration_time=300)
