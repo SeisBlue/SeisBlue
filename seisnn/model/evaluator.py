@@ -98,7 +98,7 @@ class GeneratorEvaluator(BaseEvaluator):
                 net, sta, loc, chan, year, julday, suffix = file_name.split('.')
                 tfr_dir = os.path.join(sub_dir, year, net, sta)
                 seisnn.utils.make_dirs(tfr_dir)
-                save_file = os.path.join(tfr_dir, f'{n}.' + file_name)
+                save_file = os.path.join(tfr_dir, f'{n:0>6}.' + file_name)
                 instance.to_tfrecord(save_file)
                 progbar.add(1)
                 n = n + 1
