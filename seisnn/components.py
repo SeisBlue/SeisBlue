@@ -78,11 +78,16 @@ class TFRecordConverter:
                                         )
         instance_list = []
         for pick in picks:
-            if metadata.starttime<pick.time<metadata.endtime:
+            if metadata.starttime < pick.time < metadata.endtime:
                 continue
-            metadata = self.get_time_window(anchor_time=pick.time,
-                                            station=pick.station,
-                                            shift='random')
+            elif metadata.endtime < pick.time < metadata.endtime + 30:
+                metadata = self.get_time_window(anchor_time=metadata.starttime + 30,
+                                                station=pick.station,
+                                                )
+            else:
+                metadata = self.get_time_window(anchor_time=pick.time,
+                                                station=pick.station,
+                                                shift='random')
             streams = seisnn.io.read_sds(metadata)
 
             for _, stream in streams.items():
