@@ -3,15 +3,15 @@ FROM tensorflow/tensorflow:2.4.1-gpu-jupyter
 # nodejs source
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
+# Install linux package
 RUN apt-mark hold libcudnn* cuda*; \
     apt-get update && apt-get upgrade -y; \
     apt-get install --reinstall libcublas10 -y; \
-    apt-get install openssh-server \
-                    sudo vim git nodejs \
-                    htop iotop \
-                    screen reptyr \
-                    ffmpeg \
-                    libproj-dev proj-data proj-bin libgeos-dev -y;
+    apt-get install -y \
+        openssh-server \
+        sudo vim git nodejs ffmpeg \
+        htop iotop screen reptyr \
+        libproj-dev proj-data proj-bin libgeos-dev;
 
 # Add all user into sudoers
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers;
@@ -31,8 +31,9 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build;
 RUN sed -i 's/\/usr\/bin\/python3/\/usr\/local\/bin\/python/g' /usr/local/share/jupyter/kernels/python3/kernel.json;
 
 # SSH login fix. Otherwise user is kicked off after login
-RUN mkdir /var/run/sshd; sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd;
+RUN mkdir /var/run/sshd; \
+    sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config; \
+    sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd;
 
 # Hide server profile form docker container, only which written into '/etc/profile' will be seen
 ENV NOTVISIBLE "in users profile"
