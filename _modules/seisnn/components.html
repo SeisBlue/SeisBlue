@@ -187,11 +187,21 @@
 <span class="sd">        :param str database: SQL database root.</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="o">=</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                                        <span class="n">station</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                        <span class="p">)</span>
         <span class="n">instance_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">pick</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">:</span>
-            <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
-                                            <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
-                                            <span class="n">shift</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span> <span class="o">&lt;</span> <span class="n">pick</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="n">metadata</span><span class="o">.</span><span class="n">endtime</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">metadata</span><span class="o">.</span><span class="n">endtime</span> <span class="o">&lt;</span> <span class="n">pick</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="n">metadata</span><span class="o">.</span><span class="n">endtime</span> <span class="o">+</span> <span class="mi">30</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span>
+                                                <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                                                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time_window</span><span class="p">(</span><span class="n">anchor_time</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+                                                <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
+                                                <span class="n">shift</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
             <span class="n">streams</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_sds</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
