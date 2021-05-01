@@ -9,7 +9,7 @@ from tensorflow.keras.layers import concatenate
 from seisnn.core import Instance
 from seisnn.model.generator import nest_net
 from seisnn.model.attention import transformer
-from seisnn.model.GAN_model import build_discriminator, build_cgan
+from seisnn.model.GAN_model import build_discriminator, build_cgan,build_patch_discriminator
 import seisnn.example_proto
 import seisnn.io
 import seisnn.sql
@@ -72,7 +72,7 @@ class GeneratorTrainer(BaseTrainer):
         self.generator_model = transformer(img_rows=1, img_cols=3008,
                                            color_type=3,
                                            num_class=3)
-        self.discriminator_model = build_discriminator(img_rows=1,
+        self.discriminator_model = build_patch_discriminator(img_rows=1,
                                                        img_cols=3008,
                                                        color_type=3,
                                                        num_class=3)
@@ -190,8 +190,8 @@ class GeneratorTrainer(BaseTrainer):
         :return: predict loss, validation loss
         """
 
-        real = np.ones((train['trace'].shape[0], 1))
-        fake = np.zeros((train['trace'].shape[0], 1))
+        real = np.ones((train['trace'].shape[0], 1,11,1))
+        fake = np.zeros((train['trace'].shape[0],1,11,1))
         g_pred = self.generator_model(train['trace'], training=False)
         concat = concatenate((train['trace'], g_pred), axis=3)
         f_disc_loss = self.discriminator_model.train_on_batch(concat, fake)
@@ -211,8 +211,8 @@ if __name__ == "__main__":
     db = seisnn.sql.Client(database)
     tfr_list = db.get_tfrecord(to_date='2019-05-09', column='path')
 
-    model_instance = 'test_model'
+    model_instance = 'trans_ganV1'
     trainer = GeneratorTrainer(database)
     trainer.train_loop(tfr_list, model_instance,
-                       batch_size=64, epochs=10,
+                       batch_size=64, epochs=50,
                        plot=True)
