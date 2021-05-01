@@ -50,6 +50,26 @@ def build_discriminator(img_rows=1, img_cols=3008, color_type=3,
     flat1 = Flatten()(conv3)
     output = Dense(1, activation='sigmoid')(flat1)
     model = tf.keras.Model(inputs=img_input, outputs=output)
+    model.summary()
+    return model
+
+def build_patch_discriminator(img_rows=1, img_cols=3008, color_type=3,
+                        num_class=3):
+    img_input = Input(shape=(img_rows, img_cols, color_type * 2),
+                      name='main_input')
+    conv1 = Conv2D(64, (1, 32),strides=4, activation='relu', padding='same')(img_input)
+    conv1 = LeakyReLU(alpha=0.1)(conv1)
+    conv2 = Conv2D(128, (1, 16),strides=4, activation='relu', padding='same')(conv1)
+    conv2 = LeakyReLU(alpha=0.1)(conv2)
+    conv2 = BatchNormalization()(conv2)
+    conv2 = (LeakyReLU(alpha=0.1))(conv2)
+    conv3 = Conv2D(256, (1, 8),strides=4, activation='relu')(conv2)
+    conv3 = BatchNormalization()(conv3)
+    conv3 = (LeakyReLU(alpha=0.1))(conv3)
+    output = Conv2D(1,(1,4),strides=4,activation='sigmoid')(conv3)
+
+    model = tf.keras.Model(inputs=img_input, outputs=output)
+    model.summary()
     return model
 
 
