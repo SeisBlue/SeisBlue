@@ -16,6 +16,7 @@ seisnn.model.GAN\_model
    
       build_cgan
       build_discriminator
+      build_patch_discriminator
    
    
 
