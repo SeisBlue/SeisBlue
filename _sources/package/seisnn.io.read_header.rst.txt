@@ -1,0 +1,6 @@
+seisnn.io.read\_header
+======================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: read_header

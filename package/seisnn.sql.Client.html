@@ -154,7 +154,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.add_events" title="seisnn.sql.Client.add_events"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_events</span></code></a>(catalog, tag[, remove_duplicates])</p></td>
 <td><p>Add event data form catalog.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.add_inventory" title="seisnn.sql.Client.add_inventory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inventory</span></code></a>(geom, network)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.add_inventory" title="seisnn.sql.Client.add_inventory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inventory</span></code></a>(geom)</p></td>
 <td><p>Add geometry data from geometry dict.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_pick</span></code>(time, station, phase, tag)</p></td>
@@ -196,16 +196,19 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.read_kml_placemark" title="seisnn.sql.Client.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml, network)</p></td>
 <td><p>Add geometry data from .KML file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.read_tfrecord_header" title="seisnn.sql.Client.read_tfrecord_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_tfrecord_header</span></code></a>(tfr_list)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_nsta</span></code>(nsta)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.read_tfrecord_header" title="seisnn.sql.Client.read_tfrecord_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_tfrecord_header</span></code></a>(tfr_list)</p></td>
 <td><p>Sync header into SQL database from tfrecord dataset.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.remove_duplicates" title="seisnn.sql.Client.remove_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicates</span></code></a>(table, match_columns)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.remove_duplicates" title="seisnn.sql.Client.remove_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicates</span></code></a>(table, match_columns)</p></td>
 <td><p>Removes duplicates data in given table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.replace_sql_wildcard" title="seisnn.sql.Client.replace_sql_wildcard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_sql_wildcard</span></code></a>(string)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.replace_sql_wildcard" title="seisnn.sql.Client.replace_sql_wildcard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_sql_wildcard</span></code></a>(string)</p></td>
 <td><p>Replaces posix wildcard characters to SQL wildcard characters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.session_scope" title="seisnn.sql.Client.session_scope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">session_scope</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.session_scope" title="seisnn.sql.Client.session_scope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">session_scope</span></code></a>()</p></td>
 <td><p>Provide a transactional scope around a series of operations.</p></td>
 </tr>
 </tbody>
@@ -227,7 +230,7 @@
 
 <dl class="py method">
 <dt id="seisnn.sql.Client.add_inventory">
-<code class="sig-name descname"><span class="pre">add_inventory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/sql.html#Client.add_inventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.sql.Client.add_inventory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_inventory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/sql.html#Client.add_inventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.sql.Client.add_inventory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add geometry data from geometry dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

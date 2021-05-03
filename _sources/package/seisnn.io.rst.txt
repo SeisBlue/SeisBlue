@@ -15,10 +15,15 @@ seisnn.io
       :toctree:
    
       get_event
+      read_afile
+      read_afile_directory
       read_dataset
       read_event_list
+      read_header
       read_hyp
       read_kml_placemark
+      read_lines
+      read_nsta
       read_sds
       write_hyp_station
       write_tfrecord

@@ -1,0 +1,6 @@
+seisnn.io.read\_afile
+=====================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: read_afile

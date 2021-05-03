@@ -393,7 +393,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">geom</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_hyp</span><span class="p">(</span><span class="n">hyp</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">sta</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">read_nsta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nsta</span><span class="p">):</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_nsta</span><span class="p">(</span><span class="n">nsta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Client.read_kml_placemark"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.read_kml_placemark">[docs]</a>    <span class="k">def</span> <span class="nf">read_kml_placemark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kml</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -406,9 +412,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">geom</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_kml_placemark</span><span class="p">(</span><span class="n">kml</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">sta</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.add_inventory"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.add_inventory">[docs]</a>    <span class="k">def</span> <span class="nf">add_inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.add_inventory"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.add_inventory">[docs]</a>    <span class="k">def</span> <span class="nf">add_inventory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add geometry data from geometry dict.</span>
 
@@ -417,8 +425,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">Inventory</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">sta</span><span class="p">,</span> <span class="n">loc</span><span class="p">)</span><span class="o">.</span><span class="n">add_db</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sta</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">Inventory</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">],</span> <span class="n">sta</span><span class="p">,</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">add_db</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
                 <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input </span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s1"> stations&#39;</span><span class="p">)</span></div>

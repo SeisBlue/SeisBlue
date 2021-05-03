@@ -32,6 +32,7 @@ seisnn.sql.Client
       ~Client.get_waveform
       ~Client.read_hyp
       ~Client.read_kml_placemark
+      ~Client.read_nsta
       ~Client.read_tfrecord_header
       ~Client.remove_duplicates
       ~Client.replace_sql_wildcard

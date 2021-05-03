@@ -1,0 +1,6 @@
+seisnn.io.read\_afile\_directory
+================================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: read_afile_directory

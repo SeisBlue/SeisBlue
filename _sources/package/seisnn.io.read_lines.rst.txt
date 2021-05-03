@@ -1,0 +1,6 @@
+seisnn.io.read\_lines
+=====================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: read_lines
