@@ -279,7 +279,13 @@ class Client:
         """
 
         geom = seisnn.io.read_hyp(hyp)
-        self.add_inventory(geom, network)
+        for sta, stats in geom.items():
+            stats['network'] = network
+        self.add_inventory(geom)
+
+    def read_nsta(self, nsta):
+        geom = seisnn.io.read_nsta(nsta)
+        self.add_inventory(geom)
 
     def read_kml_placemark(self, kml, network):
         """
@@ -292,9 +298,11 @@ class Client:
         """
 
         geom = seisnn.io.read_kml_placemark(kml)
-        self.add_inventory(geom, network)
+        for sta, stats in geom.items():
+            stats['network'] = network
+        self.add_inventory(geom)
 
-    def add_inventory(self, geom, network):
+    def add_inventory(self, geom):
         """
         Add geometry data from geometry dict.
 
@@ -303,8 +311,8 @@ class Client:
         """
         with self.session_scope() as session:
             counter = 0
-            for sta, loc in geom.items():
-                Inventory(network, sta, loc).add_db(session)
+            for sta, stats in geom.items():
+                Inventory(stats['network'], sta, stats['location']).add_db(session)
                 counter += 1
 
             print(f'Input {counter} stations')
