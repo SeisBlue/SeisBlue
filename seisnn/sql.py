@@ -283,8 +283,8 @@ class Client:
             stats['network'] = network
         self.add_inventory(geom)
 
-    def read_nsta(self, nsta):
-        geom = seisnn.io.read_nsta(nsta)
+    def read_GDMSstations(self, nsta):
+        geom = seisnn.io.read_GDMSstations(nsta)
         self.add_inventory(geom)
 
     def read_kml_placemark(self, kml, network):
@@ -339,7 +339,7 @@ class Client:
 
         return query.all()
 
-    def add_events(self, catalog, tag, remove_duplicates=True):
+    def add_sfile_events(self, events, tag, remove_duplicates=True):
         """
         Add event data form catalog.
 
@@ -348,7 +348,6 @@ class Client:
         :param bool remove_duplicates: Removes duplicates in event table.
         """
 
-        events = seisnn.io.read_event_list(catalog)
         with self.session_scope() as session:
             event_count = 0
             pick_count = 0

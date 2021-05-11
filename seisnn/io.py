@@ -13,6 +13,7 @@ from obspy import Stream
 from obspy.core import inventory
 from obspy.clients.filesystem import sds
 import obspy.io.nordic.core
+import obspy
 import tensorflow as tf
 
 import seisnn
@@ -104,7 +105,7 @@ def read_sds(metadata):
     starttime = metadata.starttime
     endtime = metadata.endtime + 0.1
 
-    client = sds.Client(sds_root=config.sds_root)
+    client = sds.Client(sds_root='/home/andy/mseed')
     stream = client.get_waveforms(network="*",
                                   station=station,
                                   location="*",
@@ -117,7 +118,6 @@ def read_sds(metadata):
     for trace in stream:
         geophone_type = trace.stats.channel[0:2]
         stream_dict[geophone_type].append(trace)
-
     return stream_dict
 
 
@@ -179,17 +179,19 @@ def read_hyp(hyp):
     print(f'read {len(geom)} stations from {hyp}')
     return geom
 
-def read_nsta(nsta):
+
+def read_GDMSstations(GDMSstations):
     config = seisnn.utils.Config()
-    hyp_file = os.path.join(config.geom, nsta)
+    hyp_file = os.path.join(config.geom, GDMSstations)
     geom = {}
-    f = open(hyp_file,'r')
+    f = open(hyp_file, 'r')
     for line in f:
-        sta = line[0:5].strip()
-        lon = float(line[5:13])
-        lat = float(line[14:21])
-        elev = float(line[23:30])
-        net = line[34:37].strip()
+        line.strip().strip(',')
+        sta = line.strip().split(',')[1][0:4]
+        lon = float(line.strip().split(',')[3])
+        lat = float(line.strip().split(',')[2])
+        elev = float(line.strip().split(',')[4])
+        net = line.strip().split(',')[0]
 
         lat = inventory.util.Latitude(lat)
         lon = inventory.util.Longitude(lon)
@@ -200,7 +202,7 @@ def read_nsta(nsta):
 
         geom[sta] = {'network': net,
                      'location': location}
-    print(f'read {len(geom)} stations from {nsta}')
+    print(f'read {len(geom)} stations from {GDMSstations}')
     return geom
 
 
@@ -323,20 +325,60 @@ def read_lines(lines):
 
 def read_afile(afile_path):
     count = 0
-    event_info = {}
     f = open(afile_path, 'r')
     header = f.readline()
     lines = f.readlines()
-    try:
-        header_info = read_header(header)
-        trace_info = read_lines(lines)
-        event_info['header_info'] = header_info
-        event_info['trace_info'] = trace_info
-        count = len(trace_info)
-    except ValueError:
-        print(afile_path)
+    header_info = read_header(header)
+    trace_info = read_lines(lines)
+    ev = obspy.core.event.Event()
+    ev.event_descriptions.append(obspy.core.event.EventDescription())
+    ev.origins.append(obspy.core.event.Origin(
+        time=obspy.UTCDateTime(header_info['year'], header_info['month'],
+                               header_info['day'], header_info['hour'],
+                               header_info['minute'], header_info['second']),
+        latitude=header_info['lat'] + header_info['lat_minute'] / 60,
+        longitude=header_info['lon'] + header_info['lon_minute'] / 60,
+        depth=header_info['depth']))
+    for trace in trace_info:
+        if len(trace['code']) > 4:
+            trace['code'] = change_station_code(trace['code'])
+        _waveform_id_1 = obspy.core.event.WaveformStreamID(
+            station_code=trace['code'],
+            channel_code='',
+            network_code=''
+        )
+        for phase in ['P', 'S']:
+            try:
+                ev.picks.append(
+                    obspy.core.event.Pick(waveform_id=_waveform_id_1,
+                                          phase_hint=phase,
+                                          time=obspy.core.UTCDateTime(trace['rtcard'])+
+                                              trace[f'{phase.lower()}time'])
+                                          )
 
-    return event_info, count
+                count += 1
+            except TypeError:
+                print(trace['rtcard'],'--------------',trace[f'{phase.lower()}time'])
+    return ev, count
+
+
+def change_station_code(station):
+    if station[0:3] == 'TAP':
+        station = 'A' + station[3:6]
+    if station[0:3] == 'TCU':
+        station = 'B' + station[3:6]
+    if station[0:3] == 'CHY':
+        station = 'C' + station[3:6]
+    if station[0:3] == 'KAU':
+        station = 'D' + station[3:6]
+    if station[0:3] == 'ILA':
+        station = 'E' + station[3:6]
+    if station[0:3] == 'HWA':
+        station = 'G' + station[3:6]
+    if station[0:3] == 'TTN':
+        station = 'H' + station[3:6]
+
+    return station
 
 
 def read_afile_directory(path_list):
@@ -344,8 +386,11 @@ def read_afile_directory(path_list):
     trace_count = 0
     abs_path = seisnn.utils.get_dir_list(path_list)
     for path in abs_path:
-        event, c = read_afile(path)
-        event_list.append(event)
-        trace_count += c
+        try:
+            event, c = read_afile(path)
+            event_list.append(event)
+            trace_count += c
+        except ValueError:
+            continue
     print('total_pick = ', trace_count)
     return event_list
