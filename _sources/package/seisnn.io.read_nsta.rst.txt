@@ -1,6 +1,0 @@
-seisnn.io.read\_nsta
-====================
-
-.. currentmodule:: seisnn.io
-
-.. autofunction:: read_nsta

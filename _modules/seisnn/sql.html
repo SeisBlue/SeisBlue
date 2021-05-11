@@ -397,8 +397,8 @@
             <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">network</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">read_nsta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nsta</span><span class="p">):</span>
-        <span class="n">geom</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_nsta</span><span class="p">(</span><span class="n">nsta</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">read_GDMSstations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nsta</span><span class="p">):</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_GDMSstations</span><span class="p">(</span><span class="n">nsta</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_inventory</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Client.read_kml_placemark"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.read_kml_placemark">[docs]</a>    <span class="k">def</span> <span class="nf">read_kml_placemark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kml</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
@@ -453,7 +453,7 @@
 
         <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Client.add_events"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.add_events">[docs]</a>    <span class="k">def</span> <span class="nf">add_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.add_sfile_events"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.add_sfile_events">[docs]</a>    <span class="k">def</span> <span class="nf">add_sfile_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add event data form catalog.</span>
 
@@ -462,7 +462,6 @@
 <span class="sd">        :param bool remove_duplicates: Removes duplicates in event table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">events</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_event_list</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">event_count</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">pick_count</span> <span class="o">=</span> <span class="mi">0</span>

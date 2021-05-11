@@ -17,9 +17,9 @@ seisnn.sql.Client
    .. autosummary::
    
       ~Client.__init__
-      ~Client.add_events
       ~Client.add_inventory
       ~Client.add_pick
+      ~Client.add_sfile_events
       ~Client.clear_table
       ~Client.get_distinct_items
       ~Client.get_events
@@ -30,9 +30,9 @@ seisnn.sql.Client
       ~Client.get_table_class
       ~Client.get_tfrecord
       ~Client.get_waveform
+      ~Client.read_GDMSstations
       ~Client.read_hyp
       ~Client.read_kml_placemark
-      ~Client.read_nsta
       ~Client.read_tfrecord_header
       ~Client.remove_duplicates
       ~Client.replace_sql_wildcard

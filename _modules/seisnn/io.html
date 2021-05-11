@@ -127,6 +127,7 @@
 <span class="kn">from</span> <span class="nn">obspy.core</span> <span class="kn">import</span> <span class="n">inventory</span>
 <span class="kn">from</span> <span class="nn">obspy.clients.filesystem</span> <span class="kn">import</span> <span class="n">sds</span>
 <span class="kn">import</span> <span class="nn">obspy.io.nordic.core</span>
+<span class="kn">import</span> <span class="nn">obspy</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
 <span class="kn">import</span> <span class="nn">seisnn</span>
@@ -218,7 +219,7 @@
     <span class="n">starttime</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span>
     <span class="n">endtime</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">endtime</span> <span class="o">+</span> <span class="mf">0.1</span>
 
-    <span class="n">client</span> <span class="o">=</span> <span class="n">sds</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">sds_root</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">sds_root</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">sds</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">sds_root</span><span class="o">=</span><span class="s1">&#39;/home/andy/mseed&#39;</span><span class="p">)</span>
     <span class="n">stream</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_waveforms</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
                                   <span class="n">station</span><span class="o">=</span><span class="n">station</span><span class="p">,</span>
                                   <span class="n">location</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
@@ -231,7 +232,6 @@
     <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
         <span class="n">geophone_type</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">channel</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">stream_dict</span><span class="p">[</span><span class="n">geophone_type</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">stream_dict</span></div>
 
 
@@ -293,17 +293,19 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;read </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations from </span><span class="si">{</span><span class="n">hyp</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">geom</span></div>
 
-<div class="viewcode-block" id="read_nsta"><a class="viewcode-back" href="../../package/seisnn.io.read_nsta.html#seisnn.io.read_nsta">[docs]</a><span class="k">def</span> <span class="nf">read_nsta</span><span class="p">(</span><span class="n">nsta</span><span class="p">):</span>
+
+<div class="viewcode-block" id="read_GDMSstations"><a class="viewcode-back" href="../../package/seisnn.io.read_GDMSstations.html#seisnn.io.read_GDMSstations">[docs]</a><span class="k">def</span> <span class="nf">read_GDMSstations</span><span class="p">(</span><span class="n">GDMSstations</span><span class="p">):</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
-    <span class="n">hyp_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">geom</span><span class="p">,</span> <span class="n">nsta</span><span class="p">)</span>
+    <span class="n">hyp_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">geom</span><span class="p">,</span> <span class="n">GDMSstations</span><span class="p">)</span>
     <span class="n">geom</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">hyp_file</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">hyp_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">sta</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="n">lon</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">13</span><span class="p">])</span>
-        <span class="n">lat</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">14</span><span class="p">:</span><span class="mi">21</span><span class="p">])</span>
-        <span class="n">elev</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">23</span><span class="p">:</span><span class="mi">30</span><span class="p">])</span>
-        <span class="n">net</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">34</span><span class="p">:</span><span class="mi">37</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">sta</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">elev</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">lat</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Latitude</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
         <span class="n">lon</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Longitude</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
@@ -314,7 +316,7 @@
 
         <span class="n">geom</span><span class="p">[</span><span class="n">sta</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;network&#39;</span><span class="p">:</span> <span class="n">net</span><span class="p">,</span>
                      <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">location</span><span class="p">}</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;read </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations from </span><span class="si">{</span><span class="n">nsta</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;read </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span><span class="si">}</span><span class="s1"> stations from </span><span class="si">{</span><span class="n">GDMSstations</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">geom</span></div>
 
 
@@ -437,20 +439,60 @@
 
 <div class="viewcode-block" id="read_afile"><a class="viewcode-back" href="../../package/seisnn.io.read_afile.html#seisnn.io.read_afile">[docs]</a><span class="k">def</span> <span class="nf">read_afile</span><span class="p">(</span><span class="n">afile_path</span><span class="p">):</span>
     <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">event_info</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">afile_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="n">header</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">header_info</span> <span class="o">=</span> <span class="n">read_header</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
-        <span class="n">trace_info</span> <span class="o">=</span> <span class="n">read_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-        <span class="n">event_info</span><span class="p">[</span><span class="s1">&#39;header_info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header_info</span>
-        <span class="n">event_info</span><span class="p">[</span><span class="s1">&#39;trace_info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trace_info</span>
-        <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trace_info</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">afile_path</span><span class="p">)</span>
+    <span class="n">header_info</span> <span class="o">=</span> <span class="n">read_header</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">trace_info</span> <span class="o">=</span> <span class="n">read_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="n">ev</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+    <span class="n">ev</span><span class="o">.</span><span class="n">event_descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">EventDescription</span><span class="p">())</span>
+    <span class="n">ev</span><span class="o">.</span><span class="n">origins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Origin</span><span class="p">(</span>
+        <span class="n">time</span><span class="o">=</span><span class="n">obspy</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">],</span>
+                               <span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;hour&#39;</span><span class="p">],</span>
+                               <span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;minute&#39;</span><span class="p">],</span> <span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;second&#39;</span><span class="p">]),</span>
+        <span class="n">latitude</span><span class="o">=</span><span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;lat_minute&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="n">longitude</span><span class="o">=</span><span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;lon_minute&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="n">depth</span><span class="o">=</span><span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">trace_info</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">trace</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">change_station_code</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">])</span>
+        <span class="n">_waveform_id_1</span> <span class="o">=</span> <span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">WaveformStreamID</span><span class="p">(</span>
+            <span class="n">station_code</span><span class="o">=</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">],</span>
+            <span class="n">channel_code</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">network_code</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ev</span><span class="o">.</span><span class="n">picks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Pick</span><span class="p">(</span><span class="n">waveform_id</span><span class="o">=</span><span class="n">_waveform_id_1</span><span class="p">,</span>
+                                          <span class="n">phase_hint</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span>
+                                          <span class="n">time</span><span class="o">=</span><span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;rtcard&#39;</span><span class="p">])</span><span class="o">+</span>
+                                              <span class="n">trace</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">time&#39;</span><span class="p">])</span>
+                                          <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">event_info</span><span class="p">,</span> <span class="n">count</span></div>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;rtcard&#39;</span><span class="p">],</span><span class="s1">&#39;--------------&#39;</span><span class="p">,</span><span class="n">trace</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">time&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">ev</span><span class="p">,</span> <span class="n">count</span></div>
+
+
+<div class="viewcode-block" id="change_station_code"><a class="viewcode-back" href="../../package/seisnn.io.change_station_code.html#seisnn.io.change_station_code">[docs]</a><span class="k">def</span> <span class="nf">change_station_code</span><span class="p">(</span><span class="n">station</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">station</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;TAP&#39;</span><span class="p">:</span>
+        <span class="n">station</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span> <span class="o">+</span> <span class="n">station</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">station</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;TCU&#39;</span><span class="p">:</span>
+        <span class="n">station</span> <span class="o">=</span> <span class="s1">&#39;B&#39;</span> <span class="o">+</span> <span class="n">station</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">station</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CHY&#39;</span><span class="p">:</span>
+        <span class="n">station</span> <span class="o">=</span> <span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="n">station</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">station</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;KAU&#39;</span><span class="p">:</span>
+        <span class="n">station</span> <span class="o">=</span> <span class="s1">&#39;D&#39;</span> <span class="o">+</span> <span class="n">station</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">station</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ILA&#39;</span><span class="p">:</span>
+        <span class="n">station</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span> <span class="o">+</span> <span class="n">station</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">station</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;HWA&#39;</span><span class="p">:</span>
+        <span class="n">station</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span> <span class="o">+</span> <span class="n">station</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">station</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;TTN&#39;</span><span class="p">:</span>
+        <span class="n">station</span> <span class="o">=</span> <span class="s1">&#39;H&#39;</span> <span class="o">+</span> <span class="n">station</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">station</span></div>
 
 
 <div class="viewcode-block" id="read_afile_directory"><a class="viewcode-back" href="../../package/seisnn.io.read_afile_directory.html#seisnn.io.read_afile_directory">[docs]</a><span class="k">def</span> <span class="nf">read_afile_directory</span><span class="p">(</span><span class="n">path_list</span><span class="p">):</span>
@@ -458,9 +500,12 @@
     <span class="n">trace_count</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">abs_path</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_dir_list</span><span class="p">(</span><span class="n">path_list</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">abs_path</span><span class="p">:</span>
-        <span class="n">event</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">read_afile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">event_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">trace_count</span> <span class="o">+=</span> <span class="n">c</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">event</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">read_afile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">event_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="n">trace_count</span> <span class="o">+=</span> <span class="n">c</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">continue</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;total_pick = &#39;</span><span class="p">,</span> <span class="n">trace_count</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">event_list</span></div>
 </pre></div>

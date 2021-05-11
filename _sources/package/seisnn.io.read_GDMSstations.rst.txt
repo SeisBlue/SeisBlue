@@ -1,0 +1,6 @@
+seisnn.io.read\_GDMSstations
+============================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: read_GDMSstations

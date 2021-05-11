@@ -151,14 +151,14 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.__init__" title="seisnn.sql.Client.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(database[, echo])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.add_events" title="seisnn.sql.Client.add_events"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_events</span></code></a>(catalog, tag[, remove_duplicates])</p></td>
-<td><p>Add event data form catalog.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.add_inventory" title="seisnn.sql.Client.add_inventory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inventory</span></code></a>(geom)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.add_inventory" title="seisnn.sql.Client.add_inventory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inventory</span></code></a>(geom)</p></td>
 <td><p>Add geometry data from geometry dict.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_pick</span></code>(time, station, phase, tag)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_pick</span></code>(time, station, phase, tag)</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.add_sfile_events" title="seisnn.sql.Client.add_sfile_events"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_sfile_events</span></code></a>(events, tag[, …])</p></td>
+<td><p>Add event data form catalog.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.clear_table" title="seisnn.sql.Client.clear_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_table</span></code></a>(table)</p></td>
 <td><p>Delete full table from database.</p></td>
@@ -190,14 +190,14 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.get_waveform" title="seisnn.sql.Client.get_waveform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_waveform</span></code></a>([from_time, to_time, station, …])</p></td>
 <td><p>Returns query from waveform table.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.read_hyp" title="seisnn.sql.Client.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp, network)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_GDMSstations</span></code>(nsta)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.read_hyp" title="seisnn.sql.Client.read_hyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hyp</span></code></a>(hyp, network)</p></td>
 <td><p>Add geometry data from .HYP file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.read_kml_placemark" title="seisnn.sql.Client.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml, network)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seisnn.sql.Client.read_kml_placemark" title="seisnn.sql.Client.read_kml_placemark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_kml_placemark</span></code></a>(kml, network)</p></td>
 <td><p>Add geometry data from .KML file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_nsta</span></code>(nsta)</p></td>
-<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#seisnn.sql.Client.read_tfrecord_header" title="seisnn.sql.Client.read_tfrecord_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_tfrecord_header</span></code></a>(tfr_list)</p></td>
 <td><p>Sync header into SQL database from tfrecord dataset.</p></td>
@@ -214,21 +214,6 @@
 </tbody>
 </table>
 <dl class="py method">
-<dt id="seisnn.sql.Client.add_events">
-<code class="sig-name descname"><span class="pre">add_events</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catalog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/sql.html#Client.add_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.sql.Client.add_events" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add event data form catalog.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>catalog</strong> (<em>str</em>) – Catalog name.</p></li>
-<li><p><strong>tag</strong> (<em>str</em>) – Pick tag.</p></li>
-<li><p><strong>remove_duplicates</strong> (<em>bool</em>) – Removes duplicates in event table.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="seisnn.sql.Client.add_inventory">
 <code class="sig-name descname"><span class="pre">add_inventory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/sql.html#Client.add_inventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.sql.Client.add_inventory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add geometry data from geometry dict.</p>
@@ -237,6 +222,21 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>geom</strong> (<em>dict</em>) – Geometry dict.</p></li>
 <li><p><strong>network</strong> (<em>str</em>) – Output network name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="seisnn.sql.Client.add_sfile_events">
+<code class="sig-name descname"><span class="pre">add_sfile_events</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/sql.html#Client.add_sfile_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.sql.Client.add_sfile_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add event data form catalog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>catalog</strong> (<em>str</em>) – Catalog name.</p></li>
+<li><p><strong>tag</strong> (<em>str</em>) – Pick tag.</p></li>
+<li><p><strong>remove_duplicates</strong> (<em>bool</em>) – Removes duplicates in event table.</p></li>
 </ul>
 </dd>
 </dl>

@@ -14,7 +14,9 @@ seisnn.io
    .. autosummary::
       :toctree:
    
+      change_station_code
       get_event
+      read_GDMSstations
       read_afile
       read_afile_directory
       read_dataset
@@ -23,7 +25,6 @@ seisnn.io
       read_hyp
       read_kml_placemark
       read_lines
-      read_nsta
       read_sds
       write_hyp_station
       write_tfrecord

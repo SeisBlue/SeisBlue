@@ -1,0 +1,6 @@
+seisnn.io.change\_station\_code
+===============================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: change_station_code

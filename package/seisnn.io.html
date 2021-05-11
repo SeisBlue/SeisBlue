@@ -13,7 +13,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.io.get_event" href="seisnn.io.get_event.html" />
+    <link rel="next" title="seisnn.io.change_station_code" href="seisnn.io.change_station_code.html" />
     <link rel="prev" title="seisnn.example_proto.Feature" href="seisnn.example_proto.Feature.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -94,7 +94,7 @@
     </a>
   </li>
   <li>
-    <a href="seisnn.io.get_event.html" title="Next Chapter: seisnn.io.get_event"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.io.get_event &raquo;</span>
+    <a href="seisnn.io.change_station_code.html" title="Next Chapter: seisnn.io.change_station_code"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.io.cha... &raquo;</span>
     </a>
   </li>
               
@@ -138,8 +138,14 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.io.get_event.html#seisnn.io.get_event" title="seisnn.io.get_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code></a>(file[, debug])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.io.change_station_code.html#seisnn.io.change_station_code" title="seisnn.io.change_station_code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_station_code</span></code></a>(station)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="seisnn.io.get_event.html#seisnn.io.get_event" title="seisnn.io.get_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code></a>(file[, debug])</p></td>
 <td><p>Returns obspy.event list from sfile.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.io.read_GDMSstations.html#seisnn.io.read_GDMSstations" title="seisnn.io.read_GDMSstations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_GDMSstations</span></code></a>(GDMSstations)</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="seisnn.io.read_afile.html#seisnn.io.read_afile" title="seisnn.io.read_afile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_afile</span></code></a>(afile_path)</p></td>
 <td><p></p></td>
@@ -165,16 +171,13 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="seisnn.io.read_lines.html#seisnn.io.read_lines" title="seisnn.io.read_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_lines</span></code></a>(lines)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="seisnn.io.read_nsta.html#seisnn.io.read_nsta" title="seisnn.io.read_nsta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_nsta</span></code></a>(nsta)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.io.read_sds.html#seisnn.io.read_sds" title="seisnn.io.read_sds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sds</span></code></a>(metadata)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="seisnn.io.read_sds.html#seisnn.io.read_sds" title="seisnn.io.read_sds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sds</span></code></a>(metadata)</p></td>
 <td><p>Read SDS database.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="seisnn.io.write_hyp_station.html#seisnn.io.write_hyp_station" title="seisnn.io.write_hyp_station"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code></a>(geom, save_file)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.io.write_hyp_station.html#seisnn.io.write_hyp_station" title="seisnn.io.write_hyp_station"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_hyp_station</span></code></a>(geom, save_file)</p></td>
 <td><p>Write STATION0.HYP file from geometry.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="seisnn.io.write_tfrecord.html#seisnn.io.write_tfrecord" title="seisnn.io.write_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code></a>(example_list, save_file)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="seisnn.io.write_tfrecord.html#seisnn.io.write_tfrecord" title="seisnn.io.write_tfrecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_tfrecord</span></code></a>(example_list, save_file)</p></td>
 <td><p>Writes TFRecord from example protocol.</p></td>
 </tr>
 </tbody>
