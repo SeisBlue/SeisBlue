@@ -359,6 +359,7 @@ def read_afile(afile_path):
                 count += 1
             except TypeError:
                 print(trace['rtcard'],'--------------',trace[f'{phase.lower()}time'])
+    ev.magnitudes =  header_info['magnitude']
     return ev, count
 
 
