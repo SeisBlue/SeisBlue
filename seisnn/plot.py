@@ -165,6 +165,48 @@ def plot_error_distribution(time_residuals, save_dir=None):
         plt.show()
 
 
+def plot_PGA_distribution(pga_list, save_dir=None):
+
+
+    sns.set()
+    bins = np.linspace(0,1000,100)
+    # bins = [0.5,1,2,3,4,5,6,7,8.0,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,23,24,25]
+    plt.hist(pga_list, bins=bins,)
+
+    plt.xticks(np.arange(0,1001 , step=100))
+    plt.semilogy()
+    plt.xlabel("PGA(gal)")
+    plt.ylabel("Counts")
+    plt.title("PGA distribution")
+    plt.show()
+
+
+def plot_event_magnitudes_distribution(events, save_dir=None):
+    """
+        plot_event_magnitude_distribution.
+
+        :param magnitude_list:
+        :param save_dir:
+        """
+    magnitudes_list = []
+    for event in events:
+        magnitudes_list.append(event.magnitudes)
+    sns.set()
+    bins = np.linspace(-2, 9, 110)
+    plt.hist(magnitudes_list, bins=bins)
+    plt.xticks(np.arange(-2, 9, step=1))
+    plt.xlabel("Magnitude")
+    plt.ylabel("Counts")
+    plt.title("Magnitudes distribution")
+
+    if save_dir:
+        seisnn.utils.make_dirs(save_dir)
+        plt.savefig(os.path.join(save_dir, f'error_distribution.png'))
+        plt.close()
+    else:
+        plt.show()
+
+
 def plot_snr_distribution(pick_snr, save_dir=None):
     """
     Plot signal to noise ratio distribution.
