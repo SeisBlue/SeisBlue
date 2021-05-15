@@ -107,7 +107,7 @@ def make_dirs(path):
     :param str path: Directory path.
     """
     if not os.path.isdir(path):
-        os.makedirs(path, mode=0o777)
+        os.makedirs(path, mode=0o777, exist_ok=True)
 
 
 def batch(iterable, size=1):
