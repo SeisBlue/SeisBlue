@@ -50,19 +50,21 @@ class TFRecordConverter:
 
     def write_tfrecord(self, picks, sub_dir, tag, database):
         instance_list = self.get_instance_list(picks, tag, database)
-        feature_list = [instance.to_feature() for instance in instance_list]
-        example_list = [seisnn.example_proto.feature_to_example(feature)
-                        for feature in feature_list]
+        if instance_list:
+            feature_list = [instance.to_feature() for instance in
+                            instance_list]
+            example_list = [seisnn.example_proto.feature_to_example(feature)
+                            for feature in feature_list]
 
-        tfr_dir = instance_list[0].get_tfrecord_dir(sub_dir)
-        seisnn.utils.make_dirs(tfr_dir)
+            tfr_dir = instance_list[0].get_tfrecord_dir(sub_dir)
+            seisnn.utils.make_dirs(tfr_dir)
 
-        file_name = instance_list[0].get_tfrecord_name()
-        save_file = os.path.join(tfr_dir, file_name)
+            file_name = instance_list[0].get_tfrecord_name()
+            save_file = os.path.join(tfr_dir, file_name)
 
-        seisnn.io.write_tfrecord(example_list, save_file)
+            seisnn.io.write_tfrecord(example_list, save_file)
 
-        print(f'output {file_name}')
+            print(f'output {file_name}')
 
     def get_instance_list(self, picks, tag, database):
         """
@@ -77,31 +79,36 @@ class TFRecordConverter:
                                         station='',
                                         )
         instance_list = []
-        for pick in picks:
-            if metadata.starttime < pick.time < metadata.endtime:
-                continue
-            elif metadata.endtime < pick.time < metadata.endtime + 30:
-                metadata = self.get_time_window(anchor_time=metadata.starttime + 30,
-                                                station=pick.station,
-                                                )
-            else:
-                metadata = self.get_time_window(anchor_time=pick.time,
-                                                station=pick.station,
-                                                shift='random')
-            streams = seisnn.io.read_sds(metadata)
+        try:
+            for pick in picks:
+                if metadata.starttime < pick.time < metadata.endtime:
+                    continue
+                elif metadata.endtime < pick.time < metadata.endtime + 30:
+                    metadata = self.get_time_window(
+                        anchor_time=metadata.starttime + 30,
+                        station=pick.station,
+                    )
+                else:
+                    metadata = self.get_time_window(anchor_time=pick.time,
+                                                    station=pick.station,
+                                                    shift='random')
 
-            for _, stream in streams.items():
-                stream = self.signal_preprocessing(stream)
-                instance = seisnn.core.Instance(stream)
+                streams = seisnn.io.read_sds(metadata)
 
-                instance.label = seisnn.core.Label(instance.metadata,
-                                                   self.phase)
-                instance.label.generate_label(database, tag, self.shape)
+                for _, stream in streams.items():
+                    stream = self.signal_preprocessing(stream)
+                    instance = seisnn.core.Instance(stream)
 
-                instance.predict = seisnn.core.Label(instance.metadata,
-                                                     self.phase)
+                    instance.label = seisnn.core.Label(instance.metadata,
+                                                       self.phase)
+                    instance.label.generate_label(database, tag, self.shape)
 
-                instance_list.append(instance)
+                    instance.predict = seisnn.core.Label(instance.metadata,
+                                                         self.phase)
+
+                    instance_list.append(instance)
+        except Exception as e:
+            print(f'station = {pick.station}, time = {pick.time}, error = {e}')
         return instance_list
 
     def get_time_window(self, anchor_time, station, shift=0):
@@ -154,9 +161,15 @@ class TFRecordConverter:
 
         trace = stream[0]
         start_time = trace.stats.starttime
-        dt = (trace.stats.endtime - trace.stats.starttime) / (
-                trace.data.size - 1)
-        end_time = start_time + dt * (points - 1)
+        if trace.data.size > 1:
+            dt = (trace.stats.endtime - trace.stats.starttime) / (
+                    trace.data.size - 1)
+            end_time = start_time + dt * (points - 1)
+        elif trace.data.size == 1:
+            end_time = start_time
+        else:
+            print('No data points in trace')
+            return
         stream.trim(start_time,
                     end_time,
                     nearest_sample=True,

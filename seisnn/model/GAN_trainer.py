@@ -9,7 +9,7 @@ from tensorflow.keras.layers import concatenate
 from seisnn.core import Instance
 from seisnn.model.generator import nest_net
 from seisnn.model.attention import transformer
-from seisnn.model.GAN_model import build_discriminator, build_cgan,build_patch_discriminator
+from seisnn.model.GAN_model import build_discriminator, build_cgan, build_patch_discriminator
 import seisnn.example_proto
 import seisnn.io
 import seisnn.sql
@@ -72,7 +72,7 @@ class GeneratorTrainer(BaseTrainer):
         self.generator_model = transformer(img_rows=1, img_cols=3008,
                                            color_type=3,
                                            num_class=3)
-        self.discriminator_model = build_patch_discriminator(img_rows=1,
+        self.discriminator_model = build_discriminator(img_rows=1,
                                                        img_cols=3008,
                                                        color_type=3,
                                                        num_class=3)
@@ -137,18 +137,18 @@ class GeneratorTrainer(BaseTrainer):
             last_epoch = len(ckpt_manager.checkpoints)
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
         dataset = seisnn.io.read_dataset(tfr_list)
-        dataset =dataset.shuffle(100000)
+        dataset = dataset.shuffle(100000)
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
-        data_len = self.get_dataset_length(self.database,tfr_list)
+        # data_len = self.get_dataset_length(self.database,tfr_list)
 
         for epoch in range(epochs):
             print(f'epoch {epoch + 1} / {epochs}')
 
             n = 0
             progbar = tf.keras.utils.Progbar(
-                data_len, stateful_metrics=metrics_names)
+                190000, stateful_metrics=metrics_names)
 
             for train in dataset.prefetch(100).batch(batch_size):
                 d_loss, g_loss = self.train_step(train, val)
@@ -190,8 +190,8 @@ class GeneratorTrainer(BaseTrainer):
         :return: predict loss, validation loss
         """
 
-        real = np.ones((train['trace'].shape[0], 1,11,1))
-        fake = np.zeros((train['trace'].shape[0],1,11,1))
+        real = np.ones((train['trace'].shape[0], 1))
+        fake = np.zeros((train['trace'].shape[0], 1))
         g_pred = self.generator_model(train['trace'], training=False)
         concat = concatenate((train['trace'], g_pred), axis=3)
         f_disc_loss = self.discriminator_model.train_on_batch(concat, fake)
@@ -207,11 +207,11 @@ class GeneratorTrainer(BaseTrainer):
 
 
 if __name__ == "__main__":
-    database = 'Hualien.db'
+    database = 'tt.db'
     db = seisnn.sql.Client(database)
-    tfr_list = db.get_tfrecord(to_date='2019-05-09', column='path')
+    tfr_list = db.get_tfrecord(from_date='2000-01-01', to_date='2018-12-31', column='path')
 
-    model_instance = 'trans_ganV1'
+    model_instance = 'qweqwe'
     trainer = GeneratorTrainer(database)
     trainer.train_loop(tfr_list, model_instance,
                        batch_size=64, epochs=50,

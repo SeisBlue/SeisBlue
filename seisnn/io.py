@@ -349,16 +349,18 @@ def read_afile(afile_path):
         )
         for phase in ['P', 'S']:
             try:
-                ev.picks.append(
-                    obspy.core.event.Pick(waveform_id=_waveform_id_1,
-                                          phase_hint=phase,
-                                          time=obspy.core.UTCDateTime(trace['rtcard'])+
-                                              trace[f'{phase.lower()}time'])
-                                          )
+                if float(trace[f'{phase.lower()}time']) != 0:
+                    ev.picks.append(
+                        obspy.core.event.Pick(waveform_id=_waveform_id_1,
+                                              phase_hint=phase,
+                                              time=obspy.core.UTCDateTime(trace['rtcard'])+
+                                                  trace[f'{phase.lower()}time'])
+                                              )
 
-                count += 1
+                    count += 1
             except TypeError:
                 print(trace['rtcard'],'--------------',trace[f'{phase.lower()}time'])
+    ev.magnitudes =  header_info['magnitude']
     return ev, count
 
 

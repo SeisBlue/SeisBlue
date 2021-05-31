@@ -50,7 +50,6 @@ def build_discriminator(img_rows=1, img_cols=3008, color_type=3,
     flat1 = Flatten()(conv3)
     output = Dense(1, activation='sigmoid')(flat1)
     model = tf.keras.Model(inputs=img_input, outputs=output)
-    model.summary()
     return model
 
 def build_patch_discriminator(img_rows=1, img_cols=3008, color_type=3,
@@ -69,7 +68,7 @@ def build_patch_discriminator(img_rows=1, img_cols=3008, color_type=3,
     output = Conv2D(1,(1,4),strides=4,activation='sigmoid')(conv3)
 
     model = tf.keras.Model(inputs=img_input, outputs=output)
-    model.summary()
+
     return model
 
 

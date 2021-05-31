@@ -132,18 +132,18 @@ class GeneratorTrainer(BaseTrainer):
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
-        data_len = self.get_dataset_length(self.database, tfr_list)
+        # data_len = self.get_dataset_length(self.database, tfr_list)
 
         for epoch in range(epochs):
             print(f'epoch {epoch + 1} / {epochs}')
 
             n = 0
             progbar = tf.keras.utils.Progbar(
-                data_len, stateful_metrics=metrics_names)
+                200000, stateful_metrics=metrics_names)
 
             loss_buffer = []
             for train in dataset.prefetch(100).batch(batch_size):
-                train_loss, val_loss = self.train_step(train, val)
+                train_loss, val_loss = self.train_step(train, val30)
                 loss_buffer.append([train_loss, val_loss])
 
                 values = [('loss', train_loss.numpy()),
@@ -171,6 +171,7 @@ class GeneratorTrainer(BaseTrainer):
 
             ckpt_save_path = ckpt_manager.save()
             print(f'Saving checkpoint to {ckpt_save_path}')
+            self.model.save(f'/home/andy/Models/{model_name}.h5')
 
     def export_model(self, model_name):
         model_path, history_path = self.get_model_dir(model_name)
