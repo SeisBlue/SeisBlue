@@ -1,0 +1,6 @@
+seisnn.plot.plot\_PGA\_distribution
+===================================
+
+.. currentmodule:: seisnn.plot
+
+.. autofunction:: plot_PGA_distribution

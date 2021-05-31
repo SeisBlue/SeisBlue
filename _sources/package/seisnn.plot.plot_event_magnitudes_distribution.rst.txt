@@ -1,0 +1,6 @@
+seisnn.plot.plot\_event\_magnitudes\_distribution
+=================================================
+
+.. currentmodule:: seisnn.plot
+
+.. autofunction:: plot_event_magnitudes_distribution

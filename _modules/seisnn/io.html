@@ -463,16 +463,18 @@
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">]:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">ev</span><span class="o">.</span><span class="n">picks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Pick</span><span class="p">(</span><span class="n">waveform_id</span><span class="o">=</span><span class="n">_waveform_id_1</span><span class="p">,</span>
-                                          <span class="n">phase_hint</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span>
-                                          <span class="n">time</span><span class="o">=</span><span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;rtcard&#39;</span><span class="p">])</span><span class="o">+</span>
-                                              <span class="n">trace</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">time&#39;</span><span class="p">])</span>
-                                          <span class="p">)</span>
+                <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">time&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">ev</span><span class="o">.</span><span class="n">picks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Pick</span><span class="p">(</span><span class="n">waveform_id</span><span class="o">=</span><span class="n">_waveform_id_1</span><span class="p">,</span>
+                                              <span class="n">phase_hint</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span>
+                                              <span class="n">time</span><span class="o">=</span><span class="n">obspy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">UTCDateTime</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;rtcard&#39;</span><span class="p">])</span><span class="o">+</span>
+                                                  <span class="n">trace</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">time&#39;</span><span class="p">])</span>
+                                              <span class="p">)</span>
 
-                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;rtcard&#39;</span><span class="p">],</span><span class="s1">&#39;--------------&#39;</span><span class="p">,</span><span class="n">trace</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">time&#39;</span><span class="p">])</span>
+    <span class="n">ev</span><span class="o">.</span><span class="n">magnitudes</span> <span class="o">=</span>  <span class="n">header_info</span><span class="p">[</span><span class="s1">&#39;magnitude&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">ev</span><span class="p">,</span> <span class="n">count</span></div>
 
 

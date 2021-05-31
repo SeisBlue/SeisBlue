@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>seisnn.plot.get_time_array &#8212; SeisNN 0.3.0dev documentation</title>
+    <title>seisnn.plot.plot_event_magnitudes_distribution &#8212; SeisNN 0.3.0dev documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -13,8 +13,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="seisnn.plot.plot_PGA_distribution" href="seisnn.plot.plot_PGA_distribution.html" />
-    <link rel="prev" title="seisnn.plot.color_palette" href="seisnn.plot.color_palette.html" />
+    <link rel="next" title="seisnn.plot.plot_loss" href="seisnn.plot.plot_loss.html" />
+    <link rel="prev" title="seisnn.plot.plot_error_distribution" href="seisnn.plot.plot_error_distribution.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -80,7 +80,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">seisnn.plot.get_time_array</a></li>
+<li><a class="reference internal" href="#">seisnn.plot.plot_event_magnitudes_distribution</a></li>
 </ul>
 </ul>
 </li>
@@ -90,11 +90,11 @@
               
                 
   <li>
-    <a href="seisnn.plot.color_palette.html" title="Previous Chapter: seisnn.plot.color_palette"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.plot.c...</span>
+    <a href="seisnn.plot.plot_error_distribution.html" title="Previous Chapter: seisnn.plot.plot_error_distribution"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; seisnn.plot.p...</span>
     </a>
   </li>
   <li>
-    <a href="seisnn.plot.plot_PGA_distribution.html" title="Next Chapter: seisnn.plot.plot_PGA_distribution"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.plot.p... &raquo;</span>
+    <a href="seisnn.plot.plot_loss.html" title="Next Chapter: seisnn.plot.plot_loss"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">seisnn.plot.plot_loss &raquo;</span>
     </a>
   </li>
               
@@ -104,7 +104,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/package/seisnn.plot.get_time_array.rst.txt"
+  <a href="../_sources/package/seisnn.plot.plot_event_magnitudes_distribution.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -128,21 +128,18 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-plot-get-time-array">
-<h1>seisnn.plot.get_time_array<a class="headerlink" href="#seisnn-plot-get-time-array" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="seisnn-plot-plot-event-magnitudes-distribution">
+<h1>seisnn.plot.plot_event_magnitudes_distribution<a class="headerlink" href="#seisnn-plot-plot-event-magnitudes-distribution" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="seisnn.plot.get_time_array">
-<code class="sig-prename descclassname"><span class="pre">seisnn.plot.</span></code><code class="sig-name descname"><span class="pre">get_time_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/plot.html#get_time_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.plot.get_time_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns time step array from feature dict.</p>
+<dt id="seisnn.plot.plot_event_magnitudes_distribution">
+<code class="sig-prename descclassname"><span class="pre">seisnn.plot.</span></code><code class="sig-name descname"><span class="pre">plot_event_magnitudes_distribution</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/plot.html#plot_event_magnitudes_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.plot.plot_event_magnitudes_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot_event_magnitude_distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>instance</strong> – Data instance.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>numpy.array</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Time array.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>magnitude_list</strong> – </p></li>
+<li><p><strong>save_dir</strong> – </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

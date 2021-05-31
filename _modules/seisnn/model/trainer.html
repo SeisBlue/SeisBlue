@@ -246,18 +246,18 @@
         <span class="n">val</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
         <span class="n">metrics_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">]</span>
 
-        <span class="n">data_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dataset_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="n">tfr_list</span><span class="p">)</span>
+        <span class="c1"># data_len = self.get_dataset_length(self.database, tfr_list)</span>
 
         <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;epoch </span><span class="si">{</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s1"> / </span><span class="si">{</span><span class="n">epochs</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">progbar</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Progbar</span><span class="p">(</span>
-                <span class="n">data_len</span><span class="p">,</span> <span class="n">stateful_metrics</span><span class="o">=</span><span class="n">metrics_names</span><span class="p">)</span>
+                <span class="mi">200000</span><span class="p">,</span> <span class="n">stateful_metrics</span><span class="o">=</span><span class="n">metrics_names</span><span class="p">)</span>
 
             <span class="n">loss_buffer</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">train</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">prefetch</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
-                <span class="n">train_loss</span><span class="p">,</span> <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+                <span class="n">train_loss</span><span class="p">,</span> <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val30</span><span class="p">)</span>
                 <span class="n">loss_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">train_loss</span><span class="p">,</span> <span class="n">val_loss</span><span class="p">])</span>
 
                 <span class="n">values</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="n">train_loss</span><span class="o">.</span><span class="n">numpy</span><span class="p">()),</span>
@@ -284,7 +284,8 @@
                 <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="n">ckpt_save_path</span> <span class="o">=</span> <span class="n">ckpt_manager</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saving checkpoint to </span><span class="si">{</span><span class="n">ckpt_save_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saving checkpoint to </span><span class="si">{</span><span class="n">ckpt_save_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/home/andy/Models/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s1">.h5&#39;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">export_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
         <span class="n">model_path</span><span class="p">,</span> <span class="n">history_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_dir</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
