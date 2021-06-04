@@ -1,0 +1,6 @@
+seisnn.io.read\_CVA\_waveform
+=============================
+
+.. currentmodule:: seisnn.io
+
+.. autofunction:: read_CVA_waveform

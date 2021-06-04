@@ -242,7 +242,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Latest checkpoint epoch </span><span class="si">{</span><span class="n">last_epoch</span><span class="si">}</span><span class="s1"> restored!!&#39;</span><span class="p">)</span>
 
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">tfr_list</span><span class="p">)</span>
-        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
         <span class="n">val</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
         <span class="n">metrics_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">]</span>
 
@@ -257,7 +257,7 @@
 
             <span class="n">loss_buffer</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">train</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">prefetch</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
-                <span class="n">train_loss</span><span class="p">,</span> <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val30</span><span class="p">)</span>
+                <span class="n">train_loss</span><span class="p">,</span> <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
                 <span class="n">loss_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">train_loss</span><span class="p">,</span> <span class="n">val_loss</span><span class="p">])</span>
 
                 <span class="n">values</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="n">train_loss</span><span class="o">.</span><span class="n">numpy</span><span class="p">()),</span>

@@ -162,24 +162,25 @@
     <span class="k">return</span> <span class="n">time_array</span></div>
 
 
-<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../package/seisnn.plot.plot_dataset.html#seisnn.plot.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_dataset"><a class="viewcode-back" href="../../package/seisnn.plot.plot_dataset.html#seisnn.plot.plot_dataset">[docs]</a><span class="k">def</span> <span class="nf">plot_dataset</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot trace and label.</span>
 
 <span class="sd">    :param instance:</span>
 <span class="sd">    :param title:</span>
 <span class="sd">    :param save_dir:</span>
+<span class="sd">    :param threshold:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">instance</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">instance</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">id</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
 
-    <span class="n">subplot</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">subplot</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">subplot</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
 
     <span class="c1"># plot label</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">subplot</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">subplot</span><span class="p">)</span>
 
-    <span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
     <span class="n">peak_flag</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">instance</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">instance</span><span class="o">.</span><span class="n">predict</span><span class="p">]):</span>
@@ -201,7 +202,7 @@
 
     <span class="c1"># plot trace</span>
     <span class="n">lines_shape</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chan</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">channel</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chan</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;EHZ&#39;</span><span class="p">,</span><span class="s1">&#39;EHN&#39;</span><span class="p">,</span><span class="s1">&#39;EHE&#39;</span><span class="p">]):</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">subplot</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

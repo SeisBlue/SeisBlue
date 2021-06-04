@@ -16,6 +16,7 @@ seisnn.io
    
       change_station_code
       get_event
+      read_CVA_waveform
       read_GDMSstations
       read_afile
       read_afile_directory
