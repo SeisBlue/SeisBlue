@@ -48,24 +48,25 @@ def get_time_array(instance):
     return time_array
 
 
-def plot_dataset(instance, title=None, save_dir=None):
+def plot_dataset(instance, title=None, save_dir=None,threshold = 0.5):
     """
     Plot trace and label.
 
     :param instance:
     :param title:
     :param save_dir:
+    :param threshold:
     """
     if title is None:
         title = f'{instance.metadata.starttime}_{instance.metadata.id[:-3]}'
 
-    subplot = len(instance.trace.channel) + 1
+    subplot = 4
     fig = plt.figure(figsize=(8, subplot * 2))
 
     # plot label
     ax = fig.add_subplot(subplot, 1, subplot)
 
-    threshold = 0.5
+    threshold = threshold
     ax.hlines(threshold, 0, 30, lw=1, linestyles='--')
     peak_flag = []
     for i, label in enumerate([instance.label, instance.predict]):
@@ -87,7 +88,7 @@ def plot_dataset(instance, title=None, save_dir=None):
 
     # plot trace
     lines_shape = [':', '-']
-    for i, chan in enumerate(instance.trace.channel):
+    for i, chan in enumerate(['EHZ','EHN','EHE']):
         ax = fig.add_subplot(subplot, 1, i + 1)
         ax.set_ylim([-1.05, 1.05])
         if i == 0:

@@ -128,7 +128,7 @@ class GeneratorTrainer(BaseTrainer):
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
 
         dataset = seisnn.io.read_dataset(tfr_list)
-        dataset = dataset.shuffle(100000)
+        dataset = dataset.shuffle(5000)
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
@@ -143,7 +143,7 @@ class GeneratorTrainer(BaseTrainer):
 
             loss_buffer = []
             for train in dataset.prefetch(100).batch(batch_size):
-                train_loss, val_loss = self.train_step(train, val30)
+                train_loss, val_loss = self.train_step(train, val)
                 loss_buffer.append([train_loss, val_loss])
 
                 values = [('loss', train_loss.numpy()),
