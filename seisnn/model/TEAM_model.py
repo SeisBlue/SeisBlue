@@ -3,12 +3,12 @@ TEAM model modified from:
 https://github.com/yetinam/TEAM
 """
 import tensorflow as tf
-from tensorflow.keras import initializers, backend as K, \
+from tensorflow.keras import initializers, \
     Input, Model, Sequential, activations
 from tensorflow.keras.layers import Add, Concatenate, Conv1D, Conv2D, \
     Dense, Dropout, Embedding, Flatten, GlobalMaxPooling1D, \
     Lambda, Layer, LayerNormalization, Masking, MaxPooling1D, \
-    Reshape, TimeDistributed
+    Permute, Reshape, TimeDistributed
 import numpy as np
 import os
 import pickle
