@@ -94,7 +94,7 @@ def get_event(file, debug=False):
                 print(err)
 
 
-def read_sds(metadata):
+def read_sds(metadata,trim = True):
     """
     Read SDS database.
 
@@ -114,6 +114,8 @@ def read_sds(metadata):
                                   channel="*",
                                   starttime=starttime,
                                   endtime=endtime)
+    if trim:
+        stream.trim(starttime, endtime, pad=True, fill_value=0)
     stream.sort(keys=['channel'], reverse=True)
 
     stream_dict = collections.defaultdict(Stream)
