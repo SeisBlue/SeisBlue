@@ -26,25 +26,62 @@ def MLP(unit_dims, activation=None, last_activation=None):
     return block_mlp
 
 
-class MixtureOutput(Model):
-    def __init__(self, input_shape, n, d=1, activation='relu', eps=1e-4, bias_mu=1.8, bias_sigma=0.2,
-                 name=None):
-        inp_masked = Input(shape=input_shape)
-        inp = StripMask()(inp_masked)
+class MDN(Model):
+    def __init__(self,
+                 unit_dims,
+                 activation_mlp=None,
+                 last_activation_mlp=None,
+                 density_dim=None,
+                 unit_dim=1,
+                 activation=None,
+                 eps=1e-4,
+                 bias_mu=1.8,
+                 bias_sigma=0.2):
+        """
+        Args:
+            unit_dims: the dimension of every kernel in MLP.
+            activation_mlp: the activation function in MLP except the last one.
+            last_activation_mlp: the last activation function in MLP.
+            density_dim: the number of probability density function.
+            unit_dim: the dimension of mu & sigma in probability density
+                function.
+            activation: activation funciton for Dense layer of mu
+            eps: the value to prevent from sigma in the probability density
+                function <= 0.
+            bias_mu: the bias of mu in the probability density function.
+            bias_sigma: the bias of mu in the probability density function.
+        """
+        super(MDN, self).__init__()
 
-        alpha = Dense(n, activation='softmax')(inp)
-        alpha = Reshape((n, 1))(alpha)
+        self.block_mlp = MLP(unit_dims, activation_mlp, last_activation_mlp)
+        self.strip_mask = StripMask()
 
-        mu = Dense(n * d, activation=activation, bias_initializer=initializers.Constant(bias_mu))(inp)
-        mu = Reshape((n, d))(mu)
+        self.dense_alpha = Dense(density_dim, activation='softmax')
+        self.dense_mu = Dense(density_dim * unit_dim, activation=activation,
+                              bias_initializer=initializers.Constant(bias_mu))
+        self.dense_sigma = Dense(density_dim * unit_dim, activation='relu',
+                                 bias_initializer=initializers.Constant(bias_sigma))
 
-        sigma = Dense(n * d, activation='relu', bias_initializer=initializers.Constant(bias_sigma))(inp)
-        sigma = Lambda(lambda x: x + eps)(sigma)  # Add epsilon to avoid division by 0
-        sigma = Reshape((n, d))(sigma)
+        self.add_eps = Lambda(lambda x: x + eps)
+        self.reshape = Reshape((density_dim, unit_dim))
+        self.reshape_alpha = Reshape((density_dim, 1))
+        self.concat = Concatenate(axis=2)
 
-        out = Concatenate(axis=2)([alpha, mu, sigma])
+    def __call__(self, inputs):
+        out_mlp = self.block_mlp(inputs)
+        out_masked = self.strip_mask(out_mlp)
 
-        Model.__init__(self, inputs=inp_masked, outputs=out, name=name)
+        alpha = self.dense_alpha(out_masked)
+        alpha = self.reshape_alpha(alpha)
+
+        mu = self.dense_mu(out_masked)
+        mu = self.reshape(mu)
+
+        sigma = self.dense_sigma(out_masked)
+        sigma = self.add_eps(sigma)
+        sigma = self.reshape(sigma)
+
+        return self.concat([alpha, mu, sigma])
 
 
 class NormalizedScaleEmbedding(Model):
