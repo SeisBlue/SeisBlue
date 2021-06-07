@@ -123,7 +123,7 @@ class NormalizedScaleEmbedding(Model):
         self.block_mlp = MLP(mlp_dims, activation)
         self.concat = Concatenate()
 
-    def __call__(self, inputs):
+    def call(self, inputs):
         inp_norm, scale = self.normalize(inputs, (1, 2), eps=self.eps)
         embed = self.embedding(inp_norm)
         out = self.block_mlp(embed)
