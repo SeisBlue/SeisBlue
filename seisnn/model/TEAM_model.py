@@ -327,35 +327,34 @@ class MultiHeadSelfAttention(Layer):
                 mask = mask[0]
         else:
             att_mask = None
-        q = K.dot(x, self.WQ)  # (batch, stations, key*n_heads)
-        q = K.reshape(q, (-1, self.stations, d_key, n_heads))
-        q = K.permute_dimensions(q, [0, 3, 1, 2])  # (batch, n_heads, stations, key)
-        k = K.dot(x, self.WK)  # (batch, stations, key*n_heads)
-        k = K.reshape(k, (-1, self.stations, d_key, n_heads))
-        k = K.permute_dimensions(k, [0, 3, 2, 1])  # (batch, n_heads, key, stations)
+        q = tf.tensordot(x, self.WQ, [[-1], [0]])  # (batch, stations, key*n_heads)
+        q = tf.reshape(q, (-1, self.stations, d_key, n_heads))
+        q = Permute((0, 3, 1, 2))(q)  # (batch, n_heads, stations, key)
+        k = tf.dot(x, self.WK, [[-1], [0]])  # (batch, stations, key*n_heads)
+        k = tf.reshape(k, (-1, self.stations, d_key, n_heads))
+        k = Permute((0, 3, 2, 1))(k)  # (batch, n_heads, key, stations)
         score = tf.matmul(q, k) / np.sqrt(d_key)  # (batch, n_heads, stations, stations)
         if mask is not None:
-            inv_mask = K.expand_dims(K.expand_dims(K.cast(~mask, K.floatx()), axis=-1), axis=-1)  # (batch, stations, 1, 1)
-            mask_B = K.permute_dimensions(inv_mask, [0, 2, 3, 1])  # (batch, 1, 1, stations)
+            inv_mask = tf.expand_dims(tf.expand_dims(tf.cast(~mask, tf.float32), axis=-1), axis=-1)  # (batch, stations, 1, 1)
+            mask_B = Permute((0, 2, 3, 1))(inv_mask)  # (batch, 1, 1, stations)
             score = score - mask_B * self.infinity
         if att_mask is not None:
-            inv_mask = K.expand_dims(K.expand_dims(K.cast(~att_mask, K.floatx()), axis=-1),
-                                     axis=-1)  # (batch, stations, 1, 1)
-            mask_B = K.permute_dimensions(inv_mask, [0, 2, 3, 1])  # (batch, 1, 1, stations)
+            inv_mask = tf.expand_dims(tf.expand_dims(tf.cast(~att_mask, tf.float32), axis=-1), axis=-1)  # (batch, stations, 1, 1)
+            mask_B = Permute((0, 2, 3, 1))(inv_mask)  # (batch, 1, 1, stations)
             score = score - mask_B * self.infinity
-        score = K.softmax(score)
+        score = activations.softmax(score)
         if self.att_dropout > 0:
-            score = K.dropout(score, self.att_dropout)
-        v = K.dot(x, self.WV)  # (batch, stations, key*n_heads)
-        v = K.reshape(v, (-1, self.stations, d_key, n_heads))
-        v = K.permute_dimensions(v, [0, 3, 1, 2])  # (batch, n_heads, stations, key)
+            score = Dropout(self.att_dropout)(score)
+        v = tf.tensordot(x, self.WV, [[-1], [0]])  # (batch, stations, key*n_heads)
+        v = tf.reshape(v, (-1, self.stations, d_key, n_heads))
+        v = Permute((0, 3, 1, 2))(v)  # (batch, n_heads, stations, key)
         o = tf.matmul(score, v)  # (batch, n_heads, stations, key)
-        o = K.permute_dimensions(o, [0, 2, 1, 3])  # (batch, stations, n_heads, key)
-        o = K.reshape(o, (-1, self.stations, n_heads * d_key))
-        o = K.dot(o, self.WO)
+        o = Permute((0, 2, 1, 3))(o)  # (batch, stations, n_heads, key)
+        o = tf.reshape(o, (-1, self.stations, n_heads * d_key))
+        o = tf.tensordot(o, self.WO, [[-1], [0]])
         if mask is not None:
-            mask = K.expand_dims(K.cast(mask, K.floatx()), axis=-1)
-            o = K.abs(o * mask)
+            mask = tf.expand_dims(tf.cast(mask, tf.float32), axis=-1)
+            o = tf.math.abs(o * mask)
         return o
 
     def compute_output_shape(self, input_shape):
@@ -364,12 +363,11 @@ class MultiHeadSelfAttention(Layer):
         else:
             return input_shape
 
-    def compute_mask(self, inputs, mask=None):
+    def compute_mask(self, mask=None):
         if self.att_masking:
             return mask[0]
         else:
             return mask
-
 
 class PointwiseFeedForward(Layer):
     def __init__(self, hidden_dim, kernel_initializer='glorot_uniform', bias_initializer='zeros', **kwargs):
