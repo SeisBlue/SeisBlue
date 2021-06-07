@@ -1,6 +1,6 @@
 import seisnn
 
-db = seisnn.sql.Client(database="tt.db")
+db = seisnn.sql.Client(database="CWB.db")
 inspector = seisnn.sql.DatabaseInspector(db)
 
 db.read_GDMSstations(nsta="GDMSstations.csv")
