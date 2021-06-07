@@ -555,17 +555,17 @@ def mixture_density_loss(y_true, y_pred, eps=1e-6, d=1, mean=True, print_shapes=
 
 def time_distributed_loss(y_true, y_pred, loss_func, norm=1, mean=True, summation=True, kwloss={}):
     seq_length = y_pred.shape[1]
-    y_true = K.reshape(y_true, (-1, (y_pred.shape[-1] - 1) // 2, 1))
-    y_pred = K.reshape(y_pred, (-1, y_pred.shape[-2], y_pred.shape[-1]))
+    y_true = tf.reshape(y_true, (-1, (y_pred.shape[-1] - 1) // 2, 1))
+    y_pred = tf.reshape(y_pred, (-1, y_pred.shape[-2], y_pred.shape[-1]))
     loss = loss_func(y_true, y_pred, **kwloss)
-    loss = K.reshape(loss, (-1, seq_length))
+    loss = tf.reshape(loss, (-1, seq_length))
 
     if mean:
-        return K.mean(loss)
+        return tf.math.reduce_mean(loss)
 
     loss /= norm
     if summation:
-        loss = K.sum(loss)
+        loss = tf.math.reduce_sum(loss)
 
     return loss
 
