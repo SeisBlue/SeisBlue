@@ -1,6 +1,6 @@
 import seisnn
 
-database = 'Hualien.db'
+database = 'CWB.db'
 db = seisnn.sql.Client(database)
 
 tfr_list = db.get_tfrecord(to_date='2019-05-09',column='path')

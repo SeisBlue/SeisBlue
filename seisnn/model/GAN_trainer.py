@@ -207,11 +207,11 @@ class GeneratorTrainer(BaseTrainer):
 
 
 if __name__ == "__main__":
-    database = 'tt.db'
+    database = 'CWB.db'
     db = seisnn.sql.Client(database)
     tfr_list = db.get_tfrecord(from_date='2000-01-01', to_date='2018-12-31', column='path')
 
-    model_instance = 'qweqwe'
+    model_instance = 'CWB_2010_2019_transgan'
     trainer = GeneratorTrainer(database)
     trainer.train_loop(tfr_list, model_instance,
                        batch_size=64, epochs=50,
