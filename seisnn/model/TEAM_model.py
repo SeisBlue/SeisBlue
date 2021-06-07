@@ -4,7 +4,7 @@ https://github.com/yetinam/TEAM
 """
 import tensorflow as tf
 from tensorflow.keras import initializers, backend as K, \
-    Input, Model, Sequential
+    Input, Model, Sequential, activations
 from tensorflow.keras.layers import Add, Concatenate, Conv1D, Conv2D, \
     Dense, Dropout, Embedding, Flatten, GlobalMaxPooling1D, \
     Lambda, Layer, LayerNormalization, Masking, MaxPooling1D, \
@@ -529,11 +529,6 @@ class StripMask(Layer):
 
     def compute_mask(self):
         return None
-
-
-# From: https://github.com/openai/gpt-2/blob/ac5d52295f8a1c3856ea24fb239087cc1a3d1131/src/model.py#L25
-def gelu(x):
-    return 0.5*x*(1+tf.tanh(np.sqrt(2/np.pi)*(x+0.044715*tf.pow(x, 3))))
 
 
 def mixture_density_loss(y_true, y_pred, eps=1e-6, d=1, mean=True, print_shapes=True):
