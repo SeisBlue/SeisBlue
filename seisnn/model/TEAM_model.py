@@ -575,13 +575,13 @@ class GlobalMaxPooling1DMasked(GlobalMaxPooling1D):
         pseudo_infty = 1000
         if mask is None:
             # Ensure that the mask is not the maximum value any more
-            mask = K.expand_dims(K.cast(mask, K.floatx()), axis=-1)
+            mask = tf.expand_dims(tf.cast(mask, tf.float32), axis=-1)
             x = x - mask * pseudo_infty
-            return K.max(x, axis=1)
+            return tf.math.reduce_max(x, axis=1)
         else:
             return super().call(x)
 
-    def compute_mask(self, inputs, mask=None):
+    def compute_mask(self):
         return None
 
 
