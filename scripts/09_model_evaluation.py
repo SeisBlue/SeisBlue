@@ -1,10 +1,10 @@
 import seisnn
 
-model_instance = 'test_model'
-database = 'Hualien.db'
-tfr_list = seisnn.utils.get_dir_list('/home/andy/TFRecord/Eval/QQQ.h5/', suffix='.tfrecord')
+model_instance = 'CWB_2010_2019_trans'
+database = 'CWB.db'
+tfr_list = seisnn.utils.get_dir_list('/home/andy/TFRecord/Eval/CWB_2010_2019_transgan.h5/', suffix='.tfrecord')
 
 evaluator = seisnn.model.evaluator.GeneratorEvaluator(database, model_instance)
-evaluator.score(tfr_list, height=0.5,delta=0.1, error_distribution=True)
+evaluator.score(tfr_list, height=0.4,delta=0.5, error_distribution=True)
 
 
