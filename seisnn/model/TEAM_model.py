@@ -7,7 +7,8 @@ from tensorflow.keras import initializers, backend as K, \
     Input, Model, Sequential
 from tensorflow.keras.layers import Add, Concatenate, Conv1D, Conv2D, \
     Dense, Dropout, Embedding, Flatten, GlobalMaxPooling1D, \
-    Lambda, Layer, Masking, MaxPooling1D, Reshape, TimeDistributed
+    Lambda, Layer, LayerNormalization, Masking, MaxPooling1D, \
+    Reshape, TimeDistributed
 import numpy as np
 import os
 import pickle
@@ -399,34 +400,6 @@ class PointwiseFeedForward(Layer):
         return input_shape
 
     def compute_mask(self, mask=None):
-        return mask
-
-
-class LayerNormalization(Layer):
-    def __init__(self, eps=1e-5, **kwargs):
-        self.eps = eps
-        super(LayerNormalization, self).__init__(**kwargs)
-
-    def build(self, input_shape):
-        self.beta = self.add_weight('beta', input_shape[-1:], initializer=initializers.Zeros())
-        self.gamma = self.add_weight('gamma', input_shape[-1:], initializer=initializers.Ones())
-        super(LayerNormalization, self).build(input_shape)  # Be sure to call this at the end
-
-    def call(self, x, mask=None):
-        # Axis according to https://github.com/tensorflow/tensor2tensor/blob/05f222d27a4885550450d9ba26987f78af5f9ecd/tensor2tensor/layers/common_layers.py#L705
-        m = K.mean(x, axis=-1, keepdims=True)
-        s = K.mean(K.square(x - m), axis=-1, keepdims=True)
-        z = (x - m) / K.sqrt(s + self.eps)
-        output = self.gamma * z + self.beta
-        if mask is not None:
-            mask = K.expand_dims(K.cast(mask, K.floatx()), axis=-1)
-            output *= mask  # Zero out all masked elements
-        return output
-
-    def compute_output_shape(self, input_shape):
-        return input_shape
-
-    def compute_mask(self, inputs, mask=None):
         return mask
 
 
