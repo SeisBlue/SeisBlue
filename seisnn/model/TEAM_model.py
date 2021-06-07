@@ -13,15 +13,17 @@ import os
 import pickle
 
 
-class MLP(Sequential):
-    def __init__(self, input_shape, dims=(100, 50), activation='relu', last_activation=None):
-        Sequential.__init__(self)
-        if last_activation is None:
-            last_activation = activation
-        self.add(Dense(dims[0], activation=activation, input_shape=input_shape))
-        for d in dims[1:-1]:
-            self.add(Dense(d, activation=activation))
-        self.add(Dense(dims[-1], activation=last_activation))
+def MLP(unit_dims, activation=None, last_activation=None):
+    if not last_activation:
+        last_activation = activation
+
+    block_mlp = Sequential()
+    unit_dims = [unit_dims] if isinstance(unit_dims, int) else unit_dims
+    for unit_dim in unit_dims[:-1]:
+        block_mlp.add(Dense(unit_dim, activation=activation))
+    block_mlp.add(Dense(unit_dims[-1], activation=last_activation))
+
+    return block_mlp
 
 
 class MixtureOutput(Model):
