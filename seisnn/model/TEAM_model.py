@@ -131,35 +131,48 @@ class NormalizedScaleEmbedding(Model):
 
 
 class Transformer(Model):
-    def __init__(self, max_stations=32, emb_dim=500, layers=6, att_masking=False, hidden_dropout=0.0,
-                 mad_params={}, ffn_params={}, norm_params={}):
+    def __init__(self,
+                 layers=6,
+                 att_masking=False,
+                 hidden_dropout=0.0,
+                 mad_params={},
+                 ffn_params={},
+                 norm_params={}):
+        super(Transformer, self).__init__()
+
+        self.att_masking = att_masking
+        self.hidden_dropout = hidden_dropout
+        self.add = Add()
         self.blocks = [(MultiHeadSelfAttention(**mad_params),
                         PointwiseFeedForward(**ffn_params),
                         LayerNormalization(**norm_params),
                         LayerNormalization(**norm_params))
                        for _ in range(layers)]
-        inp = Input((max_stations, emb_dim))
-        if att_masking:
-            att_mask = Input((max_stations,), dtype=bool)
-        else:
-            att_mask = None
-        x = inp
+
+    def __call__(self, x, att_mask=None, norm1_mask=None, norm2_mask=None):
         for attention_layer, ffn_layer, norm1_layer, norm2_layer in self.blocks:
-            if att_mask is not None:
+            if self.att_masking:
                 modified_x = attention_layer([x, att_mask])
             else:
                 modified_x = attention_layer(x)
-            if hidden_dropout > 0:
-                modified_x = Dropout(hidden_dropout)(modified_x)
-            x = norm1_layer(Add()([x, modified_x]))
+
+            if self.hidden_dropout > 0:
+                modified_x = Dropout(self.hidden_dropout)(modified_x)
+            x = norm1_layer(self.add([x, modified_x]))
+            if self.att_masking:
+                norm1_mask = tf.expand_dims(tf.cast(norm1_mask, tf.float32), axis=-1)
+                x *= norm1_mask  # Zero out all masked elements
+
             modified_x = ffn_layer(x)
-            if hidden_dropout > 0:
-                modified_x = Dropout(hidden_dropout)(modified_x)
-            x = norm2_layer(Add()([x, modified_x]))
-        inputs = inp
-        if att_masking:
-            inputs = [inp, att_mask]
-        super(Transformer, self).__init__(inputs=inputs, outputs=x)
+
+            if self.hidden_dropout > 0:
+                modified_x = Dropout(self.hidden_dropout)(modified_x)
+            x = norm2_layer(self.add([x, modified_x]))
+            if self.att_masking:
+                norm2_mask = tf.expand_dims(tf.cast(norm2_mask, tf.float32), axis=-1)
+                x *= norm2_mask  # Zero out all masked elements
+
+        return x
 
 
 # Calculates and concatenates sinusoidal embeddings for lat, lon and depth
