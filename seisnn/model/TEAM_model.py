@@ -637,15 +637,18 @@ def build_transformer_model(max_stations,
     else:
         input_shape = (trace_length, 3)
         metadata_shape = (3,)
-    waveform_model = NormalizedScaleEmbedding(input_shape, downsample=downsample, activation=activation,
+    waveform_model = NormalizedScaleEmbedding(downsample=downsample,
+                                              activation=activation,
                                               mlp_dims=waveform_model_dims)
-    mlp_mag_single_station = MLP((waveform_model.output_shape[1],), output_mlp_dims, activation=activation)
-    output_model_single_station = MixtureOutput((output_mlp_dims[-1],), 5, name='magnitude',
-                                                bias_mu=bias_mag_mu, bias_sigma=bias_mag_sigma)
+    output_model_single_station = MDN(unit_dims=output_mlp_dims,
+                                      activation_mlp=activation,
+                                      density_dim=5,
+                                      name='magnitude',
+                                      bias_mu=bias_mag_mu,
+                                      bias_sigma=bias_mag_sigma)
 
     waveform_inp_single_station = Input(shape=input_shape)
     emb = waveform_model(waveform_inp_single_station)
-    emb = mlp_mag_single_station(emb)
     out = output_model_single_station(emb)
 
     single_station_model = Model(waveform_inp_single_station, out)
@@ -665,20 +668,32 @@ def build_transformer_model(max_stations,
         transformer_max_stations = max_stations + n_pga_targets
 
     if not skip_transformer:
-        transformer = Transformer(max_stations=transformer_max_stations, emb_dim=emb_dim, att_masking=att_masking,
-                                  layers=transformer_layers, hidden_dropout=hidden_dropout, mad_params=mad_params,
+        transformer = Transformer(layers=transformer_layers,
+                                  att_masking=att_masking,
+                                  hidden_dropout=hidden_dropout,
+                                  mad_params=mad_params,
                                   ffn_params=ffn_params)
 
-    mlp_mag = MLP((emb_dim,), output_mlp_dims, activation=activation)
-    output_model = MixtureOutput((output_mlp_dims[-1],), magnitude_mixture, bias_mu=bias_mag_mu,
-                                 bias_sigma=bias_mag_sigma)
+    output_model = MDN(unit_dims=output_mlp_dims,
+                       activation_mlp=activation,
+                       density_dim=magnitude_mixture,
+                       bias_mu=bias_mag_mu,
+                       bias_sigma=bias_mag_sigma)
 
-    mlp_loc = MLP((emb_dim,), output_location_dims, activation=activation)
-    output_model_loc = MixtureOutput((output_location_dims[-1],), location_mixture, d=3, bias_mu=bias_loc_mu,
-                                     bias_sigma=bias_loc_sigma, activation='linear')
+    output_model_loc = MDN(unit_dims=output_location_dims,
+                           activation_mlp=activation,
+                           density_dim=location_mixture,
+                           unit_dim=3,
+                           activation='linear',
+                           bias_mu=bias_loc_mu,
+                           bias_sigma=bias_loc_sigma)
 
-    mlp_pga = MLP((emb_dim,), output_mlp_dims, activation=activation)
-    output_model_pga = MixtureOutput((output_mlp_dims[-1],), pga_mixture, activation='linear', bias_mu=-5, bias_sigma=1)
+    output_model_pga = MDN(unit_dims=output_mlp_dims,
+                           activation_mlp=activation,
+                           density_dim=pga_mixture,
+                           activation='linear',
+                           bias_mu=-5,
+                           bias_sigma=1)
 
     waveform_inp = Input(shape=(max_stations,) + input_shape)
     metadata_inp = Input(shape=(max_stations,) + metadata_shape)
@@ -705,17 +720,17 @@ def build_transformer_model(max_stations,
         pga_targets_masked = Masking(0)(pga_targets_inp)
         pga_emb = PositionEmbedding(wavelengths=wavelength, emb_dim=emb_dim, borehole=borehole,
                                     rotation=rotation, rotation_anchor=rotation_anchor)(pga_targets_masked)
-        att_mask = Input(tensor=K.concatenate([K.ones_like(emb[:, :, 0], dtype=bool),
-                                               K.zeros_like(pga_emb[:, :, 0], dtype=bool)], axis=1))
+        att_mask = Input(tensor=K.concatenate([tf.ones_like(emb[:, :, 0], dtype=bool),
+                                               tf.zeros_like(pga_emb[:, :, 0], dtype=bool)], axis=1))
         emb = Concatenate(axis=1)([emb, pga_emb])
-        emb = transformer([emb, att_mask])
+        emb = transformer(emb, att_mask)
     else:
         if skip_transformer:
             mlp_input_length = emb_dim
             if alternative_coords_embedding:
                 mlp_input_length += metadata_shape[0]
 
-            emb = TimeDistributed(MLP((mlp_input_length,), [emb_dim, emb_dim], activation=activation))(emb)
+            emb = TimeDistributed(MLP(unit_dims=[emb_dim, emb_dim], activation=activation))(emb)
             emb = GlobalMaxPooling1DMasked()(emb)
         else:
             emb = transformer(emb)
@@ -726,15 +741,11 @@ def build_transformer_model(max_stations,
         else:
             event_emb = Lambda(lambda x: x[:, 0, :])(emb)  # Select event embedding
 
-        mag_embedding = mlp_mag(event_emb)
-        out = output_model(mag_embedding)
-
-        loc_embedding = mlp_loc(event_emb)
-        out_loc = output_model_loc(loc_embedding)
+        out = output_model(event_emb)
+        out_loc = output_model_loc(event_emb)
 
     if n_pga_targets:
         pga_emb = Lambda(lambda x: x[:, -n_pga_targets:, :])(emb)  # Select embeddings for pga
-        pga_emb = TimeDistributed(mlp_pga)(pga_emb)
         output_pga = TimeDistributed(output_model_pga, name='pga')(pga_emb)
 
     if dataset_bias:
