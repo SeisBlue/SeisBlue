@@ -421,20 +421,19 @@ class AddEventToken(Layer):
             self.emb = self.add_weight('emb', (input_shape[2],), initializer=initializer)
         super(AddEventToken, self).build(input_shape)  # Be sure to call this at the end
 
-    def call(self, x, mask=None):
-        pad = K.ones_like(x[:, :1, :])
+    def call(self, x):
+        pad = tf.ones_like(x[:, :1, :])
         if self.emb is not None:
             pad *= self.emb
-        x = K.concatenate([pad, x], axis=1)
+        x = tf.concate([pad, x], axis=1)
         return x
 
     def compute_output_shape(self, input_shape):
         return input_shape[0], input_shape[1] + 1, input_shape[2]
 
-    def compute_mask(self, inputs, mask=None):
+    def compute_mask(self, mask=None):
         if mask is not None:
             return tf.pad(mask, [[0, 0], [1, 0]], mode='CONSTANT', constant_values=True)
-
 
 class AddConstantToMixture(Layer):
     def __init__(self, **kwargs):
