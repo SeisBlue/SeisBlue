@@ -35,7 +35,7 @@ for station in station_list:
         a = anchor_time
         print(anchor_time)
         metadata = tfr_converter.get_time_window(anchor_time=anchor_time, station = station,shift=0 )
-        streams = seisnn.io.read_sds(metadata)
+        streams = seisnn.io.read_sds(metadata,trim=False)
         for _, stream in streams.items():
             print(f'stream processing')
             stream.resample(100)
@@ -64,7 +64,8 @@ for station in station_list:
             predict_output = model.predict(instance_input_list)
             for i,instance in enumerate(instance_list):
                 instance.predict.data = predict_output[i]
-                instance.predict.get_picks()
-                instance.predict.write_picks_to_database('predict', database)
+                instance.plot(threshold = 0.4)
+                # instance.predict.get_picks()
+                # instance.predict.write_picks_to_database('predict', database)
 
 db.remove_duplicates('pick', ['time', 'phase', 'station', 'tag'])
