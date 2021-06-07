@@ -85,42 +85,49 @@ class MDN(Model):
 
 
 class NormalizedScaleEmbedding(Model):
-    def __init__(self, input_shape, activation='relu', downsample=1, mlp_dims=(500, 300, 200, 150), eps=1e-8):
-        self.activation = activation
-        self.inp_shape = input_shape
-        self.downsample = downsample
-        self.mlp_dims = mlp_dims
+    def __init__(self,
+                 activation=None,
+                 downsample=1,
+                 mlp_dims=(500, 300, 200, 150),
+                 eps=1e-8):
+        super(NormalizedScaleEmbedding, self).__init__()
+
+        def normalize_waves(x, axis=None, keepdims=True, eps=1e-8):
+            max = tf.math.reduce_max(tf.math.abs(x), axis, keepdims) + eps
+
+            normalized = x / (max)
+            normalized = tf.expend_dims(normalized)
+
+            scale = tf.log(max)
+            scale = tf.expend_dims(scale)
+
+            return normalized, scale
+
         self.eps = eps
-        inp, out = self._build_model()
-        Model.__init__(self, inputs=inp, outputs=out)
+        self.normalize = Lambda(normalize_waves())
+        self.embedding = Sequential([
+            Conv2D(8, (downsample, 1), strides=(downsample, 1), activation=activation),
+            Conv2D(32, (16, 3), strides=(1, 3), activation=activation),
+            Reshape((-1, 32 * self.inp_shape[-1] // 3)),
+            Conv1D(64, 16, activation=activation),
+            MaxPooling1D(2),
+            Conv1D(128, 16, activation=activation),
+            MaxPooling1D(2),
+            Conv1D(32, 8, activation=activation),
+            MaxPooling1D(2),
+            Conv1D(32, 8, activation=activation),
+            Conv1D(16, 4, activation=activation),
+            Flatten()
+        ])
+        self.block_mlp = MLP(mlp_dims, activation)
+        self.concat = Concatenate()
 
-    def _build_model(self):
-        activation = self.activation
-        downsample = self.downsample
-        inp = Input(shape=self.inp_shape)
-        x = Lambda(lambda t: t / (K.max(K.abs(t), axis=(1, 2), keepdims=True) + self.eps))(inp)
-        x = Lambda(lambda t: K.expand_dims(t))(x)
-        scale = Lambda(lambda t: K.log(K.max(K.abs(t), axis=(1, 2)) + self.eps) / 100)(inp)
-        scale = Lambda(lambda t: K.expand_dims(t))(scale)
-        x = Conv2D(8, (downsample, 1), strides=(downsample, 1), activation=activation)(x)
-        x = Conv2D(32, (16, 3), strides=(1, 3), activation=activation)(x)
-        x = Reshape((-1, 32 * self.inp_shape[-1] // 3))(x)
-        x = Conv1D(64, 16, activation=activation)(x)
-        x = MaxPooling1D(2)(x)
-        x = Conv1D(128, 16, activation=activation)(x)
-        x = MaxPooling1D(2)(x)
-        x = Conv1D(32, 8, activation=activation)(x)
-        x = MaxPooling1D(2)(x)
-        x = Conv1D(32, 8, activation=activation)(x)
-        x = Conv1D(16, 4, activation=activation)(x)
+    def __call__(self, inputs):
+        inp_norm, scale = self.normalize(inputs, (1, 2), eps=self.eps)
+        embed = self.embedding(inp_norm)
+        out = self.block_mlp(embed)
 
-        x = Flatten()(x)
-
-        x = Concatenate()([x, scale])
-
-        x = MLP(input_shape=(865,), dims=self.mlp_dims, activation=activation)(x)
-
-        return inp, x
+        return self.concat([out, scale])
 
 
 class Transformer(Model):
