@@ -481,17 +481,17 @@ class Masking_nd(Layer):
         self.axis = axis
         self.nodim = nodim
 
-    def compute_mask(self, inputs, mask=None):
+    def compute_mask(self, inputs):
         if self.nodim:
-            output_mask = K.not_equal(inputs, self.mask_value)
+            output_mask = tf.math.not_equal(inputs, self.mask_value)
         else:
-            output_mask = K.any(K.not_equal(inputs, self.mask_value), axis=self.axis)
+            output_mask = tf.math.reduce_any(tf.not_equal(inputs, self.mask_value), axis=self.axis)
         return output_mask
 
     def call(self, inputs):
-        boolean_mask = K.any(K.not_equal(inputs, self.mask_value),
+        boolean_mask = tf.math.reduce_any(tf.math.not_equal(inputs, self.mask_value),
                              axis=self.axis, keepdims=True)
-        return inputs * K.cast(boolean_mask, K.dtype(inputs))
+        return inputs * tf.cast(boolean_mask, inputs.dtype)
 
     def compute_output_shape(self, input_shape):
         return input_shape
