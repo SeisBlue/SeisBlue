@@ -46,7 +46,7 @@ class MDN(Model):
             density_dim: the number of probability density function.
             unit_dim: the dimension of mu & sigma in probability density
                 function.
-            activation: activation funciton for Dense layer of mu
+            activation: activation function for Dense layer of mu
             eps: the value to prevent from sigma in the probability density
                 function <= 0.
             bias_mu: the bias of mu in the probability density function.
