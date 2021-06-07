@@ -444,16 +444,16 @@ class AddConstantToMixture(Layer):
 
     def call(self, x, mask=None):
         mix, const = x
-        const = K.expand_dims(const, axis=-1)
+        const = tf.expand_dims(const, axis=-1)
         alpha = tf.gather(mix, 0, axis=-1)
         mu = tf.gather(mix, 1, axis=-1) + const
         sigma = tf.gather(mix, 2, axis=-1)
-        output = K.stack([alpha, mu, sigma], axis=-1)
+        output = tf.stack([alpha, mu, sigma], axis=-1)
         mask = self.compute_mask(x, mask)
         if mask is not None:
-            mask = K.cast(mask, dtype=K.floatx())
+            mask = tf.cast(mask, dtype=tf.float32)
             while mask.ndim < output.ndim:
-                mask = K.expand_dims(mask, -1)
+                mask = tf.expand_dims(mask, -1)
             output *= mask
         return output
 
@@ -472,7 +472,6 @@ class AddConstantToMixture(Layer):
                 return mask1
             else:
                 return tf.logical_and(mask1, mask2)
-
 
 class Masking_nd(Layer):
     def __init__(self, mask_value=0., axis=-1, nodim=False, **kwargs):
