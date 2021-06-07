@@ -536,19 +536,19 @@ def mixture_density_loss(y_true, y_pred, eps=1e-6, d=1, mean=True, print_shapes=
         print(f'True: {y_true.shape}')
         print(f'Pred: {y_pred.shape}')
     alpha = y_pred[:, :, 0]
-    density = K.ones_like(y_pred[:, :, 0])  # Create an array of ones of correct size
+    density = tf.ones_like(y_pred[:, :, 0])  # Create an array of ones of correct size
     for j in range(d):
         mu = y_pred[:, :, j + 1]
         sigma = y_pred[:, :, j + 1 + d]
-        sigma = K.maximum(sigma, eps)
-        density *= 1 / (np.sqrt(2 * np.pi) * sigma) * K.exp(-(y_true[:, j] - mu) ** 2 / (2 * sigma ** 2))
+        sigma = tf.math.maximum(sigma, eps)
+        density *= 1 / (np.sqrt(2 * np.pi) * sigma) * tf.math.exp(-(y_true[:, j] - mu) ** 2 / (2 * sigma ** 2))
     density *= alpha
-    density = K.sum(density, axis=1)
+    density = tf.math.reduce_sum(density, axis=1)
     density += eps
-    loss = - K.log(density)
+    loss = - tf.math.log(density)
 
     if mean:
-        return K.mean(loss)
+        return tf.math.reduce_mean(loss)
     else:
         return loss
 
