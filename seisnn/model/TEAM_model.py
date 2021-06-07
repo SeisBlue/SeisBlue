@@ -370,7 +370,11 @@ class MultiHeadSelfAttention(Layer):
             return mask
 
 class PointwiseFeedForward(Layer):
-    def __init__(self, hidden_dim, kernel_initializer='glorot_uniform', bias_initializer='zeros', **kwargs):
+    def __init__(self,
+                 hidden_dim,
+                 kernel_initializer='glorot_uniform',
+                 bias_initializer='zeros',
+                 **kwargs):
         super(PointwiseFeedForward, self).__init__(**kwargs)
         self.hidden_dim = hidden_dim
         self.kernel_initializer = initializers.get(kernel_initializer)
@@ -384,17 +388,17 @@ class PointwiseFeedForward(Layer):
         super(PointwiseFeedForward, self).build(input_shape)  # Be sure to call this at the end
 
     def call(self, x, mask=None):
-        x = gelu(K.dot(x, self.kernel1) + self.bias1)
-        x = K.dot(x, self.kernel2) + self.bias2
+        x = activations.gelu(tf.tensordot(x, self.kernel1, [[-1], [0]]) + self.bias1)
+        x = tf.tensordot(x, self.kernel2, [[-1], [0]]) + self.bias2
         if mask is not None:
-            mask = K.expand_dims(K.cast(mask, K.floatx()), axis=-1)
+            mask = tf.expand_dims(tf.cast(mask, tf.float32), axis=-1)
             x *= mask  # Zero out all masked elements
         return x
 
     def compute_output_shape(self, input_shape):
         return input_shape
 
-    def compute_mask(self, inputs, mask=None):
+    def compute_mask(self, mask=None):
         return mask
 
 
