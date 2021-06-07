@@ -150,7 +150,7 @@ class Transformer(Model):
                         LayerNormalization(**norm_params))
                        for _ in range(layers)]
 
-    def __call__(self, x, att_mask=None, norm1_mask=None, norm2_mask=None):
+    def call(self, x, att_mask=None, norm1_mask=None, norm2_mask=None):
         for attention_layer, ffn_layer, norm1_layer, norm2_layer in self.blocks:
             if self.att_masking:
                 modified_x = attention_layer([x, att_mask])
