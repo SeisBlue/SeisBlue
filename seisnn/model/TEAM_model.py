@@ -179,7 +179,13 @@ class Transformer(Model):
 # Note: Permutation is completely unnecessary, but kept for compatibility reasons
 # WARNING: Does not take into account curvature of the earth!
 class PositionEmbedding(Layer):
-    def __init__(self, wavelengths, emb_dim, borehole=False, rotation=None, rotation_anchor=None, **kwargs):
+    def __init__(self,
+                 wavelengths,
+                 emb_dim,
+                 borehole=False,
+                 rotation=None,
+                 rotation_anchor=None,
+                 **kwargs):
         super(PositionEmbedding, self).__init__(**kwargs)
         self.wavelengths = wavelengths  # Format: [(min_lat, max_lat), (min_lon, max_lon), (min_depth, max_depth)]
         self.emb_dim = emb_dim
@@ -193,7 +199,7 @@ class PositionEmbedding(Layer):
         if rotation is not None:
             # print(f'Rotating by {np.rad2deg(rotation)} degrees')
             c, s = np.cos(rotation), np.sin(rotation)
-            self.rotation_matrix = K.variable(np.array(((c, -s), (s, c))), dtype=K.floatx())
+            self.rotation_matrix = tf.Variable(np.array(((c, -s), (s, c))), dtype=tf.float32)
         else:
             self.rotation_matrix = None
 
@@ -238,12 +244,12 @@ class PositionEmbedding(Layer):
         if self.rotation is not None:
             lat_base = x[:, :, 0]
             lon_base = x[:, :, 1]
-            lon_base *= K.cos(lat_base * np.pi / 180)
+            lon_base *= tf.cos(lat_base * np.pi / 180)
 
             lat_base -= self.rotation_anchor[0]
-            lon_base -= self.rotation_anchor[1] * K.cos(self.rotation_anchor[0] * np.pi / 180)
+            lon_base -= self.rotation_anchor[1] * tf.cos(self.rotation_anchor[0] * np.pi / 180)
 
-            latlon = K.stack([lat_base, lon_base], axis=-1)
+            latlon = tf.stack([lat_base, lon_base], axis=-1)
             rotated = latlon @ self.rotation_matrix
 
             lat_base = rotated[:, :, 0:1] * self.lat_coeff
@@ -260,24 +266,24 @@ class PositionEmbedding(Layer):
                 depth2_base = x[:, :, 2:3] * self.depth_coeff
             else:
                 depth2_base = x[:, :, 3:4] * self.depth_coeff
-            output = tf.concat([K.sin(lat_base), K.cos(lat_base),
-                                K.sin(lon_base), K.cos(lon_base),
-                                K.sin(depth_base), K.cos(depth_base),
-                                K.sin(depth2_base), K.cos(depth2_base)], axis=-1)
+            output = tf.concat([tf.sin(lat_base), tf.cos(lat_base),
+                                tf.sin(lon_base), tf.cos(lon_base),
+                                tf.sin(depth_base), tf.cos(depth_base),
+                                tf.sin(depth2_base), tf.cos(depth2_base)], axis=-1)
         else:
-            output = tf.concat([K.sin(lat_base), K.cos(lat_base),
-                                K.sin(lon_base), K.cos(lon_base),
-                                K.sin(depth_base), K.cos(depth_base)], axis=-1)
+            output = tf.concat([tf.sin(lat_base), tf.cos(lat_base),
+                                tf.sin(lon_base), tf.cos(lon_base),
+                                tf.sin(depth_base), tf.cos(depth_base)], axis=-1)
         output = tf.gather(output, self.mask, axis=-1)
         if mask is not None:
-            mask = K.expand_dims(K.cast(mask, K.floatx()), axis=-1)
+            mask = tf.expand_dims(tf.cast(mask, tf.float32, axis=-1))
             output *= mask  # Zero out all masked elements
         return output
 
     def compute_output_shape(self, input_shape):
         return input_shape[:-1] + (self.emb_dim,)
 
-    def compute_mask(self, inputs, mask=None):
+    def compute_mask(self, mask=None):
         return mask
 
 
