@@ -1,6 +1,6 @@
 import seisnn
 
-database = 'Hualien.db'
+database = 'CWB.db'
 tag = 'manual'
 
 db = seisnn.sql.Client(database=database)
