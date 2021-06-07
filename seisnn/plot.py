@@ -196,6 +196,7 @@ def plot_event_magnitudes_distribution(events, save_dir=None):
     bins = np.linspace(-2, 9, 110)
     plt.hist(magnitudes_list, bins=bins)
     plt.xticks(np.arange(-2, 9, step=1))
+    plt.semilogy()
     plt.xlabel("Magnitude")
     plt.ylabel("Counts")
     plt.title("Magnitudes distribution")
