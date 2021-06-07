@@ -504,13 +504,13 @@ class GetMask(Layer):
     def build(self, input_shape):
         super(GetMask, self).build(input_shape)  # Be sure to call this at the end
 
-    def call(self, x, mask=None):
+    def call(self, mask=None):
         return mask
 
     def compute_output_shape(self, input_shape):
         return input_shape[:2]
 
-    def compute_mask(self, inputs, mask=None):
+    def compute_mask(self, mask=None):
         return mask
 
 
@@ -521,13 +521,13 @@ class StripMask(Layer):
     def build(self, input_shape):
         super(StripMask, self).build(input_shape)  # Be sure to call this at the end
 
-    def call(self, x, mask=None):
+    def call(self, x):
         return x
 
     def compute_output_shape(self, input_shape):
         return input_shape
 
-    def compute_mask(self, inputs, mask=None):
+    def compute_mask(self):
         return None
 
 
