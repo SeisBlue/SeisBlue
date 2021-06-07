@@ -68,7 +68,7 @@ class MDN(Model):
         self.reshape_alpha = Reshape((density_dim, 1))
         self.concat = Concatenate(axis=2)
 
-    def __call__(self, inputs):
+    def call(self, inputs):
         out_mlp = self.block_mlp(inputs)
         out_masked = self.strip_mask(out_mlp)
 
@@ -720,7 +720,7 @@ def build_transformer_model(max_stations,
         pga_targets_masked = Masking(0)(pga_targets_inp)
         pga_emb = PositionEmbedding(wavelengths=wavelength, emb_dim=emb_dim, borehole=borehole,
                                     rotation=rotation, rotation_anchor=rotation_anchor)(pga_targets_masked)
-        att_mask = Input(tensor=K.concatenate([tf.ones_like(emb[:, :, 0], dtype=bool),
+        att_mask = Input(tensor=tf.concat([tf.ones_like(emb[:, :, 0], dtype=bool),
                                                tf.zeros_like(pga_emb[:, :, 0], dtype=bool)], axis=1))
         emb = Concatenate(axis=1)([emb, pga_emb])
         emb = transformer(emb, att_mask)
@@ -754,7 +754,7 @@ def build_transformer_model(max_stations,
         dataset_embedding = Embedding(n_datasets, 1, input_length=1)
         dataset_bias_term = dataset_embedding(dataset)
         dataset_bias_term = Flatten()(dataset_bias_term)
-        dataset_bias_term = Lambda(lambda x: K.squeeze(x, -1))(dataset_bias_term)
+        dataset_bias_term = Lambda(lambda x: tf.squeeze(x, -1))(dataset_bias_term)
         out = AddConstantToMixture()([out, dataset_bias_term])
 
     # Name output
