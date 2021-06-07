@@ -321,11 +321,11 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">database</span> <span class="o">=</span> <span class="s1">&#39;tt.db&#39;</span>
+    <span class="n">database</span> <span class="o">=</span> <span class="s1">&#39;CWB.db&#39;</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">tfr_list</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_tfrecord</span><span class="p">(</span><span class="n">from_date</span><span class="o">=</span><span class="s1">&#39;2000-01-01&#39;</span><span class="p">,</span> <span class="n">to_date</span><span class="o">=</span><span class="s1">&#39;2018-12-31&#39;</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;path&#39;</span><span class="p">)</span>
 
-    <span class="n">model_instance</span> <span class="o">=</span> <span class="s1">&#39;qweqwe&#39;</span>
+    <span class="n">model_instance</span> <span class="o">=</span> <span class="s1">&#39;CWB_2010_2019_transgan&#39;</span>
     <span class="n">trainer</span> <span class="o">=</span> <span class="n">GeneratorTrainer</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">trainer</span><span class="o">.</span><span class="n">train_loop</span><span class="p">(</span><span class="n">tfr_list</span><span class="p">,</span> <span class="n">model_instance</span><span class="p">,</span>
                        <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>

@@ -208,7 +208,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="read_sds"><a class="viewcode-back" href="../../package/seisnn.io.read_sds.html#seisnn.io.read_sds">[docs]</a><span class="k">def</span> <span class="nf">read_sds</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+<div class="viewcode-block" id="read_sds"><a class="viewcode-back" href="../../package/seisnn.io.read_sds.html#seisnn.io.read_sds">[docs]</a><span class="k">def</span> <span class="nf">read_sds</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span><span class="n">trim</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read SDS database.</span>
 
@@ -228,6 +228,8 @@
                                   <span class="n">channel</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
                                   <span class="n">starttime</span><span class="o">=</span><span class="n">starttime</span><span class="p">,</span>
                                   <span class="n">endtime</span><span class="o">=</span><span class="n">endtime</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">trim</span><span class="p">:</span>
+        <span class="n">stream</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span><span class="n">starttime</span><span class="p">,</span> <span class="n">endtime</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">stream</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">stream_dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="n">Stream</span><span class="p">)</span>
