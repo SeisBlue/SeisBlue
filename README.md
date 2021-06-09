@@ -1,8 +1,8 @@
 # SeisNN ![Version](http://img.shields.io/:Version-0.5.0dev-darkgreen.svg?style=flat-square) [![License](http://img.shields.io/:License-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
 
- ![Notebook](http://img.shields.io/:Notebook-build.20200806-orange.svg?style=flat-square) ![Docker](http://img.shields.io/:Docker-build.20210222-blue.svg?style=flat-square)
+ ![Docker](https://img.shields.io/docker/v/seisnn/dev/latest?label=docker) [![Docker Build](https://github.com/SeisNN/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/SeisNN/SeisNN/actions?query=workflow%3A%22Docker+Image%22)
 
-Docs build: [![CircleCI](https://circleci.com/gh/SeisNN/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/SeisNN/SeisNN/tree/master) [![Docker Build](https://github.com/SeisNN/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/SeisNN/SeisNN/actions?query=workflow%3A%22Docker+Image%22) 
+Docs build: [![CircleCI](https://circleci.com/gh/SeisNN/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/SeisNN/SeisNN/tree/master)  
 
 Github Pages: https://seisnn.github.io/SeisNN/
 
