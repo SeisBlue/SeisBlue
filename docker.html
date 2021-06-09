@@ -3,11 +3,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Docker &#8212; SeisNN 0.3.0dev documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -132,7 +133,7 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="docker">
+  <section id="docker">
 <h1>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h1>
 <p>Nvidia-docker currently only works on Linux.</p>
 <p>Install <a class="reference external" href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">docker</a> and <a class="reference external" href="https://github.com/NVIDIA/nvidia-docker">nvidia-docker</a>.</p>
@@ -152,13 +153,13 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">username</span><span class="nd">@localhost</span> <span class="o">-</span><span class="n">p49154</span>
 </pre></div>
 </div>
-<div class="section" id="data-transfer-between-host-and-container">
+<section id="data-transfer-between-host-and-container">
 <h2>Data transfer between host and container<a class="headerlink" href="#data-transfer-between-host-and-container" title="Permalink to this headline">¶</a></h2>
 <p>Mounted volumes are data bridges between the host and containers.</p>
 <p>Your data will stayed in the mounted volumes, any modifications will be destroyed when starting a new container.</p>
 <p>Put your scripts in the workspace folder and you will find them in the container’s home folder.</p>
-</div>
-<div class="section" id="useful-docker-commands">
+</section>
+<section id="useful-docker-commands">
 <h2>Useful docker commands<a class="headerlink" href="#useful-docker-commands" title="Permalink to this headline">¶</a></h2>
 <p>Update image:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">pull</span> <span class="n">seisnn</span><span class="o">/</span><span class="n">dev</span>
@@ -180,8 +181,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker rmi -f $(docker images -q)
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -196,7 +197,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
     </p>
   </div>
 </footer>

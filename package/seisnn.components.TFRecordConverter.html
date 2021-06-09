@@ -3,11 +3,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>seisnn.components.TFRecordConverter &#8212; SeisNN 0.3.0dev documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
@@ -128,17 +129,17 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-components-tfrecordconverter">
+  <section id="seisnn-components-tfrecordconverter">
 <h1>seisnn.components.TFRecordConverter<a class="headerlink" href="#seisnn-components-tfrecordconverter" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="seisnn.components.TFRecordConverter">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">seisnn.components.</span></code><code class="sig-name descname"><span class="pre">TFRecordConverter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('P',</span> <span class="pre">'S',</span> <span class="pre">'N')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'triang'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.components.TFRecordConverter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">seisnn.components.</span></span><span class="sig-name descname"><span class="pre">TFRecordConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('P',</span> <span class="pre">'S',</span> <span class="pre">'N')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'triang'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main class for TFRecord Converter.</p>
 <p>Consumes data from external source and emit TFRecord.</p>
 <dl class="py method">
-<dt id="seisnn.components.TFRecordConverter.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('P',</span> <span class="pre">'S',</span> <span class="pre">'N')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'triang'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.components.TFRecordConverter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('P',</span> <span class="pre">'S',</span> <span class="pre">'N')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'triang'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -173,8 +174,8 @@
 </tbody>
 </table>
 <dl class="py method">
-<dt id="seisnn.components.TFRecordConverter.convert_training_from_picks">
-<code class="sig-name descname"><span class="pre">convert_training_from_picks</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pick_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.convert_training_from_picks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.convert_training_from_picks" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.components.TFRecordConverter.convert_training_from_picks">
+<span class="sig-name descname"><span class="pre">convert_training_from_picks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pick_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.convert_training_from_picks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.convert_training_from_picks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert training TFRecords from database picks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -188,8 +189,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.components.TFRecordConverter.get_instance_list">
-<code class="sig-name descname"><span class="pre">get_instance_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">picks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.get_instance_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.get_instance_list" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.components.TFRecordConverter.get_instance_list">
+<span class="sig-name descname"><span class="pre">get_instance_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">picks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.get_instance_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.get_instance_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns instance list form list of picks and SQL database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -206,8 +207,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.components.TFRecordConverter.get_time_window">
-<code class="sig-name descname"><span class="pre">get_time_window</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anchor_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">station</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.get_time_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.get_time_window" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.components.TFRecordConverter.get_time_window">
+<span class="sig-name descname"><span class="pre">get_time_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anchor_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">station</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.get_time_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.get_time_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns metadata from anchor time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -228,8 +229,8 @@ if ‘random’ will shift randomly within the trace length.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.components.TFRecordConverter.signal_preprocessing">
-<code class="sig-name descname"><span class="pre">signal_preprocessing</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.signal_preprocessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.signal_preprocessing" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.components.TFRecordConverter.signal_preprocessing">
+<span class="sig-name descname"><span class="pre">signal_preprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.signal_preprocessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.signal_preprocessing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a signal processed stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -245,8 +246,8 @@ if ‘random’ will shift randomly within the trace length.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.components.TFRecordConverter.trim_trace">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">trim_trace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3008</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.trim_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.trim_trace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.components.TFRecordConverter.trim_trace">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">trim_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3008</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/components.html#TFRecordConverter.trim_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.components.TFRecordConverter.trim_trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return trimmed stream in a given length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -266,7 +267,7 @@ if ‘random’ will shift randomly within the trace length.</p></li>
 
 </dd></dl>
 
-</div>
+</section>
 
 
     </div>
@@ -281,7 +282,7 @@ if ‘random’ will shift randomly within the trace length.</p></li>
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
     </p>
   </div>
 </footer>

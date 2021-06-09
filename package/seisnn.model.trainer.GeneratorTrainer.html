@@ -3,11 +3,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>seisnn.model.trainer.GeneratorTrainer &#8212; SeisNN 0.3.0dev documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
@@ -128,16 +129,16 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="seisnn-model-trainer-generatortrainer">
+  <section id="seisnn-model-trainer-generatortrainer">
 <h1>seisnn.model.trainer.GeneratorTrainer<a class="headerlink" href="#seisnn-model-trainer-generatortrainer" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="seisnn.model.trainer.GeneratorTrainer">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">seisnn.model.trainer.</span></code><code class="sig-name descname"><span class="pre">GeneratorTrainer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">database=None</span></em>, <em class="sig-param"><span class="pre">model=&lt;tensorflow.python.keras.engine.functional.Functional</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">optimizer=&lt;tensorflow.python.keras.optimizer_v2.adam.Adam</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">loss=&lt;tensorflow.python.keras.losses.BinaryCrossentropy</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.model.trainer.GeneratorTrainer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">seisnn.model.trainer.</span></span><span class="sig-name descname"><span class="pre">GeneratorTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">database=None</span></em>, <em class="sig-param"><span class="pre">model=&lt;tensorflow.python.keras.engine.functional.Functional</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">optimizer=&lt;tensorflow.python.keras.optimizer_v2.adam.Adam</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">loss=&lt;tensorflow.python.keras.losses.BinaryCrossentropy</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="seisnn.model.trainer.BaseTrainer.html#seisnn.model.trainer.BaseTrainer" title="seisnn.model.trainer.BaseTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">seisnn.model.trainer.BaseTrainer</span></code></a></p>
 <p>Trainer class.</p>
 <dl class="py method">
-<dt id="seisnn.model.trainer.GeneratorTrainer.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">database=None</span></em>, <em class="sig-param"><span class="pre">model=&lt;tensorflow.python.keras.engine.functional.Functional</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">optimizer=&lt;tensorflow.python.keras.optimizer_v2.adam.Adam</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">loss=&lt;tensorflow.python.keras.losses.BinaryCrossentropy</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.model.trainer.GeneratorTrainer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">database=None</span></em>, <em class="sig-param"><span class="pre">model=&lt;tensorflow.python.keras.engine.functional.Functional</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">optimizer=&lt;tensorflow.python.keras.optimizer_v2.adam.Adam</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">loss=&lt;tensorflow.python.keras.losses.BinaryCrossentropy</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the trainer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -179,8 +180,8 @@
 </tbody>
 </table>
 <dl class="py method">
-<dt id="seisnn.model.trainer.GeneratorTrainer.train_loop">
-<code class="sig-name descname"><span class="pre">train_loop</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tfr_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer.train_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer.train_loop" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.model.trainer.GeneratorTrainer.train_loop">
+<span class="sig-name descname"><span class="pre">train_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tfr_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer.train_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer.train_loop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main training loop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -202,8 +203,8 @@ False save fig, True show fig.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="seisnn.model.trainer.GeneratorTrainer.train_step">
-<code class="sig-name descname"><span class="pre">train_step</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer.train_step" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="seisnn.model.trainer.GeneratorTrainer.train_step">
+<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seisnn/model/trainer.html#GeneratorTrainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#seisnn.model.trainer.GeneratorTrainer.train_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Training step.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -223,7 +224,7 @@ False save fig, True show fig.</p></li>
 
 </dd></dl>
 
-</div>
+</section>
 
 
     </div>
@@ -238,7 +239,7 @@ False save fig, True show fig.</p></li>
     </p>
     <p>
         &copy; Copyright 2020, Jimmy.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
     </p>
   </div>
 </footer>
