@@ -1,0 +1,8 @@
+flake8
+pylint
+recommonmark
+setuptools
+Sphinx
+sphinx-bootstrap-theme
+twine
+yapf

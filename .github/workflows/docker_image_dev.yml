@@ -6,6 +6,7 @@ on:
       - '.github/workflows/docker_image_dev.yml'
       - 'docker/Dockerfile.dev'
       - 'requirements.txt'
+      - 'requirements_dev.txt'
 
 env:
   DOCKER_REPO: seisnn/dev
