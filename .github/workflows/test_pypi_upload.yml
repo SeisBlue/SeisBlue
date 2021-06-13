@@ -1,11 +1,11 @@
-name: PyPI upload
+name: Test PyPI upload
 
 on:
   push:
-    branches:
+    branches-ignore:
       - master
     paths:
-      - '.github/workflows/pypi_upload.yml'
+      - '.github/workflows/test_pypi_upload.yml'
       - 'setup.py'
 
 jobs:
@@ -25,8 +25,8 @@ jobs:
     - name: Build package
       run: python setup.py sdist bdist_wheel
 
-    - name: Publish distribution to PyPI
-      if: startsWith(github.ref, 'refs/tags')
+    - name: Publish distribution to Test PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
-        password: ${{ secrets.PYPI_TOKEN }}
+        password: ${{ secrets.TEST_PYPI_TOKEN }}
+        repository_url: https://test.pypi.org/legacy/

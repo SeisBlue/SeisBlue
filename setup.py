@@ -1,17 +1,10 @@
 """
 SeisNN - Deep learning seismic phase picking project
 """
-import argparse
-import datetime
 import setuptools
 
 version = '0.5.0'
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--dev', help='Dev build', action='store_true')
-args = parser.parse_args()
-if args.dev:
-    version += 'dev' + datetime.datetime.now().strftime("%Y%m%d")
+dev_version = version + '.dev1'
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -19,7 +12,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name='SeisNN',
     packages=['seisnn'],
-    version=version,
+    version=dev_version,
     description='Deep learning seismic phase picking project',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -28,6 +21,11 @@ setuptools.setup(
     author_email='jimmy60504@gmail.com',
     url='https://github.com/SeisNN/SeisNN',
     python_requires='>=3.6',
+    install_requires=[
+        "obspy",
+        "SQLAlchemy",
+        "tqdm",
+    ],
     classifiers=[
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.6",
