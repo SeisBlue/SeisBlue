@@ -1,4 +1,4 @@
-# SeisNN ![Version](http://img.shields.io/:Version-0.5.0dev-darkgreen.svg?style=flat-square) [![License](http://img.shields.io/:License-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
+# SeisNN ![Version](https://img.shields.io/pypi/v/seisnn?color=darkgreen&label=Version&style=flat-square) [![License](http://img.shields.io/:License-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
 
  ![Docker](https://img.shields.io/docker/v/seisnn/dev/latest?label=docker) [![Docker Build](https://github.com/SeisNN/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/SeisNN/SeisNN/actions?query=workflow%3A%22Docker+Image%22)
 
