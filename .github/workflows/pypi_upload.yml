@@ -2,6 +2,8 @@ name: PyPI upload
 
 on:
   push:
+    branches:
+      - master
     paths:
       - '.github/workflows/pypi_upload.yml'
       - 'setup.py'
