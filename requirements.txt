@@ -1,5 +1,4 @@
 Cartopy
-flake8
 ipympl
 ipywidgets
 jupyterlab
@@ -9,17 +8,11 @@ numpy
 obspy
 pandas
 Pillow
-pylint
 pyyaml
-recommonmark
 scikit-learn
 scipy
 seaborn
-setuptools
 sklearn
-Sphinx
-sphinx-bootstrap-theme
 SQLAlchemy
 tensorflow-gpu
 tqdm
-yapf

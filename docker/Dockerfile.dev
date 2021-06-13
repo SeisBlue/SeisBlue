@@ -22,6 +22,10 @@ RUN python -m pip install --upgrade pip; \
     python -m pip install shapely --no-binary shapely; \
     python -m pip --no-cache-dir install --upgrade --requirement /tmp/requirements.txt;
 
+# Install development related python packages in requirements_dev.txt
+COPY requirements_dev.txt /tmp/
+RUN python -m pip --no-cache-dir install --upgrade --requirement /tmp/requirements_dev.txt;
+
 # Jupyter Lab interactive plot
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build; \
     jupyter labextension install jupyter-matplotlib --no-build; \
@@ -43,9 +47,9 @@ RUN echo "export VISIBLE=now" >> /etc/profile;
 RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda-10.2/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/profile; \
     echo "export PYTHONPATH=$PYTHONPATH:/SeisNN" >> /etc/profile;
 
-# Delete login message for sftp login and set color
+# Delete tensorflow login message for sftp login by replacing default .bashrc
 RUN mv /etc/bash.bashrc /etc/bash.bashrc.old; \
-    echo 'alias ls="ls --color"' > /etc/bash.bashrc;
+    cp /etc/skel/.bashrc /etc/bash.bashrc;
 
 # Open SSH port 22 and make SSHD standby for incoming connection
 EXPOSE 22

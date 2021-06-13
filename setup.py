@@ -10,7 +10,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name='SeisNN',
     packages=['seisnn'],
-    version='0.3.0dev',
+    version='0.5.0dev',
     description='Deep learning seismic phase picking project',
     long_description=long_description,
     long_description_content_type="text/markdown",
