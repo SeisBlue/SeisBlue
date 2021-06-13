@@ -1,11 +1,10 @@
 """
 SeisNN - Deep learning seismic phase picking project
 """
-from datetime import datetime
 import setuptools
 
 version = '0.5.0'
-dev_version = version + '.dev' + datetime.now().strftime("%Y%m%d")
+dev_version = version + '.dev1'
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
