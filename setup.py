@@ -5,7 +5,7 @@ from datetime import datetime
 import setuptools
 
 version = '0.5.0'
-dev_version = version + '.build' + datetime.now().strftime("%Y%m%dT%H%M%S")
+dev_version = version + '.dev' + datetime.now().strftime("%Y%m%d")
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
