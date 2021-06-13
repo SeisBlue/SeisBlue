@@ -4,8 +4,8 @@ SeisNN - Deep learning seismic phase picking project
 from datetime import datetime
 import setuptools
 
-version = '0.5.0'
-dev_version = version + '.build' + datetime.now().strftime("%Y%m%dT%H%M%S")
+version = datetime.now().strftime("%Y.%m")
+dev_version = version + '.dev' + datetime.now().strftime("%d%H%M")
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
