@@ -7,7 +7,7 @@ on:
       - 'setup.py'
 
 jobs:
-  Build_Docker_Image:
+  Build_PyPI_Package:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
