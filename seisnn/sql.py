@@ -667,6 +667,59 @@ class Client:
 
         matched_list = sorted(list(set(matched_list)))
         return matched_list
+		
+	def remove_picks(self,
+                  from_time=None, to_time=None,
+                  station=None, phase=None,
+                  tag=None):
+        """
+        刪除指定picks
+
+        :param str from_time: From time.
+        :param str to_time: To time.
+        :param str station: Station name.
+        :param str phase: Phase name.
+        :param str tag: Catalog tag.
+        """
+        with self.session_scope() as session:
+            query = session.query(Pick)
+            if from_time is not None:
+                query = query.filter(Pick.time >= from_time)
+            if to_time is not None:
+                query = query.filter(Pick.time <= to_time)
+            if station is not None:
+                station = self.get_matched_list(station, 'pick', 'station')
+                query = query.filter(Pick.station.in_(station))
+            if phase is not None:
+                phase = self.get_matched_list(phase, 'pick', 'phase')
+                query = query.filter(Pick.phase.in_(phase))
+            if tag is not None:
+                tag = self.get_matched_list(tag, 'pick', 'tag')
+                query = query.filter(Pick.tag.in_(tag))
+
+            print("Remove {} rows.".format(query.count()))
+            query.delete()
+    
+    def remove_inventories(self, station=None, network=None):
+        """
+        刪除inventories
+
+        :param str station: Station name.
+        :param str network: Network name.
+        """
+        with self.session_scope() as session:
+            query = session.query(Inventory)
+            if station is not None:
+                station = self.get_matched_list(
+                    station, 'inventory', 'station')
+                query = query.filter(Inventory.station.in_(station))
+            if network is not None:
+                network = self.get_matched_list(
+                    network, 'inventory', 'network')
+                query = query.filter(Inventory.network.in_(network))
+
+            print("Remove {} rows.".format(query.count()))
+            query.delete()
 
 
 class DatabaseInspector:
