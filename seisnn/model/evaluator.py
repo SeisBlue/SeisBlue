@@ -156,9 +156,4 @@ class GeneratorEvaluator(BaseEvaluator):
                 f'{phase}: precision = {precision},recall = {recall},f1 = {f1}')
 
 
-def get_from_time_to_time(pick, delta=0.1):
-    from_time = UTCDateTime(pick.time) - delta
-    from_time = datetime.strptime(str(from_time), '%Y-%m-%dT%H:%M:%S.%fZ')
-    to_time = UTCDateTime(pick.time) + delta
-    to_time = datetime.strptime(str(to_time), '%Y-%m-%dT%H:%M:%S.%fZ')
-    return from_time, to_time
+
