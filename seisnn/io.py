@@ -94,11 +94,12 @@ def get_event(file, debug=False):
                 print(err)
 
 
-def read_sds(metadata,trim = True):
+def read_sds(metadata, trim=True):
     """
     Read SDS database.
 
     :param metadata: Metadata.
+    :param trim:
     :rtype: dict
     :return: Dict contains all traces within the time window.
     """
@@ -107,7 +108,7 @@ def read_sds(metadata,trim = True):
     starttime = metadata.starttime
     endtime = metadata.endtime + 0.1
 
-    client = sds.Client(sds_root='/home/andy/SDS_ROOT')
+    client = sds.Client(sds_root=config.sds_root)
     stream = client.get_waveforms(network="*",
                                   station=station,
                                   location="*",
@@ -358,8 +359,8 @@ def read_afile(afile_path):
                         obspy.core.event.Pick(waveform_id=_waveform_id_1,
                                               phase_hint=phase,
                                               time=obspy.core.UTCDateTime(trace['rtcard'])+
-                                                  trace[f'{phase.lower()}time'])
-                                              )
+                                                   trace[f'{phase.lower()}time'])
+                    )
 
                     count += 1
             except TypeError:
