@@ -107,11 +107,12 @@ class Pick(Base):
     tag = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     snr = sqlalchemy.Column(sqlalchemy.Float)
 
-    def __init__(self, time, station, phase, tag):
+    def __init__(self, time, station, phase, tag, snr=None):
         self.time = time
         self.station = station
         self.phase = phase
         self.tag = tag
+        self.snr = snr
 
     def __repr__(self):
         return f"Pick(" \
@@ -415,9 +416,9 @@ class Client:
 
         return query.all()
 
-    def add_pick(self, time, station, phase, tag):
+    def add_pick(self, time, station, phase, tag, snr):
         with self.session_scope() as session:
-            Pick(time, station, phase, tag).add_db(session)
+            Pick(time, station, phase, tag, snr).add_db(session)
 
     def get_picks(self,
                   from_time=None, to_time=None,
