@@ -101,7 +101,7 @@ def transformer(img_rows=None, img_cols=None, color_type=3, num_class=3):
     conv12_S = Conv1D(8, 11, activation='relu', padding='same')(up6_S)
     conv13_S = Conv1D(1, 1, activation='sigmoid', padding='same')(conv12_S)
     #############################################################################
-    output = concatenate([conv13, conv13_P, conv13_S], axis=2)
+    output = concatenate([conv13_P, conv13_S,conv13], axis=2)
     output = output[:, tf.newaxis, :, :]
     model = Model(inputs=inputs, outputs=output)
     return model
