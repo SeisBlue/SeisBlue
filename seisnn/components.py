@@ -26,7 +26,7 @@ class TFRecordConverter:
         self.trace_length = trace_length
         self.shape = shape
 
-    def convert_training_from_picks(self, pick_list, tag, database):
+    def convert_training_from_picks(self, pick_list, tag, database,cpu_count = None):
         """
         Convert training TFRecords from database picks.
 
@@ -46,7 +46,8 @@ class TFRecordConverter:
                               sub_dir='train',
                               tag=tag,
                               database=database,
-                              batch_size=1)
+                              batch_size=1,
+                              cpu_count = cpu_count)
 
     def write_tfrecord(self, picks, sub_dir, tag, database):
         instance_list = self.get_instance_list(picks, tag, database)
@@ -93,7 +94,7 @@ class TFRecordConverter:
                                                     station=pick.station,
                                                     shift='random')
 
-                streams = seisnn.io.read_sds(metadata)
+                streams = seisnn.io.read_sds(metadata,sds_path='/home/andy/mseed')
 
                 for _, stream in streams.items():
                     stream = self.signal_preprocessing(stream)
