@@ -137,7 +137,7 @@ class GeneratorTrainer(BaseTrainer):
             last_epoch = len(ckpt_manager.checkpoints)
             print(f'Latest checkpoint epoch {last_epoch} restored!!')
         dataset = seisnn.io.read_dataset(tfr_list)
-        dataset = dataset.shuffle(100000)
+        dataset = dataset.shuffle(5000)
         val = next(iter(dataset.batch(1)))
         metrics_names = ['loss', 'val']
 
@@ -211,8 +211,8 @@ if __name__ == "__main__":
     db = seisnn.sql.Client(database)
     tfr_list = db.get_tfrecord(from_date='2000-01-01', to_date='2018-12-31', column='path')
 
-    model_instance = 'CWB_2010_2019_transgan'
+    model_instance = 'qqq'
     trainer = GeneratorTrainer(database)
     trainer.train_loop(tfr_list, model_instance,
-                       batch_size=64, epochs=50,
+                       batch_size=250, epochs=100,
                        plot=True)
