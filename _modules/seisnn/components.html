@@ -140,7 +140,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">trace_length</span> <span class="o">=</span> <span class="n">trace_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span></div>
 
-<div class="viewcode-block" id="TFRecordConverter.convert_training_from_picks"><a class="viewcode-back" href="../../package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter.convert_training_from_picks">[docs]</a>    <span class="k">def</span> <span class="nf">convert_training_from_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+<div class="viewcode-block" id="TFRecordConverter.convert_training_from_picks"><a class="viewcode-back" href="../../package/seisnn.components.TFRecordConverter.html#seisnn.components.TFRecordConverter.convert_training_from_picks">[docs]</a>    <span class="k">def</span> <span class="nf">convert_training_from_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pick_list</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span><span class="n">cpu_count</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert training TFRecords from database picks.</span>
 
@@ -160,7 +160,8 @@
                               <span class="n">sub_dir</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span>
                               <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span>
                               <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span>
-                              <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+                              <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">cpu_count</span> <span class="o">=</span> <span class="n">cpu_count</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">write_tfrecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">picks</span><span class="p">,</span> <span class="n">sub_dir</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
         <span class="n">instance_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_list</span><span class="p">(</span><span class="n">picks</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
@@ -207,7 +208,7 @@
                                                     <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
                                                     <span class="n">shift</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
 
-                <span class="n">streams</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_sds</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+                <span class="n">streams</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_sds</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span><span class="n">sds_path</span><span class="o">=</span><span class="s1">&#39;/home/andy/mseed&#39;</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signal_preprocessing</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>

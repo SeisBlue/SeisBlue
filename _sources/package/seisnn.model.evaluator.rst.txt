@@ -9,13 +9,6 @@ seisnn.model.evaluator
 
    
    
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-   
-      get_from_time_to_time
-   
    
 
    

@@ -213,7 +213,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">Metadata</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">trace</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">channel</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">get_snr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pick</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">starttime</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">point</span> <span class="o">&gt;=</span> <span class="n">second</span> <span class="o">*</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">signal</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="n">point</span><span class="p">:</span><span class="n">point</span> <span class="o">+</span> <span class="n">second</span> <span class="o">*</span> <span class="mi">100</span><span class="p">]</span>
+            <span class="n">noise</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="n">point</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span><span class="n">point</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">noise</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">point</span><span class="p">]</span>
+            <span class="n">signal</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="n">point</span><span class="p">:</span><span class="n">point</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">noise</span><span class="p">)]</span>
+        <span class="n">snr</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">qc</span><span class="o">.</span><span class="n">signal_to_noise_ratio</span><span class="p">(</span><span class="n">signal</span><span class="o">=</span><span class="n">signal</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">)</span>
+        <span class="n">pick</span><span class="o">.</span><span class="n">snr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">snr</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Label"><a class="viewcode-back" href="../../package/seisnn.core.Label.html#seisnn.core.Label">[docs]</a><span class="k">class</span> <span class="nc">Label</span><span class="p">:</span>
@@ -319,7 +331,8 @@
             <span class="n">db</span><span class="o">.</span><span class="n">add_pick</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
                         <span class="n">station</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">station</span><span class="p">,</span>
                         <span class="n">phase</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span>
-                        <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span></div></div>
+                        <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span>
+                        <span class="n">snr</span><span class="o">=</span><span class="n">pick</span><span class="o">.</span><span class="n">snr</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Pick"><a class="viewcode-back" href="../../package/seisnn.core.Pick.html#seisnn.core.Pick">[docs]</a><span class="k">class</span> <span class="nc">Pick</span><span class="p">:</span>
@@ -331,11 +344,13 @@
                  <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">phase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">snr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">station</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">phase</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snr</span> <span class="o">=</span> <span class="n">snr</span></div></div>
 
 
 <div class="viewcode-block" id="Instance"><a class="viewcode-back" href="../../package/seisnn.core.Instance.html#seisnn.core.Instance">[docs]</a><span class="k">class</span> <span class="nc">Instance</span><span class="p">:</span>
@@ -488,6 +503,7 @@
         <span class="n">tfr_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sub_dir</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">sta</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">tfr_dir</span></div></div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">pass</span>

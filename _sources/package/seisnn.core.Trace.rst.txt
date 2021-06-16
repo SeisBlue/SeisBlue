@@ -19,6 +19,7 @@ seisnn.core.Trace
       ~Trace.__init__
       ~Trace.from_feature
       ~Trace.from_stream
+      ~Trace.get_snr
    
    
 

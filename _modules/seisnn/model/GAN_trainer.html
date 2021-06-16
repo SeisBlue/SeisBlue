@@ -251,7 +251,7 @@
             <span class="n">last_epoch</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ckpt_manager</span><span class="o">.</span><span class="n">checkpoints</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Latest checkpoint epoch </span><span class="si">{</span><span class="n">last_epoch</span><span class="si">}</span><span class="s1"> restored!!&#39;</span><span class="p">)</span>
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_dataset</span><span class="p">(</span><span class="n">tfr_list</span><span class="p">)</span>
-        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
         <span class="n">val</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
         <span class="n">metrics_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="s1">&#39;val&#39;</span><span class="p">]</span>
 
@@ -325,10 +325,10 @@
     <span class="n">db</span> <span class="o">=</span> <span class="n">seisnn</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">tfr_list</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_tfrecord</span><span class="p">(</span><span class="n">from_date</span><span class="o">=</span><span class="s1">&#39;2000-01-01&#39;</span><span class="p">,</span> <span class="n">to_date</span><span class="o">=</span><span class="s1">&#39;2018-12-31&#39;</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;path&#39;</span><span class="p">)</span>
 
-    <span class="n">model_instance</span> <span class="o">=</span> <span class="s1">&#39;CWB_2010_2019_transgan&#39;</span>
+    <span class="n">model_instance</span> <span class="o">=</span> <span class="s1">&#39;qqq&#39;</span>
     <span class="n">trainer</span> <span class="o">=</span> <span class="n">GeneratorTrainer</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
     <span class="n">trainer</span><span class="o">.</span><span class="n">train_loop</span><span class="p">(</span><span class="n">tfr_list</span><span class="p">,</span> <span class="n">model_instance</span><span class="p">,</span>
-                       <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                       <span class="n">batch_size</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                        <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 

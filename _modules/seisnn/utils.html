@@ -249,7 +249,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">]</span></div>
 
 
-<span class="k">def</span> <span class="nf">_parallel_process</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_parallel_process</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpu_count</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parallelize a partial function and return results in a list.</span>
 
@@ -259,7 +259,8 @@
 
 <span class="sd">    :return: List of results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">cpu_count</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cpu_count</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cpu_count</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Found </span><span class="si">{</span><span class="n">cpu_count</span><span class="si">}</span><span class="s1"> cpu threads:&#39;</span><span class="p">)</span>
 
     <span class="n">pool</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">cpu_count</span><span class="p">,</span> <span class="n">maxtasksperchild</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -274,19 +275,21 @@
     <span class="k">return</span> <span class="n">result</span>
 
 
-<div class="viewcode-block" id="parallel"><a class="viewcode-back" href="../../package/seisnn.utils.parallel.html#seisnn.utils.parallel">[docs]</a><span class="k">def</span> <span class="nf">parallel</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="parallel"><a class="viewcode-back" href="../../package/seisnn.utils.parallel.html#seisnn.utils.parallel">[docs]</a><span class="k">def</span> <span class="nf">parallel</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpu_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parallels a function.</span>
 
 <span class="sd">    :param data_list: List of data.</span>
 <span class="sd">    :param func: Paralleled function.</span>
+<span class="sd">    :param batch_size:</span>
+<span class="sd">    :param cpu_count:</span>
 <span class="sd">    :param kwargs: Fixed function parameters.</span>
 
 <span class="sd">    :return: List of results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">par</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">batch_operation</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="n">result_list</span> <span class="o">=</span> <span class="n">_parallel_process</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">result_list</span> <span class="o">=</span> <span class="n">_parallel_process</span><span class="p">(</span><span class="n">data_list</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">cpu_count</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result_list</span></div>
 
 

@@ -221,11 +221,12 @@
     <span class="n">tag</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">snr</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">snr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">station</span> <span class="o">=</span> <span class="n">station</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">phase</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snr</span> <span class="o">=</span> <span class="n">snr</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Pick(&quot;</span> \
@@ -529,9 +530,9 @@
 
         <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">add_pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">snr</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_scope</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="n">Pick</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span><span class="o">.</span><span class="n">add_db</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+            <span class="n">Pick</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">snr</span><span class="p">)</span><span class="o">.</span><span class="n">add_db</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Client.get_picks"><a class="viewcode-back" href="../../package/seisnn.sql.Client.html#seisnn.sql.Client.get_picks">[docs]</a>    <span class="k">def</span> <span class="nf">get_picks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                   <span class="n">from_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
