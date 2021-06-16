@@ -1,6 +1,6 @@
 ---
 name: Add Quick Thoughts
-about: Write down ASAP
+about: Write things down ASAP
 title: ''
 labels: ''
 assignees: ''
