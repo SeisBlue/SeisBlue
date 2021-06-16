@@ -17,7 +17,7 @@ model = tf.keras.models.load_model(
         'MultiHeadSelfAttention': MultiHeadSelfAttention,
         'ResBlock': ResBlock
     })
-a =  obspy.UTCDateTime(0)
+a = obspy.UTCDateTime(0)
 year = 2019
 tfr_converter = seisnn.components.TFRecordConverter(trace_length=86401)
 station_list = os.listdir(f'/home/andy/SDS_ROOT/{year}/HL/')
@@ -25,7 +25,7 @@ station_list.sort()
 for station in station_list:
     julday = seisnn.utils.get_dir_list(f'/home/andy/SDS_ROOT/{year}/HL/{station}', suffix='2019*')
     julday.sort()
-    anchor_time = obspy.UTCDateTime(year = year,julday=julday[0][-3:])
+    anchor_time = obspy.UTCDateTime(year=year, julday=int(julday[0][-3:]))
     print(station)
     station_list = os.path.basename(f'/home/andy/SDS_ROOT/2019/HL/{station}/')
     while True:
@@ -34,8 +34,8 @@ for station in station_list:
             break
         a = anchor_time
         print(anchor_time)
-        metadata = tfr_converter.get_time_window(anchor_time=anchor_time, station = station,shift=0 )
-        streams = seisnn.io.read_sds(metadata,trim=False)
+        metadata = tfr_converter.get_time_window(anchor_time=anchor_time, station=station, shift=0)
+        streams = seisnn.io.read_sds(metadata, trim=False)
         for _, stream in streams.items():
             print(f'stream processing')
             stream.resample(100)
@@ -43,7 +43,7 @@ for station in station_list:
             print('start sliding')
             instance_list = []
             instance_input_list = []
-            for window_st in stream.slide(window_length=30.07, step=30.00):
+            for window_st in stream.slide(window_length=30.07, step=30.08):
 
                 window_st.normalize()
                 if window_st.traces[0].stats.npts != 3008:
@@ -62,10 +62,14 @@ for station in station_list:
             print('predict')
             instance_input_list = np.array(instance_input_list)
             predict_output = model.predict(instance_input_list)
-            for i,instance in enumerate(instance_list):
+            for i, instance in enumerate(instance_list):
+                q = 0
                 instance.predict.data = predict_output[i]
-                instance.plot(threshold = 0.4)
-                # instance.predict.get_picks()
-                # instance.predict.write_picks_to_database('predict', database)
+                # instance.plot(threshold = 0.6)
+                instance.predict.get_picks(height=0.6)
+                for pick in instance.predict.picks:
+                    instance.trace.get_snr(pick)
+                    # print(pick.snr)
+                instance.predict.write_picks_to_database('predict', db)
 
 db.remove_duplicates('pick', ['time', 'phase', 'station', 'tag'])
