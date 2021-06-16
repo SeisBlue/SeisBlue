@@ -101,6 +101,18 @@ class Trace:
         self.channel = feature.channel
         return self
 
+    def get_snr(self, pick, second=1):
+        vector = np.linalg.norm(self.data, axis=2)[0]
+        point = int((pick.time - self.metadata.starttime) * 100)
+        if point >= second * 100:
+            signal = vector[point:point + second * 100]
+            noise = vector[point - len(signal):point]
+        else:
+            noise = vector[0:point]
+            signal = vector[point:point + len(noise)]
+        snr = seisnn.qc.signal_to_noise_ratio(signal=signal, noise=noise)
+        pick.snr = np.around(snr, 4)
+
 
 class Label:
     """
@@ -205,7 +217,8 @@ class Label:
             db.add_pick(time=pick.time.datetime,
                         station=pick.station,
                         phase=pick.phase,
-                        tag=tag)
+                        tag=tag,
+                        snr=pick.snr)
 
 
 class Pick:
@@ -217,11 +230,13 @@ class Pick:
                  time=None,
                  station=None,
                  phase=None,
-                 tag=None):
+                 tag=None,
+                 snr=None):
         self.time = time
         self.station = station
         self.phase = phase
         self.tag = tag
+        self.snr = snr
 
 
 class Instance:
@@ -374,6 +389,7 @@ class Instance:
         tfr_dir = os.path.join(sub_dir, year, net, sta)
 
         return tfr_dir
+
 
 if __name__ == "__main__":
     pass
