@@ -7,26 +7,36 @@ import numpy as np
 from seisnn.model.attention import TransformerBlockE, TransformerBlockD, \
     MultiHeadSelfAttention, ResBlock
 
-database = 'Hualien.db'
-db = seisnn.sql.Client(database)
-model = tf.keras.models.load_model(
-    '/home/andy/Models/CWB_trans_2010_2019.h5',
-    custom_objects={
-        'TransformerBlockE': TransformerBlockE,
-        'TransformerBlockD': TransformerBlockD,
-        'MultiHeadSelfAttention': MultiHeadSelfAttention,
-        'ResBlock': ResBlock
-    })
-a = obspy.UTCDateTime(0)
-year = 2019
-tfr_converter = seisnn.components.TFRecordConverter(trace_length=86401)
-station_list = os.listdir(f'/home/andy/SDS_ROOT/{year}/HL/')
-station_list.sort()
-for station in station_list:
-    julday = seisnn.utils.get_dir_list(f'/home/andy/SDS_ROOT/{year}/HL/{station}', suffix='2019*')
+
+def main():
+        database = 'Hualien2.db'
+        station_list = os.listdir(f'/home/andy/SDS_ROOT/2019/HL/')
+        station_list.sort()
+        seisnn.utils.parallel(station_list,
+                              func=predict_parallel,
+                              database=database,
+                              model_instance='/home/andy/Models/ttt.h5',
+                              batch_size=1,
+                              cpu_count=3)
+        pass
+
+
+def predict_parallel(station, database, model_instance):
+    a = obspy.UTCDateTime(0)
+    model = tf.keras.models.load_model(
+        model_instance,
+        custom_objects={
+            'TransformerBlockE': TransformerBlockE,
+            'TransformerBlockD': TransformerBlockD,
+            'MultiHeadSelfAttention': MultiHeadSelfAttention,
+            'ResBlock': ResBlock
+        })
+    julday = seisnn.utils.get_dir_list(f'/home/andy/SDS_ROOT/2019/HL/{station}', suffix='2019*')
     julday.sort()
-    anchor_time = obspy.UTCDateTime(year=year, julday=int(julday[0][-3:]))
+    anchor_time = obspy.UTCDateTime(year=2019, julday=int(julday[0][-3:]))
     print(station)
+    tfr_converter = seisnn.components.TFRecordConverter(trace_length=86401)
+
     while True:
         if anchor_time == a:
             break
@@ -44,6 +54,7 @@ for station in station_list:
             for window_st in stream.slide(window_length=30.07, step=30.08):
 
                 window_st.normalize()
+
                 if window_st.traces[0].stats.npts != 3008:
                     continue
                 instance = seisnn.core.Instance(window_st)
@@ -61,13 +72,13 @@ for station in station_list:
             instance_input_list = np.array(instance_input_list)
             predict_output = model.predict(instance_input_list)
             for i, instance in enumerate(instance_list):
-                q = 0
                 instance.predict.data = predict_output[i]
                 # instance.plot(threshold = 0.6)
                 instance.predict.get_picks(height=0.6)
                 for pick in instance.predict.picks:
                     instance.trace.get_snr(pick)
-                    # print(pick.snr)
-                instance.predict.write_picks_to_database('predict', db)
+                instance.predict.write_picks_to_database('predict', database)
 
-db.remove_duplicates('pick', ['time', 'phase', 'station', 'tag'])
+
+if __name__ == '__main__':
+    main()

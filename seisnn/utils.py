@@ -135,7 +135,7 @@ def batch_operation(data_list, func, **kwargs):
     return [func(data, **kwargs) for data in data_list]
 
 
-def _parallel_process(file_list, par, batch_size=None):
+def _parallel_process(file_list, par, batch_size=None, cpu_count=None):
     """
     Parallelize a partial function and return results in a list.
 
@@ -145,7 +145,8 @@ def _parallel_process(file_list, par, batch_size=None):
 
     :return: List of results.
     """
-    cpu_count = mp.cpu_count()
+    if cpu_count is None:
+        cpu_count = mp.cpu_count()
     print(f'Found {cpu_count} cpu threads:')
 
     pool = mp.Pool(processes=cpu_count, maxtasksperchild=1)
@@ -160,19 +161,21 @@ def _parallel_process(file_list, par, batch_size=None):
     return result
 
 
-def parallel(data_list, func, batch_size=None, **kwargs):
+def parallel(data_list, func, batch_size=None, cpu_count=None, **kwargs):
     """
     Parallels a function.
 
     :param data_list: List of data.
     :param func: Paralleled function.
+    :param batch_size:
+    :param cpu_count:
     :param kwargs: Fixed function parameters.
 
     :return: List of results.
     """
     par = functools.partial(batch_operation, func=func, **kwargs)
 
-    result_list = _parallel_process(data_list, par, batch_size)
+    result_list = _parallel_process(data_list, par, batch_size, cpu_count)
     return result_list
 
 

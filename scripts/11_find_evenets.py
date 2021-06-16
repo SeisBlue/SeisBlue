@@ -20,7 +20,7 @@ def split_event(db, from_time, to_time, station_limit=2):
                 from_time=from_time,
                 to_time=to_time
             )
-            channel = channel[0].channel.split(', ')
+            channel = ['EHZ','EHN','EHE']
 
             network = db.get_inventories(station=pick.station)
             network = network[0].network
