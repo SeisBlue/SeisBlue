@@ -1,1 +1,0 @@
-ffmpeg -y -framerate 24 -pattern_type glob -i /home/jimmy/models/HL_pre_train/png/*.png -c:v libx264 -pix_fmt yuv420p '/home/jimmy/models/HL_pre_train/mp4/pre_train.mp4'

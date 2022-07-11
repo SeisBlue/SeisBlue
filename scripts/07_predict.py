@@ -1,11 +1,14 @@
-import seisnn
+import seisblue
 
-model = 'CWB_2010_2019_transgan.h5'
-database = 'CWB.db'
+model = 'demo_gan.h5'
+database = 'demo'
 
-db = seisnn.sql.Client(database)
-tfr_list = db.get_tfrecord(from_date='2020-01-01',to_date='2020-12-31',column='path')
-tfr_list = seisnn.utils.flatten_list(tfr_list)
+db = seisblue.sql.Client(database)
+tfr_list = db.get_tfrecord(from_date='2020-04-01', to_date='2020-06-30',
+                           column='path')
+tfr_list = seisblue.utils.flatten_list(tfr_list)
 
-evaluator = seisnn.model.evaluator.GeneratorEvaluator(database, model)
+# tfr_list = seisblue.utils.get_dir_list('/home/andy/TFRecord/noise/HP01',suffix='.tfrecord')
+
+evaluator = seisblue.model.evaluator.GeneratorEvaluator(database, model)
 evaluator.predict(tfr_list)

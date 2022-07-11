@@ -2,8 +2,10 @@ Cartopy
 ipympl
 ipywidgets
 jupyterlab
+keras
 lxml
 matplotlib
+mlflow
 numpy
 obspy
 pandas
@@ -14,5 +16,5 @@ scipy
 seaborn
 sklearn
 SQLAlchemy
-tensorflow-gpu
+tensorflow
 tqdm

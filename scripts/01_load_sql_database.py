@@ -1,20 +1,16 @@
-import seisnn
+import seisblue
 
-db = seisnn.sql.Client(database="CWB.db")
-inspector = seisnn.sql.DatabaseInspector(db)
+db = seisblue.sql.Client(database='demo', build=True)
+inspector = seisblue.sql.DatabaseInspector(db)
 
-db.read_GDMSstations(nsta="GDMSstations.csv")
+db.read_hyp('/home/andy/Geom/STATION0.2020HP.HYP', 'HP')
+# # db.read_kml_placemark('NCREE.kml','NCREE')
 inspector.inventory_summery()
-# db.read_hyp(hyp="HL2019.HYP", network="HL")
-# inspector.inventory_summery()
-
-
-path_list = '/home/andy/A_file/*'
-events = seisnn.io.read_afile_directory(path_list)
-# events = seisnn.io.read_event_list('HL2018')
+events = seisblue.io.read_event_list('/home/andy/Catalog/HP2020_04_05')
+# # events = seisblue.io.read_afile_directory('/home/andy/Catalog/CWB2012/FEB')
 db.add_sfile_events(events=events, tag="manual")
 
 inspector.event_summery()
 inspector.pick_summery()
 
-inspector.plot_map()
+inspector.plot_map(center=[121.5, 24], pad=1, depth_size=0.5, max_depth=160000)

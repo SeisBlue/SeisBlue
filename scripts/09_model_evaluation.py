@@ -1,10 +1,9 @@
-import seisnn
+import seisblue
 
-model_instance = 'CWB_2010_2019_trans'
-database = 'CWB.db'
-tfr_list = seisnn.utils.get_dir_list('/home/andy/TFRecord/Eval/CWB_2010_2019_transgan.h5/', suffix='.tfrecord')
+# model_instance = 'CWB_2010_2019_trans'
+# database = 'CWB.db'
+tfr_list = seisblue.utils.get_dir_list('/home/andy/TFRecord/Eval/demo_gan.h5',
+                                       suffix='.tfrecord')
+evaluator = seisblue.model.evaluator.GeneratorEvaluator()
 
-evaluator = seisnn.model.evaluator.GeneratorEvaluator(database, model_instance)
-evaluator.score(tfr_list, height=0.4,delta=0.5, error_distribution=True)
-
-
+evaluator.score(tfr_list, threshold=0.3, delta=0.2, error_distribution=True)

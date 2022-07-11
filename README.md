@@ -1,12 +1,11 @@
-# SeisNN ![Version](https://img.shields.io/pypi/v/seisnn?color=darkgreen&label=Version&style=flat-square) [![License](http://img.shields.io/:License-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
+# SeisBlue ![Version](https://img.shields.io/pypi/v/seisblue?color=darkgreen&label=Version&style=flat-square) [![License](http://img.shields.io/:License-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
 
- ![Docker](https://img.shields.io/docker/v/seisnn/dev/latest?label=docker) [![Docker Build](https://github.com/SeisNN/SeisNN/workflows/Docker%20Image/badge.svg)](https://github.com/SeisNN/SeisNN/actions?query=workflow%3A%22Docker+Image%22)
+ [![Docker Build](https://github.com/SeisBlue/SeisBlue/workflows/Docker%20Image/badge.svg)](https://github.com/seisblue/seisblue/actions?query=workflow%3A%22Docker+Image%22)
 
-Docs build: [![CircleCI](https://circleci.com/gh/SeisNN/SeisNN/tree/master.svg?style=svg)](https://circleci.com/gh/SeisNN/SeisNN/tree/master)  
 
-Github Pages: https://seisnn.github.io/SeisNN/
+Github Pages: https://seisblue.github.io/seisblue/
 
-Deep learning seismic phase picking framework with SEISAN
+A deep-learning data processing platform for seismology
 
 ![workflow](workflow.png)
 
@@ -55,7 +54,13 @@ Reference:
 
  Zhou, Z., Siddiquee, M. M. R., Tajbakhsh, N., & Liang, J. (2018). Unet++: A nested u-net architecture for medical image segmentation. In Deep Learning in Medical Image Analysis and Multimodal Learning for Clinical Decision Support (pp. 3-11). Springer, Cham.
 
+ [PhasePApy](https://doi.org/10.1785/0220160019) | [GitHub](https://github.com/austinholland/PhasePApy)
 
+ Chen, C., & Holland, A. A. (2016). PhasePApy: A robust pure Python package for automatic identification of seismic phases. Seismological Research Letters, 87(6), 1384-1396.
+
+ [PyAPA](https://doi.org/10.3319/TAO.2018.12.23.01) | [GitHub](https://github.com/SeanMica/PyAPA)
+
+ Chang, Y. H., Hung, S. H., & Chen, Y. L. (2019). A fast algorithm for automatic phase picker and event location: Application to the 2018 Hualien earthquake sequences. Terr. Atmos. Ocean. Sci, 30, 435-448.
 
 ---
 

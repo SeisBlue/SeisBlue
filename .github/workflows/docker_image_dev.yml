@@ -9,13 +9,15 @@ on:
       - 'requirements_dev.txt'
 
 env:
-  DOCKER_REPO: seisnn/dev
+  DOCKER_REPO: seisblue/dev
 
 jobs:
   Build_Docker_Image:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        lfs: true
 
     - name: Login Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin

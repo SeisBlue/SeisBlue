@@ -18,18 +18,18 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'SeisNN'
-copyright = '2020, Jimmy'
-author = 'Jimmy'
+project = 'SeisBlue'
+copyright = '2021, SeisBlue team'
+author = 'SeisBlue Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '0.3.0'
+version = '0.5.0'
 # The full version, including alpha/beta/rc tags.
-release = '0.3.0dev'
+release = '0.5.0dev1'
 
 
 # -- General configuration ---------------------------------------------------

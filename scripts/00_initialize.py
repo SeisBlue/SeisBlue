@@ -1,3 +1,3 @@
-import seisnn
+import seisblue
 
-config = seisnn.utils.Config(initialize=True)
+config = seisblue.utils.Config(initialize=True)

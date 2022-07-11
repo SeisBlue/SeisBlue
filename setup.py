@@ -1,5 +1,5 @@
 """
-SeisNN - Deep learning seismic phase picking project
+SeisBlue - A deep-learning data processing platform for seismology
 """
 import setuptools
 
@@ -10,16 +10,16 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='SeisNN',
-    packages=['seisnn'],
+    name='SeisBlue',
+    packages=['seisblue'],
     version=dev_version,
-    description='Deep learning seismic phase picking project',
+    description='A deep-learning data processing platform for seismology',
     long_description=long_description,
     long_description_content_type="text/markdown",
     license='MIT',
-    author='jimmy',
+    author='SeisBlue Team',
     author_email='jimmy60504@gmail.com',
-    url='https://github.com/SeisNN/SeisNN',
+    url='https://github.com/SeisBlue/SeisBlue',
     python_requires='>=3.6',
     install_requires=[
         "obspy",

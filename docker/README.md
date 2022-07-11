@@ -5,7 +5,7 @@ Install [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [n
 
 Clone this repo:
 
-`git clone https://github.com/SeisNN/SeisNN.git`
+`git clone https://github.com/SeisBlue/SeisBlue.git`
 
 Create workspace for home, will mount later into the container:
 
@@ -13,7 +13,7 @@ Create workspace for home, will mount later into the container:
 
 Run docker container, change the followings in [run_ssh.sh](run_ssh.sh): 
 - `49154` for ssh port
-- `</path/to/seisnn>` for this project folder
+- `</path/to/seisblue>` for this project folder
 - `</path/to/workspace>` for home in the container
 - `</path/to/sfile>` for S-file folder
 - `</path/to/database>` for database or trace data folder
@@ -34,15 +34,15 @@ Put your scripts in the workspace folder and you will find them in the container
 
 Update image:
 
-    docker pull seisnn/dev
+    docker pull seisblue/dev
 
 Remove container:
 
-    docker container rm seisnn_ssh
+    docker container rm seisblue_ssh
 
 Remove image:
 
-    docker image rm seisnn/dev
+    docker image rm seisblue/dev
 
 Remove all containers(!):
 

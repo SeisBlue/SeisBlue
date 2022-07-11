@@ -1,17 +1,17 @@
 # Custom SQL Query
 
-SeisNN SQL database is based on [sqlalchemy](https://www.sqlalchemy.org/) object relational mapper(orm),
+seisblue SQL database is based on [sqlalchemy](https://www.sqlalchemy.org/) object relational mapper(orm),
 check out [Querying](https://docs.sqlalchemy.org/en/13/orm/tutorial.html#querying) for further information. 
 
-This script demonstrates how to write a custom query from SeisNN.
+This script demonstrates how to write a custom query from SeisBlue.
 
 ```python
 import datetime
 
-import seisnn
+import seisblue
 
 # connect to sql database
-db = seisnn.sql.Client('HL2017.db')
+db = seisblue.sql.Client('HL2017.db')
 
 # open sql session, it will terminate the session when exit `with` statement
 with db.session_scope() as session:

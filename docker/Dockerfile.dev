@@ -1,4 +1,7 @@
-FROM tensorflow/tensorflow:2.5.0-gpu-jupyter
+FROM tensorflow/tensorflow:2.6.0-gpu-jupyter
+
+# Ignore all interactive dialog during apt-get update
+ENV DEBIAN_FRONTEND noninteractive
 
 # nodejs source
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
@@ -6,12 +9,13 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 # Install linux package
 RUN apt-mark hold libcudnn* cuda*; \
     apt-get update && apt-get upgrade -y; \
-    apt-get install --reinstall libcublas10 -y; \
     apt-get install -y \
+        build-essential gcc gfortran libgfortran3 \
+        libproj-dev proj-data proj-bin libgeos-dev \
+        libx11-dev libx11-xcb-dev xorg openbox \
         openssh-server \
         sudo vim git nodejs ffmpeg \
-        htop iotop screen reptyr \
-        libproj-dev proj-data proj-bin libgeos-dev;
+        htop iotop screen reptyr;
 
 # Add all user into sudoers
 RUN echo '%staff   ALL=(ALL:ALL) ALL' >> /etc/sudoers;
@@ -34,6 +38,18 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build;
 # Change jupyter python kernel
 RUN sed -i 's/\/usr\/bin\/python3/\/usr\/local\/bin\/python/g' /usr/local/share/jupyter/kernels/python3/kernel.json;
 
+# Install SEISAN
+RUN mkdir /opt/seismo;
+COPY docker/seisan/seisan_v11_linux_64.tar.gz /opt/seismo/
+WORKDIR /opt/seismo
+RUN gunzip seisan_v11_linux_64.tar.gz; tar xvf seisan_v11_linux_64.tar; \
+    sed -i 's/SEISARCH="linux64"/SEISARCH="gfortran"/g' /opt/seismo/COM/SEISAN.bash; \
+    sed -i 's/SEISAN_TOP="\/home\/s2000\/seismo"/SEISAN_TOP="\/opt\/seismo"/g' /opt/seismo/COM/SEISAN.bash; \
+    chmod 777 -R /opt/seismo
+
+# Fix X11 forwarding request failed on channel 0
+RUN sed -i 's/#X11UseLocalhost yes/X11UseLocalhost no/g' /etc/ssh/sshd_config;
+
 # SSH login fix. Otherwise user is kicked off after login
 RUN mkdir /var/run/sshd; \
     sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config; \
@@ -43,13 +59,17 @@ RUN mkdir /var/run/sshd; \
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile;
 
-# Set CUDA path and SeisNN source code path
-RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda-10.2/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/profile; \
-    echo "export PYTHONPATH=$PYTHONPATH:/SeisNN" >> /etc/profile;
+# Set CUDA path and SeisBlue source code path
+RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64" >> /etc/profile; \
+    echo "export PYTHONPATH=$PYTHONPATH:/SeisBlue" >> /etc/profile;
 
 # Delete tensorflow login message for sftp login by replacing default .bashrc
 RUN mv /etc/bash.bashrc /etc/bash.bashrc.old; \
     cp /etc/skel/.bashrc /etc/bash.bashrc;
+
+# Add SEISAN to bashrc
+RUN echo 'source /opt/seismo/COM/SEISAN.bash' >> /etc/bash.bashrc; \
+    echo 'alias select="/home/user/seismo/PRO/select"' >> /etc/bash.bashrc;
 
 # Open SSH port 22 and make SSHD standby for incoming connection
 EXPOSE 22

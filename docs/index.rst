@@ -1,6 +1,6 @@
-SeisNN
+SeisBlue
 ==============
-Seismic event P phase picking project
+A deep-learning data processing platform for seismology
 
 Main framework: Obspy, Seisan, Tensorflow with Keras
 
