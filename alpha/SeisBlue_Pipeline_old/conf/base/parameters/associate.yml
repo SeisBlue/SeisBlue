@@ -1,0 +1,14 @@
+# This is a boilerplate parameters config generated for pipeline 'associate'
+# using Kedro 0.18.2.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://kedro.readthedocs.io/en/0.18.2/kedro_project_setup/configuration.html#parameters
+
+associate:
+  assoc_database: /kedro/data/03_primary/demo_assoc.db
+  waveforms_dir: /mnt/data
+  tag: manual
+  station: '*'
+  from_time: 2012-01-01 00:00:00
+  to_time: 2023-01-31 23:59:59
+

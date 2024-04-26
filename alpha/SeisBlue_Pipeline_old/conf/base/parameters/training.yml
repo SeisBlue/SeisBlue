@@ -1,0 +1,21 @@
+# This is a boilerplate parameters config generated for pipeline 'training'
+# using Kedro 0.18.2.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://kedro.readthedocs.io/en/0.18.2/kedro_project_setup/configuration.html#parameters
+
+get_pretrain_dataset:
+  database: /kedro/data/02_intermediate/HP2017_EQ_NEW_1_10.db
+  to_date: "2017-12-31"
+  column: "dataset_path"
+
+get_pretrain_dataloader:
+  batch_size: 64
+  test_split: 0.2
+
+pretrain:
+  epochs: 5
+  model_path: /kedro/data/05_model_input/model.pt
+  model_name: PhaseNet
+
+

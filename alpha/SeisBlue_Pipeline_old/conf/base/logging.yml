@@ -1,0 +1,66 @@
+version: 1
+
+disable_existing_loggers: False
+
+formatters:
+  simple:
+    format: "%(asctime)s %(levelname)s\t%(message)s"
+  complex:
+    format: "%(asctime)s\t%(name)s\n%(levelname)s\t%(message)s"
+
+
+handlers:
+  console:
+    class: kedro.extras.logging.color_logger.ColorHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+    colors:
+      debug: cyan
+      info: white
+      warning: yellow
+      error: red
+
+  debug_file_handler:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: complex
+    filename: logs/debug.log
+    maxBytes: 10485760 # 10MB
+    backupCount: 20
+    encoding: utf8
+    delay: True
+
+  info_file_handler:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: complex
+    filename: logs/info.log
+    maxBytes: 10485760 # 10MB
+    backupCount: 20
+    encoding: utf8
+    delay: True
+
+  error_file_handler:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: complex
+    filename: logs/errors.log
+    maxBytes: 10485760 # 10MB
+    backupCount: 20
+    encoding: utf8
+    delay: True
+
+  rich:
+    class: rich.logging.RichHandler
+    level: DEBUG
+
+loggers:
+  kedro:
+    level: INFO
+
+  seisblue_pipeline:
+    level: DEBUG
+
+root:
+  handlers: [console, debug_file_handler, info_file_handler, error_file_handler]

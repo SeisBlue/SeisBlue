@@ -1,0 +1,38 @@
+global:
+  database: rebuild
+  dataset: HP_2020
+  datasetpath: /usr/src/app/dataset/HP_2020*
+
+train:
+  database: "{{ global.database }}"
+  instance_filter: {'from_time': 2018-01-01T00:00:00, 'to_time': 2018-06-01T00:00:00}
+  batch_size: [256]
+  epochs: [100]
+  g_lr: 1e-04
+  d_lr: 1e-05
+  w_gr: 1
+  w_gdata: 100000
+  experiment_name: CWASN_45Hz
+  run_name: 'GAN'
+
+  pretrain_RUN_ID: null
+
+test:
+  database: "{{ global.database }}"
+  dataset: "{{ global.dataset }}"
+  datasetpath: "{{ global.datasetpath }}"
+  instance_filter: {'from_time': 2020-04-01T00:00:00, 'to_time': 2020-04-02T00:00:00}
+  batch_size: 256
+  tag: Transformer
+  phase: PSN
+  threshold: 0.3
+  RUN_ID: 7118d2ff82ea4084a25369934c8459b4
+  model_dirname: model_70
+
+analysis:
+  database: "{{ global.database }}"
+  dataset: "{{ global.dataset }}"
+  datasetpath: "{{ global.datasetpath }}"
+  snr_save_dir: /usr/src/app/02_picking/figure/snr
+  image_folder: /usr/src/app/mlruns/932399367284162723/7118d2ff82ea4084a25369934c8459b4/artifacts/plots_valid2
+  output_file: /usr/src/app/02_picking/figure/HP2017_valid.mp4

@@ -1,0 +1,18 @@
+# This is a boilerplate parameters config generated for pipeline 'dataset_generation'
+# using Kedro 0.18.2.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://kedro.readthedocs.io/en/0.18.2/kedro_project_setup/configuration.html#parameters
+
+
+# get_time_window
+trace_length: 33
+
+# get_instance_list (Label.generate_label)
+phase: PSN
+shape: triang
+half_width: 20
+
+# write_hdf5
+HDF5_filepath: /kedro/data/03_primary/HP2017.hdf5
+

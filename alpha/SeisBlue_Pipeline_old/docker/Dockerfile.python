@@ -1,0 +1,7 @@
+FROM python:3.8
+
+WORKDIR /usr/src/app
+
+COPY src/requirements.txt ./
+RUN pip install --upgrade pip; \
+    pip --no-cache-dir install -r requirements.txt;

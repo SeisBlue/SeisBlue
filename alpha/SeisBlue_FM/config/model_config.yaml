@@ -1,0 +1,22 @@
+global:
+  pretrain_model_filepath : None
+  model_filepath: ./model/CNN.pt
+  tag: SeisPolar
+
+train:
+  pretrain_model_filepath : "{{ global.pretrain_model_filepath }}"
+  model_filepath: "{{ global.model_filepath }}"
+  batch_size : [16]
+  epochs : [20]
+  lr : 1e-05
+  weight : [1, 1, 1]
+  experiment_name: 2018_HL_2022_ETBATS
+  run_name: ''
+
+test:
+  model_filepath : "{{ global.model_filepath }}"
+  batch_size: 16
+  tag: "{{ global.tag }}"
+  threshold: 0.95
+  reverse_back: False
+  u.6m6: c0e7ebcf52ee4fb68e5baa38e9876bc3
