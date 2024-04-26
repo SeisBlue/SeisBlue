@@ -1,0 +1,61 @@
+global:
+  events_dir: /mnt/events/2018_HL
+  dataset_name: 2018_HL
+  waveforms_dir: /mnt/data
+  sub_waveforms_dir: /mnt/data/2018
+  hyp_filepath: /mnt/events/2018_HL/STATION0.HYP
+  def_filepath: /mnt/events/2018_HL/SEISAN.DEF
+  response_dir: None
+  network: HL
+  threshold_error: 10
+  reverse: True
+  with_manual: False
+
+process_inventory:
+  hyp_filepath: "{{ global.hyp_filepath }}"
+  sub_waveforms_dir: "{{ global.sub_waveforms_dir }}"
+  network: "{{ global.network }}"
+
+process_event:
+  events_dir: "{{ global.events_dir }}"
+  dataset_name: "{{ global.dataset_name }}"
+  waveforms_dir: "{{ global.waveforms_dir }}"
+  sub_waveforms_dir: "{{ global.sub_waveforms_dir }}"
+  hyp_filepath: "{{ global.hyp_filepath }}"
+  pick_tag : manual
+  label_tag : manual
+  trace_length : 2.60
+  shift : 1.56
+  trace_length_npts : 256
+  shape : triang
+  half_width : 20
+  split_ratio : {'test': 1}
+  reverse: "{{ global.reverse }}"
+  with_manual: "{{ global.with_manual }}"
+
+kagan:
+  dataset_name: "{{ global.dataset_name }}"
+  method_id: FPFIT
+
+quality_filter:
+  hyp_filepath: "{{ global.hyp_filepath }}"
+  dataset_name: "{{ global.dataset_name }}"
+  threshold_azi: 200
+  threshold_ain: 40
+
+plot_beach:
+  dataset_name: "{{ global.dataset_name }}"
+  rprofile_filename: Aa120.7_23.0_120.7_23.1_90_50_0_50
+  bprofile_filename: Aa120.6_23.1_120.8_23.1_90_50_0_50
+
+plot_map:
+  dataset_name: "{{ global.dataset_name }}"
+  hyp_filepath: "{{ global.hyp_filepath }}"
+  sub_waveforms_dir: "{{ global.sub_waveforms_dir }}"
+  network: "{{ global.network }}"
+  events_dir: "{{ global.events_dir }}"
+  waveforms_dir: "{{ global.waveforms_dir }}"
+  trace_length: 15
+  shape: triang
+  event_id: 2023-05-11T00:09:21.303000
+  outputfile: gmap.html

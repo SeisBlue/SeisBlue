@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+global:
+  database: rebuild
+  events_dir: /mnt/events/2020_HP
+  dataset_name: 2020_HP
+  waveforms_dir: /mnt/data
+  sub_waveforms_dir: /mnt/data/2020
+  hyp_filepath: /mnt/events/2020_HP/STATION0.HYP
+  def_filepath: null
+  response_dir: null
+  network: HP
+
+process_inventory:
+  build_database: False
+  hyp_filepath: "{{ global.hyp_filepath }}"
+  sub_waveforms_dir: "{{ global.sub_waveforms_dir }}"
+  database: "{{ global.database }}"
+  network: "{{ global.network }}"
+
+process_event:
+  build_database: False
+  events_dir: "{{ global.events_dir }}"
+  database: "{{ global.database }}"
+  network: "{{ global.network }}"
+  tag: manual
+  waveforms_dir: "{{ global.waveforms_dir }}"
+  trace_length: 24
+  instance_parameters:
+    phase: PSN
+    shape: triang
+    half_width: 20
+    tag: manual
+
+process_waveform:
+  build_database: False
+  waveforms_dir: "{{ global.waveforms_dir }}"
+  database: "{{ global.database }}"
+  pick_filter: {'from_time': 2020-04-01T00:00:00, 'to_time': 2020-06-01T00:00:00, 'tag':manual}
+  trace_length: 24
+  instance_parameters:
+    phase: PSN
+    shape: triang
+    half_width: 20
+    tag: manual
+  dataset_dir: '/usr/src/app/dataset'

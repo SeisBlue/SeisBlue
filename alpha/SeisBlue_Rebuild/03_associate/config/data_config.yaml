@@ -1,0 +1,17 @@
+global:
+  database: rebuild
+  events_dir: /mnt/events/2021_SF
+  dataset_name: 2021_SF
+  waveforms_dir: /mnt/data
+  sub_waveforms_dir: /mnt/data/2017
+  hyp_filepath: /mnt/events/2021_SF/STATION0.HYP
+  def_filepath: None
+  response_dir: None
+  network: SF
+  
+associator:
+  database: "{{ global.database }}"
+  hyp_filepath: "{{ global.hyp_filepath }}"
+  max_s_p: 60
+  origin_time_delta: 3
+  nsta_declare: 3

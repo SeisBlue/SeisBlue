@@ -1,0 +1,20 @@
+# This is a boilerplate parameters config generated for pipeline 'data_processing'
+# using Kedro 0.18.2.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://kedro.readthedocs.io/en/0.18.2/kedro_project_setup/configuration.html#parameters
+
+# get_station_time
+waveforms_dir: /mnt/data
+
+# get_events_list_params
+events_dir: /mnt/sfile/HP2017
+
+# read_picks_params
+tag : manual
+
+# create_db_client_params
+database: /kedro/data/02_intermediate/HP2017_EQ_NEW_1_10.db
+
+
+
