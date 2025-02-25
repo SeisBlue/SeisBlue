@@ -1,11 +1,15 @@
-# SeisBlue ![Version](https://img.shields.io/pypi/v/seisblue?color=darkgreen&label=Version&style=flat-square) [![License](http://img.shields.io/:License-mit-red.svg?style=flat-square)](http://badges.mit-license.org)
-
- [![Docker Build](https://github.com/SeisBlue/SeisBlue/workflows/Docker%20Image/badge.svg)](https://github.com/seisblue/seisblue/actions?query=workflow%3A%22Docker+Image%22)
-
-
-Github Pages: https://seisblue.github.io/seisblue/
+# SeisBlue
 
 A deep-learning data processing platform for seismology
+
+---
+# Warning 
+
+This project is turned into internal development. The code is not maintained and updated.
+
+Please contact the author or [SGYLAB](https://sgylab.gl.ntu.edu.tw/) for more information.
+
+---
 
 ![workflow](workflow.png)
 
@@ -13,26 +17,11 @@ A deep-learning data processing platform for seismology
 
 ---
 
-# Warning
+# Related Publications
 
-The code is still in the development state, API will change frequently. 
-
-Beta version will be released soon.
-
-Please star us for upcoming updates!
-
----
-
-Prerequisite:
-
-- S-File catalog from [SEISAN](http://seisan.info/)
-- SeisComP Data Structure (SDS) database. The directory and file layout of SDS is defined as:
-
-      SDSROOT/YEAR/NET/STA/CHAN.TYPE/NET.STA.LOC.CHAN.TYPE.YEAR.DAY
-
-Installation:
-
-- Follow the instructions in the [Docker](docker) folder to create a Docker container.
+- Huang, C.-M., Chang, L.-H., Kuo-Chen, H., and Zhuang, Y.: SeisBlue: a deep-learning data processing platform for seismology, EGU General Assembly 2023, Vienna, Austria, 24–28 Apr 2023, EGU23-13927, https://doi.org/10.5194/egusphere-egu23-13927, 2023.
+- Sun, WF., Pan, SY., Huang, CM. et al. Deep learning-based earthquake catalog reveals the seismogenic structures of the 2022 MW 6.9 Chihshang earthquake sequence. Terr Atmos Ocean Sci 35, 5 (2024). https://doi.org/10.1007/s44195-024-00063-9
+- Kuo-Chen, H., Sun, W., Huang, C., Pan, S., 2022, Near real-time seismic data processing helps scientist understand aftershocks, Temblor, http://doi.org/10.32858/temblor.276
 
 ---
 
